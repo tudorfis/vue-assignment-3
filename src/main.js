@@ -1,5 +1,22 @@
 import Vue from 'vue'
-import App from './app-5/App.vue'
+import App from './app-7/App.vue'
+
+/**
+  Vue.filter('to-lowercase', value => {
+    return value.toLowerCase()
+  })
+
+  Vue.mixin({
+    created() {
+      console.log('global mixin - created hook')
+    }
+  })
+*/
+
+Vue.filter('countAppendLength', value => {
+  if (!value) return ''
+  return `${value} (${value.length})`
+})
 
 new Vue({
   el: '#app',
