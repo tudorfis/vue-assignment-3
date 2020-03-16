@@ -1,6 +1,3 @@
-import Vue from 'vue'
-import App from './app-11/App.vue'
-
 /**
   Vue.filter('to-lowercase', value => {
     return value.toLowerCase()
@@ -36,7 +33,22 @@ import App from './app-11/App.vue'
   })
 */
 
+/*
 import { store } from './app-11/store/store'
+
+new Vue({
+  el: '#app',
+  store,
+  render: h => h(App)
+})
+*/
+
+import Vue from 'vue'
+import App from './app-12/App.vue'
+import store from './app-12/store/store'
+import * as currencyFilters from './app-12/filters/currency.filter'
+
+Vue.filter('currency', currencyFilters.currency)
 
 new Vue({
   el: '#app',
