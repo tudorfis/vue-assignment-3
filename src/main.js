@@ -43,6 +43,7 @@ new Vue({
 })
 */
 
+/*
 import Vue from 'vue'
 import App from './app-12/App.vue'
 import store from './app-12/store/store'
@@ -53,5 +54,14 @@ Vue.filter('currency', currencyFilters.currency)
 new Vue({
   el: '#app',
   store,
+  render: h => h(App)
+})
+*/
+
+import Vue from 'vue'
+import App from './app-13/App.vue'
+
+new Vue({
+  el: '#app',
   render: h => h(App)
 })
