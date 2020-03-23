@@ -51,16 +51,31 @@ export default {
 
     /** @TODO: remove */
 
-    const graph = this.graph.$data.graphModel
-    const jointFactory = new JointFactory(graph, this.elements, this.links);
+    // const graph = this.graph.$data.graphModel
+    // const jointFactory = new JointFactory(graph, this.elements, this.links);
 
-    JointFactory.createRectangle(
-      'Kartra', 
-      {bg: '#515151', color: 'white' },
-      { x: 100, y: 30 },
-      { width: 100, height: 60 }
-    )
+    // JointFactory.createRectangle(
+    //   'Kartra', 
+    //   {bg: '#515151', color: 'white' },
+    //   { x: 100, y: 30 },
+    //   { width: 100, height: 60 }
+    // )
 
+    const rect = new joint.shapes.standard.Rectangle();
+    this.elements.push(rect);
+
+    rect.position(100, 30);
+    rect.resize(100, 60);
+
+    rect.attr({
+        body: { fill: '#515151' },
+        label: {
+            text: 'Kartra',
+            fill: 'white'
+        }
+    });
+
+    rect.addTo(this.graph.$data.graphModel);
 
 
     const rect2 = rect.clone();
@@ -69,6 +84,9 @@ export default {
     rect2.translate(300, 0);
     rect2.attr('label/text', 'Sequences!');
     rect2.addTo(this.graph.$data.graphModel);
+
+
+
 
     const link = new joint.shapes.standard.Link();
     this.links.push(link);
@@ -114,9 +132,11 @@ export default {
       }
     }
     
+
     link.source(rect);
     link.target(rect2);
     link.addTo(this.graph.$data.graphModel);
+    
 
     this.paper.on('link:mouseover', linkView => {
         linkView.model.appendLabel(linkLabel);
@@ -131,34 +151,6 @@ export default {
       vm.links.splice(vm.links.indexOf(linkView.model), 1)
       linkView.model.remove()
     });
-
-    
-
-    
-    function resetAll(paper) {
-      paper.drawBackground({
-          color: 'white'
-      })
-
-      var elements = paper.model.getElements();
-      for (var i = 0, ii = elements.length; i < ii; i++) {
-          var currentElement = elements[i];
-          currentElement.attr('body/stroke', 'black');
-      }
-
-      var links = paper.model.getLinks();
-      for (var j = 0, jj = links.length; j < jj; j++) {
-          var currentLink = links[j];
-          currentLink.attr('line/stroke', 'black');
-          currentLink.label(0, {
-              attrs: {
-                  body: {
-                      stroke: 'black'
-                  }
-              }
-          })
-      }
-  }
 
   }
 };
