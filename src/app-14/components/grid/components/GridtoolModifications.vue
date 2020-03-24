@@ -1,0 +1,103 @@
+<template>
+  <div class="gridtool-modifications">
+    <i 
+      @click="onDelete"
+      class="fas fa-trash delete-icon"
+      :style="{...generalIconStyle, ...deleteIconStyle}"
+    ></i>
+    <i
+      @click="onEdit"
+      class="fas fa-edit edit-icon"
+      :style="{...generalIconStyle, ...editIconStyle}"></i>
+  </div>
+</template>
+
+<script>
+import { VueUtils } from '../../../utils/vue.utils';
+import { globalConfig } from '../../../config/global.config';
+import { gridCellService } from '../services/gridcell.service';
+import { dragElementsEnum } from '../../../services/dragElements.service';
+export default {
+  methods: {
+    onDelete(event) {
+      const gridCellElement = VueUtils.traversePath(event, 'gridcell')
+      gridCellService.resetCell(gridCellElement)
+    },
+    onEdit(event) {
+      const gridCellElement = VueUtils.traversePath(event, 'gridcell')
+      const elementType = gridCellElement.__vue__.$data.gridElementType
+
+      switch (elementType) {
+        case dragElementsEnum.SEND_EMAIL:
+          $('#sendEmailModal').modal();
+          break;
+        
+        case dragElementsEnum.SEND_SMS:
+          $('#sendSmsModal').modal();
+          break;
+
+        case dragElementsEnum.ADD_REMOVE_TAG:
+          $('#addRemoveTagsModal').modal();
+          break;
+      }
+    }
+  },
+  computed: {
+    generalIconStyle() {
+      const fontSize = Math.floor(globalConfig.gridCellElementWidth / 5)
+      return {
+        'font-size': `${fontSize}px`
+      }
+    },
+    deleteIconStyle() {
+      const left =  Math.floor(globalConfig.gridCellElementWidth / 15)
+      const top = left + 5
+
+      return {
+        'top': `-${top}px`,
+        'left': `-${left}px`
+      }
+    },
+    editIconStyle() {
+      const left =  globalConfig.gridCellElementWidth - Math.floor(globalConfig.gridCellElementWidth / 7)
+      const top = Math.floor(globalConfig.gridCellElementHeight / 10)
+
+      return {
+        'top': `-${top}px`,
+        'left': `${left}px`
+      }
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.gridtool-modifications {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  i {
+    cursor: pointer;
+    position: absolute;
+    
+    
+    &:hover {
+      transition: transform 0.20s;
+      transform: scale(1.30);
+    }
+
+    &.delete-icon {
+      color: lightcoral;
+      top: -15px;
+      left: -10px;
+    }
+    &.edit-icon {
+      color: black;
+      top: -15px;
+      right: -10px;
+    }
+    
+  }
+}
+</style>

@@ -1,14 +1,17 @@
 <template>
-  <div class="topmenu">
+  <div class="topmenu" @mouseover="resetGridView">
     <img src="src/app-14/assets/img/kartra-logo.png">
-    <button class="btn btn-success">
+    <button class="btn btn-success btn-green">
       <i class="fas fa-check-circle"></i> Done &amp; Exit
     </button>
   </div>
 </template>
 
 <script>
-export default {};
+import mousemoveMixin from '../../mixins/mousemove.mixin'
+export default {
+  mixins: [mousemoveMixin],
+};
 </script>
 
 <style lang="scss" scoped>
@@ -24,25 +27,6 @@ export default {};
     margin: auto 10px;
   }
   
-  button {
-    background: #86c92f;
-    border-color: #86c92f;
-    padding: 5px 15px;
-    margin: 10px;
-    font-size: 12px;
-
-    i {
-      margin: 0 5px 0 0;
-      font-size: 14px;
-      vertical-align: middle;
-    }
-
-    &:hover {
-      transition: all 0.3s ease-in-out;
-        color: #fff;
-        background: #6aa025;
-        border-color: #659723;
-    }
-  }
+  
 }
 </style>

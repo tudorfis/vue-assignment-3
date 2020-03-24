@@ -1,17 +1,23 @@
 <template>
   <div class="add-remove-tag" draggable="true" @dragstart="drag">
-    <i class="fas fa-tags"></i>
-    <label>Add/Remove Tag</label>
+    <i class="fas fa-tags" :style="iStyle"></i>
+    <label v-show="!isInsideCell">Add/Remove Tag</label>
   </div>
 </template>
 
 <script>
-import { dragElements, dragService } from '../../../services/drag.service'
+import { toolboxService } from '../services/toolbox.service'
 export default {
+    props: ['isInsideCell'],
     methods: {
         drag(event) {
-            dragService.activeDrag = dragElements.SEND_EMAIL
-            console.log('drag() in sendemail', event)
+            toolboxService.startDrag(event.target, 'addremovetag')
+        }
+    },
+    computed: {
+        iStyle() {
+            const extraStyle = { 'margin-top': '3px' }
+            return toolboxService.setIconStyle(this.isInsideCell, extraStyle)
         }
     }
 };
@@ -20,8 +26,10 @@ export default {
 <style lang="scss" scoped>
 .add-remove-tag {
   background: magenta;
-  border: 5px solid lightseagreen;
 
+  &.gridtool {
+      box-shadow: 0px 0px 5px magenta;
+  }
   i {
     font-size: 40px;
     color: white;

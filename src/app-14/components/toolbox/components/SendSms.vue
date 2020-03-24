@@ -1,7 +1,7 @@
 <template>
-  <div class="send-email" draggable="true" @dragstart="drag">
-    <i class="fas fa-envelope-open-text" :style="iStyle"></i>
-    <label v-show="!isInsideCell">Send Email</label>
+  <div class="send-sms" draggable="true" @dragstart="drag">
+    <i class="fas fa-sms" :style="iStyle"></i>
+    <label v-show="!isInsideCell">Send SMS</label>
   </div>
 </template>
 
@@ -11,23 +11,24 @@ export default {
     props: ['isInsideCell'],
     methods: {
         drag(event) {
-            toolboxService.startDrag(event.target, 'sendemail')
+            toolboxService.startDrag(event.target, 'sendsms')
         }
     },
     computed: {
         iStyle() {
-            return toolboxService.setIconStyle(this.isInsideCell)
+            const extraStyle = { 'margin-left': '5px' }
+            return toolboxService.setIconStyle(this.isInsideCell, extraStyle)
         }
     }
 };
 </script>
 
 <style lang="scss" scoped>
-.send-email {
-  background: lightcyan;
+.send-sms {
+  background: lime;
 
   &.gridtool {
-    box-shadow: 0px 0px 12px lightcyan;
+      box-shadow: 0px 0px 8px lime;
   }
   i {
     font-size: 40px;

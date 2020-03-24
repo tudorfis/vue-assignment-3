@@ -3,52 +3,43 @@
     ref="gridcell"
     class="gridcell"
     @drop.prevent="onDrop"
-    @dragover.prevent="onAllowDrop"
+    @dragover.prevent="onDragover"
     :style="{...dimensionsStyle}"
-  >{{ position }}</div>
+  >
+    <small class="position-info">{{ position }}</small>
+    <krt-gridcell-element
+      ref="gridcellelement" 
+      v-if="hasElement"
+      @mountedElement="onMountGridcellElement"
+      :element="gridElement"
+      :type="gridElementType"
+    >
+    </krt-gridcell-element>
+  </div>
 </template>
 
 <script>
 import { gridCellService } from '../services/gridcell.service';
+import GridcellElementVue from './GridcellElement.vue';
+import { dragElementsService } from '../../../services/dragElements.service';
+import { VueUtils } from '../../../utils/vue.utils';
+import { globalConfig } from '../../../config/global.config';
 export default {
+  components: {
+    krtGridcellElement: GridcellElementVue
+  },
   props: ['width', 'height', 'index', 'total', 'cols', 'rows'],
   data() {
     return {
       hasElement: false,
-      letters: [
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'M',
-        'N',
-        'O',
-        'P',
-        'Q',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'Y',
-        'Z'
-      ]
+      gridElement: null,
+      gridElementType: '',
+      letters: globalConfig.alphabet
     };
   },
   computed: {
     allowDrop() {
-      /** @TODO - figure out if element is here or link */
-      // return Math.round(Math.random());
-      return !this.hasElement;
+      return !this.hasElement
     },
     dimensionsStyle() {
       return {
@@ -65,47 +56,62 @@ export default {
   },
   methods: {
     onDrop(event) {
+      const sameElement = dragElementsService.isSameElement(this.gridElement)
+      if (sameElement) return;
+
       gridCellService.removeClasses(['allowed-drop', 'not-allowed-drop']);
 
       if (this.allowDrop) {
-        gridCellService.addClasses(['hurray']);
-        this.hasElement = true;
+        this.hasElement = true
+        this.gridElementType = dragElementsService.activeDragElementType
+        /** we also have here a mount to 
+         * store gridElement & removePrevious one from GridcellElement.vue 
+         * */
       }
-      
-      console.log('drop() in cell', event);
     },
-    onAllowDrop(event) {
-      const vm = this;
+    onDragover(event) {
+      const sameElement = dragElementsService.isSameElement(this.gridElement)
+      if (sameElement) return;
 
-      const newClass = this.allowDrop ? 'allowed-drop' : 'not-allowed-drop';
-      this.$refs.gridcell.classList.add(newClass);
+      /** operations for current cell */
+      const gridCell = this.$refs.gridcell
+      gridCell.classList.add(`${!this.allowDrop ? 'not-' : ''}allowed-drop`);
+      
+      /** operations when changing cell */
+      if (gridCellService.isDifferentCell(gridCell)) 
+        gridCellService.previousCellOperations()
 
-      const cell = this.$refs.gridcell;
-      const uid = cell.__vue__._uid;
+      gridCellService.saveActiveCell(gridCell)
+    },
+    onMountGridcellElement(gridElement) {
+      this.gridElement = gridElement
 
-      if (uid !== gridCellService.activeUid)
-        gridCellService.removeClasses(['allowed-drop', 'not-allowed-drop']);
+      /** if the same block has been moved, to delete it from the previous cell */
+      if (dragElementsService.insideCell) {
+        const dragElement = dragElementsService.previousDragElement
+        const gridCellElement = VueUtils.traverseParent(dragElement.__vue__, 'gridcell')
 
-      gridCellService.activeCell = cell;
-      gridCellService.activeUid = uid;
+        gridCellService.resetCell(gridCellElement)
+      }
     }
-  },
-  mounted() {
-    window.vm = this;
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .gridcell {
+  position: relative;
   border: 1px dashed #e0e0e0;
   margin: -1px 0 0 -1px;
   color: #eee;
   z-index: 0;
 
-  &.hurray {
-    background: gray;
+  .position-info {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
+
   &.allowed-drop {
     background-color: #ccffcc;
     border: 3px dashed lime !important;
@@ -116,7 +122,7 @@ export default {
     background-color: #ffd1d1;
     border: 3px dashed red !important;
     z-index: 1 !important;
-    margin: -3px 0 0 -3px !important;
+    margin: -2px 0 0 -2px !important;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="gridcontent">
+  <div class="gridcontent" @mouseover="resetGridView">
     <!-- <input type="text" v-model="gridColumns"> -->
     <!-- <input type="text" v-model="gridRows"> -->
 
@@ -18,18 +18,21 @@
 </template>
 
 <script>
+import { globalConfig } from '../../config/global.config'
 import GridcellVue from './components/Gridcell.vue';
+import mousemoveMixin from '../../mixins/mousemove.mixin';
 export default {
+  mixins: [mousemoveMixin],
   props: ['toolboxWidth', 'topmenuHeight'],
   components: {
     krtGridcell: GridcellVue
   },
   data() {
     return {
-      gridCellHeight: 120,
-      gridCellWidth: 120,
-      gridColumns: 10,
-      gridRows: 10
+      gridCellHeight: globalConfig.gridCellHeight,
+      gridCellWidth: globalConfig.gridCellWidth,
+      gridColumns: globalConfig.gridColumns,
+      gridRows: globalConfig.gridRows
     };
   },
   computed: {
