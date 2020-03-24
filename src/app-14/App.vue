@@ -1,8 +1,11 @@
 <template>
-    <div class="builder">
+    <div class="builder" :style="builderStyle">
         <krt-topmenu></krt-topmenu>
         <krt-toolbox></krt-toolbox>
-        <krt-grid></krt-grid>
+        <krt-grid 
+            :toolboxWidth="toolboxWidth"
+            :topmenuHeight="topmenuHeight"
+        ></krt-grid>
     </div>
 </template>
 
@@ -15,6 +18,20 @@ export default {
         krtTopmenu: TopmenuVue,
         krtToolbox: ToolboxVue,
         krtGrid: GridContentVue
+    },
+    data() {
+        return {
+            toolboxWidth: 200,
+            topmenuHeight: 60
+        }
+    },
+    computed: {
+        builderStyle() {
+            return {
+                'grid-template-columns': `${this.toolboxWidth}px 1fr`,
+                'grid-template-rows': `${this.topmenuHeight}px auto`
+            }
+        }
     }
 }
 </script>
@@ -23,8 +40,6 @@ export default {
     .builder {
         height: 100%;
         display: grid;
-        grid-template-columns: 200px 1fr;
-        grid-template-rows: 50px auto;
         grid-template-areas: 
             "topmenu topmenu"
             "toolbox gridcontent";
@@ -33,5 +48,4 @@ export default {
         .toolbox { grid-area: toolbox; }
         .gridcontent { grid-area: gridcontent; }
     }
-    
 </style>

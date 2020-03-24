@@ -1,16 +1,26 @@
 <template>
-  <div class="gridlayout">
-    <krt-gridcell
-      v-for="n in nrGridCells"
-      :width="gridCellHeight"
-      :height="gridCellWidth"
-    ></krt-gridcell>
+  <div class="gridcontent">
+    <!-- <input type="text" v-model="gridColumns"> -->
+    <!-- <input type="text" v-model="gridRows"> -->
+
+    <div class="gridlayout" :style="gridStyle">
+      <krt-gridcell
+        v-for="gridCellIndex in gridSize"
+        :index="gridCellIndex"
+        :total="gridSize"
+        :cols="gridColumns"
+        :rows="gridRows"
+        :width="gridCellHeight"
+        :height="gridCellWidth"
+      ></krt-gridcell>
+    </div>
   </div>
 </template>
 
 <script>
-import GridcellVue from './components/Gridcell.vue'
+import GridcellVue from './components/Gridcell.vue';
 export default {
+  props: ['toolboxWidth', 'topmenuHeight'],
   components: {
     krtGridcell: GridcellVue
   },
@@ -18,56 +28,31 @@ export default {
     return {
       gridCellHeight: 120,
       gridCellWidth: 120,
-      nrGridCells: 0,
-      resizeInProgress: false
-    }
+      gridColumns: 10,
+      gridRows: 10
+    };
   },
-  methods: {
-    buildGrid() {
-      
-      this.resizeInProgress = true
-
-      const width = (window.innerWidth - 200)
-      const height = (window.innerHeight - 50)
-
-      this.nrGridCells = 
-        Math.floor(width / this.gridCellHeight) *
-        Math.floor(height / this.gridCellWidth)
-
-      const gridlayout = document.querySelector('.gridlayout')
-
-      gridlayout.style.width = `${width - (width % this.gridCellWidth) + 1}px`
-      gridlayout.style.height = `${height - (height % this.gridCellHeight) + 1}px`
-
-      this.resizeInProgress = false
+  computed: {
+    gridStyle() {
+      return {
+        'grid-template-columns': `repeat(${this.gridColumns}, 1fr)`,
+        'grid-template-rows': `repeat(${this.gridRows}, 1fr)`
+      };
+    },
+    gridSize() {
+      return this.gridColumns * this.gridRows;
     }
-  },
-  mounted() {
-    const vm = this;
-    this.buildGrid()
-    
-    window.addEventListener('resize', event => {
-      if (!this.resizeInProgress) {
-        setTimeout(_ => {
-          vm.buildGrid.call(vm)
-        }, 1000)
-      }
-    });
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  .gridlayout {
-    margin: 30px auto;
-    display: flex;
-    flex-wrap: wrap;
-    border-left:  1px solid #e0e0e0;
-    border-top:  1px solid #e0e0e0;
+.gridcontent {
+  overflow: auto;
+  padding: 30px;
 
-    .gridcell {
-      border-right: 1px solid #e0e0e0;
-      border-bottom: 1px solid #e0e0e0;
-    }
+  .gridlayout {
+    display: grid;
   }
+}
 </style>
