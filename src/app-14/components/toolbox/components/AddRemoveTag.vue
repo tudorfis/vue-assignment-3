@@ -11,7 +11,7 @@ export default {
     props: ['isInsideCell'],
     methods: {
         drag(event) {
-            toolboxService.startDrag(event.target, 'addremovetag')
+            toolboxService.startDrag(event, 'addremovetag')
         }
     },
     computed: {

@@ -15,7 +15,10 @@ export const dragElementsService = {
     get insideCell() {
         if (!this.activeDragElement) return false
 
-        return this.activeDragElement.__vue__.$options.propsData.isInsideCell
+        if (this.activeDragElement.__vue__)
+            return this.activeDragElement.__vue__.$options.propsData.isInsideCell
+        
+        return false
     },
 
     isSameElement(gridEl) {

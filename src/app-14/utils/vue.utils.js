@@ -9,16 +9,32 @@ export class VueUtils {
         
         return {}
     }
-    static traverseParent(vueElement, targetRef) {
-        if (vueElement.$parent && vueElement.$parent) {
-            const parent = vueElement.$parent
+    static traverseByRef(vueElement, targetRef) {
+        if (vueElement.$refs[targetRef]) 
+            return vueElement.$refs[targetRef]
 
-            if (parent.$refs[targetRef]) 
-                return parent.$refs[targetRef]
-            
-            return VueUtils.traverseParent(parent, targetRef)
-        }
+        if (vueElement.$parent)
+            return VueUtils.traverseByRef(vueElement.$parent, targetRef)
 
         return {}
+    }
+    static traverseByQuery(vueElement, targetQuery) {
+        if (vueElement.$el && vueElement.$el.querySelector(targetQuery)) 
+            return vueElement.$el.querySelector(targetQuery)
+
+        if (vueElement.$parent)
+            return VueUtils.traverseByQuery(vueElement.$parent, targetQuery)
+
+        return {}
+    }
+
+    static traverseByProp(vueElement, targetProp) {
+        if (vueElement.$options.propsData && vueElement.$options.propsData[targetProp])
+            return vueElement.$options.propsData[targetProp]
+
+        if (vueElement.$parent)
+            return VueUtils.traverseByProp(vueElement.$parent, targetProp)
+
+        return null
     }
 }

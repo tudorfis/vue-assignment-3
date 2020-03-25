@@ -46,6 +46,7 @@ export default {
           border-radius: 5px;
           box-shadow: 3px 3px 12px #555;
           text-align: center;
+          font-weight: bold;
 
           &:hover {
             cursor: move;

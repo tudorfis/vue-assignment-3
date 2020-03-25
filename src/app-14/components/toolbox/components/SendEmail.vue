@@ -1,5 +1,5 @@
 <template>
-  <div class="send-email" draggable="true" @dragstart="drag">
+  <div class="send-email" draggable="true" @dragstart="onDrag">
     <i class="fas fa-envelope-open-text" :style="iStyle"></i>
     <label v-show="!isInsideCell">Send Email</label>
   </div>
@@ -10,8 +10,8 @@ import { toolboxService } from '../services/toolbox.service'
 export default {
     props: ['isInsideCell'],
     methods: {
-        drag(event) {
-            toolboxService.startDrag(event.target, 'sendemail')
+        onDrag(event) {
+          toolboxService.startDrag(event, 'sendemail')
         }
     },
     computed: {

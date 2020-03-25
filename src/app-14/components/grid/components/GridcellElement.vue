@@ -1,6 +1,6 @@
 <template>
   <div class="gridcell-element" :style="gridcellElementStyle">
-    <krt-gridtool-modifications style="display: none"></krt-gridtool-modifications>
+    <krt-gridtool-modifications style="display: none" refs="gridtoolmodifications"></krt-gridtool-modifications>
     <krt-send-email
       ref="sendemail"
       class="gridtool"
@@ -39,7 +39,7 @@ export default {
     krtSendSms: SendSmsVue,
     krtAddRemoveTag: AddRemoveTagVue
   },
-  props: ['element', 'type'],
+  props: ['element', 'type', 'allowDrop'],
   data() {
     return {
       dragElementsEnum,
@@ -75,9 +75,11 @@ export default {
     /** the purpose of this is to wait for the
      * element to generate from the v-if v-else-if statements
      * */
-    const refs = this.$refs;
-    const mountedElement = refs[Object.keys(refs)[0]].$el;
-    this.$emit('mountedElement', mountedElement);
+    const refs = this.$refs
+    const ref = refs[Object.keys(refs)[0]]
+
+    if (ref)
+      this.$emit('mountedElement', ref.$el);
   }
 };
 </script>

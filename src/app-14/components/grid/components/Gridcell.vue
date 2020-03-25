@@ -89,7 +89,7 @@ export default {
       /** if the same block has been moved, to delete it from the previous cell */
       if (dragElementsService.insideCell) {
         const dragElement = dragElementsService.previousDragElement
-        const gridCellElement = VueUtils.traverseParent(dragElement.__vue__, 'gridcell')
+        const gridCellElement = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell')
 
         gridCellService.resetCell(gridCellElement)
       }
