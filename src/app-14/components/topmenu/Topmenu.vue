@@ -1,6 +1,6 @@
 <template>
-  <div class="topmenu" @mouseover="resetGridView">
-    <img src="src/app-14/assets/img/kartra-logo.png">
+  <div class="topmenu" @mouseover="resetGridView" :style="topmenuStyle">
+    <img src="src/app-14/assets/img/kartra-logo.png" :style="imgStyle">
     <button class="btn btn-success btn-green">
       <i class="fas fa-check-circle"></i> Done &amp; Exit
     </button>
@@ -9,8 +9,22 @@
 
 <script>
 import mousemoveMixin from '../../mixins/mousemove.mixin'
+import { globalConfig } from '../../config/global.config'
 export default {
   mixins: [mousemoveMixin],
+  computed: {
+    topmenuStyle() {
+      return {
+        height: `${globalConfig.topmenuHeight}px`
+      }
+    },
+    imgStyle() {
+      return {
+        height: `${globalConfig.topmenuHeight - 10}px`,
+        margin: `auto 10px`
+      }
+    }
+  }
 };
 </script>
 
@@ -18,7 +32,6 @@ export default {
 .topmenu {
   position: fixed;
   width: 100%;
-  height: 60px;
   z-index: 2;
 
   background: #444;
@@ -27,11 +40,7 @@ export default {
   justify-content: space-between;
 
   img {
-    height: 50px;
     width: auto;
-    margin: auto 10px;
   }
-  
-  
 }
 </style>

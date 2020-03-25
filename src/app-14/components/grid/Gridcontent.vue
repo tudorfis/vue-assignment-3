@@ -1,32 +1,42 @@
 <template>
   <div class="gridcontent" @mouseover="resetGridView">
-
     <svg
       id="svgGrid"
-      :style="{width: `${(gridCellWidth * gridColumns) + 5}px`, height: `${(gridCellHeight * gridRows) + 5}px`}"
-      :viewBox="`0 0 ${gridCellWidth * gridColumns} ${gridCellHeight * gridRows}`"
+      :style="svgStyle"
+      :viewBox="svgViewBox"
     >
-      <path stroke="#ccc" stroke-width="10" d="M125 30 V0" fill="none"></path>
-      <path fill="#ccc" stroke="#000" stroke-width="0" d="M110 30 H140 L125 50 Z"  />
 
-      <path stroke="#ccc" stroke-width="10" d="M125 5 H240" fill="none"></path>
-      <path stroke="#ccc" stroke-width="10" d="M244.5 0 V355" fill="none"></path>
-      <path stroke="#ccc" stroke-width="10" d="M245 350 H270" fill="none"></path>
-      <path fill="#ccc" stroke="#000" stroke-width="0" d="M270 335 V365 L290 350 Z"></path>
+      <!-- top arrow -->
+      <path :fill="strokeColor" d="M100 100 h15 l-15 -20 l-15 20 Z"  />
+      
+      <!-- down arrow -->
+      <path :fill="strokeColor" d="M100 110 h15 l-15 20 l-15 -20 Z"  />
 
-      <path stroke="#ccc" stroke-width="10" d="M440 350 H750" fill="none"></path>
-      <path fill="#ccc" stroke="#000" stroke-width="0" d="M750 335 V365 L770 350 Z"></path>
+      <!-- left arrow -->
+      <path :fill="strokeColor" d="M40 50 v-20 l-20 15 l20 15 Z"  />
+
+      <!-- right arrow -->
+      <path :fill="strokeColor" d="M50 50 v-20 l20 15 l-20 15 Z"  />
+
+
+      <!-- some lines drawed for fun -->
+      <path :fill="strokeColor" d="M110 30 H140 L125 50 Z"  />
+      <path :stroke="strokeColor" :stroke-width="strokeWidth" d="M125 30 v-25 h120 v345 h30" fill="none"></path>
+      <path :fill="strokeColor" d="M270 335 v30 L290 350 Z"></path>
+
+      <path :stroke="strokeColor" :stroke-width="strokeWidth" d="M440 350 H750"></path>
+      <path :fill="strokeColor" d="M750 335 v30 l20 -15 Z"></path>
+
     </svg>
-
-    <div class="gridlayout" :style="gridStyle">
+    <div class="gridlayout" :style="gridLayoutStyle">
       <krt-gridcell
         v-for="gridCellIndex in gridSize"
         :index="gridCellIndex"
         :total="gridSize"
-        :cols="gridColumns"
-        :rows="gridRows"
-        :width="gridCellHeight"
-        :height="gridCellWidth"
+        :cols="globalConfig.gridColumns"
+        :rows="globalConfig.gridRows"
+        :width="globalConfig.gridCellHeight"
+        :height="globalConfig.gridCellWidth"
       ></krt-gridcell>
     </div>
   </div>
@@ -44,21 +54,37 @@ export default {
   },
   data() {
     return {
-      gridCellHeight: globalConfig.gridCellHeight,
-      gridCellWidth: globalConfig.gridCellWidth,
-      gridColumns: globalConfig.gridColumns,
-      gridRows: globalConfig.gridRows
+      globalConfig,
+      strokeWidth: 10,
+      strokeColor: '#ccc'
     };
   },
   computed: {
-    gridStyle() {
+    svgStyle() {
       return {
-        'grid-template-columns': `repeat(${this.gridColumns}, 1fr)`,
-        'grid-template-rows': `repeat(${this.gridRows}, 1fr)`
-      };
+        width: `${(globalConfig.gridCellWidth * globalConfig.gridColumns) + 4}px`,
+        height: `${(globalConfig.gridCellHeight * globalConfig.gridRows) + 4}px`,
+        left: `${globalConfig.toolboxWidth + 20 + 2}px`,
+        top: `${globalConfig.topmenuHeight + 20 + 2}px`
+      }
+    },
+    svgViewBox() {
+      const width = globalConfig.gridCellWidth * globalConfig.gridColumns
+      const height = globalConfig.gridCellHeight * globalConfig.gridRows
+      
+      return `0 0 ${width} ${height}`
+    },
+    gridLayoutStyle() {
+      return {
+        left: `${globalConfig.toolboxWidth + 20 + 2}px`,
+        top: `${globalConfig.topmenuHeight + 20 + 10}px`,
+        left: `${globalConfig.toolboxWidth + 20 + 10}px`,
+        'grid-template-columns': `repeat(${globalConfig.gridColumns}, 1fr)`,
+        'grid-template-rows': `repeat(${globalConfig.gridRows}, 1fr)`
+      }
     },
     gridSize() {
-      return this.gridColumns * this.gridRows;
+      return globalConfig.gridColumns * globalConfig.gridRows;
     }
   }
 };
@@ -69,9 +95,7 @@ export default {
   svg {
     position: absolute;
     border:2px solid #000;
-    left: 222px;
     z-index: 0;
-    top: 83px;
 
     path {
       z-index: 2;
@@ -83,10 +107,7 @@ export default {
 
   .gridlayout {
     display: grid;
-
     position: absolute;
-    top: 90px;
-    left: 230px;
     z-index: 1;
   }
 }

@@ -1,8 +1,8 @@
 <template>
-  <div class="toolbox" @mouseover="resetGridView">
-    <krt-send-email class="tool"></krt-send-email>
-    <krt-send-sms class="tool"></krt-send-sms>
-    <krt-add-remove-tag class="tool"></krt-add-remove-tag>
+  <div class="toolbox" @mouseover="resetGridView" :style="toolboxStyle">
+    <krt-send-email class="tool" :style="toolStyle"></krt-send-email>
+    <krt-send-sms class="tool" :style="toolStyle"></krt-send-sms>
+    <krt-add-remove-tag class="tool" :style="toolStyle"></krt-add-remove-tag>
 
     <krt-send-email-modal></krt-send-email-modal>
     <krt-send-sms-modal></krt-send-sms-modal>
@@ -18,6 +18,7 @@ import AddRemoveTagVue from './components/AddRemoveTag.vue'
 import SendEmailModalVue from './modals/SendEmailModal.vue'
 import SendSmsModalVue from './modals/SendSmsModal.vue'
 import AddRemoveTagsModalVue from './modals/AddRemoveTags.vue'
+import { globalConfig } from '../../config/global.config'
 export default {
   mixins: [mousemoveMixin],
   components: {
@@ -27,6 +28,26 @@ export default {
     krtSendEmailModal: SendEmailModalVue,
     krtSendSmsModal: SendSmsModalVue,
     krtAddRemoveTagsModal: AddRemoveTagsModalVue
+  },
+  computed: {
+    toolboxStyle() {
+      return {
+        width: `${globalConfig.toolboxWidth}px`,
+        top: `${globalConfig.topmenuHeight}px`
+      }
+    },
+    toolStyle() {
+      let width = globalConfig.gridCellElementWidth
+      width -= Math.round(width / 7)
+      
+      let height = globalConfig.gridCellElementHeight
+      height -= Math.round(height / 7)
+      
+      return {
+        width: `${width}px`,
+        height: `${height}px`
+      }
+    }
   }
 }
 </script>
@@ -35,17 +56,16 @@ export default {
   .toolbox {
     height: 100%;
     position: fixed;
-    width: 200px;
     z-index: 2;
-    top: 60px;
 
     background: #3792bc;
     color: white;
     box-shadow: 2px 0px 5px #1e7baf;
     
     .tool {
-      width: 120px;
-      height: 120px;
+      width: 120px !important;
+      height: 120px !important;
+      
       margin: 20px auto;
       padding: 30px 15px;
       border: 0;
