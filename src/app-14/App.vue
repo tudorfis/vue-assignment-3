@@ -2,7 +2,10 @@
   <div class="builder" :style="builderStyle">
     <krt-topmenu></krt-topmenu>
     <krt-toolbox></krt-toolbox>
-    <krt-grid :toolboxWidth="toolboxWidth" :topmenuHeight="topmenuHeight"></krt-grid>
+    <krt-grid
+      :toolboxWidth="toolboxWidth"
+      :topmenuHeight="topmenuHeight"
+    ></krt-grid>
   </div>
 </template>
 
@@ -51,6 +54,10 @@ export default {
   .gridcontent {
     grid-area: gridcontent;
   }
+}
+
+.modal-backdrop {
+  z-index: 1;
 }
 
 button.btn-green {

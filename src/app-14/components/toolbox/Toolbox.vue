@@ -32,25 +32,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .toolbox {
-        background: #3792bc;
-        color: white;
-        box-shadow: 2px 0px 5px #1e7baf;
-        
-        .tool {
-          width: 120px;
-          height: 120px;
-          margin: 20px auto;
-          padding: 30px 15px;
-          border: 0;
-          border-radius: 5px;
-          box-shadow: 3px 3px 12px #555;
-          text-align: center;
-          font-weight: bold;
+  .toolbox {
+    height: 100%;
+    position: fixed;
+    width: 200px;
+    z-index: 2;
+    top: 60px;
 
-          &:hover {
-            cursor: move;
-          }
-        }
+    background: #3792bc;
+    color: white;
+    box-shadow: 2px 0px 5px #1e7baf;
+    
+    .tool {
+      width: 120px;
+      height: 120px;
+      margin: 20px auto;
+      padding: 30px 15px;
+      border: 0;
+      border-radius: 5px;
+      box-shadow: 3px 3px 12px #555;
+      text-align: center;
+      font-weight: bold;
+
+      &:hover {
+        cursor: move;
+      }
     }
+  }
 </style>

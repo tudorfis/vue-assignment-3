@@ -16,6 +16,11 @@ export default {
 
 <style lang="scss" scoped>
 .topmenu {
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  z-index: 2;
+
   background: #444;
   color: white;
   display: flex;
