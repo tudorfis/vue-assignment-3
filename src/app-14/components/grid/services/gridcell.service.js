@@ -25,6 +25,6 @@ export const gridCellService = {
         this.activeUid = gridCell.__vue__._uid;
     },
     resetCell(gridCellElement) {
-        gridCellElement.__vue__.$data.hasElement = false
+        gridCellElement.__vue__.$options.propsData['cell'].hasElement = false
     }
 }

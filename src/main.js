@@ -59,7 +59,6 @@ new Vue({
 */
 
 const appNumber = window.location.search.match(/\=(\d+)/)[1];
-console.log(appNumber)
 
 import Vue from 'vue'
 import App14 from './app-14/App.vue'

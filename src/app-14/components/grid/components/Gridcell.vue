@@ -4,17 +4,15 @@
     class="gridcell"
     @drop.prevent="onDrop"
     @dragover.prevent="onDragover"
-    :style="{...dimensionsStyle}"
+    :style="gridCellStyle"
   >
     <small class="position-info">{{ position }}</small>
     <krt-gridcell-element
-      ref="gridcellelement" 
-      v-if="hasElement"
-      @mountedElement="onMountGridcellElement"
-      :element="gridElement"
-      :type="gridElementType"
-    >
-    </krt-gridcell-element>
+      ref="gridcellelement"
+      v-show="cell.hasElement"
+      :type="cell.gridElementType"
+    ></krt-gridcell-element>
+      <!-- @mountedElement="onMountGridcellElement" -->
   </div>
 </template>
 
@@ -28,71 +26,64 @@ export default {
   components: {
     krtGridcellElement: GridcellElementVue
   },
-  props: ['width', 'height', 'index', 'total', 'cols', 'rows'],
+  props: ['width', 'height', 'position', 'cell'],
   data() {
     return {
-      hasElement: false,
-      gridElement: null,
-      gridElementType: '',
-      letters: globalConfig.alphabet
+      hasElement: this.cell.hasElement,
+      gridElement: this.cell.gridElement,
+      gridElementType: this.cell.gridElementType
     };
   },
   computed: {
     allowDrop() {
-      return !this.hasElement
+      return !this.cell.hasElement;
     },
-    dimensionsStyle() {
+    gridCellStyle() {
+      const borderSize = globalConfig.gridCellBorderSize;
+      const borderColor = globalConfig.gridCellBorderColor;
+      const borderStyle = globalConfig.gridCellBorderStyle;
+      // const marginBorder = !borderSize ? '0' : `-${borderSize}`
+
       return {
         width: `${this.width}px`,
-        height: `${this.height}px`
+        height: `${this.height}px`,
+        border: `${borderSize}px ${borderStyle} ${borderColor}`
+        // margin: `${marginBorder}px 0 0 ${marginBorder}px`
       };
-    },
-    position() {
-      const letter = this.letters[Math.ceil(this.index / this.cols) - 1];
-      const number = this.index % this.cols || this.cols;
-
-      return `${letter}${number}`;
     }
   },
   methods: {
     onDrop(event) {
-      const sameElement = dragElementsService.isSameElement(this.gridElement)
+      const sameElement = dragElementsService.isSameElement(event.target);
       if (sameElement) return;
 
       gridCellService.removeClasses(['allowed-drop', 'not-allowed-drop']);
 
       if (this.allowDrop) {
-        this.hasElement = true
-        this.gridElementType = dragElementsService.activeDragElementType
-        /** we also have here a mount to 
-         * store gridElement & removePrevious one from GridcellElement.vue 
-         * */
+        this.cell.hasElement = true;
+        this.cell.gridElementType = dragElementsService.activeDragElementType;
+
+        if (dragElementsService.insideCell) {
+          const dragElement = dragElementsService.previousDragElement;
+          const gridCellElement = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell');
+
+          gridCellService.resetCell(gridCellElement);
+        }
       }
     },
     onDragover(event) {
-      const sameElement = dragElementsService.isSameElement(this.gridElement)
+      const sameElement = dragElementsService.isSameElement(event.target);
       if (sameElement) return;
 
       /** operations for current cell */
-      const gridCell = this.$refs.gridcell
+      const gridCell = this.$refs.gridcell;
       gridCell.classList.add(`${!this.allowDrop ? 'not-' : ''}allowed-drop`);
-      
+
       /** operations when changing cell */
-      if (gridCellService.isDifferentCell(gridCell)) 
-        gridCellService.previousCellOperations()
+      if (gridCellService.isDifferentCell(gridCell))
+        gridCellService.previousCellOperations();
 
-      gridCellService.saveActiveCell(gridCell)
-    },
-    onMountGridcellElement(gridElement) {
-      this.gridElement = gridElement
-
-      /** if the same block has been moved, to delete it from the previous cell */
-      if (dragElementsService.insideCell) {
-        const dragElement = dragElementsService.previousDragElement
-        const gridCellElement = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell')
-
-        gridCellService.resetCell(gridCellElement)
-      }
+      gridCellService.saveActiveCell(gridCell);
     }
   }
 };
@@ -101,8 +92,7 @@ export default {
 <style lang="scss" scoped>
 .gridcell {
   position: relative;
-  border: 1px dashed #e0e0e0;
-  margin: -1px 0 0 -1px;
+
   color: #eee;
   z-index: 0;
 
@@ -114,15 +104,13 @@ export default {
 
   &.allowed-drop {
     background-color: #ccffcc;
-    border: 3px dashed lime !important;
+    border: 5px dashed lime !important;
     z-index: 1 !important;
-    margin: -2px 0 0 -2px !important;
   }
   &.not-allowed-drop {
     background-color: #ffd1d1;
-    border: 3px dashed red !important;
+    border: 5px dashed red !important;
     z-index: 1 !important;
-    margin: -2px 0 0 -2px !important;
   }
 }
 </style>

@@ -1,6 +1,13 @@
 <template>
-  <div class="gridcell-element" :style="gridcellElementStyle">
-    <krt-gridtool-modifications style="display: none" refs="gridtoolmodifications"></krt-gridtool-modifications>
+  <div
+    class="gridcell-element"
+    :style="gridcellElementStyle"
+    @mouseenter="showModifications = true"
+    @mouseleave="showModifications = false"
+  >
+    <krt-gridtool-modifications
+      :visible="showModifications"
+    ></krt-gridtool-modifications>
     <krt-send-email
       ref="sendemail"
       class="gridtool"
@@ -39,30 +46,28 @@ export default {
     krtSendSms: SendSmsVue,
     krtAddRemoveTag: AddRemoveTagVue
   },
-  props: ['element', 'type', 'allowDrop'],
+  props: ['allowDrop', 'type'],
   data() {
     return {
       dragElementsEnum,
-      cellWidth: globalConfig.gridCellWidth,
-      cellHeight: globalConfig.gridCellHeight,
-      width: globalConfig.gridCellElementWidth,
-      height: globalConfig.gridCellElementHeight
+      globalConfig,
+      showModifications: false
     };
   },
   computed: {
     gridcellElementStyle() {
-      const topBottom = (this.cellHeight - this.height) / 2;
-      const leftRight = (this.cellWidth - this.width) / 2;
+      const top = (globalConfig.gridCellHeight - globalConfig.gridCellElementHeight) / 2;
+      const left = (globalConfig.gridCellWidth - globalConfig.gridCellElementWidth) / 2;
 
       return {
-        top: `${topBottom}px`,
-        left: `${leftRight}px`,
-        width: `${this.width}px`,
-        height: `${this.height}px`
+        top: `${top}px`,
+        left: `${left}px`,
+        width: `${globalConfig.gridCellElementWidth}px`,
+        height: `${globalConfig.gridCellElementHeight}px`
       };
     },
     gridToolStyle() {
-      const padding = Math.floor(this.height / 3.5);
+      const padding = Math.floor(globalConfig.gridCellElementHeight / 3.5);
       const borderRadius = Math.floor(padding / 2.5);
 
       return {
@@ -70,16 +75,6 @@ export default {
         'border-radius': `${borderRadius}px`
       };
     }
-  },
-  mounted() {
-    /** the purpose of this is to wait for the
-     * element to generate from the v-if v-else-if statements
-     * */
-    const refs = this.$refs
-    const ref = refs[Object.keys(refs)[0]]
-
-    if (ref)
-      this.$emit('mountedElement', ref.$el);
   }
 };
 </script>
@@ -87,23 +82,15 @@ export default {
 <style lang="scss" scoped>
 .gridcell-element {
   position: absolute;
+  &:hover {
+    cursor: move;
+  }
+  
   .gridtool {
     width: 100%;
     height: 100%;
     text-align: center;
     border: 0;
-
-    &:hover {
-      cursor: move;
-    }
-  }
-
-  &:hover {
-    cursor: move;
-
-    .gridtool-modifications {
-      display: block !important;
-    }
   }
 }
 </style>

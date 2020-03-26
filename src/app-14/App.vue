@@ -14,6 +14,7 @@ import { globalConfig } from './config/global.config';
 import TopmenuVue from './components/topmenu/Topmenu.vue';
 import ToolboxVue from './components/toolbox/Toolbox.vue';
 import GridContentVue from './components/grid/Gridcontent.vue';
+import { gridModel } from './models/grid.model';
 export default {
   components: {
     krtTopmenu: TopmenuVue,
@@ -33,6 +34,9 @@ export default {
         'grid-template-rows': `${this.topmenuHeight}px auto`
       };
     }
+  },
+  beforeCreate() {
+    gridModel.buildGrid('new')
   }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="add-remove-tag" draggable="true" @dragstart="drag">
     <i class="fas fa-tags" :style="iStyle"></i>
-    <label v-show="!isInsideCell">Add/Remove Tag</label>
+    <label v-show="!isInsideCell">Add / Remove Tag</label>
   </div>
 </template>
 

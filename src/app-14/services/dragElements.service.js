@@ -8,9 +8,7 @@ export const dragElementsEnum = {
 export const dragElementsService = {
     activeDragElement: null,
     activeDragElementType: '',
-
     previousDragElement: null,
-    previousDragElementType: '',
 
     get insideCell() {
         if (!this.activeDragElement) return false
@@ -26,15 +24,5 @@ export const dragElementsService = {
             return true
 
         return false
-    },
-
-    setActiveDragElement(element, type) {
-        dragElementsService.activeDragElement = element
-        dragElementsService.activeDragElementType = type
-    },
-
-    setPreviousDragElement(element, type) {
-        this.previousDragElement = element
-        this.previousDragElementType = type
     }
 }

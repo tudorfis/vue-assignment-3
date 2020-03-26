@@ -1,5 +1,6 @@
+
 <template>
-  <div class="gridtool-modifications">
+  <div class="gridtool-modifications" v-show="visible">
     <i 
       @click="onDelete"
       class="fas fa-trash delete-icon"
@@ -18,6 +19,7 @@ import { globalConfig } from '../../../config/global.config';
 import { gridCellService } from '../services/gridcell.service';
 import { dragElementsEnum } from '../../../services/dragElements.service';
 export default {
+  props: ['visible'],
   methods: {
     onDelete(event) {
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')
@@ -25,7 +27,7 @@ export default {
     },
     onEdit(event) {
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')
-      const elementType = gridCellElement.__vue__.$data.gridElementType
+      const elementType = gridCellElement.__vue__.$options.propsData['cell'].gridElementType
 
       switch (elementType) {
         case dragElementsEnum.SEND_EMAIL:
@@ -50,8 +52,8 @@ export default {
       }
     },
     deleteIconStyle() {
-      const left =  Math.floor(globalConfig.gridCellElementWidth / 15)
-      const top = left + 5
+      const left =  Math.floor(globalConfig.gridCellElementWidth / 14)
+      const top = left + Math.floor(left / 2)
 
       return {
         'top': `-${top}px`,
@@ -60,7 +62,7 @@ export default {
     },
     editIconStyle() {
       const left =  globalConfig.gridCellElementWidth - Math.floor(globalConfig.gridCellElementWidth / 7)
-      const top = Math.floor(globalConfig.gridCellElementHeight / 10)
+      let top = Math.floor(globalConfig.gridCellElementHeight / 11)
 
       return {
         'top': `-${top}px`,
@@ -80,7 +82,6 @@ export default {
   i {
     cursor: pointer;
     position: absolute;
-    
     
     &:hover {
       transition: transform 0.20s;

@@ -28,15 +28,21 @@ export const toolboxService = {
             case 'addremovetag': dragType = dragElementsEnum.ADD_REMOVE_TAG; break;
         }
 
-        dragElementsService.setActiveDragElement(dragElement, dragType)
+        dragElementsService.activeDragElement = dragElement
+        dragElementsService.activeDragElementType = dragType
         
         if (dragElementsService.insideCell)
-            dragElementsService.setPreviousDragElement(dragElement, dragType)
+            dragElementsService.previousDragElement = dragElement
 
         this.afterStartDrag(event)
     },
     afterStartDrag(event) {
         setTimeout(_ => {
+            const vueElement = event.srcElement.__vue__
+
+            if (VueUtils.traverseByProp(vueElement, 'isInsideCell'))
+                VueUtils.traverseByQuery(vueElement, '.gridtool-modifications').style.visibility = 'visible'
+
             event.srcElement.style.borderRadius = this.tempElementBorderRadius
         }, 0)
     },
