@@ -19,11 +19,16 @@ export const globalConfig = {
     gridCellBorderColor: '#e0e0e0',
     gridCellBorderStyle: 'dashed',
 
-    gridColumns: 6,
-    gridRows: 6,
+    gridColumns: 4,
+    gridRows: 4,
 
     arrowWidth: 8,
     arrowColor: '#ccc',
+
+    rowsFromTheEnd: 2,
+    colsFromTheEnd: 2,
+
+    droppointDimension: 40,
 
     alphabet: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','Y','Z']
 }

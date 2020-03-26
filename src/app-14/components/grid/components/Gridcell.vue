@@ -6,13 +6,15 @@
     @dragover.prevent="onDragover"
     :style="gridCellStyle"
   >
+    <krt-gridcell-droppoints
+      v-show="showDroppoints"
+    ></krt-gridcell-droppoints>
     <small class="position-info">{{ position }}</small>
     <krt-gridcell-element
       ref="gridcellelement"
       v-show="cell.hasElement"
       :type="cell.gridElementType"
     ></krt-gridcell-element>
-      <!-- @mountedElement="onMountGridcellElement" -->
   </div>
 </template>
 
@@ -22,16 +24,23 @@ import GridcellElementVue from './GridcellElement.vue';
 import { dragElementsService } from '../../../services/dragElements.service';
 import { VueUtils } from '../../../utils/vue.utils';
 import { globalConfig } from '../../../config/global.config';
+import { gridModel } from '../../../models/grid.model'
+import GridcellDropPointsVue from './GridcellDropPoints.vue';
+
+window.gridCellService = gridCellService
+
 export default {
   components: {
-    krtGridcellElement: GridcellElementVue
+    krtGridcellElement: GridcellElementVue,
+    krtGridcellDroppoints: GridcellDropPointsVue
   },
   props: ['width', 'height', 'position', 'cell'],
   data() {
     return {
       hasElement: this.cell.hasElement,
       gridElement: this.cell.gridElement,
-      gridElementType: this.cell.gridElementType
+      gridElementType: this.cell.gridElementType,
+      showDroppoints: false
     };
   },
   computed: {
@@ -42,13 +51,11 @@ export default {
       const borderSize = globalConfig.gridCellBorderSize;
       const borderColor = globalConfig.gridCellBorderColor;
       const borderStyle = globalConfig.gridCellBorderStyle;
-      // const marginBorder = !borderSize ? '0' : `-${borderSize}`
 
       return {
         width: `${this.width}px`,
         height: `${this.height}px`,
         border: `${borderSize}px ${borderStyle} ${borderColor}`
-        // margin: `${marginBorder}px 0 0 ${marginBorder}px`
       };
     }
   },
@@ -63,12 +70,25 @@ export default {
         this.cell.hasElement = true;
         this.cell.gridElementType = dragElementsService.activeDragElementType;
 
+        /** remove previous cell */
         if (dragElementsService.insideCell) {
           const dragElement = dragElementsService.previousDragElement;
           const gridCellElement = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell');
 
           gridCellService.resetCell(gridCellElement);
         }
+
+        /** add column if near end */
+        if (gridModel.nearColEnd(this.position))
+          gridModel.addColumnEnd()
+
+        /** ad row if near end */
+        if (gridModel.nearRowEnd(this.position))
+          gridModel.addRowEnd()
+
+        /** hide drop points */
+        gridCellService.hideDropPoints()
+
       }
     },
     onDragover(event) {
@@ -77,6 +97,10 @@ export default {
 
       /** operations for current cell */
       const gridCell = this.$refs.gridcell;
+
+      if (this.allowDrop)
+        this.showDroppoints = true
+        
       gridCell.classList.add(`${!this.allowDrop ? 'not-' : ''}allowed-drop`);
 
       /** operations when changing cell */
@@ -97,6 +121,7 @@ export default {
   z-index: 0;
 
   .position-info {
+    font-size: 20px;
     position: absolute;
     top: 0;
     left: 0;

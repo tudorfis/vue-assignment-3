@@ -1,0 +1,78 @@
+<template>
+  <div class="drop-between-points">
+    <div class="drop-point drop-top" :style="{...pointStyle, ...topPointStyle}">&nbsp;</div>
+    <div class="drop-point drop-right" :style="{...pointStyle, ...rightPointStyle}">&nbsp;</div>
+    <div class="drop-point drop-bottom" :style="{...pointStyle, ...bottomPointStyle}">&nbsp;</div>
+    <div class="drop-point drop-left" :style="{...pointStyle, ...leftPointStyle}">&nbsp;</div>
+  </div>
+</template>
+
+<script>
+import { globalConfig } from '../../../config/global.config';
+export default {
+  computed: {
+    pointDimension() {
+        return globalConfig.droppointDimension
+    },
+    halfPointDimension() {
+        return Math.round(this.pointDimension / 2)
+    },
+    halfCellWidth() {
+        return Math.round(globalConfig.gridCellWidth / 2)
+    },
+    halfCellHeight() {
+        return Math.round(globalConfig.gridCellHeight / 2)
+    },
+    pointStyle() {
+      return {
+        width: `${this.pointDimension}px`,
+        height: `${this.pointDimension}px`,
+        'border-radius': `${this.halfPointDimension}px`
+      };
+    },
+    topPointStyle() {
+      return {
+        top: `-${this.halfPointDimension}px`,
+        left: `${this.halfCellWidth - this.halfPointDimension}px`
+      };
+    },
+    rightPointStyle() {
+      const top = this.halfCellHeight - this.halfPointDimension;
+      return {
+        top: `${top}px`,
+        left: `-${this.halfPointDimension}px`
+      };
+    },
+    bottomPointStyle() {
+      const top = this.halfCellHeight - this.halfPointDimension;
+      const left = globalConfig.gridCellWidth - this.halfPointDimension;
+      return {
+        top: `${top}px`,
+        left: `${left}px`
+      };
+    },
+    leftPointStyle() {
+      const top = globalConfig.gridCellHeight - this.halfPointDimension;
+      const left = this.halfCellWidth - this.halfPointDimension;
+      return {
+        top: `${top}px`,
+        left: `${left}px`
+      };
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.drop-between-points {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .drop-point {
+    position: absolute;
+    background: yellow;
+    border: 5px solid red;
+  }
+}
+</style>

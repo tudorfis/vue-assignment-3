@@ -27,7 +27,6 @@ export class VueUtils {
 
         return {}
     }
-
     static traverseByProp(vueElement, targetProp) {
         if (vueElement.$options.propsData && vueElement.$options.propsData[targetProp])
             return vueElement.$options.propsData[targetProp]
