@@ -1,15 +1,34 @@
 <template>
-  <div class="drop-between-points">
-    <div class="drop-point drop-top" :style="{...pointStyle, ...topPointStyle}">&nbsp;</div>
-    <div class="drop-point drop-right" :style="{...pointStyle, ...rightPointStyle}">&nbsp;</div>
-    <div class="drop-point drop-bottom" :style="{...pointStyle, ...bottomPointStyle}">&nbsp;</div>
-    <div class="drop-point drop-left" :style="{...pointStyle, ...leftPointStyle}">&nbsp;</div>
+  <div
+    class="drop-between-points" 
+    v-show="display !== false">
+    <div
+      class="drop-point drop-top"
+      :style="{...pointStyle, ...topPointStyle}"
+      v-show="display.showTop"
+    >&nbsp;</div>
+    <div 
+      class="drop-point drop-right"
+      :style="{...pointStyle, ...rightPointStyle}"
+      v-show="display.showRight"
+    >&nbsp;</div>
+    <div 
+      class="drop-point drop-bottom"
+      :style="{...pointStyle, ...bottomPointStyle}"
+      v-show="display.showBottom"
+    >&nbsp;</div>
+    <div 
+      class="drop-point drop-left"
+      :style="{...pointStyle, ...leftPointStyle}"
+      v-show="display.showLeft"
+    >&nbsp;</div>
   </div>
 </template>
 
 <script>
 import { globalConfig } from '../../../config/global.config';
 export default {
+  props: ['display'],
   computed: {
     pointDimension() {
         return globalConfig.droppointDimension

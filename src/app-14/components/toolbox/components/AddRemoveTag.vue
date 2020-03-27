@@ -1,5 +1,5 @@
 <template>
-  <div class="add-remove-tag" draggable="true" @dragstart="drag">
+  <div class="add-remove-tag" draggable="true" @dragstart="onDrag">
     <i class="fas fa-tags" :style="iStyle"></i>
     <label v-show="!isInsideCell">Add / Remove Tag</label>
   </div>
@@ -10,7 +10,7 @@ import { toolboxService } from '../services/toolbox.service'
 export default {
     props: ['isInsideCell'],
     methods: {
-        drag(event) {
+        onDrag(event) {
             toolboxService.startDrag(event, 'addremovetag')
         }
     },

@@ -28,10 +28,10 @@ export class VueUtils {
         return {}
     }
     static traverseByProp(vueElement, targetProp) {
-        if (vueElement.$options.propsData && vueElement.$options.propsData[targetProp])
+        if (vueElement && vueElement.$options.propsData && vueElement.$options.propsData[targetProp])
             return vueElement.$options.propsData[targetProp]
 
-        if (vueElement.$parent)
+        if (vueElement && vueElement.$parent)
             return VueUtils.traverseByProp(vueElement.$parent, targetProp)
 
         return null

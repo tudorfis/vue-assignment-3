@@ -16,14 +16,14 @@
 <script>
 import { VueUtils } from '../../../utils/vue.utils';
 import { globalConfig } from '../../../config/global.config';
-import { gridCellService } from '../services/gridcell.service';
+import { gridcellOperationsService } from '../services/gridcellOperations.service';
 import { dragElementsEnum } from '../../../services/dragElements.service';
 export default {
   props: ['visible'],
   methods: {
     onDelete(event) {
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')
-      gridCellService.resetCell(gridCellElement)
+      gridcellOperationsService.resetCell(gridCellElement)
     },
     onEdit(event) {
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')

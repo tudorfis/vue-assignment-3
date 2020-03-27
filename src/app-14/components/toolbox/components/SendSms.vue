@@ -1,5 +1,5 @@
 <template>
-  <div class="send-sms" draggable="true" @dragstart="drag">
+  <div class="send-sms" draggable="true" @dragstart="onDrag">
     <i class="fas fa-sms" :style="iStyle"></i>
     <label v-show="!isInsideCell">Send SMS</label>
   </div>
@@ -10,7 +10,7 @@ import { toolboxService } from '../services/toolbox.service'
 export default {
     props: ['isInsideCell'],
     methods: {
-        drag(event) {
+        onDrag(event) {
           toolboxService.startDrag(event, 'sendsms')
         }
     },

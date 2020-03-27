@@ -1,9 +1,9 @@
-import { gridCellService } from "../components/grid/services/gridcell.service"
+import { gridcellOperationsService } from "../components/grid/services/gridcellOperations.service"
 
 export default {
     methods: {
         resetGridView() {
-            gridCellService.previousCellOperations()
+            gridcellOperationsService.previousCellOperations()
         }
     }
 }

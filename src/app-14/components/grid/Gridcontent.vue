@@ -37,7 +37,7 @@ import { globalConfig } from '../../config/global.config'
 import GridcellVue from './components/Gridcell.vue';
 import mousemoveMixin from '../../mixins/mousemove.mixin';
 import { gridModel } from '../../models/grid.model'
-import gridcontentMixin from './mixins/gridcontentStyles'
+import gridcontentMixin from './mixins/gridcontentStyles.mixin'
 import GridcontentControlsVue from './components/GridcontentControls.vue';
 export default {
   mixins: [mousemoveMixin, gridcontentMixin],
