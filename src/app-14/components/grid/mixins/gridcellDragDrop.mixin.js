@@ -2,6 +2,7 @@ import { gridcellOperationsService } from '../services/gridcellOperations.servic
 import { dragElementsService } from '../../../services/dragElements.service'
 import { gridModel } from '../../../models/grid.model';
 import { VueUtils } from '../../../utils/vue.utils'
+import { globalConfig } from '../../../config/global.config';
 
 export default {
     props: ['position', 'cell'],
@@ -28,8 +29,10 @@ export default {
             if (this.dropppointInfo) {
                 gridcellOperationsService.moveCellsByDroppoint(this.position, this.dropppointInfo)
             
-                this.removePreviousCell() 
-                this.setCellActive()
+                this.removePreviousCell()
+
+                this.setCellActive(
+                    this.getNextDropPosition())
 
             } else if (this.allowDrop) {
                 this.setCellActive()
@@ -76,8 +79,10 @@ export default {
             if (gridModel.nearRowEnd(this.position))
             gridModel.addRowEnd()
         },
-        setCellActive() {
-            gridModel.setCell(this.position, { 
+        setCellActive(position) {
+            position = position || this.position
+
+            gridModel.setCell(position, { 
                 hasElement: true,
                 gridElementType: dragElementsService.activeDragElementType
             })
@@ -87,6 +92,29 @@ export default {
                 gridcellOperationsService.previousCellOperations();
 
             gridcellOperationsService.saveActiveCell(gridCell);
+        },
+        getNextDropPosition() {
+            if (this.dropppointInfo === 'right')
+                return this.getNextDropPositionRight()
+
+            if (this.dropppointInfo === 'bottom')
+                return this.getNextDropPositionBottom()
+
+            return this.position
+        },
+        getNextDropPositionRight() {
+            const letter = this.position.split('')[0]
+            const number = gridModel.getNumberByP(this.position)
+
+            return `${letter}${number + 1}`
+        },
+        getNextDropPositionBottom() {
+            const letterIndex = gridModel.getLetterIndexByP(this.position)
+                
+            const letter = globalConfig.alphabet[letterIndex]
+            const number = gridModel.getNumberByP(this.position)
+
+            return `${letter}${number}`
         }
     }
 }

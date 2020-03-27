@@ -98,8 +98,19 @@ export const gridModel = {
     isMouseOnTopOutside(event, gridCell) {
         return gridMouseOperations.isMouseOnTopOutside(event, gridCell)
     },
-    
     isMouseOnBottomOutside(event, gridCell) {
         return gridMouseOperations.isMouseOnBottomOutside(event, gridCell) 
+    },
+    hasElementLeft(position) {
+        return gridMouseOperations.hasElementLeft.call(this, position)
+    },
+    hasElementRight(position) {
+        return gridMouseOperations.hasElementRight.call(this, position)
+    },
+    isMouseOnLeftOutside(event, gridCell) {
+        return gridMouseOperations.isMouseOnLeftOutside(event, gridCell)
+    },
+    isMouseOnRightOutside(event, gridCell) {
+        return gridMouseOperations.isMouseOnRightOutside(event, gridCell) 
     }
 }

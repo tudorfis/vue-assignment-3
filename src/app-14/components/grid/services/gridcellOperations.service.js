@@ -44,43 +44,65 @@ export const gridcellOperationsService = {
         gridCellElement.__vue__.$options.propsData['cell'].hasElement = false
     },
     setDroppoints(event, gridCell, position) {
-        let dropppointInfo = ''
+        const isCellBellow = gridModel.hasElementBellow(position)
+        const isMouseOnBottom = gridModel.isMouseOnBottomOutside(event, gridCell)
+
+        if (isCellBellow && isMouseOnBottom) {
+            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showBottom: true}
+            return 'bottom'
+        }
 
         const isCellAbove = gridModel.hasElementAbove(position)
         const isMouseOnTop = gridModel.isMouseOnTopOutside(event, gridCell)
   
         if (isCellAbove && isMouseOnTop) {
-            dropppointInfo = 'top'
             gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showTop: true}
-        
-        } else {
+            return 'top'
+        }
 
-            const isCellBellow = gridModel.hasElementBellow(position)
-            const isMouseOnBottom = gridModel.isMouseOnBottomOutside(event, gridCell)
+        const isCellRight = gridModel.hasElementRight(position)
+        const isMouseOnRight = gridModel.isMouseOnRightOutside(event, gridCell)
 
-            if (isCellBellow && isMouseOnBottom) {
-                dropppointInfo = 'bottom'
-                gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showBottom: true}
-            }
+        if (isCellRight && isMouseOnRight) {
+            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showRight: true}
+            return 'right'
+        }
+
+        const isCellLeft = gridModel.hasElementLeft(position)
+        const isMouseOnLeft = gridModel.isMouseOnLeftOutside(event, gridCell)
+
+        if (isCellLeft && isMouseOnLeft) {
+            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showLeft: true}
+            return 'left'
         }
         
-        /** @TODO: EXTEND FOR OTHER POINTS */
-        
-        return dropppointInfo
+        return ''
     },
     moveCellsByDroppoint(position, dropppointInfo) {
-        if (dropppointInfo === 'top') {
+        if (dropppointInfo === 'bottom') {
+            gridModel.spliceRows(position)
+        }
+
+        else if (dropppointInfo === 'top') {
             const letterIndex = gridModel.getLetterIndexByP(position)
             const bellowLetter = globalConfig.alphabet[letterIndex - 2]
             const number = gridModel.getNumberByP(position)
             
             const splicePosition = `${bellowLetter}${number}`
-
-            // console.log(`position=${position} splicePosition=${splicePosition}`)
-
             gridModel.spliceRows(splicePosition)
         }
 
-        /** @TODO: EXTEND FOR OTHER POINTS */
+        if (dropppointInfo === 'right') {
+            gridModel.spliceCols(position)
+        }
+
+        else if (dropppointInfo === 'left') {
+            const letter = position.split('')[0];
+            const number = gridModel.getNumberByP(position);
+
+            const splicePosition = `${letter}${number - 1}`
+            gridModel.spliceCols(splicePosition)
+        
+        }
     }
 }

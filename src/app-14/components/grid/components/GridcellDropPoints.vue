@@ -65,25 +65,25 @@ export default {
     },
     rightPointStyle() {
       const top = this.halfCellHeight - this.halfPointDimension;
-      return {
-        top: `${top}px`,
-        left: `-${this.halfPointDimension}px`
-      };
-    },
-    bottomPointStyle() {
-      const top = this.halfCellHeight - this.halfPointDimension;
       const left = globalConfig.gridCellWidth - this.halfPointDimension;
       return {
         top: `${top}px`,
         left: `${left}px`
       };
     },
-    leftPointStyle() {
+    bottomPointStyle() {
       const top = globalConfig.gridCellHeight - this.halfPointDimension;
       const left = this.halfCellWidth - this.halfPointDimension;
       return {
         top: `${top}px`,
         left: `${left}px`
+      };
+    },
+    leftPointStyle() {
+      const top = this.halfCellHeight - this.halfPointDimension;
+      return {
+        top: `${top}px`,
+        left: `-${this.halfPointDimension}px`
       };
     }
   }
