@@ -15,22 +15,21 @@ export const toolboxService = {
         event.srcElement.style.borderRadius = 0
     },
     startDrag(event, type = '') {
+        if (!type) return
+
         this.beforeStartDrag(event)
 
         const dragElement = event.target
+        dragElementsService.activeDragElement = dragElement
 
-        if (!type) return
         let dragType
-
         switch (type) {
             case 'sendemail': dragType = dragElementsEnum.SEND_EMAIL; break;
             case 'sendsms': dragType = dragElementsEnum.SEND_SMS; break;
             case 'addremovetag': dragType = dragElementsEnum.ADD_REMOVE_TAG; break;
         }
-
-        dragElementsService.activeDragElement = dragElement
         dragElementsService.activeDragElementType = dragType
-        
+
         if (dragElementsService.insideCell)
             dragElementsService.previousDragElement = dragElement
 

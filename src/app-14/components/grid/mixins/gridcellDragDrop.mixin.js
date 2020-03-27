@@ -39,14 +39,19 @@ export default {
             }
         },
         onDragover(event) {
-            const gridCell = this.$refs.gridcell;
-
             if (this.isSameGrid()) return;
+
+            const gridCell = this.$refs.gridcell;
 
             this.dropppointInfo = gridcellOperationsService.setDroppoints(event, gridCell, this.position)
 
-            if (!this.dropppointInfo)
-                gridCell.classList.add(`${!this.allowDrop ? 'not-' : ''}allowed-drop`);
+            if (!this.dropppointInfo) {
+                gridCell.classList.add(`${!this.allowDrop ? 'not-' : ''}allowed-drop`)
+                gridcellOperationsService.hideDropPoints(gridCell)
+            }
+            
+            else if (gridCell.classList.contains('not-allowed-drop'))
+                gridCell.classList.remove('not-allowed-drop')
 
             this.handlePreviousCell(gridCell)
         },

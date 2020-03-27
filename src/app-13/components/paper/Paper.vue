@@ -48,19 +48,6 @@ export default {
       background: { color: this.defaultBgColor }
     });
 
-
-    /** @TODO: remove */
-
-    // const graph = this.graph.$data.graphModel
-    // const jointFactory = new JointFactory(graph, this.elements, this.links);
-
-    // JointFactory.createRectangle(
-    //   'Kartra', 
-    //   {bg: '#515151', color: 'white' },
-    //   { x: 100, y: 30 },
-    //   { width: 100, height: 60 }
-    // )
-
     const rect = new joint.shapes.standard.Rectangle();
     this.elements.push(rect);
 

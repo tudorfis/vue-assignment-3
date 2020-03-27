@@ -2,26 +2,34 @@
   <div
     class="drop-between-points" 
     v-show="display !== false">
-    <div
-      class="drop-point drop-top"
-      :style="{...pointStyle, ...topPointStyle}"
-      v-show="display.showTop"
-    >&nbsp;</div>
-    <div 
-      class="drop-point drop-right"
-      :style="{...pointStyle, ...rightPointStyle}"
-      v-show="display.showRight"
-    >&nbsp;</div>
-    <div 
-      class="drop-point drop-bottom"
-      :style="{...pointStyle, ...bottomPointStyle}"
-      v-show="display.showBottom"
-    >&nbsp;</div>
-    <div 
-      class="drop-point drop-left"
-      :style="{...pointStyle, ...leftPointStyle}"
-      v-show="display.showLeft"
-    >&nbsp;</div>
+    <transition name="point-animation" mode="out-in">
+      <div
+        class="drop-point drop-top"
+        :style="{...pointStyle, ...topPointStyle}"
+        v-show="display.showTop"
+      >&nbsp;</div>
+    </transition>
+    <transition name="point-animation" mode="out-in">
+      <div 
+        class="drop-point drop-right"
+        :style="{...pointStyle, ...rightPointStyle}"
+        v-show="display.showRight"
+      >&nbsp;</div>
+    </transition>
+    <transition name="point-animation" mode="out-in">
+      <div 
+        class="drop-point drop-bottom"
+        :style="{...pointStyle, ...bottomPointStyle}"
+        v-show="display.showBottom"
+      >&nbsp;</div>
+    </transition>
+    <transition name="point-animation" mode="out-in">
+      <div 
+        class="drop-point drop-left"
+        :style="{...pointStyle, ...leftPointStyle}"
+        v-show="display.showLeft"
+      >&nbsp;</div>
+    </transition>
   </div>
 </template>
 
@@ -92,6 +100,20 @@ export default {
     position: absolute;
     background: yellow;
     border: 5px solid red;
+    box-shadow: 1px 1px 15px #ccc;
   }
+}
+
+.point-animation-enter {
+  opacity: 0;
+}
+.point-animation-enter-active {
+  transition: opacity .7s;
+}
+.point-animation-leave {
+}
+.point-animation-leave-active {
+  transition: opacity .2s;
+  opacity: 0;
 }
 </style>

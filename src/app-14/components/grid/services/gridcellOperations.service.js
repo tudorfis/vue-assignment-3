@@ -30,9 +30,11 @@ export const gridcellOperationsService = {
         this.hideDropPoints()
         this.removeClasses(['allowed-drop', 'not-allowed-drop'])
     },
-    hideDropPoints() {
-        if (this.activeCell && this.activeCell.__vue__)
-            this.activeCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint}
+    hideDropPoints(gridCell) {
+        gridCell = gridCell || this.activeCell
+        
+        if (gridCell && gridCell.__vue__)
+            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint}
     },
     saveActiveCell(gridCell) {
         this.activeCell = gridCell
@@ -44,20 +46,22 @@ export const gridcellOperationsService = {
     setDroppoints(event, gridCell, position) {
         let dropppointInfo = ''
 
-        const isMouseOnTop = gridModel.isMouseOnTopOutside(event, gridCell)
         const isCellAbove = gridModel.hasElementAbove(position)
+        const isMouseOnTop = gridModel.isMouseOnTopOutside(event, gridCell)
   
-        /**
-         console.log(`
-            isCellAbove=${isCellAbove}
-            isMouseOnTop=${isMouseOnTop}
-            bothTrue=${isCellAbove && isMouseOnTop}
-        `)
-        */
-
-        if (isMouseOnTop && isCellAbove) {
+        if (isCellAbove && isMouseOnTop) {
             dropppointInfo = 'top'
             gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showTop: true}
+        
+        } else {
+
+            const isCellBellow = gridModel.hasElementBellow(position)
+            const isMouseOnBottom = gridModel.isMouseOnBottomOutside(event, gridCell)
+
+            if (isCellBellow && isMouseOnBottom) {
+                dropppointInfo = 'bottom'
+                gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showBottom: true}
+            }
         }
         
         /** @TODO: EXTEND FOR OTHER POINTS */

@@ -10,19 +10,19 @@ export class VueUtils {
         return {}
     }
     static traverseByRef(vueElement, targetRef) {
-        if (vueElement.$refs[targetRef]) 
+        if (vueElement && vueElement.$refs[targetRef]) 
             return vueElement.$refs[targetRef]
 
-        if (vueElement.$parent)
+        if (vueElement && vueElement.$parent)
             return VueUtils.traverseByRef(vueElement.$parent, targetRef)
 
         return {}
     }
     static traverseByQuery(vueElement, targetQuery) {
-        if (vueElement.$el && vueElement.$el.querySelector(targetQuery)) 
+        if (vueElement && vueElement.$el && vueElement.$el.querySelector(targetQuery)) 
             return vueElement.$el.querySelector(targetQuery)
 
-        if (vueElement.$parent)
+        if (vueElement && vueElement.$parent)
             return VueUtils.traverseByQuery(vueElement.$parent, targetQuery)
 
         return {}
