@@ -54,7 +54,7 @@ export const gridModel = {
     },
     loadGridModel(model, modelJSON) {
         model = model || {}
-        
+
         if (modelJSON)
             model = JSON.parse(modelJSON)
         
@@ -117,11 +117,11 @@ export const gridModel = {
     nearRowEnd(position) {
         return this.getRow(position) > (this.model.numRows - globalConfig.rowsFromTheEnd)
     },
-    removeColumnEnd() {
-        gridModelOperations.removeColumnEnd.call(this)
+    removeColumnAtEnd() {
+        gridModelOperations.removeColumnAtEnd.call(this)
     },
-    removeRowEnd() {
-        gridModelOperations.removeRowEnd.call(this)
+    removeRowAtEnd() {
+        gridModelOperations.removeRowAtEnd.call(this)
     },
     addColumnAtEnd() {
         gridModelOperations.addColumnAtEnd.call(this)

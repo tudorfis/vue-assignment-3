@@ -1,23 +1,26 @@
 
 import Vue from 'vue'
 import { cellBlueprint } from './grid.model'
+import { zoomService } from '../services/zoom.service'
 
 export const gridModelOperations = {
-    removeColumnEnd() {
+    removeColumnAtEnd() {
         for (let row = 1; row <= this.model.numRows; row++) {
             const position = this.getPosition(row, this.model.numCols)
             delete this.model.cells[position]
         }
 
         this.model.numCols--
+        zoomService.calculateSvgViewBox()
     },
-    removeRowEnd() {
+    removeRowAtEnd() {
         for (let col = 1; col <= this.model.numCols; col++) {
             const position = this.getPosition(this.model.numRows, col)
             delete this.model.cells[position]
         }
 
         this.model.numRows--
+        zoomService.calculateSvgViewBox()
     },
     addColumnAtEnd() {
         this.model.numCols++
@@ -26,6 +29,8 @@ export const gridModelOperations = {
             const position = this.getPosition(row, this.model.numCols)
             Vue.set(this.model.cells, position, {...cellBlueprint})
         }
+
+        zoomService.calculateSvgViewBox()
     },
     addRowAtEnd() {
         this.model.numRows++
@@ -34,6 +39,8 @@ export const gridModelOperations = {
             const position = this.getPosition(this.model.numRows, col)
             Vue.set(this.model.cells, position, {...cellBlueprint})
         }
+
+        zoomService.calculateSvgViewBox()
     },
     spliceCols(position) {
         if (this.isElementsColEnd(position))

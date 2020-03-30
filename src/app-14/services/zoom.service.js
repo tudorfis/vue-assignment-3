@@ -1,4 +1,5 @@
 import { globalConfig } from "../config/global.config"
+import { gridModel } from "../models/grid.model"
 
 /**
     <button class="btn btn-info" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()">z in</button>
@@ -6,6 +7,7 @@ import { globalConfig } from "../config/global.config"
  */
 
 export const zoomService = {
+    svgViewBox: '0 0 0 0',
     disableZoomIn() {
         const gc = globalConfig
         return (gc.zoomLevel + gc.zoomDiff > gc.zoomMax)
@@ -25,8 +27,8 @@ export const zoomService = {
         
         globalConfig.arrowWidth += 2
         globalConfig.droppointDimension += 10
-      },
-      zoomOut() {
+    },
+    zoomOut() {
         globalConfig.zoomLevel -= globalConfig.zoomDiff
 
         globalConfig.gridCellWidth -= 60
@@ -37,5 +39,15 @@ export const zoomService = {
         
         globalConfig.arrowWidth -= 2
         globalConfig.droppointDimension -= 10
-      }
+    },
+    calculateSvgViewBox() {
+        const gc = globalConfig
+        const gm = gridModel.model
+
+        const width = 240 * gm.numCols - gm.numCols
+        const height = 240 * gm.numRows - gm.numRows
+            
+        const viewBox = `0 0 ${width} ${height}`
+        this.svgViewBox = viewBox
+    }
 }

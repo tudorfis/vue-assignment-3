@@ -23,17 +23,6 @@ export default {
                 border: `${svgBorder}`
             }
         },
-        svgViewBox() {
-            if (!gridModel.model) return '0 0 0 0'
-
-            const gc = globalConfig
-            const gm = gridModel.model
-
-            const width = gc.gridCellWidth * gm.numCols
-            const height = gc.gridCellHeight * gm.numRows
-            
-            return `0 0 ${width} ${height}`
-        },
         gridLayoutStyle() {
             if (!gridModel.model) return {}
 

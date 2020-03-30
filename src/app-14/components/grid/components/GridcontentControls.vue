@@ -48,13 +48,13 @@ export default {
           gridModel.addColumnAtEnd()
         },
         decrementCols() {
-          gridModel.removeColumnEnd()
+          gridModel.removeColumnAtEnd()
         },
         incrementRows() {
           gridModel.addRowAtEnd()
         },
         decrementRows() {
-          gridModel.removeRowEnd()
+          gridModel.removeRowAtEnd()
         },
         saveModel() {
           tempModel = gridModel.saveGridModel()

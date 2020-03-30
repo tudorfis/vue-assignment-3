@@ -80,10 +80,10 @@ export default {
   }
 
   .position-info {
-    font-size: 20px;
     position: absolute;
     top: 0;
     left: 0;
+    font-size: 14px;
   }
 
   &.allowed-drop {
