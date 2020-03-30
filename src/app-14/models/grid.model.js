@@ -43,22 +43,29 @@ export const gridModel = {
       return output
     },
     saveGridModel() {
+        const currentTime = new Date().getTime()
+
         const output = {
             numCols: this.model.numCols,
             numRows: this.model.numRows,
             totalSteps: this.model.totalSteps,
-            steps: Utils.objfilter(this.model.cells, cell => cell.hasElement),
+            steps: this.model.cells
+            // steps: Utils.objfilter(this.model.cells, cell => cell.hasElement),
         }
         
+        console.log(`gridModel.saveGridModel() execution time: ${(new Date().getTime() - currentTime) / 1000} seconds`)
         return JSON.stringify(output)
     },
     loadGridModel(model, modelJSON) {
+        const currentTime = new Date().getTime()
+
         model = model || {}
 
         if (modelJSON)
             model = JSON.parse(modelJSON)
-        
-        this.newGridModel(model.numRows, model.numCols)
+
+        const gridSize = gridModelOperations.reduceGridSize.call(this, model)
+        this.newGridModel(gridSize.numRows, gridSize.numCols)
 
         for (const position in model.steps) {
             const step = model.steps[position]
@@ -68,6 +75,8 @@ export const gridModel = {
                 gridElementType: step.gridElementType
             })
         }
+
+        console.log(`gridModel.loadGridModel() execution time: ${(new Date().getTime() - currentTime) / 1000} seconds`)
     },
     getRow(position) {
         return parseInt(position.split(cellSplitSymbol)[0])
@@ -85,8 +94,11 @@ export const gridModel = {
         return `${row + rowDiff}${cellSplitSymbol}${col + colDiff}`
     },
     setCell(position, properties) {
+        this.model.cells[position] = this.model.cells[position] || { ...cellBlueprint }
+
         this.model.cells[position].hasElement = properties.hasElement
         this.model.cells[position].gridElementType = properties.gridElementType
+        
         this.model.totalSteps++
     },
     isElementsColEnd(position) {

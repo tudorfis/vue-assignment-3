@@ -1,7 +1,10 @@
 
 export const globalConfig = {
-    gridColumns: 40,
-    gridRows: 40,
+    gridColumns: 15,
+    gridRows: 15,
+
+    minGridColumns: 15,
+    minGridRows: 15,
 
     zoomLevel: 100,
     zoomDiff: 25,

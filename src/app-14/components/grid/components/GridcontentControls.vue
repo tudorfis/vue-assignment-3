@@ -6,25 +6,12 @@
     <button class="btn btn-success" @click="incrementRows">++Rows</button>
     <button class="btn btn-danger" @click="decrementRows">--Rows</button>
 
-    <input v-model="globalConfig.gridCellWidth" />
-    <input v-model="globalConfig.gridCellHeight" />
-
-    <input v-model="globalConfig.gridCellElementWidth" />
-    <input v-model="globalConfig.gridCellElementHeight" />
-
-    <button class="btn btn-success" @click="saveModel">save</button>
-    <button class="btn btn-danger" @click="loadModel">load</button>
-
-    <input v-model="spliceColPosition" />
-    <button class="btn btn-warning" @click="spliceCols">cols</button>
-    
-    <input v-model="spliceRowPosition" />
-    <button class="btn btn-warning" @click="spliceRows">rows</button>
-
+    <small>{{ globalConfig.zoomLevel }}</small>
     <button class="btn btn-info" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()">z in</button>
     <button class="btn btn-info" @click="zoomService.zoomOut()" :disabled="zoomService.disableZoomOut()">z out</button>
 
-    {{ globalConfig.zoomLevel }}
+    <button class="btn btn-success" @click="saveModel">save</button>
+    <button class="btn btn-danger" @click="loadModel">load</button>
   </div>
 </template>
 
@@ -38,9 +25,7 @@ export default {
     data() {
         return {
             zoomService,
-            globalConfig,
-            spliceColPosition: 'B1',
-            spliceRowPosition: 'A2',
+            globalConfig
         }
     },
     methods: {
@@ -62,12 +47,6 @@ export default {
         loadModel() {
           gridModel.loadGridModel(null, tempModel)
           this.$forceUpdate()
-        },
-        spliceCols() {
-            gridModel.spliceCols(this.spliceColPosition)
-        },
-        spliceRows() {
-            gridModel.spliceRows(this.spliceRowPosition)
         }
     }
 };

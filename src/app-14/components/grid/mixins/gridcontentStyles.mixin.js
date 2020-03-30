@@ -23,6 +23,11 @@ export default {
                 border: `${svgBorder}`
             }
         },
+        gridLayoutClass() {
+            return {
+                [`zoom-${globalConfig.zoomLevel}`]: true
+            }
+        },
         gridLayoutStyle() {
             if (!gridModel.model) return {}
 

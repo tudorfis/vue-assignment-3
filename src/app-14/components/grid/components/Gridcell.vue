@@ -1,8 +1,8 @@
 <template>
+<!-- :class="gridCellClass" -->
   <div
     ref="gridcell"
     class="gridcell"
-    :class="gridCellClass"
     @drop.prevent="onDrop"
     @dragover.prevent="onDragover"
   >
@@ -41,11 +41,6 @@ export default {
       }
 
       return false
-    },
-    gridCellClass() {
-      return {
-        [`zoom-${globalConfig.zoomLevel}`]: true
-      }
     }
   }
 };
@@ -57,27 +52,6 @@ export default {
   color: #eee;
   z-index: 0;
   border: 1px dashed #e0e0e0;
-
-  &.zoom-50 {
-    width: 120px;
-    height: 120px;
-  }
-  &.zoom-75 {
-    width: 180px;
-    height: 180px;
-  }
-  &.zoom-100 {
-    width: 240px;
-    height: 240px;
-  }
-  &.zoom-125 {
-    width: 300px;
-    height: 300px;
-  }
-  &.zoom-150 {
-    width: 360px;
-    height: 360px;
-  }
 
   .position-info {
     position: absolute;
