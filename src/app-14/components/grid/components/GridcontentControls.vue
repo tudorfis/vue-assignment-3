@@ -38,13 +38,13 @@ export default {
     },
     methods: {
         incrementCols() {
-          gridModel.addColumnEnd()
+          gridModel.addColumnAtEnd()
         },
         decrementCols() {
           gridModel.removeColumnEnd()
         },
         incrementRows() {
-          gridModel.addRowEnd()
+          gridModel.addRowAtEnd()
         },
         decrementRows() {
           gridModel.removeRowEnd()

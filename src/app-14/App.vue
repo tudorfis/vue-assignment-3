@@ -10,11 +10,14 @@
 </template>
 
 <script>
+import { gridModel } from './models/grid.model';
+window.gridModel = gridModel
+
 import { globalConfig } from './config/global.config';
 import TopmenuVue from './components/topmenu/Topmenu.vue';
 import ToolboxVue from './components/toolbox/Toolbox.vue';
 import GridContentVue from './components/grid/Gridcontent.vue';
-import { gridModel } from './models/grid.model';
+
 export default {
   components: {
     krtTopmenu: TopmenuVue,
@@ -36,7 +39,7 @@ export default {
     }
   },
   beforeCreate() {
-    gridModel.buildGrid('new')
+    gridModel.newGridModel()
   }
 };
 </script>
@@ -64,6 +67,7 @@ export default {
   z-index: 1;
 }
 
+/** @TODO: move/use below classes from existing template */
 button.btn-green {
   background: #86c92f;
   border-color: #86c92f;

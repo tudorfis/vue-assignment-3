@@ -22,9 +22,10 @@
     </svg>
     <div class="gridlayout" :style="gridLayoutStyle">
       <krt-gridcell
-        v-for="n of gridSize"
-        :cell="gridModel.getCell(n)"
-        :position="gridModel.getPosition(n)"
+        v-for="(cell,position) of gridObj"
+        :cell="cell"
+        :key="position"
+        :position="position"
         :width="globalConfig.gridCellHeight"
         :height="globalConfig.gridCellWidth"
       ></krt-gridcell>
@@ -53,7 +54,10 @@ export default {
     };
   },
   computed: {
-    gridSize: _ => gridModel.model.numCols * gridModel.model.numRows
+    gridObj() {
+      const gridObj = gridModel.buildGridCells()
+      return gridObj
+    }
   }
 };
 </script>

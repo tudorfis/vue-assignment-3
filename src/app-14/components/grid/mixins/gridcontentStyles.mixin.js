@@ -14,11 +14,11 @@ export default {
             const svgBorder = `${gc.svgBorderSize}px solid ${gc.svgBorderColor}`
 
             return {
-            width: `${svgWidth}px`,
-            height: `${svgHeight}px`,
-            left: `${svgLeft}px`,
-            top: `${svgTop}px`,
-            border: `${svgBorder}`
+                width: `${svgWidth}px`,
+                height: `${svgHeight}px`,
+                left: `${svgLeft}px`,
+                top: `${svgTop}px`,
+                border: `${svgBorder}`
             }
         },
         svgViewBox() {
@@ -38,10 +38,10 @@ export default {
             const top = gc.topmenuHeight + gc.gridContentTopPadding + (gc.arrowWidth * 2) + gc.svgBorderSize
 
             return {
-            top: `${top}px`,
-            left: `${left}px`,
-            'grid-template-columns': `repeat(${gm.numCols}, 1fr)`,
-            'grid-template-rows': `repeat(${gm.numRows}, 1fr)`
+                top: `${top}px`,
+                left: `${left}px`,
+                'grid-template-columns': `repeat(${gm.numCols}, 1fr)`,
+                'grid-template-rows': `repeat(${gm.numRows}, 1fr)`
             }
         }
     }

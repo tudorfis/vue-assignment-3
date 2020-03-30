@@ -1,67 +1,70 @@
 
 import Vue from 'vue'
 import { cellBlueprint } from './grid.model'
-import { globalConfig } from '../config/global.config'
 
 export const gridModelOperations = {
     removeColumnEnd() {
-        for (let index = 0; index < this.model.numRows; index++) {
-            const position = `${this.getLetterByI(index)}${this.model.numCols}`
+        for (let row = 1; row <= this.model.numRows; row++) {
+            const position = this.getPosition(row, this.model.numCols)
             delete this.model.cells[position]
         }
+
         this.model.numCols--
     },
     removeRowEnd() {
-        for (let index = 1; index <= this.model.numCols; index++) {
-            const position = `${this.getLetterByI(this.model.numRows - 1)}${index}`
+        for (let col = 1; col <= this.model.numCols; col++) {
+            const position = this.getPosition(this.model.numRows, col)
             delete this.model.cells[position]
         }
+
         this.model.numRows--
     },
-    addColumnEnd() {
+    addColumnAtEnd() {
         this.model.numCols++
-        for (let index = 0; index < this.model.numRows; index++) {
-            const position = `${this.getLetterByI(index)}${this.model.numCols}`
-            Vue.set(this.model.cells, [position][0], {...cellBlueprint})
+
+        for (let row = 1; row <= this.model.numRows; row++) {
+            const position = this.getPosition(row, this.model.numCols)
+            Vue.set(this.model.cells, position, {...cellBlueprint})
         }
-        
     },
-    addRowEnd() {
+    addRowAtEnd() {
         this.model.numRows++
-        for (let index = 1; index <= this.model.numCols; index++) {
-            const position = `${this.getLetterByI(this.model.numRows - 1)}${index}`
-            Vue.set(this.model.cells, [position][0], {...cellBlueprint})
+
+        for (let col = 1; col <= this.model.numCols; col++) {
+            const position = this.getPosition(this.model.numRows, col)
+            Vue.set(this.model.cells, position, {...cellBlueprint})
         }
     },
     spliceCols(position) {
-        this.addColumnEnd()
-        
-        const letter = position.split('')[0]
-        const number = this.getNumberByP(position)
+        if (this.isElementsColEnd(position))
+            this.addColumnAtEnd()
 
-        for (let i = this.model.numCols; i > number + 1; i--) {
-            const nextPos = `${letter}${i}`
-            const prevPos = `${letter}${i - 1}`
+        const row = this.getRow(position)
+        const col = this.getCol(position)
+
+        for (let i = this.model.numCols; i > col; i--) {
+            const nextPos = this.getPosition(row, i)
+            const prevPos = this.getPosition(row, i - 1)
 
             this.model.cells[nextPos] = this.model.cells[prevPos]
         }
-        position = `${letter}${number + 1}`
-        Vue.set(this.model.cells, [position][0], {...cellBlueprint})
+        
+        Vue.set(this.model.cells, position, {...cellBlueprint})
     },
     spliceRows(position) {
-        this.addRowEnd()
-        
-        const number = this.getNumberByP(position)
-        const letterIndex = this.getLetterIndexByP(position)
+        if (this.isElementsRowEnd(position))
+            this.addRowAtEnd()
 
-        for (let i = this.model.numRows - 1; i > letterIndex; i--) {
-            const nextPos = `${globalConfig.alphabet[i]}${number}`
-            const prevPos = `${globalConfig.alphabet[i - 1]}${number}`
-            
-            this.model.cells[nextPos] = this.model.cells[prevPos]
+        const row = this.getRow(position)
+        const col = this.getCol(position)
+        
+        for (let i = this.model.numRows; i > row; i--) {
+            const currentPosition = this.getPosition(i, col)
+            const previousPosition = this.getPosition(i - 1, col)
+
+            this.model.cells[currentPosition] = this.model.cells[previousPosition]
         }
 
-        position = `${globalConfig.alphabet[letterIndex]}${number}`
-        Vue.set(this.model.cells, [position][0], {...cellBlueprint})
+        Vue.set(this.model.cells, position, {...cellBlueprint})
     }
 }

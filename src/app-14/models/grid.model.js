@@ -3,6 +3,8 @@ import { globalConfig } from "../config/global.config"
 import { gridModelOperations } from './gridModel.operations'
 import { gridMouseOperations } from './gridMouse.operations'
 
+const cellSplitSymbol = globalConfig.cellSplitSymbol
+
 const newGridBlueprint = {
     numRows: 0,
     numCols: 0,
@@ -16,60 +18,77 @@ export const cellBlueprint = {
 
 export const gridModel = {
     model: null,
-    buildGrid(type) {
-        if (!type) throw new Error(`Please provide a type`)
-
-        if (type === 'new')
-            this.newGridModel()
-    },
     newGridModel() {
         this.model = {...newGridBlueprint}
 
         this.model.numRows = globalConfig.gridRows
         this.model.numCols = globalConfig.gridColumns
 
-        this.generateNewCells()
+        this.model.cells = this.buildGridCells('new')
     },
-    generateNewCells() {
-        for (let n = 1; n <= (this.model.numRows * this.model.numCols); n++)
-            this.model.cells[this.getPosition(n)] = {...cellBlueprint}
+    buildGridCells(type = '') {
+      const output = {}
+      for (let row = 1; row <= this.model.numRows; row++) 
+        for (let col = 1; col <= this.model.numCols; col++) {
+
+          const position = this.getPosition(row, col)
+          output[position] = (type === 'new') ? {...cellBlueprint} : this.model.cells[position]
+        }
+
+      return output
     },
-    getCell(n) {
-        return this.model.cells[this.getPosition(n)]
+    getRow(position) {
+        return parseInt(position.split(cellSplitSymbol)[0])
+    },
+    getCol(position) {
+        return parseInt(position.split(cellSplitSymbol)[1])
+    },
+    getPosition(row, col) {
+        return `${row}${cellSplitSymbol}${col}`
+    },
+    getPositionDiff(position, rowDiff = 0, colDiff = 0) {
+        const row = this.getRow(position)
+        const col = this.getCol(position)
+
+        return `${row + rowDiff}${cellSplitSymbol}${col + colDiff}`
     },
     setCell(position, properties) {
         this.model.cells[position].hasElement = properties.hasElement
         this.model.cells[position].gridElementType = properties.gridElementType
     },
-    getPosition(n) {
-        return `${this.getLetterByN(n)}${this.getNumberByN(n)}`;
+    isElementsColEnd(position) {
+        const row = this.getRow(position)
+        const colNearEnd = this.model.numCols - globalConfig.colsFromTheEnd
+        
+        for (let i = this.model.numCols; i >= colNearEnd; i--) {
+            if (this.model.cells[this.getPosition(row, i)].hasElement)
+                return true
+        }
+        
+        return false
     },
-    getLetterByN(n) {
-        return this.getLetterByI(Math.ceil(n / this.model.numCols) - 1)
-    },
-    getLetterByI(index) {
-        return globalConfig.alphabet[index]
-    },
-    getLetterIndexByP(position) {
-        return globalConfig.alphabet.indexOf(position.split('')[0]) + 1
-    },
-    getNumberByN(number) {
-        return number % this.model.numCols || this.model.numCols
-    },
-    getNumberByP(position) {
-        return parseInt(position.split('')[1]) 
+    isElementsRowEnd(position) {
+        const col = this.getCol(position)
+        const rowNearEnd = this.model.numRows - globalConfig.rowsFromTheEnd
+
+        for (let i = this.model.numRows; i >= rowNearEnd; i--) {
+            if (this.model.cells[this.getPosition(i, col)].hasElement)
+                return true
+        }
+        
+        return false
     },
     nearColEnd(position) {
-        return this.getNumberByP(position) > this.model.numCols - globalConfig.colsFromTheEnd
+        return this.getCol(position) > (this.model.numCols - globalConfig.colsFromTheEnd)
     },
     nearRowEnd(position) {
-        return this.getLetterIndexByP(position) > (this.model.numRows - globalConfig.rowsFromTheEnd)
+        return this.getRow(position) > (this.model.numRows - globalConfig.rowsFromTheEnd)
     },
     saveGridModel() {
         return JSON.stringify(this.model)
     },
-    loadGridModel(model) {
-        this.model = JSON.parse(model)
+    loadGridModel(modelJSON) {
+        this.model = JSON.parse(modelJSON)
     },
     removeColumnEnd() {
         gridModelOperations.removeColumnEnd.call(this)
@@ -77,11 +96,11 @@ export const gridModel = {
     removeRowEnd() {
         gridModelOperations.removeRowEnd.call(this)
     },
-    addColumnEnd() {
-        gridModelOperations.addColumnEnd.call(this)
+    addColumnAtEnd() {
+        gridModelOperations.addColumnAtEnd.call(this)
     },
-    addRowEnd() {
-        gridModelOperations.addRowEnd.call(this)
+    addRowAtEnd() {
+        gridModelOperations.addRowAtEnd.call(this)
     },
     spliceCols(position) {
         gridModelOperations.spliceCols.call(this, position)

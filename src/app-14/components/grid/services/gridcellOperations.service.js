@@ -54,7 +54,7 @@ export const gridcellOperationsService = {
 
         const isCellAbove = gridModel.hasElementAbove(position)
         const isMouseOnTop = gridModel.isMouseOnTopOutside(event, gridCell)
-  
+
         if (isCellAbove && isMouseOnTop) {
             gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showTop: true}
             return 'top'
@@ -78,31 +78,5 @@ export const gridcellOperationsService = {
         
         return ''
     },
-    moveCellsByDroppoint(position, dropppointInfo) {
-        if (dropppointInfo === 'bottom') {
-            gridModel.spliceRows(position)
-        }
-
-        else if (dropppointInfo === 'top') {
-            const letterIndex = gridModel.getLetterIndexByP(position)
-            const bellowLetter = globalConfig.alphabet[letterIndex - 2]
-            const number = gridModel.getNumberByP(position)
-            
-            const splicePosition = `${bellowLetter}${number}`
-            gridModel.spliceRows(splicePosition)
-        }
-
-        if (dropppointInfo === 'right') {
-            gridModel.spliceCols(position)
-        }
-
-        else if (dropppointInfo === 'left') {
-            const letter = position.split('')[0];
-            const number = gridModel.getNumberByP(position);
-
-            const splicePosition = `${letter}${number - 1}`
-            gridModel.spliceCols(splicePosition)
-        
-        }
-    }
+    
 }
