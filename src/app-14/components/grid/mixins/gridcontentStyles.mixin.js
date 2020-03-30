@@ -4,6 +4,8 @@ import { gridModel } from "../../../models/grid.model"
 export default {
     computed: {
         svgStyle() {
+            if (!gridModel.model) return {}
+
             const gc = globalConfig
             const gm = gridModel.model
 
@@ -22,6 +24,8 @@ export default {
             }
         },
         svgViewBox() {
+            if (!gridModel.model) return '0 0 0 0'
+
             const gc = globalConfig
             const gm = gridModel.model
 
@@ -31,6 +35,8 @@ export default {
             return `0 0 ${width} ${height}`
         },
         gridLayoutStyle() {
+            if (!gridModel.model) return {}
+
             const gc = globalConfig
             const gm = gridModel.model
 

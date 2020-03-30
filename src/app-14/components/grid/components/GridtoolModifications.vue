@@ -1,6 +1,6 @@
 
 <template>
-  <div class="gridtool-modifications" v-show="visible">
+  <div class="gridtool-modifications">
     <i 
       @click="onDelete"
       class="fas fa-trash delete-icon"
@@ -19,7 +19,6 @@ import { globalConfig } from '../../../config/global.config';
 import { gridcellOperationsService } from '../services/gridcellOperations.service';
 import { dragElementsEnum } from '../../../services/dragElements.service';
 export default {
-  props: ['visible'],
   methods: {
     onDelete(event) {
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')

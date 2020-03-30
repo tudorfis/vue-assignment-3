@@ -1,6 +1,7 @@
 <template>
   <div class="send-sms" draggable="true" @dragstart="onDrag">
-    <i class="fas fa-sms" :style="iStyle"></i>
+    <i class="fas fa-sms"></i>
+    <div class="clear"></div>
     <label v-show="!isInsideCell">Send SMS</label>
   </div>
 </template>
@@ -12,12 +13,6 @@ export default {
     methods: {
         onDrag(event) {
           toolboxService.startDrag(event, 'sendsms')
-        }
-    },
-    computed: {
-        iStyle() {
-            const extraStyle = { 'margin-left': '5px' }
-            return toolboxService.setIconStyle(this.isInsideCell, extraStyle)
         }
     }
 };
@@ -31,7 +26,6 @@ export default {
       box-shadow: 0px 0px 8px lime;
   }
   i {
-    font-size: 40px;
     color: #3792bc;
   }
   label {

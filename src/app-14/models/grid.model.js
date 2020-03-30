@@ -2,12 +2,15 @@
 import { globalConfig } from "../config/global.config"
 import { gridModelOperations } from './gridModel.operations'
 import { gridMouseOperations } from './gridMouse.operations'
+import { Utils } from '../utils/utils'
 
 const cellSplitSymbol = globalConfig.cellSplitSymbol
 
 const newGridBlueprint = {
     numRows: 0,
     numCols: 0,
+    totalSteps: 0,
+    steps: {},
     cells: {}
 }
 
@@ -18,24 +21,53 @@ export const cellBlueprint = {
 
 export const gridModel = {
     model: null,
-    newGridModel() {
+    newGridModel(numRows, numCols) {
         this.model = {...newGridBlueprint}
 
-        this.model.numRows = globalConfig.gridRows
-        this.model.numCols = globalConfig.gridColumns
+        this.model.numRows = numRows || globalConfig.gridRows
+        this.model.numCols = numCols || globalConfig.gridColumns
 
         this.model.cells = this.buildGridCells('new')
     },
     buildGridCells(type = '') {
+      if (!this.model) return {}
+
       const output = {}
       for (let row = 1; row <= this.model.numRows; row++) 
         for (let col = 1; col <= this.model.numCols; col++) {
 
           const position = this.getPosition(row, col)
-          output[position] = (type === 'new') ? {...cellBlueprint} : this.model.cells[position]
+          output[position] = type === 'new' ? {...cellBlueprint} : this.model.cells[position]
         }
 
       return output
+    },
+    saveGridModel() {
+        const output = {
+            numCols: this.model.numCols,
+            numRows: this.model.numRows,
+            totalSteps: this.model.totalSteps,
+            steps: Utils.objfilter(this.model.cells, cell => cell.hasElement),
+        }
+        
+        return JSON.stringify(output)
+    },
+    loadGridModel(model, modelJSON) {
+        model = model || {}
+        
+        if (modelJSON)
+            model = JSON.parse(modelJSON)
+        
+        this.newGridModel(model.numRows, model.numCols)
+
+        for (const position in model.steps) {
+            const step = model.steps[position]
+            
+            this.setCell(position, {
+                hasElement: true,
+                gridElementType: step.gridElementType
+            })
+        }
     },
     getRow(position) {
         return parseInt(position.split(cellSplitSymbol)[0])
@@ -55,6 +87,7 @@ export const gridModel = {
     setCell(position, properties) {
         this.model.cells[position].hasElement = properties.hasElement
         this.model.cells[position].gridElementType = properties.gridElementType
+        this.model.totalSteps++
     },
     isElementsColEnd(position) {
         const row = this.getRow(position)
@@ -83,12 +116,6 @@ export const gridModel = {
     },
     nearRowEnd(position) {
         return this.getRow(position) > (this.model.numRows - globalConfig.rowsFromTheEnd)
-    },
-    saveGridModel() {
-        return JSON.stringify(this.model)
-    },
-    loadGridModel(modelJSON) {
-        this.model = JSON.parse(modelJSON)
     },
     removeColumnEnd() {
         gridModelOperations.removeColumnEnd.call(this)

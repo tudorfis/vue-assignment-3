@@ -8,7 +8,6 @@ export default {
     data() {
         return {
             hasElement: this.cell.hasElement,
-            gridElement: this.cell.gridElement,
             gridElementType: this.cell.gridElementType,
             droppointsDisplay: false,
             dropppointInfo: ''

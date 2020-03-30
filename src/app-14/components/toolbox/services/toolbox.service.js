@@ -3,16 +3,12 @@ import { globalConfig } from "../../../config/global.config"
 import { VueUtils } from "../../../utils/vue.utils"
 
 export const toolboxService = {
-    tempElementBorderRadius: null,
-
-    beforeStartDrag(event) {
-        const vueElement = event.srcElement.__vue__
-
-        if (VueUtils.traverseByProp(vueElement, 'isInsideCell'))
-            VueUtils.traverseByQuery(vueElement, '.gridtool-modifications').style.visibility = 'hidden'
-
-        this.tempElementBorderRadius = event.srcElement.style.borderRadius
-        event.srcElement.style.borderRadius = 0
+    tempDragStyles: {
+        borderRadius: null,
+        width: null,
+        height: null,
+        padding: null,
+        iconFontSize: null
     },
     startDrag(event, type = '') {
         if (!type) return
@@ -35,6 +31,31 @@ export const toolboxService = {
 
         this.afterStartDrag(event)
     },
+    beforeStartDrag(event) {
+        const vueElement = event.srcElement.__vue__
+
+        if (VueUtils.traverseByProp(vueElement, 'isInsideCell'))
+            VueUtils.traverseByQuery(vueElement, '.gridtool-modifications').style.visibility = 'hidden'
+
+        else this.setDragStyles(event.srcElement)
+    },
+    setDragStyles(element) {
+        this.tempDragStyles = {
+            borderRadius: element.style.borderRadius,
+            width: element.style.width,
+            height: element.style.height,
+            padding: element.style.padding,
+            iconFontSize: element.querySelector('i').style.fontSize
+        }
+
+        element.style.borderRadius = `0px`
+        element.style.width = `${globalConfig.gridCellElementWidth}px`
+        element.style.height = `${globalConfig.gridCellElementHeight}px`
+        element.style.padding = `${Math.floor(globalConfig.gridCellElementWidth / 3.3)}px`
+
+        element.querySelector('i').style.fontSize = `${Math.floor(globalConfig.gridCellElementWidth / 2.7)}px`
+        element.querySelector('label').style.display = `none`
+    },
     afterStartDrag(event) {
         setTimeout(_ => {
             const vueElement = event.srcElement.__vue__
@@ -42,15 +63,16 @@ export const toolboxService = {
             if (VueUtils.traverseByProp(vueElement, 'isInsideCell'))
                 VueUtils.traverseByQuery(vueElement, '.gridtool-modifications').style.visibility = 'visible'
 
-            event.srcElement.style.borderRadius = this.tempElementBorderRadius
+            else this.resetDragStyles(event.srcElement)
         }, 0)
     },
-    setIconStyle(insideCell, extraStyles = {}) {
-        const fontSize = Math.floor(globalConfig.gridCellElementHeight / 2.5)
+    resetDragStyles(element) {
+        element.style.borderRadius = this.tempDragStyles.borderRadius
+        element.style.width = this.tempDragStyles.width
+        element.style.height = this.tempDragStyles.height
+        element.style.padding = this.tempDragStyles.padding
         
-        return !insideCell ? {} : {
-            ...extraStyles,
-            'font-size': `${fontSize}px !important`
-        }
+        element.querySelector('i').style.fontSize = this.tempDragStyles.iconFontSize
+        element.querySelector('label').style.display = `block`
     }
 }

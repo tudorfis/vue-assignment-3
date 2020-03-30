@@ -1,31 +1,28 @@
 <template>
   <div
     class="gridcell-element"
-    :style="gridcellElementStyle"
+    :class="gridcellElementClass"
     @mouseenter="showModifications = true"
     @mouseleave="showModifications = false"
   >
     <krt-gridtool-modifications
-      :visible="showModifications"
+      v-if="showModifications"
     ></krt-gridtool-modifications>
     <krt-send-email
       ref="sendemail"
       class="gridtool"
-      :style="gridToolStyle"
       :isInsideCell="true"
       v-if="type === dragElementsEnum.SEND_EMAIL"
     ></krt-send-email>
     <krt-send-sms
       ref="sendsms"
       class="gridtool"
-      :style="gridToolStyle"
       :isInsideCell="true"
       v-else-if="type === dragElementsEnum.SEND_SMS"
     ></krt-send-sms>
     <krt-add-remove-tag
       ref="addremovetag"
       class="gridtool"
-      :style="gridToolStyle"
       :isInsideCell="true"
       v-else-if="type === dragElementsEnum.ADD_REMOVE_TAG"
     ></krt-add-remove-tag>
@@ -55,42 +52,84 @@ export default {
     };
   },
   computed: {
-    gridcellElementStyle() {
-      const top = (globalConfig.gridCellHeight - globalConfig.gridCellElementHeight) / 2;
-      const left = (globalConfig.gridCellWidth - globalConfig.gridCellElementWidth) / 2;
-
+    gridcellElementClass() {
       return {
-        top: `${top}px`,
-        left: `${left}px`,
-        width: `${globalConfig.gridCellElementWidth}px`,
-        height: `${globalConfig.gridCellElementHeight}px`
-      };
-    },
-    gridToolStyle() {
-      const padding = Math.floor(globalConfig.gridCellElementHeight / 3.5);
-      const borderRadius = Math.floor(padding / 2.5);
-
-      return {
-        padding: `${padding}px`,
-        'border-radius': `${borderRadius}px`
-      };
+        [`zoom-${globalConfig.zoomLevel}`]: true
+      }
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .gridcell-element {
   position: absolute;
   &:hover {
     cursor: move;
   }
-  
+
   .gridtool {
     width: 100%;
     height: 100%;
     text-align: center;
     border: 0;
   }
+  
+  &.zoom-50 {
+    width: 70px;
+    height: 70px;
+    top: 25px;
+    left: 25px;
+    .gridtool {
+      padding: 20px;
+      border-radius: 7.5px;
+      i { font-size: 26px; }
+    }
+  }
+  &.zoom-75 {
+    width: 105px;
+    height: 105px;
+    top: 37.5px;
+    left: 37.5px;
+    .gridtool {
+      padding: 30px;
+      border-radius: 11.25px;
+      i { font-size: 42px; }
+    }
+  }
+  &.zoom-100 {
+    width: 140px;
+    height: 140px;
+    top: 50px;
+    left: 50px;
+    .gridtool {
+      padding: 40px;
+      border-radius: 15px;
+      i { font-size: 56px; }
+    }
+  }
+  &.zoom-125 {
+    width: 175px;
+    height: 175px;
+    top: 62.5px;
+    left: 62.5px;
+    .gridtool {
+      padding: 50px;
+      border-radius: 18.75px;
+      i { font-size: 70px; }
+    }
+  }
+  &.zoom-150 {
+    width: 210px;
+    height: 210px;
+    top: 75px;
+    left: 75px;
+    .gridtool {
+      padding: 60px;
+      border-radius: 22.5px;
+      i { font-size: 84px; }
+    }
+  }
+  
 }
 </style>

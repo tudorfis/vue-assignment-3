@@ -39,7 +39,16 @@ export default {
     }
   },
   beforeCreate() {
-    gridModel.newGridModel()
+    /** @TODO - match an id of a sequence to get the output  */
+    // gridModel.newGridModel()
+    // gridModel.loadGridModel(`{"numCols":40,"numRows":40,"totalSteps":3,"steps":{"1-2":{"hasElement":true,"gridElementType":"SEND_SMS"},"2-1":{"hasElement":true,"gridElementType":"ADD_REMOVE_TAG"},"2-3":{"hasElement":true,"gridElementType":"SEND_EMAIL"}}}`)
+    
+    fetch('http://localhost:8080/src/app-14/data/model.json')
+      .then(data => data.json())
+      .then(model => {
+        gridModel.loadGridModel(model)
+        document.querySelector('.loading-icon').style.visibility = 'hidden'
+      })
   }
 };
 </script>
@@ -62,7 +71,6 @@ export default {
     grid-area: gridcontent;
   }
 }
-
 .modal-backdrop {
   z-index: 1;
 }

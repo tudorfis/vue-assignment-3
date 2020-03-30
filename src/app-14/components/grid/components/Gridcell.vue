@@ -2,11 +2,12 @@
   <div
     ref="gridcell"
     class="gridcell"
+    :class="gridCellClass"
     @drop.prevent="onDrop"
     @dragover.prevent="onDragover"
-    :style="gridCellStyle"
   >
     <krt-gridcell-droppoints
+      v-if="showDroppoints"
       :display="droppointsDisplay"
     ></krt-gridcell-droppoints>
     <small class="position-info">{{ position }}</small>
@@ -31,30 +32,52 @@ export default {
     krtGridcellElement: GridcellElementVue,
     krtGridcellDroppoints: GridcellDropPointsVue
   },
-  props: ['width', 'height'],
   computed: {
-    gridCellStyle() {
-      const borderSize = globalConfig.gridCellBorderSize;
-      const borderColor = globalConfig.gridCellBorderColor;
-      const borderStyle = globalConfig.gridCellBorderStyle;
+    showDroppoints() {
+      const droppointsKeys = Object.keys(this.droppointsDisplay)
+      for (const key of droppointsKeys) {
+        if (this.droppointsDisplay[key])
+          return true
+      }
 
+      return false
+    },
+    gridCellClass() {
       return {
-        width: `${this.width}px`,
-        height: `${this.height}px`,
-        border: `${borderSize}px ${borderStyle} ${borderColor}`
-      };
+        [`zoom-${globalConfig.zoomLevel}`]: true
+      }
     }
-  },
-  
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .gridcell {
   position: relative;
-
   color: #eee;
   z-index: 0;
+  border: 1px dashed #e0e0e0;
+
+  &.zoom-50 {
+    width: 120px;
+    height: 120px;
+  }
+  &.zoom-75 {
+    width: 180px;
+    height: 180px;
+  }
+  &.zoom-100 {
+    width: 240px;
+    height: 240px;
+  }
+  &.zoom-125 {
+    width: 300px;
+    height: 300px;
+  }
+  &.zoom-150 {
+    width: 360px;
+    height: 360px;
+  }
 
   .position-info {
     font-size: 20px;

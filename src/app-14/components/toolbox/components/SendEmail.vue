@@ -1,6 +1,7 @@
 <template>
   <div class="send-email" draggable="true" @dragstart="onDrag">
-    <i class="fas fa-envelope-open-text" :style="iStyle"></i>
+    <i class="fas fa-envelope-open-text"></i>
+    <div class="clear"></div>
     <label v-show="!isInsideCell">Send Email</label>
   </div>
 </template>
@@ -12,11 +13,6 @@ export default {
     methods: {
         onDrag(event) {
           toolboxService.startDrag(event, 'sendemail')
-        }
-    },
-    computed: {
-        iStyle() {
-            return toolboxService.setIconStyle(this.isInsideCell)
         }
     }
 };
@@ -30,7 +26,6 @@ export default {
     box-shadow: 0px 0px 12px lightcyan;
   }
   i {
-    font-size: 40px;
     color: #3792bc;
   }
   label {

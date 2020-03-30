@@ -1,5 +1,23 @@
 
 export const globalConfig = {
+    gridColumns: 40,
+    gridRows: 40,
+
+    zoomLevel: 100,
+    zoomDiff: 25,
+    zoomMax: 150,
+    zoomMin: 50,
+
+    gridCellWidth: 240,
+    gridCellHeight: 240,
+
+    gridCellElementWidth: 140,
+    gridCellElementHeight: 140,
+
+    droppointDimension: 40,
+    arrowWidth: 8,
+    arrowColor: '#ccc',
+    
     toolboxWidth: 200,
     topmenuHeight: 60,
 
@@ -9,27 +27,8 @@ export const globalConfig = {
     svgBorderSize: 2,
     svgBorderColor: '#000',
 
-    gridCellWidth: 240,
-    gridCellHeight: 240,
-
-    gridCellElementWidth: 140,
-    gridCellElementHeight: 140,
-    
-    gridCellBorderSize: 1,
-    gridCellBorderColor: '#e0e0e0',
-    gridCellBorderStyle: 'dashed',
-
-    gridColumns: 4,
-    gridRows: 4,
-
-    arrowWidth: 8,
-    arrowColor: '#ccc',
-
     rowsFromTheEnd: 2,
     colsFromTheEnd: 2,
-
-    droppointDimension: 40,
     
     cellSplitSymbol: '-'
-
 }

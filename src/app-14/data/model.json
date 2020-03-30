@@ -1,0 +1,19 @@
+{
+    "numCols":40,
+    "numRows":40,
+    "totalSteps":3,
+    "steps":{
+       "1-2":{
+          "hasElement":true,
+          "gridElementType":"SEND_SMS"
+       },
+       "2-1":{
+          "hasElement":true,
+          "gridElementType":"ADD_REMOVE_TAG"
+       },
+       "2-3":{
+          "hasElement":true,
+          "gridElementType":"SEND_EMAIL"
+       }
+    }
+ }

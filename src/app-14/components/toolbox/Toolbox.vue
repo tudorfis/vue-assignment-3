@@ -52,20 +52,22 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .toolbox {
     height: 100%;
     position: fixed;
     z-index: 2;
-
     background: #3792bc;
     color: white;
     box-shadow: 2px 0px 5px #1e7baf;
     
     .tool {
-      width: 120px !important;
-      height: 120px !important;
-      
+      &:hover {
+        cursor: move;
+      }
+
+      width: 120px;
+      height: 120px;
       margin: 20px auto;
       padding: 30px 15px;
       border: 0;
@@ -74,8 +76,8 @@ export default {
       text-align: center;
       font-weight: bold;
 
-      &:hover {
-        cursor: move;
+      i {
+        font-size: 40px;
       }
     }
   }

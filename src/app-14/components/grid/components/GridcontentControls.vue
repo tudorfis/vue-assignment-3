@@ -20,6 +20,11 @@
     
     <input v-model="spliceRowPosition" />
     <button class="btn btn-warning" @click="spliceRows">rows</button>
+
+    <button class="btn btn-info" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()">z in</button>
+    <button class="btn btn-info" @click="zoomService.zoomOut()" :disabled="zoomService.disableZoomOut()">z out</button>
+
+    {{ globalConfig.zoomLevel }}
   </div>
 </template>
 
@@ -27,13 +32,15 @@
 window.tempModel = null
 
 import { globalConfig } from '../../../config/global.config'
+import { zoomService } from '../../../services/zoom.service'
 import { gridModel } from '../../../models/grid.model';
 export default {
     data() {
         return {
+            zoomService,
             globalConfig,
             spliceColPosition: 'B1',
-            spliceRowPosition: 'A2'
+            spliceRowPosition: 'A2',
         }
     },
     methods: {
@@ -53,7 +60,7 @@ export default {
           tempModel = gridModel.saveGridModel()
         },
         loadModel() {
-          gridModel.loadGridModel(tempModel)
+          gridModel.loadGridModel(null, tempModel)
           this.$forceUpdate()
         },
         spliceCols() {
