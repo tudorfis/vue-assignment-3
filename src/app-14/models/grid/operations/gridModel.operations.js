@@ -1,8 +1,8 @@
 
 import Vue from 'vue'
-import { cellBlueprint } from './grid.model'
-import { zoomService } from '../services/zoom.service'
-import { globalConfig } from '../config/global.config'
+import { cellBlueprint } from '../grid.model'
+import { zoomService } from '../../../services/zoom.service'
+import { globalConfig } from '../../../config/global.config'
 
 export const gridModelOperations = {
     removeColumnAtEnd() {
@@ -81,17 +81,13 @@ export const gridModelOperations = {
 
         for (let row = 1; row <= model.numRows - globalConfig.rowsFromTheEnd; row++)
             for (let col = 1; col <= model.numCols - globalConfig.colsFromTheEnd; col++)
-                if (model.steps[gridModel.getPosition(row, col)] && col > numCols) {
+                if (model.steps[gridModel.getPosition(row, col)] && col > numCols)
                     numCols = col
-                    console.log(`numCols=${numCols}`)
-                }
 
         for (let col = model.numCols - globalConfig.colsFromTheEnd; col >= 1; col--)
             for (let row = model.numRows - globalConfig.rowsFromTheEnd; row >= 1; row--)
-                if (model.steps[gridModel.getPosition(row, col)] && row > numRows) {
+                if (model.steps[gridModel.getPosition(row, col)] && row > numRows)
                     numRows = row
-                    console.log(`numRows=${numRows}`)
-                }
 
         numRows += globalConfig.rowsFromTheEnd
         numCols += globalConfig.colsFromTheEnd

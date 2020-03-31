@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { gridModel } from './models/grid.model';
+import { gridModel } from './models/grid/grid.model';
 window.gridModel = gridModel
 
 import { globalConfig } from './config/global.config';
@@ -42,16 +42,15 @@ export default {
   beforeCreate() {
     /** @TODO - match an id of a sequence to get the output  */
     // gridModel.newGridModel()
-    // zoomService.calculateSvgViewBox()
-    
-    fetch('http://localhost:8080/src/app-14/data/model.json')
+    // return
+  
+    let isLight = 1
+    const matchRef = window.location.search.match(/light\=(\d{1})/)
+    if (matchRef && matchRef[1]) isLight = parseInt(matchRef[1])
+
+    fetch(`http://localhost:8080/src/app-14/data/model-${isLight === 1?'light':'heavy'}.json`)
       .then(data => data.json())
-      .then(model => {
-        
-        gridModel.loadGridModel(model)
-        zoomService.calculateSvgViewBox()
-        document.querySelector('.loading-icon').style.visibility = 'hidden'
-      })
+      .then(model => { gridModel.loadGridModel(model) })
   }
 };
 </script>

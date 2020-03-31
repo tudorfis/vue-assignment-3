@@ -1,5 +1,5 @@
 import { globalConfig } from "../config/global.config"
-import { gridModel } from "../models/grid.model"
+import { gridModel } from "../models/grid/grid.model"
 
 /**
     <button class="btn btn-info" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()">z in</button>
@@ -44,8 +44,8 @@ export const zoomService = {
         const gc = globalConfig
         const gm = gridModel.model
 
-        const width = 240 * gm.numCols - gm.numCols
-        const height = 240 * gm.numRows - gm.numRows
+        const width = (240 * gm.numCols) + (gc.arrowWidth * 2)
+        const height = (240 * gm.numRows) + (gc.arrowWidth * 2)
             
         const viewBox = `0 0 ${width} ${height}`
         this.svgViewBox = viewBox

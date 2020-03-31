@@ -26,7 +26,7 @@ export default {
     },
     onEdit(event) {
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')
-      const elementType = gridCellElement.__vue__.$options.propsData['cell'].gridElementType
+      const elementType = gridCellElement.__vue__.$options.propsData['cell'].type
 
       switch (elementType) {
         case dragElementsEnum.SEND_EMAIL:

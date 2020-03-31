@@ -1,5 +1,5 @@
 import { globalConfig } from "../../../config/global.config"
-import { gridModel } from "../../../models/grid.model"
+import { gridModel } from "../../../models/grid/grid.model"
 
 export default {
     computed: {

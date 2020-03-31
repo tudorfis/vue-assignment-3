@@ -13,8 +13,8 @@
     <small class="position-info">{{ position }}</small>
     <krt-gridcell-element
       ref="gridcellelement"
-      v-show="cell.hasElement"
-      :type="cell.gridElementType"
+      v-show="cell.is"
+      :type="cell.type"
     ></krt-gridcell-element>
   </div>
 </template>

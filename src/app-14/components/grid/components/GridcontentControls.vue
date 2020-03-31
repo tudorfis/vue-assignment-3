@@ -20,7 +20,7 @@ window.tempModel = null
 
 import { globalConfig } from '../../../config/global.config'
 import { zoomService } from '../../../services/zoom.service'
-import { gridModel } from '../../../models/grid.model';
+import { gridModel } from '../../../models/grid/grid.model';
 export default {
     data() {
         return {

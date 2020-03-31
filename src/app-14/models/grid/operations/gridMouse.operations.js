@@ -1,6 +1,6 @@
-import { globalConfig } from "../config/global.config"
-import { VueUtils } from "../utils/vue.utils"
-import { dragElementsService } from "../services/dragElements.service"
+import { globalConfig } from "../../../config/global.config"
+import { VueUtils } from "../../../utils/vue.utils"
+import { dragElementsService } from "../../../services/dragElements.service"
 
 export const gridMouseOperations = {
     isSameGridCells(prev, next) {
@@ -27,8 +27,8 @@ export const gridMouseOperations = {
         const abovePosition = this.getPositionDiff(position, -1, 0)
         const isSameGridCells = gridMouseOperations.isSameGridCells.call(this, position, abovePosition)
 
-        const hasElementAbove = this.model.cells[abovePosition].hasElement
-        const hasElement = this.model.cells[position].hasElement
+        const hasElementAbove = this.model.cells[abovePosition].is
+        const hasElement = this.model.cells[position].is
 
         return !isSameGridCells && hasElement && hasElementAbove
     },
@@ -53,8 +53,8 @@ export const gridMouseOperations = {
         const bellowPosition = this.getPositionDiff(position, 1, 0)
         const isSameGridCells = gridMouseOperations.isSameGridCells.call(this, bellowPosition, position)
 
-        const hasElementBellow = this.model.cells[bellowPosition].hasElement
-        const hasElement = this.model.cells[position].hasElement
+        const hasElementBellow = this.model.cells[bellowPosition].is
+        const hasElement = this.model.cells[position].is
 
         return !isSameGridCells && hasElement && hasElementBellow
     },
@@ -73,8 +73,8 @@ export const gridMouseOperations = {
         const nextPosition = this.getPositionDiff(position, 0, 1)
         const isSameGridCells = gridMouseOperations.isSameGridCells.call(this, position, nextPosition)
 
-        const hasElementNext = this.model.cells[nextPosition].hasElement
-        const hasElement = this.model.cells[position].hasElement
+        const hasElementNext = this.model.cells[nextPosition].is
+        const hasElement = this.model.cells[position].is
 
         return !isSameGridCells && hasElement && hasElementNext
     },
@@ -96,8 +96,8 @@ export const gridMouseOperations = {
         const prevPosition = this.getPositionDiff(position, 0, -1)
         const isSameGridCells = gridMouseOperations.isSameGridCells.call(this, prevPosition, position)
 
-        const hasElementPrev = this.model.cells[prevPosition].hasElement
-        const hasElement = this.model.cells[position].hasElement
+        const hasElementPrev = this.model.cells[prevPosition].is
+        const hasElement = this.model.cells[position].is
 
         return !isSameGridCells && hasElement && hasElementPrev
     },

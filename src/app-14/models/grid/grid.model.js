@@ -1,8 +1,10 @@
 
-import { globalConfig } from "../config/global.config"
-import { gridModelOperations } from './gridModel.operations'
-import { gridMouseOperations } from './gridMouse.operations'
-import { Utils } from '../utils/utils'
+import { Utils } from "../../utils/utils"
+import { globalConfig } from "../../config/global.config"
+import { gridModelOperations } from './operations/gridModel.operations'
+import { gridMouseOperations } from './operations/gridMouse.operations'
+import { gridLinksOperations } from './operations/gridLinks.operations'
+import { zoomService } from "../../services/zoom.service"
 
 const cellSplitSymbol = globalConfig.cellSplitSymbol
 
@@ -15,19 +17,26 @@ const newGridBlueprint = {
 }
 
 export const cellBlueprint = {
-    hasElement: false,
-    gridElementType: ''
+    is: 0,
+    type: ''
 }
 
 export const gridModel = {
+    arrows: [],
     model: null,
     newGridModel(numRows, numCols) {
+        const currentTime = new Date().getTime()
+
         this.model = {...newGridBlueprint}
 
         this.model.numRows = numRows || globalConfig.gridRows
         this.model.numCols = numCols || globalConfig.gridColumns
 
         this.model.cells = this.buildGridCells('new')
+
+        this.afterGridLoaded()
+
+        console.log(`gridModel.newGridModel() execution time: ${(new Date().getTime() - currentTime) / 1000} seconds`)
     },
     buildGridCells(type = '') {
       if (!this.model) return {}
@@ -43,17 +52,15 @@ export const gridModel = {
       return output
     },
     saveGridModel() {
-        const currentTime = new Date().getTime()
+        const steps = Utils.objfilter(this.model.cells, cell => cell.is)
 
         const output = {
             numCols: this.model.numCols,
             numRows: this.model.numRows,
             totalSteps: this.model.totalSteps,
-            steps: this.model.cells
-            // steps: Utils.objfilter(this.model.cells, cell => cell.hasElement),
+            steps: steps
         }
         
-        console.log(`gridModel.saveGridModel() execution time: ${(new Date().getTime() - currentTime) / 1000} seconds`)
         return JSON.stringify(output)
     },
     loadGridModel(model, modelJSON) {
@@ -71,12 +78,18 @@ export const gridModel = {
             const step = model.steps[position]
             
             this.setCell(position, {
-                hasElement: true,
-                gridElementType: step.gridElementType
+                is: 1,
+                type: step.type
             })
         }
 
+        this.afterGridLoaded()
         console.log(`gridModel.loadGridModel() execution time: ${(new Date().getTime() - currentTime) / 1000} seconds`)
+    },
+    afterGridLoaded() {
+        zoomService.calculateSvgViewBox()
+        document.querySelector('.loading-icon').style.visibility = 'hidden'
+        this.generateLinks()
     },
     getRow(position) {
         return parseInt(position.split(cellSplitSymbol)[0])
@@ -96,8 +109,8 @@ export const gridModel = {
     setCell(position, properties) {
         this.model.cells[position] = this.model.cells[position] || { ...cellBlueprint }
 
-        this.model.cells[position].hasElement = properties.hasElement
-        this.model.cells[position].gridElementType = properties.gridElementType
+        this.model.cells[position].is = properties.is
+        this.model.cells[position].type = properties.type
         
         this.model.totalSteps++
     },
@@ -106,7 +119,7 @@ export const gridModel = {
         const colNearEnd = this.model.numCols - globalConfig.colsFromTheEnd
         
         for (let i = this.model.numCols; i >= colNearEnd; i--) {
-            if (this.model.cells[this.getPosition(row, i)].hasElement)
+            if (this.model.cells[this.getPosition(row, i)].is)
                 return true
         }
         
@@ -117,7 +130,7 @@ export const gridModel = {
         const rowNearEnd = this.model.numRows - globalConfig.rowsFromTheEnd
 
         for (let i = this.model.numRows; i >= rowNearEnd; i--) {
-            if (this.model.cells[this.getPosition(i, col)].hasElement)
+            if (this.model.cells[this.getPosition(i, col)].is)
                 return true
         }
         
@@ -170,5 +183,8 @@ export const gridModel = {
     },
     isMouseOnRightOutside(event, gridCell) {
         return gridMouseOperations.isMouseOnRightOutside(event, gridCell) 
+    },
+    generateLinks() {
+        return gridLinksOperations.generateLinks.call(this) 
     }
 }

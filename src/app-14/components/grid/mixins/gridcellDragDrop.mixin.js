@@ -1,21 +1,21 @@
 import { gridcellOperationsService } from '../services/gridcellOperations.service'
 import { dragElementsService } from '../../../services/dragElements.service'
-import { gridModel } from '../../../models/grid.model';
+import { gridModel } from '../../../models/grid/grid.model';
 import { VueUtils } from '../../../utils/vue.utils'
 
 export default {
     props: ['position', 'cell'],
     data() {
         return {
-            hasElement: this.cell.hasElement,
-            gridElementType: this.cell.gridElementType,
+            is: this.cell.is,
+            type: this.cell.type,
             droppointsDisplay: false,
             dropppointInfo: ''
         }
     },
     computed: {
         allowDrop() {
-            return !this.cell.hasElement;
+            return !this.cell.is;
         }
     },
     methods: {
@@ -84,8 +84,8 @@ export default {
         setCellActive(position) {
             position = position || this.position
             gridModel.setCell(position, { 
-                hasElement: true,
-                gridElementType: dragElementsService.activeDragElementType
+                is: 1,
+                type: dragElementsService.activeDragElementType
             })
         },
         moveCellsByDroppoint() {

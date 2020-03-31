@@ -1,4 +1,4 @@
-import { gridModel } from "../../../models/grid.model"
+import { gridModel } from "../../../models/grid/grid.model"
 
 export const droppointsDisplayBlueprint = {
     showTop: false,
@@ -41,7 +41,7 @@ export const gridcellOperationsService = {
     },
     resetCell(gridCellElement) {
         gridModel.model.totalSteps--
-        gridCellElement.__vue__.$options.propsData['cell'].hasElement = false
+        gridCellElement.__vue__.$options.propsData['cell'].is = false
     },
     setDroppoints(event, gridCell, position) {
         const isCellBellow = gridModel.hasElementBellow(position)
