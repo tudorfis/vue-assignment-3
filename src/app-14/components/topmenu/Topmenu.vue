@@ -32,7 +32,7 @@ export default {
 .topmenu {
   position: fixed;
   width: 100%;
-  z-index: 2;
+  z-index: 3;
 
   background: #444;
   color: white;

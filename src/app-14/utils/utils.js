@@ -11,4 +11,13 @@ export class Utils {
     
         return result;
     }
+    static reduceobj(obj) {
+      const output = []
+
+      for (let i = 0; i < obj.length; i++)
+        for (let j = 0; j < obj[i].length; j++)
+          output.push(obj[i][j])
+
+      return output
+    }
 }

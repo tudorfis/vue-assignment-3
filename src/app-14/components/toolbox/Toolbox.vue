@@ -56,7 +56,7 @@ export default {
   .toolbox {
     height: 100%;
     position: fixed;
-    z-index: 2;
+    z-index: 3;
     background: #3792bc;
     color: white;
     box-shadow: 2px 0px 5px #1e7baf;

@@ -1,6 +1,6 @@
 {
-    "numCols":15,
-    "numRows":15,
+    "numCols":5,
+    "numRows":5,
     "totalSteps":5,
     "steps":{
        "1-1":{"is":1,"type":"ADD_REMOVE_TAG"},

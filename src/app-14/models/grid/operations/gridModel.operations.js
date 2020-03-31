@@ -79,13 +79,16 @@ export const gridModelOperations = {
         let numRows = 0, 
             numCols = 0
 
-        for (let row = 1; row <= model.numRows - globalConfig.rowsFromTheEnd; row++)
-            for (let col = 1; col <= model.numCols - globalConfig.colsFromTheEnd; col++)
+        const rowLength = model.numRows - globalConfig.rowsFromTheEnd
+        const colLength = model.numCols - globalConfig.colsFromTheEnd
+
+        for (let row = 1; row <= rowLength; row++)
+            for (let col = 1; col <= colLength; col++)
                 if (model.steps[gridModel.getPosition(row, col)] && col > numCols)
                     numCols = col
 
-        for (let col = model.numCols - globalConfig.colsFromTheEnd; col >= 1; col--)
-            for (let row = model.numRows - globalConfig.rowsFromTheEnd; row >= 1; row--)
+        for (let col = 1; col <= colLength; col++)
+            for (let row = 1; row <= rowLength; row++)
                 if (model.steps[gridModel.getPosition(row, col)] && row > numRows)
                     numRows = row
 

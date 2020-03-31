@@ -41,14 +41,14 @@ export default {
   },
   beforeCreate() {
     /** @TODO - match an id of a sequence to get the output  */
-    // gridModel.newGridModel()
+    // gridModel.newGridModel(undefined, undefined, true)
     // return
   
-    let isLight = 1
-    const matchRef = window.location.search.match(/light\=(\d{1})/)
-    if (matchRef && matchRef[1]) isLight = parseInt(matchRef[1])
+    let modelType = null
+    const matchRef = window.location.search.match(/model\=(\w+)/)
+    if (matchRef && matchRef[1]) modelType = matchRef[1]
 
-    fetch(`http://localhost:8080/src/app-14/data/model-${isLight === 1?'light':'heavy'}.json`)
+    fetch(`http://localhost:8080/src/app-14/data/model-${modelType || 'light'}.json`)
       .then(data => data.json())
       .then(model => { gridModel.loadGridModel(model) })
   }

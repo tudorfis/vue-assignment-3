@@ -1,30 +1,18 @@
 <template>
   <div class="gridcontent" @mouseover="resetGridView">
+    <!-- @TODO: remove controls, used only for testing purposes -->
     <krt-gridcontent-controls></krt-gridcontent-controls>
-    <!-- -->
     <svg
       id="svgGrid"
       :style="svgStyle"
       :viewBox="zoomService.svgViewBox" 
     >
-
-        <path v-for="arrow of gridModel.arrows" :fill="globalConfig.arrowColor" :d="arrow" />
-
-        <!-- 
-        <path :fill="globalConfig.arrowColor" d="M100 100 h15 l-15 -20 l-15 20 Z" class="top-arrow"  />
-        <path :fill="globalConfig.arrowColor" d="M100 110 h15 l-15 20 l-15 -20 Z" class="down-arrow"  />
-        <path :fill="globalConfig.arrowColor" d="M40 50 v-20 l-20 15 l20 15 Z" class="left-arrow" />
-        <path :fill="globalConfig.arrowColor" d="M50 50 v-20 l20 15 l-20 15 Z" class="right-arrow" />
-        -->
-
-      <!-- 
-        <path :fill="globalConfig.arrowColor" d="M124 32 h15 l-15 20 l-15 -20 Z"  />
-        <path :stroke="globalConfig.arrowColor" :stroke-width="globalConfig.arrowWidth" d="M124 32 v-26 h119 v345 h30" fill="none"></path>
-        <path :fill="globalConfig.arrowColor" d="M270 335 v30 L290 350 Z"></path>
-        
-        <path :stroke="globalConfig.arrowColor" :stroke-width="globalConfig.arrowWidth" d="M440 350 H750"></path>
-        <path :fill="globalConfig.arrowColor" d="M750 335 v30 l20 -15 Z"></path>
-      -->
+        <path 
+          :d="arrow.d" 
+          v-for="arrow of pathObj"
+          :fill="arrow.a ? globalConfig.arrowColor : 'none'"
+          :stroke="!arrow.a ? globalConfig.arrowColor : ''"
+          :stroke-width="!arrow.a ? globalConfig.arrowWidth : 0" />
     </svg>
     <div 
       class="gridlayout"
@@ -49,6 +37,7 @@ import { gridModel } from '../../models/grid/grid.model'
 import gridcontentMixin from './mixins/gridcontentStyles.mixin'
 import GridcontentControlsVue from './components/GridcontentControls.vue';
 import { zoomService } from '../../services/zoom.service'
+import { Utils } from '../../utils/utils';
 export default {
   mixins: [mousemoveMixin, gridcontentMixin],
   props: ['toolboxWidth', 'topmenuHeight'],
@@ -65,8 +54,10 @@ export default {
   },
   computed: {
     gridObj() {
-      const gridObj = gridModel.buildGridCells('get')
-      return gridObj
+      return gridModel.buildGridCells('get')
+    },
+    pathObj() {
+      return Utils.reduceobj(gridModel.paths)
     }
   }
 };
@@ -77,14 +68,7 @@ export default {
   svg {
     position: absolute;
     z-index: 0;
-    path {
-      z-index: 2;
-    }
   }
-
-  overflow: auto;
-  padding: 30px;
-
   .gridlayout {
     display: grid;
     position: absolute;
@@ -94,7 +78,6 @@ export default {
       .gridcell {
         width: 120px;
         height: 120px;
-
         .gridcell-element {
           width: 70px;
           height: 70px;
@@ -112,7 +95,6 @@ export default {
       .gridcell {
         width: 180px;
         height: 180px;
-
         .gridcell-element {
           width: 105px;
           height: 105px;
@@ -130,7 +112,6 @@ export default {
       .gridcell {
         width: 240px;
         height: 240px;
-
         .gridcell-element {
           width: 140px;
           height: 140px;
@@ -148,7 +129,6 @@ export default {
       .gridcell {
         width: 300px;
         height: 300px;
-
         .gridcell-element {
           width: 175px;
           height: 175px;
@@ -166,7 +146,6 @@ export default {
       .gridcell {
         width: 360px;
         height: 360px;
-
         .gridcell-element {
           width: 210px;
           height: 210px;

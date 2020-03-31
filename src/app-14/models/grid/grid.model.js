@@ -22,9 +22,9 @@ export const cellBlueprint = {
 }
 
 export const gridModel = {
-    arrows: [],
+    paths: [],
     model: null,
-    newGridModel(numRows, numCols) {
+    newGridModel(numRows, numCols, doAfterGrid) {
         const currentTime = new Date().getTime()
 
         this.model = {...newGridBlueprint}
@@ -34,7 +34,8 @@ export const gridModel = {
 
         this.model.cells = this.buildGridCells('new')
 
-        this.afterGridLoaded()
+        if (doAfterGrid)
+            this.afterGridLoaded()
 
         console.log(`gridModel.newGridModel() execution time: ${(new Date().getTime() - currentTime) / 1000} seconds`)
     },
@@ -52,24 +53,17 @@ export const gridModel = {
       return output
     },
     saveGridModel() {
-        const steps = Utils.objfilter(this.model.cells, cell => cell.is)
-
         const output = {
             numCols: this.model.numCols,
             numRows: this.model.numRows,
             totalSteps: this.model.totalSteps,
-            steps: steps
+            steps: Utils.objfilter(this.model.cells, cell => cell.is)
         }
         
         return JSON.stringify(output)
     },
-    loadGridModel(model, modelJSON) {
+    loadGridModel(model) {
         const currentTime = new Date().getTime()
-
-        model = model || {}
-
-        if (modelJSON)
-            model = JSON.parse(modelJSON)
 
         const gridSize = gridModelOperations.reduceGridSize.call(this, model)
         this.newGridModel(gridSize.numRows, gridSize.numCols)

@@ -45,7 +45,7 @@ export default {
           tempModel = gridModel.saveGridModel()
         },
         loadModel() {
-          gridModel.loadGridModel(null, tempModel)
+          gridModel.loadGridModel(JSON.parse(tempModel))
           this.$forceUpdate()
         }
     }
