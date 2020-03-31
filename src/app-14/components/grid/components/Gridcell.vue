@@ -1,5 +1,4 @@
 <template>
-<!-- :class="gridCellClass" -->
   <div
     ref="gridcell"
     class="gridcell"

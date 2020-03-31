@@ -38,6 +38,7 @@ import gridcontentMixin from './mixins/gridcontentStyles.mixin'
 import GridcontentControlsVue from './components/GridcontentControls.vue';
 import { zoomService } from '../../services/zoom.service'
 import { Utils } from '../../utils/utils';
+
 export default {
   mixins: [mousemoveMixin, gridcontentMixin],
   props: ['toolboxWidth', 'topmenuHeight'],

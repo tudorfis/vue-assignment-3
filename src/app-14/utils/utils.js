@@ -13,10 +13,17 @@ export class Utils {
     }
     static reduceobj(obj) {
       const output = []
+      const keys = Object.keys(obj)
 
-      for (let i = 0; i < obj.length; i++)
-        for (let j = 0; j < obj[i].length; j++)
-          output.push(obj[i][j])
+      if (keys && keys.length) {
+          
+          for (const key of keys) {
+            const child = obj[key]
+            for (const subChild of child) {
+                output.push(subChild)
+            }
+          }
+      }
 
       return output
     }

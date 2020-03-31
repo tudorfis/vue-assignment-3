@@ -13,7 +13,8 @@ const newGridBlueprint = {
     numCols: 0,
     totalSteps: 0,
     steps: {},
-    cells: {}
+    cells: {},
+    links: []
 }
 
 export const cellBlueprint = {
@@ -22,11 +23,9 @@ export const cellBlueprint = {
 }
 
 export const gridModel = {
-    paths: [],
+    paths: {},
     model: null,
-    newGridModel(numRows, numCols, doAfterGrid) {
-        const currentTime = new Date().getTime()
-
+    newGridModel(numRows, numCols, doAfterGridLoaded = false) {
         this.model = {...newGridBlueprint}
 
         this.model.numRows = numRows || globalConfig.gridRows
@@ -34,10 +33,8 @@ export const gridModel = {
 
         this.model.cells = this.buildGridCells('new')
 
-        if (doAfterGrid)
+        if (doAfterGridLoaded)
             this.afterGridLoaded()
-
-        console.log(`gridModel.newGridModel() execution time: ${(new Date().getTime() - currentTime) / 1000} seconds`)
     },
     buildGridCells(type = '') {
       if (!this.model) return {}
@@ -57,14 +54,13 @@ export const gridModel = {
             numCols: this.model.numCols,
             numRows: this.model.numRows,
             totalSteps: this.model.totalSteps,
-            steps: Utils.objfilter(this.model.cells, cell => cell.is)
+            steps: Utils.objfilter(this.model.cells, cell => cell.is),
+            links: this.model.links
         }
         
         return JSON.stringify(output)
     },
     loadGridModel(model) {
-        const currentTime = new Date().getTime()
-
         const gridSize = gridModelOperations.reduceGridSize.call(this, model)
         this.newGridModel(gridSize.numRows, gridSize.numCols)
 
@@ -76,14 +72,16 @@ export const gridModel = {
                 type: step.type
             })
         }
-
+        
+        this.model.links = model.links
         this.afterGridLoaded()
-        console.log(`gridModel.loadGridModel() execution time: ${(new Date().getTime() - currentTime) / 1000} seconds`)
     },
     afterGridLoaded() {
         zoomService.calculateSvgViewBox()
         document.querySelector('.loading-icon').style.visibility = 'hidden'
-        this.generateLinks()
+        setTimeout(function(){
+            gridModel.generateLinks()
+        }, 0)
     },
     getRow(position) {
         return parseInt(position.split(cellSplitSymbol)[0])
