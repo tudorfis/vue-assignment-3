@@ -27,15 +27,17 @@ export default {
             if (this.dropppointInfo) {
                 const newPosition = this.moveCellsByDroppoint()
                 
-                this.removePreviousCell()
                 this.setCellActive(newPosition)
+                this.removePreviousCell(newPosition)
             } 
             
             else if (this.allowDrop) {
                 this.setCellActive()
                 this.addRowOrColEnd()
-                this.removePreviousCell() 
+                this.removePreviousCell(this.position) 
             }
+
+            gridModel.generateLinks()
         },
         onDragover(event) {
             if (this.isSameGrid()) return;
@@ -66,12 +68,15 @@ export default {
 
             return false
         },
-        removePreviousCell() {
+        removePreviousCell(newPosition) {
             if (dragElementsService.insideCell) {
                 const dragElement = dragElementsService.previousDragElement;
+
                 const gridCellElement = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell');
-        
                 gridcellOperationsService.resetCell(gridCellElement);
+                
+                const oldPosition = gridCellElement.__vue__.position
+                gridModel.resetLinks(oldPosition, newPosition)
             }
         },
         addRowOrColEnd() {

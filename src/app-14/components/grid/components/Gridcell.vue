@@ -50,7 +50,7 @@ export default {
   position: relative;
   color: #eee;
   z-index: 0;
-  border: 1px dashed #e0e0e0;
+  // border: 1px dashed #e0e0e0;
 
   .position-info {
     position: absolute;

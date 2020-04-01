@@ -1,4 +1,7 @@
 
+import Vue from 'vue'
+window.Vue = Vue
+
 import { Utils } from "../../utils/utils"
 import { globalConfig } from "../../config/global.config"
 import { gridModelOperations } from './operations/gridModel.operations'
@@ -73,15 +76,14 @@ export const gridModel = {
             })
         }
         
+        this.model.steps = model.steps
         this.model.links = model.links
         this.afterGridLoaded()
     },
     afterGridLoaded() {
         zoomService.calculateSvgViewBox()
         document.querySelector('.loading-icon').style.visibility = 'hidden'
-        setTimeout(function(){
-            gridModel.generateLinks()
-        }, 0)
+        gridModel.generateLinks()
     },
     getRow(position) {
         return parseInt(position.split(cellSplitSymbol)[0])
@@ -178,5 +180,8 @@ export const gridModel = {
     },
     generateLinks() {
         return gridLinksOperations.generateLinks.call(this) 
+    },
+    resetLinks(oldPosition, newPosition) {
+        gridLinksOperations.resetLinks.call(this, oldPosition, newPosition) 
     }
 }
