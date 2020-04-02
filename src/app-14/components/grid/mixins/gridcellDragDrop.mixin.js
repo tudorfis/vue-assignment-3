@@ -21,26 +21,25 @@ export default {
     methods: {
         onDrop() {
             gridcellOperationsService.previousCellOperations()
-
             if (this.isSameGrid()) return;
 
-            let newPosition
             if (this.dropppointInfo) {
-                newPosition = this.moveCellsByDroppoint()
-                
+                const newPosition = this.moveCellsByDroppoint()
+
                 this.setCellActive(newPosition)
                 this.removePreviousCell(newPosition)
             } 
             
             else if (this.allowDrop) {
-                newPosition = this.position
-
                 this.setCellActive()
                 this.addRowOrColEnd()
-                this.removePreviousCell(newPosition) 
+
+                const oldPosition = this.removePreviousCell(this.position) 
+                gridModel.regenerateLinkPath(oldPosition, this.position)
             }
 
-            gridModel.regenerateLinkPath(newPosition)
+             /** @TODO: build the functionality to change 
+             * arrows and links if it's between a straight line */
         },
         onDragover(event) {
             if (this.isSameGrid()) return;
@@ -79,7 +78,7 @@ export default {
                 gridcellOperationsService.resetCell(gridCellElement);
                 
                 const oldPosition = gridCellElement.__vue__.position
-                gridModel.resetLinks(oldPosition, newPosition)
+                return oldPosition
             }
         },
         addRowOrColEnd() {

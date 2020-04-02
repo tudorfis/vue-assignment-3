@@ -83,7 +83,7 @@ export const gridModel = {
     afterGridLoaded() {
         zoomService.calculateSvgViewBox()
         document.querySelector('.loading-icon').style.visibility = 'hidden'
-        gridModel.generateLinks()
+        gridModel.buildLinks()
     },
     getRow(position) {
         return parseInt(position.split(cellSplitSymbol)[0])
@@ -178,13 +178,10 @@ export const gridModel = {
     isMouseOnRightOutside(event, gridCell) {
         return gridMouseOperations.isMouseOnRightOutside(event, gridCell) 
     },
-    generateLinks() {
-        return gridLinksOperations.generateLinks.call(this) 
+    buildLinks() {
+        return gridLinksOperations.buildLinks.call(this) 
     },
-    resetLinks(oldPosition, newPosition) {
-        gridLinksOperations.resetLinks.call(this, oldPosition, newPosition) 
-    },
-    regenerateLinkPath(newPosition) {
-        gridLinksOperations.regenerateLinkPath.call(this, newPosition) 
+    regenerateLinkPath(oldPosition, newPosition) {
+        gridLinksOperations.regenerateLinkPath.call(this, oldPosition, newPosition) 
     }
 }

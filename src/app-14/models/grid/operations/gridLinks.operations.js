@@ -117,7 +117,7 @@ class LinkEEHelper {
         this.states = []
         this.stateVersion = -1
 
-        this.prevLink = ''
+        this.prevLink = '' // based on connected elements
         this.nextLink = ''
     }
     saveState() {
@@ -134,26 +134,28 @@ class LinkEEHelper {
         return this.states[this.states.length - 1]
     }
     regenerate() {
-        if (this.eeL[this.prevLink] && this.eeL[this.prevLink][this.nextLink]) {
-            const prev = this.prevLink
-            const next = this.nextLink
+        const vm = this
+        if (vm.eeL[vm.prevLink] && vm.eeL[vm.prevLink][vm.nextLink]) {
+            const prev = vm.prevLink
+            const next = vm.nextLink
 
-            const patch = this.eeL[prev][next]
-            const patchee = this.ee[prev]
-            
-            for (let i = 0; i < this.directions.length; i++) {
-                const direction = this.directions[i]
+            const patchee = vm.ee[next]
+            const patch = vm.eeL[next][prev]
+
+            for (let i = 0; i < vm.directions.length; i++) {
+                const direction = vm.directions[i]
                 
                 if (patch[direction] && patchee[direction]) {
-                    patchee[direction] -= 1
-                    
+                    patchee[direction]--
+
                     if (!patchee[direction])
                         delete patchee[direction]
                 }
             }
 
-            delete this.eeL[prev][next]
-            delete this.eeL[next]
+            delete vm.eeL[next][prev]
+            delete vm.eeL[prev]
+            delete vm.ee[prev]
         }
     }
     setLinkEEL(link, connectedLink, type) {
@@ -359,11 +361,12 @@ export const gridLinksOperations = {
 
         return [ linePath, arrowPath ]
     },
-    generateLinks() {
+    buildLinks() {
         const vm = gridLinksOperations
         
         linkEEhelper.resetEE()
         gridModel.paths = {}
+        vm.regenerateTimes = 0
 
         if (gridModel.model.links && gridModel.model.links.length)
             for (const linkKey of gridModel.model.links)
@@ -371,34 +374,7 @@ export const gridLinksOperations = {
 
         linkEEhelper.saveState()
     },
-    resetLinks(oldPosition, newPosition) {
-        const vm = gridLinksOperations
-        linkEEhelper.nextLink = oldPosition
-
-        for (let i = 0; i < gridModel.model.links.length; i++) {
-            const linkKey = gridModel.model.links[i]
-
-            const link1 = vm.getLink1(linkKey)
-            const link2 = vm.getLink2(linkKey)
-
-            if (link1 === oldPosition) {
-                linkEEhelper.prevLink = link2
-                gridModel.model.links[i] = vm.genLinkKey(newPosition, link2)
-
-                delete gridModel.paths[linkKey]
-                delete linkEEhelper.ee[link1]
-            }
-
-            else if (link2 === oldPosition) {
-                linkEEhelper.prevLink = link1
-                gridModel.model.links[i] = vm.genLinkKey(link1, newPosition)
-                
-                delete gridModel.paths[linkKey]
-                delete linkEEhelper.ee[link2]
-            }
-        }
-    },
-    regenerateLinkPath(newPosition) {
+    regenerateLinkPath(oldPosition, newPosition) {
         const vm = gridLinksOperations
 
         for (let i = 0; i < gridModel.model.links.length; i++) {
@@ -407,13 +383,60 @@ export const gridLinksOperations = {
             const link1 = vm.getLink1(linkKey)
             const link2 = vm.getLink2(linkKey)
 
-            if (link1 === newPosition || link2 === newPosition) {
+            const newLinkKey = vm.getNewLinkKeyForRegeneration(link1, link2, oldPosition, newPosition)
+
+            if (newLinkKey) {
                 const regenerateLinkEE = true
-                vm.genLinkTwoCells(linkKey, regenerateLinkEE)
+                vm.genLinkTwoCells(newLinkKey, regenerateLinkEE)
+    
+                gridModel.model.links[i] = newLinkKey
+                delete gridModel.paths[linkKey]
                 
                 linkEEhelper.saveState()
             }
         }
+    },
+    getNewLinkKeyForRegeneration(link1, link2, oldPosition, newPosition) {
+        const vm = gridLinksOperations
+        let newLinkKey
+        const regenerateTimes = vm.getRegenerateTimes(oldPosition)
+
+        if (link1 === oldPosition) {
+            linkEEhelper.prevLink = link1
+            linkEEhelper.nextLink = link2
+
+            newLinkKey = vm.genLinkKey(newPosition, link2)
+        }
+        else if (link2 === oldPosition) {
+            if (regenerateTimes > 1) {
+                linkEEhelper.prevLink = link1
+                linkEEhelper.nextLink = link2
+            }
+            else {
+                linkEEhelper.prevLink = link2
+                linkEEhelper.nextLink = link1
+            }
+
+            newLinkKey = vm.genLinkKey(link1, newPosition)
+        }
+
+        return newLinkKey
+    },
+    getRegenerateTimes(oldPosition) {
+        const vm = gridLinksOperations
+
+        let count = 0
+        for (let j = 0; j < gridModel.model.links.length; j++) {
+            const linkKey = gridModel.model.links[j]
+
+            const link1 = vm.getLink1(linkKey)
+            const link2 = vm.getLink2(linkKey)
+
+            if (link1 === oldPosition || link2 === oldPosition)
+                count++
+        }
+        
+        return count
     },
     getTop(row, withAdjust = false) {
         return ((row - 1) * gsize) + (globalConfig.arrowWidth / 2) + (withAdjust ? ((row - 1) * gadjust) : 0)
@@ -429,5 +452,13 @@ export const gridLinksOperations = {
     },
     genLinkKey(link1, link2) {
         return `${link1}${linkSeparator}${link2}`
+    },
+    genReverseLinkKey(linkKey) {
+        const vm = gridLinksOperations
+
+        return vm.genLinkKey(
+            vm.getLink1(linkKey),
+            vm.getLink2(linkKey)
+        )
     }
 }

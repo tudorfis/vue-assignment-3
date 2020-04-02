@@ -20,3 +20,6 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 Potential Builds:
 - lazy loading grids on big models
 - make the border lines svg paths instead of divs
+- make documentation for structure, drag and everything
+- put gridLinks operations in different files, polymorphism on left/right/up/down
+- fix the spliceCols/spliceRows problem when dragging a linked element between it's connections
