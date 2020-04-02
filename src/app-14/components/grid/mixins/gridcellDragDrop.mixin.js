@@ -24,20 +24,23 @@ export default {
 
             if (this.isSameGrid()) return;
 
+            let newPosition
             if (this.dropppointInfo) {
-                const newPosition = this.moveCellsByDroppoint()
+                newPosition = this.moveCellsByDroppoint()
                 
                 this.setCellActive(newPosition)
                 this.removePreviousCell(newPosition)
             } 
             
             else if (this.allowDrop) {
+                newPosition = this.position
+
                 this.setCellActive()
                 this.addRowOrColEnd()
-                this.removePreviousCell(this.position) 
+                this.removePreviousCell(newPosition) 
             }
 
-            gridModel.generateLinks()
+            gridModel.regenerateLinkPath(newPosition)
         },
         onDragover(event) {
             if (this.isSameGrid()) return;

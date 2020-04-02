@@ -27,8 +27,8 @@ export const globalConfig = {
     gridContentLeftPadding: 20,
     gridContentTopPadding: 20,
 
-    svgBorderSize: 2,
-    svgBorderColor: '#000',
+    svgBorderSize: 1,
+    svgBorderColor: '#ccc',
 
     rowsFromTheEnd: 2,
     colsFromTheEnd: 2,

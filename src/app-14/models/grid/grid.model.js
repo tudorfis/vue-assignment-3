@@ -183,5 +183,8 @@ export const gridModel = {
     },
     resetLinks(oldPosition, newPosition) {
         gridLinksOperations.resetLinks.call(this, oldPosition, newPosition) 
+    },
+    regenerateLinkPath(newPosition) {
+        gridLinksOperations.regenerateLinkPath.call(this, newPosition) 
     }
 }

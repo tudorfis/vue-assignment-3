@@ -2,6 +2,7 @@
   <div
     ref="gridcell"
     class="gridcell"
+    @dragstart="stopDragEmptyCell"
     @drop.prevent="onDrop"
     @dragover.prevent="onDragover"
   >
@@ -31,6 +32,12 @@ export default {
     krtGridcellElement: GridcellElementVue,
     krtGridcellDroppoints: GridcellDropPointsVue
   },
+  methods: {
+    stopDragEmptyCell(event) {
+      if (!event.target.classList.contains('gridtool'))
+        event.preventDefault()
+    }      
+  },
   computed: {
     showDroppoints() {
       const droppointsKeys = Object.keys(this.droppointsDisplay)
@@ -50,13 +57,14 @@ export default {
   position: relative;
   color: #eee;
   z-index: 0;
-  // border: 1px dashed #e0e0e0;
+  border: 1px dashed #e0e0e0;
 
   .position-info {
     position: absolute;
     top: 0;
     left: 0;
     font-size: 14px;
+    user-select: none;
   }
 
   &.allowed-drop {

@@ -2,6 +2,7 @@
   <div class="gridcontent" @mouseover="resetGridView">
     <!-- @TODO: remove controls, used only for testing purposes -->
     <krt-gridcontent-controls></krt-gridcontent-controls>
+    <!-- @TODO: add top menu controls, such as zoom in, zoom out etc -->
     <svg
       id="svgGrid"
       :style="svgStyle"
@@ -9,7 +10,8 @@
     >
         <path 
           :d="arrow.d" 
-          v-for="arrow of pathObj"
+          :key="arrowIndex"
+          v-for="(arrow, arrowIndex) of pathObj"
           :fill="arrow.a ? globalConfig.arrowColor : 'none'"
           :stroke="!arrow.a ? globalConfig.arrowColor : ''"
           :stroke-width="!arrow.a ? globalConfig.arrowWidth : 0" />

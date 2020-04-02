@@ -77,7 +77,7 @@ export default {
   z-index: 1;
 }
 
-/** @TODO: move/use below classes from existing template */
+/** @TODO: move/use below classes from existing kartra template */
 button.btn-green {
   background: #86c92f;
   border-color: #86c92f;
