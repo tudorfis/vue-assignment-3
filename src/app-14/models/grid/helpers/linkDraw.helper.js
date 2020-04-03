@@ -5,11 +5,10 @@ import linkEEhelper from './linkEE.helper'
 const arrowSizeW = globalConfig.arrowSizeW
 const arrowSizeH = globalConfig.arrowSizeH
 
-const northArrowPath = `h${arrowSizeH} l-${arrowSizeH} ${arrowSizeW} l-${arrowSizeH} -${arrowSizeW} Z`
-const southArrowPath = `h${arrowSizeH} l-${arrowSizeH} -${arrowSizeW} l-${arrowSizeH} ${arrowSizeW} Z`
-const westArrowPath = `v-${arrowSizeW} l${arrowSizeW} ${arrowSizeH} l-${arrowSizeW} ${arrowSizeH} Z`
-const eastArrowPath = `v-${arrowSizeW} l-${arrowSizeW} ${arrowSizeH} l${arrowSizeW} ${arrowSizeH} Z`
-
+const upArrowPath = `h${arrowSizeH} l-${arrowSizeH} ${arrowSizeW} l-${arrowSizeH} -${arrowSizeW} Z`
+const downArrowPath = `h${arrowSizeH} l-${arrowSizeH} -${arrowSizeW} l-${arrowSizeH} ${arrowSizeW} Z`
+const leftArrowPath = `v-${arrowSizeW} l${arrowSizeW} ${arrowSizeH} l-${arrowSizeW} ${arrowSizeH} Z`
+const rightArrowPath = `v-${arrowSizeW} l-${arrowSizeW} ${arrowSizeH} l${arrowSizeW} ${arrowSizeH} Z`
 
 const cell_size = globalConfig.cellSizeCalculation
 const cell_adjust = globalConfig.cellAdjustCalculation
@@ -61,36 +60,30 @@ export class LinkDrawHelper {
     get upDown() {
         return this.up ? 'up' : (this.down ? 'down' : '')
     }
-    get eastWest() {
-        return this.left ? 'east' : (this.right ? 'west' : '')
+    oppositeDirection(dirrection) {
+        if (dirrection === 'up') return 'down'
+        if (dirrection === 'down') return 'up'
+        if (dirrection === 'left') return 'right'
+        if (dirrection === 'right') return 'left'
     }
-    get northSouth() {
-        return this.down ? 'north' : (this.up ? 'south' : '')
-    }
-
-    drawLine(type = '', lineType = '', link1 = null, link2 = null) {
-        if (type === 'north') type = 'down'
-        if (type === 'south') type = 'up'
-        if (type === 'west') type = 'right'
-        if (type === 'east') type = 'left'
-
+    drawLine(direction = '', lineType = '') {
         let d, distance, cell1, cell2
-        if (type === 'up') {
+        if (direction === 'up') {
             d = 'v-'
             cell1 = this.row1
             cell2 = this.row2
         }
-        else if (type === 'down') {
+        else if (direction === 'down') {
             d = 'v';
             cell1 = this.row2
             cell2 = this.row1
         }
-        else if (type === 'right') {
+        else if (direction === 'right') {
             d = 'h';    
             cell1 = this.col2
             cell2 = this.col1
         }
-        else if (type === 'left') {
+        else if (direction === 'left') {
             d = 'h-'
             cell1 = this.col1
             cell2 = this.col2
@@ -102,31 +95,33 @@ export class LinkDrawHelper {
         else if (lineType === 'full') 
             distance = cell_size * (cell1 - cell2 - 1)
         
-        else if (lineType === 'half')
+        else if (lineType === 'half') {
             distance = (this.left ? 117 : 123)
+            distance += linkEEhelper.getDiffEE(direction, this.link2, this.link1, 'half')
+        }
 
         return ` ${d}${distance}`
     }
-    drawPath(type, link1, link2) {
+    drawPath(direction) {
         let left, top, path
-        const diff_ee = linkEEhelper.getDiffEE(type, link1, link2, 'out')
+        const diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'out')
 
-        if (type === 'up') {
+        if (direction === 'up') {
             left = this.get_left_m_path() + 125 + diff_ee
             top =  this.get_top_m_path(true) + 52
             path = `M${left} ${top} v-50`
         }
-        else if (type === 'down') {
+        else if (direction === 'down') {
             left = this.get_left_m_path() + 125 + diff_ee
             top =  this.get_top_m_path(true) + (cell_size - 48)
             path = `M${left} ${top} v50`
         }
-        else if (type === 'left') {
+        else if (direction === 'left') {
             left = this.get_left_m_path(true) + 52
             top =  this.get_top_m_path() + 125 + diff_ee
             path = `M${left} ${top} h-50`
         }
-        else if (type === 'right') {
+        else if (direction === 'right') {
             left = this.get_left_m_path(true) + (cell_size - 48)
             top =  this.get_top_m_path() + 125 + diff_ee
             path = `M${left} ${top} h50`
@@ -134,29 +129,33 @@ export class LinkDrawHelper {
 
         return { a: 0, d: path }
     }
-    drawArrow(type, link1, link2)  {
+    drawArrow(direction)  {
+        direction = this.oppositeDirection(direction)
+        
         let left, top, arrow
-        const diff_ee = linkEEhelper.getDiffEE(type, link1, link2, 'in')
-
-        if (type === 'north') {
+        const diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'in')
+        
+        if (direction === 'up') {
             left = this.get_left_m_arrow() + 125 + diff_ee
             top = this.get_top_m_arrow(true) + 30
-            arrow = `M${left} ${top} ${northArrowPath}`
+            arrow = `M${left} ${top} ${upArrowPath}`
+
+            // console.log(`diff_ee`, diff_ee)
         }
-        else if (type === 'south') {
+        else if (direction === 'down') {
             left = this.get_left_m_arrow() + 125 + diff_ee
             top = this.get_top_m_arrow(true) + (cell_size - 25)
-            arrow = `M${left} ${top} ${southArrowPath}`
+            arrow = `M${left} ${top} ${downArrowPath}`
         }
-        else if (type === 'west') {
+        else if (direction === 'left') {
             left = this.get_left_m_arrow(true) + 28
             top = this.get_top_m_arrow() + 130 + diff_ee
-            arrow = `M${left} ${top} ${westArrowPath}`
+            arrow = `M${left} ${top} ${leftArrowPath}`
         }
-        else if (type === 'east') {
+        else if (direction === 'right') {
             left = this.get_left_m_arrow(true) + (cell_size - 23)
             top = this.get_top_m_arrow() + 130 + diff_ee
-            arrow = `M${left} ${top} ${eastArrowPath}`
+            arrow = `M${left} ${top} ${rightArrowPath}`
         }
 
         return {a: 1, d: arrow}
@@ -165,28 +164,28 @@ export class LinkDrawHelper {
     get_left_m_path(adjust = false) {
         const cell_starting_point       = (this.col1 - 1) * cell_size
         const arrow_difference          = arrow_width / 2
-        const cell_adjustment_for_svg   = adjust ? (this.col1 - 1) * cell_adjust : 0
+        const cell_adjustment_for_svg   = (adjust ? (this.col1 - 1) * cell_adjust : 0)
 
         return cell_starting_point  +  arrow_difference  +  cell_adjustment_for_svg
     }
     get_top_m_path(adjust = false) {
         const cell_starting_point       = (this.row1 - 1) * cell_size
         const arrow_difference          = arrow_width / 2
-        const cell_adjustment_for_svg   = adjust ? (this.row1 - 1) * cell_adjust : 0
+        const cell_adjustment_for_svg   = (adjust ? (this.row1 - 1) * cell_adjust : 0)
 
         return cell_starting_point  +  arrow_difference  +  cell_adjustment_for_svg
     }
     get_left_m_arrow(adjust = false) {
         const cell_starting_point       = (this.col2 - 1) * cell_size
         const arrow_difference          = arrow_width / 2
-        const cell_adjustment_for_svg   = adjust ? (this.col2 - 1) * cell_adjust : 0
+        const cell_adjustment_for_svg   = (adjust ? (this.col2 - 1) * cell_adjust : 0)
 
         return cell_starting_point  +  arrow_difference  +  cell_adjustment_for_svg
     }
     get_top_m_arrow(adjust = false) {
         const cell_starting_point       = (this.row2 - 1) * cell_size
         const arrow_difference          = arrow_width / 2
-        const cell_adjustment_for_svg   = adjust ? (this.row2 - 1) * cell_adjust : 0
+        const cell_adjustment_for_svg   = (adjust ? (this.row2 - 1) * cell_adjust : 0)
 
         return cell_starting_point  +  arrow_difference  +  cell_adjustment_for_svg
     }

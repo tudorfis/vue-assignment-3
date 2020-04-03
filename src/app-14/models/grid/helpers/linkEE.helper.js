@@ -1,6 +1,10 @@
 
 import { Utils } from '../../../utils/utils'
 import { LinkDrawHelper } from './linkDraw.helper'
+import { globalConfig } from '../../../config/global.config'
+
+const gc = globalConfig
+const pointDiff = gc.arrowSizeW + (gc.arrowSizeW - gc.arrowSizeH)
 
 class LinkEEHelper {
     constructor() {
@@ -13,20 +17,6 @@ class LinkEEHelper {
             right: Utils.deepclone(directionEEBlueprint),
             left: Utils.deepclone(directionEEBlueprint)
         }
-    }
-    getDiffEE(type, link1, link2, inOut) {
-        if (type === 'north') type = 'up'
-        if (type === 'south') type = 'down'
-        if (type === 'west') type = 'right'
-        if (type === 'east') type = 'left'
-
-        if (inOut === 'in') {
-
-        } else if (inOut === 'out') {
-
-        }
-
-        return 0
     }
     generateEEmap() {
         this.eeMap = {}
@@ -75,6 +65,40 @@ class LinkEEHelper {
         const link2InObj = this.eeMap[l.link2][link2In]
         link2InObj.total++
         link2InObj.in[l.link1] = link2InObj.total
+    }
+    getDiffEE(direction, link1, link2, inOut) {
+        let pointNr
+        let difference = 0
+
+        if (inOut === 'out') {
+            pointNr = this.eeMap[link1][direction].out[link2] 
+            difference = this.getDifferenceByPoint(pointNr)
+        } 
+        else if (inOut === 'in') {
+            pointNr = this.eeMap[link2][direction].in[link1]
+            difference = this.getDifferenceByPoint(pointNr)
+        }
+        else if (inOut === 'half') {
+
+            for (const direction in this.eeMap[link2]) {
+                const directionObj = this.eeMap[link2][direction]
+
+                if (directionObj.in.hasOwnProperty(link1)) {
+                    pointNr = directionObj.in[link1]
+                    difference = this.getDifferenceByPoint(pointNr)
+                    break;
+                }
+            }
+        }
+
+        return difference
+    }
+    getDifferenceByPoint(pointNr) {
+        if (pointNr === 1) return 0
+        else if (pointNr === 2) return -pointDiff
+        else if (pointNr === 3) return pointDiff
+        else if (pointNr === 4) return -(pointDiff * 2)
+        else if (pointNr === 5) return (pointDiff * 2)
     }
 }
 

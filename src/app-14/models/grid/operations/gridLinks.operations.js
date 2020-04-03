@@ -17,38 +17,34 @@ export const gridLinksOperations = {
         Vue.set(gridModel.paths, linkKey, [])
 
         const l = new LinkDrawHelper(linkKey, gridModel)
-        let path, arrow, t1, t2, t3, t4, t5
+        let path, arrow, direction1, direction2, sameColRow
 
         if (l.right || l.left) {
-            t1 = 'rightLeft'
-            t2 = 'eastWest'
-            t3 = 'upDown'
-            t4 = 'northSouth'
-            t5 = 'sameRow'
+            direction1 = 'rightLeft'
+            direction2 = 'upDown'
+            sameColRow = 'sameRow'
         }
         
         else if (l.up || l.down) {
-            t1 = 'upDown'
-            t2 = 'northSouth'
-            t3 = 'rightLeft'
-            t4 = 'eastWest'
-            t5 = 'sameCol'
+            direction1 = 'upDown'
+            direction2 = 'rightLeft'
+            sameColRow = 'sameCol'
         }
 
-        path = l.drawPath(l[t1], l.link1, l.link2)
-        path.d += l.drawLine(l[t1], 'full')
+        path = l.drawPath(l[direction1])
+        path.d += l.drawLine(l[direction1], 'full')
 
-        if (l[t5]) {
-            path.d += l.drawLine(l[t2], 'arrow')
-            arrow = l.drawArrow(l[t2], l.link1, l.link2)
+        if (l[sameColRow]) {
+            path.d += l.drawLine(l[direction1], 'arrow')
+            arrow = l.drawArrow(l[direction1])
         
         } else {
-            path.d += l.drawLine(l[t1], 'half', l.link1, l.link2)
-            path.d += l.drawLine(l[t3], 'half', l.link1, l.link2)
-            path.d += l.drawLine(l[t3], 'full')
+            path.d += l.drawLine(l[direction1], 'half')
+            path.d += l.drawLine(l[direction2], 'half')
+            path.d += l.drawLine(l[direction2], 'full')
 
-            path.d += l.drawLine(l[t4], 'arrow')
-            arrow = l.drawArrow(l[t4], l.link1, l.link2)
+            path.d += l.drawLine(l[direction2], 'arrow')
+            arrow = l.drawArrow(l[direction2])
         }
 
         gridModel.paths[linkKey].push(...[path, arrow])
