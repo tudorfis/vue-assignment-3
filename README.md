@@ -23,3 +23,4 @@ Potential Builds:
 - make documentation for structure, drag and everything
 - put gridLinks operations in different files, polymorphism on left/right/up/down
 - fix the spliceCols/spliceRows problem when dragging a linked element between it's connections
+- sort the gridModel.model.links so we don't have overlapping lines

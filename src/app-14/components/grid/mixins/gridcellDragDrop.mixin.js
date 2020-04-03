@@ -34,9 +34,16 @@ export default {
                 this.setCellActive()
                 this.addRowOrColEnd()
 
-                const oldPosition = this.removePreviousCell(this.position) 
-                gridModel.regenerateLinkPath(oldPosition, this.position)
+                const oldPosition = this.removePreviousCell(this.position)
+
+                /** rebuilding everything */
+                gridModel.rearangeLinks(oldPosition, this.position)
+                gridModel.buildLinks()
+
+                /** faster, rebuildingOnlyOneLinkPath */
+                // gridModel.rebuildLinkPath(oldPosition, this.position)
             }
+
 
              /** @TODO: build the functionality to change 
              * arrows and links if it's between a straight line */

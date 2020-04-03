@@ -59,7 +59,7 @@ class LinkCellsHelper {
     get northSouth() {
         return this.down ? 'north' : (this.up ? 'south' : '')
     }
-    draw(type = '', lineType = '') {
+    draw(type = '', lineType = '', link1 = null, link2 = null, extra = false) {
         let d, distance
         switch (type) {
             case 'up': {
@@ -97,10 +97,21 @@ class LinkCellsHelper {
             }
         }
 
-        if (lineType === 'half')
-            distance = this.left ? 117 : (this.right ? 123 : 123)
+        if (lineType === 'half') {
+            distance = (this.left ? 117 : 123)
 
-        return `${d}${distance}`
+            const direction = Object.keys(linkEEhelper.eeL[link2][link1])[0]
+            const diffEE = linkEEhelper.genEE(link2, direction)
+
+            const directionOp = Object.keys(linkEEhelper.eeL[link1][link2])[0]
+            if (extra && directionOp === 'up') {
+                distance -= diffEE
+            }
+            else
+                distance += diffEE
+        }
+
+        return ` ${d}${distance}`
     }
 }
 
@@ -119,6 +130,27 @@ class LinkEEHelper {
 
         this.prevLink = '' // based on connected elements
         this.nextLink = ''
+
+        this.deletionPrevNextArr  = [] // after patching
+        
+        this.directionForward = ''
+        this.directionBackward = ''
+    }
+    deletePrevNext() {
+        for (const obj of this.deletionPrevNextArr) {
+            delete this.eeL[obj.next][obj.prev]
+            delete this.eeL[obj.prev][obj.next]
+
+            if (!Object.keys(this.eeL[obj.next]).length)
+                delete this.eeL[obj.next]
+
+            if (!Object.keys(this.eeL[obj.prev]).length)
+                delete this.eeL[obj.prev]
+
+            delete this.ee[obj.oldPosition]
+        }
+
+        linkEEhelper.deletionPrevNextArr = []
     }
     saveState() {
         this.stateVersion++
@@ -135,28 +167,22 @@ class LinkEEHelper {
     }
     regenerate() {
         const vm = this
-        if (vm.eeL[vm.prevLink] && vm.eeL[vm.prevLink][vm.nextLink]) {
-            const prev = vm.prevLink
-            const next = vm.nextLink
 
-            const patchee = vm.ee[next]
-            const patch = vm.eeL[next][prev]
-
-            for (let i = 0; i < vm.directions.length; i++) {
-                const direction = vm.directions[i]
-                
-                if (patch[direction] && patchee[direction]) {
-                    patchee[direction]--
-
-                    if (!patchee[direction])
-                        delete patchee[direction]
-                }
+        function regenerateDirections(link1, link2) {
+            let direction1 = Object.keys(vm.eeL[link1][link2])[0]
+            let direction2 = Object.keys(vm.ee[link1])
+    
+            if (direction2.indexOf(direction1) !== -1) {
+                vm.ee[link1][direction1]--
+    
+                if (!vm.ee[link1][direction1])
+                    delete vm.ee[link1][direction1]
             }
-
-            delete vm.eeL[next][prev]
-            delete vm.eeL[prev]
-            delete vm.ee[prev]
+    
         }
+
+        regenerateDirections(vm.prevLink, vm.nextLink)
+        regenerateDirections(vm.nextLink, vm.prevLink)
     }
     setLinkEEL(link, connectedLink, type) {
         if (!this.eeL[link])
@@ -187,8 +213,19 @@ class LinkEEHelper {
         this.ee[link][type]++
         this.setLinkEEL(link, connectedLink, type)
     }
-    // link, type, 'genArrow', forArrow, 'left'
-    genEE(link, type, gen, forArrow, position) {
+    genEE(link, type) {
+        if (this.ee[link] && this.ee[link][type]) {
+            let diff = 0
+            const pointNr = this.ee[link][type]
+
+            if (pointNr === 2) diff = -25
+            if (pointNr === 3) diff = 25
+            if (pointNr === 4) diff = -50
+            if (pointNr === 5) diff = 50
+
+            return diff
+        }
+
         return 0
     }
 }
@@ -197,6 +234,7 @@ const linkEEhelper = new LinkEEHelper()
 window.linkEEhelper = linkEEhelper
 
 export const gridLinksOperations = {
+    regenerateTimes: 0,
     genLinkTwoCells(linkKey, regenerateLinkEE = false) {
         Vue.set(gridModel.paths, linkKey, [])
 
@@ -204,10 +242,6 @@ export const gridLinksOperations = {
         const vm2 = gridModel
 
         const l = new LinkCellsHelper(linkKey, vm1, vm2)
-
-        if (regenerateLinkEE)
-            linkEEhelper.regenerate()
-
         let path, arrow, t1, t2, t3, t4, t5
 
         if (l.right || l.left) {
@@ -226,135 +260,120 @@ export const gridLinksOperations = {
             t5 = 'sameCol'
         }
 
-        path = vm1.genPath.call(vm2, l.link1, l.link2, l[t1])
+        /** set ee & eeL */
+        linkEEhelper.setLinkEE(l.link1, l.link2, l[t1], 'genPath')
+
+        if (l[t5]) linkEEhelper.setLinkEE(l.link2, l.link1, l[t2], 'genArrow')
+        else linkEEhelper.setLinkEE(l.link2, l.link1, l[t4], 'genArrow')
+
+        /** regenerate ee & eeL */
+        if (regenerateLinkEE)
+            linkEEhelper.regenerate()
+        
+        /** draw arrow paths */
+        path = vm1.genPath.call(vm2, l.link1, l[t1])
         path.d += l.draw(l[t1], 'full')
 
-        if (l[t5])
-            arrow = vm1.genArrow.call(vm2, l.link2, l.link1, l[t2])
-
+        if (l[t5]) 
+            arrow = vm1.genArrow.call(vm2, l.link2, l[t2])
+        
         else {
-            path.d += l.draw(l[t1], 'half')
-            path.d += l.draw(l[t3], 'half')
+            path.d += l.draw(l[t1], 'half', l.link1, l.link2)
+            path.d += l.draw(l[t3], 'half', l.link2, l.link1, true)
             path.d += l.draw(l[t3], 'full')
-            arrow = vm1.genArrow.call(vm2, l.link2, l.link1, l[t4])
+            arrow = vm1.genArrow.call(vm2, l.link2, l[t4])
         }
 
         gridModel.paths[linkKey].push(...[path, ...arrow])
     },
-    genPath(link, connectedLink, type = '', forArrow = false) {
+    genPath(link, type = '', forArrow = false) {
         const vm = gridLinksOperations
         const row = this.getRow(link)
         const col = this.getCol(link)
-
-        if (!forArrow)
-            linkEEhelper.setLinkEE(link, connectedLink, type, 'genPath')
 
         /** @TODO: implement some sort of polymorphism for paths */
         let left, top, path
         switch (type) {
             case 'up': {
-                const leftEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'left')
-                left = vm.getLeft(col) + 125 + leftEE
-
-                const topEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'top')
-                top =  vm.getTop(row, 1) + 52 + (forArrow ? -13 : 0) + topEE
-                
-                const pathEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'path')
-                path = `M${left} ${top} v-${(forArrow ? 38 : 50) + pathEE}`
+                const diffEE = linkEEhelper.genEE(link, 'up')
+                left = vm.getLeft(col) + 125 + diffEE
+                top =  vm.getTop(row, 1) + 52 + (forArrow ? -13 : 0)
+                path = `M${left} ${top} v-${forArrow ? 38 : 50}`
                 break
             }
 
             case 'down': {
-                const leftEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'left')
-                left = vm.getLeft(col) + 125 + leftEE
-
-                const topEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'top')
-                top =  vm.getTop(row, 1) + (gsize - 48) + (forArrow ? 17 : 0) + topEE
-
-                const pathEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'path')
-                path = `M${left} ${top} v${(forArrow ? 40 : 50) + pathEE}`
+                const diffEE = linkEEhelper.genEE(link, 'down')
+                left = vm.getLeft(col) + 125 + diffEE
+                top =  vm.getTop(row, 1) + (gsize - 48) + (forArrow ? 17 : 0)
+                path = `M${left} ${top} v${forArrow ? 40 : 50}`
                 break
             }
 
             case 'left': {
-                const leftEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'left')
-                left = vm.getLeft(col, 1) + 52 + (forArrow ? -15 : 0) + leftEE
-
-                const topEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'top')
-                top =  vm.getTop(row) + 125 + topEE
-
-                const pathEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'path')
-                path = `M${left} ${top} h-${(forArrow ? 35 : 50) + pathEE}`
+                const diffEE = linkEEhelper.genEE(link, 'left')
+                left = vm.getLeft(col, 1) + 52 + (forArrow ? -15 : 0)
+                top =  vm.getTop(row) + 125 + diffEE
+                path = `M${left} ${top} h-${forArrow ? 35 : 50}`
                 break
             }
 
             case 'right': {
-                const leftEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'left')
-                left = vm.getLeft(col, 1) + (gsize - 48) + (forArrow ? 15 : 0) + leftEE
-
-                const topEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'top')
-                top =  vm.getTop(row) + 125 + topEE
-                
-                const pathEE = linkEEhelper.genEE(link, type, 'genPath', forArrow, 'path')
-                path = `M${left} ${top} h${(forArrow ? 35 : 50) + pathEE}`
+                const diffEE = linkEEhelper.genEE(link, 'right')
+                left = vm.getLeft(col, 1) + (gsize - 48) + (forArrow ? 15 : 0)
+                top =  vm.getTop(row) + 125 + diffEE
+                path = `M${left} ${top} h${forArrow ? 35 : 50}`
                 break
             }
         }
 
         return { a: 0, d: path }
     },
-    genArrow(link, connectedLink, type = '') {
+    /** @TODO: test the dontRow, dontCol possibilities */
+    genArrow(link, type = '') {
         const vm = gridLinksOperations
+        const leeh = linkEEhelper
+
         const row = this.getRow(link)
         const col = this.getCol(link)
-
-        linkEEhelper.setLinkEE(link, connectedLink, type, 'genArrow')
 
         /** @TODO: implement some sort of polymorphism for arrows */
         let left, top, arrowPath, linePath
         switch (type) {
             case 'north': {
-                const leftEE = linkEEhelper.genEE(link, type, 'genArrow', null, 'left')
-                left = vm.getLeft(col) + 125 + leftEE
+                const diffEE = leeh.genEE(link, 'up')
+                left = vm.getLeft(col) + 125 + diffEE
+                top = vm.getTop(row, 1) + 30
 
-                const topEE = linkEEhelper.genEE(link, type, 'genArrow', null, 'top')
-                top = vm.getTop(row, 1) + 30 + topEE
-            
                 arrowPath = {a: 1, d: `M${left} ${top} ${northArrowPath}`}
-                linePath = vm.genPath.call(this, link, connectedLink, 'up', true)
+                linePath = vm.genPath.call(this, link, 'up', true)
                 break
             }
             case 'south': {
-                const leftEE = linkEEhelper.genEE(link, type, 'genArrow', null, 'left')
-                left = vm.getLeft(col) + 125 + leftEE
-
-                const topEE = linkEEhelper.genEE(link, type, 'genArrow', null, 'top')
-                top = vm.getTop(row, 1) + (gsize - 25) + topEE
+                const diffEE = leeh.genEE(link, 'down')
+                left = vm.getLeft(col) + 125 + diffEE
+                top = vm.getTop(row, 1) + (gsize - 25)
 
                 arrowPath = {a: 1, d: `M${left} ${top} ${southArrowPath}`}
-                linePath = vm.genPath.call(this, link, connectedLink, 'down', true)
+                linePath = vm.genPath.call(this, link, 'down', true)
                 break
             }
             case 'west': {
-                const leftEE = linkEEhelper.genEE(link, type, 'genArrow', null, 'left')
-                left = vm.getLeft(col, 1) + 28 + leftEE
-
-                const topEE = linkEEhelper.genEE(link, type, 'genArrow', null, 'top')
-                top = vm.getTop(row) + 130 + topEE
+                const diffEE = leeh.genEE(link, 'left')
+                left = vm.getLeft(col, 1) + 28
+                top = vm.getTop(row) + 130 + diffEE
 
                 arrowPath = {a: 1, d: `M${left} ${top} ${westArrowPath}`}
-                linePath = vm.genPath.call(this, link, connectedLink, 'left', true)
+                linePath = vm.genPath.call(this, link, 'left', true)
                 break
             }
             case 'east': {
-                const leftEE = linkEEhelper.genEE(link, type, 'genArrow', null, 'left')
-                left = vm.getLeft(col, 1) + (gsize - 23) + leftEE
-
-                const topEE = linkEEhelper.genEE(link, type, 'genArrow', null, 'top')
-                top = vm.getTop(row) + 130 + topEE
+                const diffEE = leeh.genEE(link, 'right')
+                left = vm.getLeft(col, 1) + (gsize - 23)
+                top = vm.getTop(row) + 130 + diffEE
 
                 arrowPath = {a: 1, d: `M${left} ${top} ${eastArrowPath}`}
-                linePath = vm.genPath.call(this, link, connectedLink, 'right', true)
+                linePath = vm.genPath.call(this, link, 'right', true)
                 break
             }
         }
@@ -374,8 +393,10 @@ export const gridLinksOperations = {
 
         linkEEhelper.saveState()
     },
-    regenerateLinkPath(oldPosition, newPosition) {
+    rebuildLinkPath(oldPosition, newPosition) {
         const vm = gridLinksOperations
+
+        const resetLinksArr = []
 
         for (let i = 0; i < gridModel.model.links.length; i++) {
             const linkKey = gridModel.model.links[i]
@@ -386,20 +407,29 @@ export const gridLinksOperations = {
             const newLinkKey = vm.getNewLinkKeyForRegeneration(link1, link2, oldPosition, newPosition)
 
             if (newLinkKey) {
-                const regenerateLinkEE = true
-                vm.genLinkTwoCells(newLinkKey, regenerateLinkEE)
-    
-                gridModel.model.links[i] = newLinkKey
-                delete gridModel.paths[linkKey]
-                
-                linkEEhelper.saveState()
+                vm.genLinkTwoCells(newLinkKey, true)
+                resetLinksArr.push({ i, newLinkKey, linkKey })
             }
+        }
+
+        vm.regenerateTimes = 0
+        linkEEhelper.deletePrevNext()
+
+        vm.resetLinkPositions(resetLinksArr)
+        linkEEhelper.saveState()
+    },
+    resetLinkPositions(resetLinksArr){
+        for (const resetObj of resetLinksArr) {
+            gridModel.model.links[resetObj.i] = resetObj.newLinkKey
+            delete gridModel.paths[resetObj.linkKey]
         }
     },
     getNewLinkKeyForRegeneration(link1, link2, oldPosition, newPosition) {
         const vm = gridLinksOperations
         let newLinkKey
-        const regenerateTimes = vm.getRegenerateTimes(oldPosition)
+        
+        if (vm.regenerateTimes === 0)
+            vm.regenerateTimes = vm.getRegenerateTimes(oldPosition)
 
         if (link1 === oldPosition) {
             linkEEhelper.prevLink = link1
@@ -408,7 +438,7 @@ export const gridLinksOperations = {
             newLinkKey = vm.genLinkKey(newPosition, link2)
         }
         else if (link2 === oldPosition) {
-            if (regenerateTimes > 1) {
+            if (vm.regenerateTimes > 1) {
                 linkEEhelper.prevLink = link1
                 linkEEhelper.nextLink = link2
             }
@@ -419,6 +449,13 @@ export const gridLinksOperations = {
 
             newLinkKey = vm.genLinkKey(link1, newPosition)
         }
+
+        if (newLinkKey)
+            linkEEhelper.deletionPrevNextArr.push({
+                prev: linkEEhelper.prevLink,
+                next: linkEEhelper.nextLink,
+                oldPosition
+            })
 
         return newLinkKey
     },
@@ -460,5 +497,21 @@ export const gridLinksOperations = {
             vm.getLink1(linkKey),
             vm.getLink2(linkKey)
         )
+    },
+    rearangeLinks(oldPosition, newPosition) {
+        const vm = gridLinksOperations
+
+        for (const i in gridModel.model.links) {
+            const linkKey = gridModel.model.links[i]
+
+            const link1 = vm.getLink1(linkKey)
+            const link2 = vm.getLink2(linkKey)
+
+            if (link1 === oldPosition)
+                gridModel.model.links[i] = vm.genLinkKey(newPosition, link2)
+
+            else if (link2 === oldPosition)
+                gridModel.model.links[i] = vm.genLinkKey(link1, newPosition)
+        }
     }
 }

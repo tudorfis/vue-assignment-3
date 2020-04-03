@@ -45,7 +45,7 @@ export default {
     // return
   
     let modelType = null
-    const matchRef = window.location.search.match(/model\=(\w+)/)
+    const matchRef = window.location.search.match(/model\=([\w\-]+)/)
     if (matchRef && matchRef[1]) modelType = matchRef[1]
 
     fetch(`http://localhost:8080/src/app-14/data/model-${modelType || 'light'}.json`)

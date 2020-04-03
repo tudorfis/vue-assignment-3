@@ -1,7 +1,5 @@
 
 import Vue from 'vue'
-window.Vue = Vue
-
 import { Utils } from "../../utils/utils"
 import { globalConfig } from "../../config/global.config"
 import { gridModelOperations } from './operations/gridModel.operations'
@@ -9,6 +7,10 @@ import { gridMouseOperations } from './operations/gridMouse.operations'
 import { gridLinksOperations } from './operations/gridLinks.operations'
 import { zoomService } from "../../services/zoom.service"
 
+window.Vue = Vue
+window.gridLinksOperations = gridLinksOperations
+
+/** @TODO: move configs into a global config files split in multiple smaller config files */
 const cellSplitSymbol = globalConfig.cellSplitSymbol
 
 const newGridBlueprint = {
@@ -181,7 +183,10 @@ export const gridModel = {
     buildLinks() {
         return gridLinksOperations.buildLinks.call(this) 
     },
-    regenerateLinkPath(oldPosition, newPosition) {
-        gridLinksOperations.regenerateLinkPath.call(this, oldPosition, newPosition) 
+    rebuildLinkPath(oldPosition, newPosition) {
+        gridLinksOperations.rebuildLinkPath.call(this, oldPosition, newPosition) 
+    },
+    rearangeLinks(oldPosition, newPosition) {
+        gridLinksOperations.rearangeLinks.call(this, oldPosition, newPosition) 
     }
 }
