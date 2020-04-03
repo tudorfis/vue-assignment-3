@@ -33,5 +33,12 @@ export const globalConfig = {
     rowsFromTheEnd: 2,
     colsFromTheEnd: 2,
     
-    cellSplitSymbol: '-'
+    cellSplitSymbol: '-',
+    linkSeparator: '__',
+
+    cellSizeCalculation: 240,
+    cellAdjustCalculation: 0.024,
+
+    arrowSizeW: 20,
+    arrowSizeH: 15
 }

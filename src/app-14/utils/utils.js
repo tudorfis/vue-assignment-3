@@ -27,4 +27,7 @@ export class Utils {
 
       return output
     }
+    static deepclone(obj) {
+        return JSON.parse(JSON.stringify(obj))
+    }
 }

@@ -23,30 +23,25 @@ export default {
             gridcellOperationsService.previousCellOperations()
             if (this.isSameGrid()) return;
 
+            let oldPosition, newPosition
             if (this.dropppointInfo) {
-                const newPosition = this.moveCellsByDroppoint()
-
+                newPosition = this.moveCellsByDroppoint()
                 this.setCellActive(newPosition)
-                this.removePreviousCell(newPosition)
+                oldPosition = this.removePreviousCell(newPosition)
+
+                /** @TODO: think of a way to add a cell on a line between
+                 *  elements and that it gets the previous and links to the next */
             } 
             
             else if (this.allowDrop) {
+                newPosition = this.position
                 this.setCellActive()
                 this.addRowOrColEnd()
-
-                const oldPosition = this.removePreviousCell(this.position)
-
-                /** rebuilding everything */
-                gridModel.rearangeLinks(oldPosition, this.position)
-                gridModel.buildLinks()
-
-                /** faster, rebuildingOnlyOneLinkPath */
-                // gridModel.rebuildLinkPath(oldPosition, this.position)
+                oldPosition = this.removePreviousCell(this.position)
             }
 
-
-             /** @TODO: build the functionality to change 
-             * arrows and links if it's between a straight line */
+            gridModel.rearangeLinks(oldPosition, newPosition)
+            gridModel.buildLinks()
         },
         onDragover(event) {
             if (this.isSameGrid()) return;

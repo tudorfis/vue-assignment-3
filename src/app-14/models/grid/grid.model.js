@@ -10,7 +10,6 @@ import { zoomService } from "../../services/zoom.service"
 window.Vue = Vue
 window.gridLinksOperations = gridLinksOperations
 
-/** @TODO: move configs into a global config files split in multiple smaller config files */
 const cellSplitSymbol = globalConfig.cellSplitSymbol
 
 const newGridBlueprint = {
@@ -182,9 +181,6 @@ export const gridModel = {
     },
     buildLinks() {
         return gridLinksOperations.buildLinks.call(this) 
-    },
-    rebuildLinkPath(oldPosition, newPosition) {
-        gridLinksOperations.rebuildLinkPath.call(this, oldPosition, newPosition) 
     },
     rearangeLinks(oldPosition, newPosition) {
         gridLinksOperations.rearangeLinks.call(this, oldPosition, newPosition) 

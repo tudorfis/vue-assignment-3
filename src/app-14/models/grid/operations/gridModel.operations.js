@@ -55,7 +55,6 @@ export const gridModelOperations = {
             const prevPos = this.getPosition(row, i - 1)
 
             this.model.cells[nextPos] = this.model.cells[prevPos]
-            this.rebuildLinkPath(prevPos, nextPos)
         }
         
         Vue.set(this.model.cells, position, {...cellBlueprint})
@@ -72,7 +71,6 @@ export const gridModelOperations = {
             const previousPosition = this.getPosition(i - 1, col)
 
             this.model.cells[currentPosition] = this.model.cells[previousPosition]
-            this.rebuildLinkPath(previousPosition, currentPosition)
         }
 
         Vue.set(this.model.cells, position, {...cellBlueprint})

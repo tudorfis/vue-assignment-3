@@ -1,8 +1,8 @@
 <template>
   <div class="gridcontent" @mouseover="resetGridView">
-    <!-- @TODO: remove controls, used only for testing purposes -->
+    <!-- @TODO: remove controls, used only for testing purposes
+        add top menu controls, such as zoom in, zoom out etc -->
     <krt-gridcontent-controls></krt-gridcontent-controls>
-    <!-- @TODO: add top menu controls, such as zoom in, zoom out etc -->
     <svg
       id="svgGrid"
       :style="svgStyle"
