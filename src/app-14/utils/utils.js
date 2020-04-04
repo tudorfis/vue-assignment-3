@@ -30,4 +30,7 @@ export class Utils {
     static deepclone(obj) {
         return JSON.parse(JSON.stringify(obj))
     }
+    static getRandomNumber(from, to) {
+        return Math.floor(Math.random() * (to + 1)) + from
+    }
 }

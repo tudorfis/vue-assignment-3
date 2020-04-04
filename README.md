@@ -24,6 +24,7 @@ TODO:
 - put gridLinks operations in different files, polymorphism on left/right/up/down
 - fix the spliceCols/spliceRows problem when dragging a linked element between it's connections
 - sort the gridModel.model.links so we don't have overlapping lines
+- solve the problem when link paths come through from behind elements paths
 
 LIBRARIES FOR INSPIRATION
 draw.io

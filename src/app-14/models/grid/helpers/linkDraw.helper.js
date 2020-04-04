@@ -94,7 +94,7 @@ export class LinkDrawHelper {
 
         return { a: 0, d: path }
     }
-    drawLine(direction = '', lineType = '', directionIn) {
+    drawLine(direction = '', lineType = '') {
         let d, distance, cell1, cell2
         if (direction === 'up') {
             d = 'v-'
