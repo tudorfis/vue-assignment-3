@@ -7,6 +7,7 @@ import { globalConfig } from '../../../config/global.config'
 export const gridLinksOperations = {
     colors: [],
     buildLinks() {
+        linkEEhelper.generateEEpath()
         linkEEhelper.generateEEmap()
         gridModel.paths = {}
 
