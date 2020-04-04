@@ -36,13 +36,12 @@ export const gridLinksOperations = {
 
         if (l[sameColRow]) {
             path.d += l.drawLine(l[direction1], 'arrow')
-            arrow = l.drawArrow(l[direction1])
-        
-        } else {
-            path.d += l.drawLine(l[direction1], 'half')
-            path.d += l.drawLine(l[direction2], 'half')
+            arrow = l.drawArrow(l[direction1], true)
+        }
+        else {
+            path.d += l.drawHalf(l[direction1], l[direction2], true)
+            path.d += l.drawHalf(l[direction2], l[direction1], false)
             path.d += l.drawLine(l[direction2], 'full')
-
             path.d += l.drawLine(l[direction2], 'arrow')
             arrow = l.drawArrow(l[direction2])
         }

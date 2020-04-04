@@ -66,42 +66,7 @@ export class LinkDrawHelper {
         if (dirrection === 'left') return 'right'
         if (dirrection === 'right') return 'left'
     }
-    drawLine(direction = '', lineType = '') {
-        let d, distance, cell1, cell2
-        if (direction === 'up') {
-            d = 'v-'
-            cell1 = this.row1
-            cell2 = this.row2
-        }
-        else if (direction === 'down') {
-            d = 'v';
-            cell1 = this.row2
-            cell2 = this.row1
-        }
-        else if (direction === 'right') {
-            d = 'h';    
-            cell1 = this.col2
-            cell2 = this.col1
-        }
-        else if (direction === 'left') {
-            d = 'h-'
-            cell1 = this.col1
-            cell2 = this.col2
-        }
- 
-        if (lineType === 'arrow') 
-            distance = 35
 
-        else if (lineType === 'full') 
-            distance = cell_size * (cell1 - cell2 - 1)
-        
-        else if (lineType === 'half') {
-            distance = (this.left ? 117 : 123)
-            distance += linkEEhelper.getDiffEE(direction, this.link2, this.link1, 'half')
-        }
-
-        return ` ${d}${distance}`
-    }
     drawPath(direction) {
         let left, top, path
         const diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'out')
@@ -129,12 +94,73 @@ export class LinkDrawHelper {
 
         return { a: 0, d: path }
     }
-    drawArrow(direction)  {
-        direction = this.oppositeDirection(direction)
+    drawLine(direction = '', lineType = '', directionIn) {
+        let d, distance, cell1, cell2
+        if (direction === 'up') {
+            d = 'v-'
+            cell1 = this.row1
+            cell2 = this.row2
+        }
+        else if (direction === 'down') {
+            d = 'v';
+            cell1 = this.row2
+            cell2 = this.row1
+        }
+        else if (direction === 'right') {
+            d = 'h';    
+            cell1 = this.col2
+            cell2 = this.col1
+        }
+        else if (direction === 'left') {
+            d = 'h-'
+            cell1 = this.col1
+            cell2 = this.col2
+        }
+ 
+        if (lineType === 'arrow') 
+            distance = 35
+
+        else if (lineType === 'full') 
+            distance = cell_size * (cell1 - cell2 - 1)
+
+        return ` ${d}${distance}`
+    }
+    drawHalf(direction = '', directionInOut = '', firstHalf) {
+        let d, diff_ee
+        if (direction === 'up') d = 'v-'
+        if (direction === 'down') d = 'v'
+        if (direction === 'right') d = 'h'
+        if (direction === 'left') d = 'h-'
+
+        let distance = this.left ? 117 : 123
+
+        if (firstHalf) {
+            diff_ee = linkEEhelper.getDiffEE(this.oppositeDirection(directionInOut), this.link1, this.link2, 'in')
+
+            if (direction === 'left') distance -= diff_ee
+            else if (direction === 'right') distance += diff_ee
         
-        let left, top, arrow
-        const diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'in')
-        
+        } else {
+            diff_ee = linkEEhelper.getDiffEE(directionInOut, this.link1, this.link2, 'out')
+
+            if (direction === 'up') distance += diff_ee
+            else if (direction === 'down') distance -= diff_ee
+        }
+
+        return ` ${d}${distance}`
+    }
+    drawArrow(direction, sameRowCol)  {
+        let left, top, arrow, diff_ee
+
+        if (sameRowCol) {
+            diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'out')
+            direction = this.oppositeDirection(direction)
+        }
+        else {
+            direction = this.oppositeDirection(direction)
+            diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'in')
+        }
+
         if (direction === 'up') {
             left = this.get_left_m_arrow() + 125 + diff_ee
             top = this.get_top_m_arrow(true) + 30

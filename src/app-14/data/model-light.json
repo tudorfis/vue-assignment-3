@@ -5,7 +5,8 @@
     "steps":{
        "2-1":{"is":1,"type":"SEND_SMS"},
        "1-2":{"is":1,"type":"SEND_EMAIL"},
+       "2-4":{"is":1,"type":"ADD_REMOVE_TAG"},
        "3-2":{"is":1,"type":"ADD_REMOVE_TAG"}
     },
-    "links":["2-1__3-2","2-1__1-2","1-2__3-2"]
+    "links":["1-2__3-2","2-1__2-4", "2-1__1-2"]
 }

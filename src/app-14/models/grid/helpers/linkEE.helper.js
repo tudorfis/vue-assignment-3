@@ -78,18 +78,6 @@ class LinkEEHelper {
             pointNr = this.eeMap[link2][direction].in[link1]
             difference = this.getDifferenceByPoint(pointNr)
         }
-        else if (inOut === 'half') {
-
-            for (const direction in this.eeMap[link2]) {
-                const directionObj = this.eeMap[link2][direction]
-
-                if (directionObj.in.hasOwnProperty(link1)) {
-                    pointNr = directionObj.in[link1]
-                    difference = this.getDifferenceByPoint(pointNr)
-                    break;
-                }
-            }
-        }
 
         return difference
     }
