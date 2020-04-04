@@ -60,78 +60,59 @@ class LinkEEHelper {
         return ''
     }
     setEEConnectionMaps(l, link1Direction, link2Direction) {
-        /** @TODO: do a check if connected lines in the same 
-         * direction exists across the path and if so move to pointNr a bit down */
-        
         const link1Obj = this.eeMap[l.link1][link1Direction]
         const link2Obj = this.eeMap[l.link2][link2Direction]
         
+        if (!link1Obj || !link2Obj) return
+        const totalLinks = this.getEETotalLinks(l, link1Direction, link2Direction)
+        
+        link1Obj.total += totalLinks + 1
+        link2Obj.total = link1Obj.total
+
+        link1Obj.out[l.link2] = link1Obj.total
+        link2Obj.in[l.link1] = link2Obj.total
+    }
+    getEETotalLinks(l, link1Direction, link2Direction) {
         let totalLinks = 0
 
-        if (link1Direction === 'right') {
-
-            // for (let col = 1; col <= gridModel.model.numCols; col++) {
-            //     const position = gridModel.getPosition(l.row1, col)
-                
-            //     if (this.eeMap[position] && this.eeMap[position].right.total > 0) {
-            //         const out = Object.keys(this.eeMap[position].right.out)
-            //         const outTotal = out.length
-
-            //         for (let i = 1; i < outTotal; i++) {
-            //             const outPosition = out[i]
-            //             const linkKey = LinkDrawHelper.genLinkKey(position, outPosition)
-            //             const l2 = new LinkDrawHelper(linkKey, gridModel)
-
-            //             if (l2.col2 >= l.col1 && l2.col1 <= l.col2 - 1) totalLinks++
-            //         }
-            //     }
-
-            //     if (this.eeMap[position] && this.eeMap[position].left.total > 0) {
-            //         const inn = Object.keys(this.eeMap[position].left.in)
-            //         const innTotal = inn.length
-
-            //         for (let i = 1; i < innTotal; i++) {
-            //             const innPosition = inn[i]
-            //             const linkKey = LinkDrawHelper.genLinkKey(position, innPosition)
-            //             const l2 = new LinkDrawHelper(linkKey, gridModel)
-
-            //             if (l2.col2 <= l.col1 && l2.col1 >= l.col2 + 1) totalLinks++
-            //         }
-            //     }
-            // }
-
+        if (link1Direction === 'right' && link2Direction === 'left') {
             for (let col = l.col1; col <= l.col2; col++) {
                 const eeMap = this.eeMap[gridModel.getPosition(l.row1, col)]
                 if (eeMap) totalLinks += eeMap.left.total + eeMap.right.total
             }
         } 
-        else if (link1Direction === 'left') {
+        else if (link1Direction === 'left' && link2Direction === 'right') {
             for (let col = l.col1; col >= l.col2; col--) {
                 const eeMap = this.eeMap[gridModel.getPosition(l.row1, col)]
                 if (eeMap) totalLinks += eeMap.right.total + eeMap.left.total
             }
         }
-        else if (link1Direction === 'down') {
+        else if (link1Direction === 'down' && link2Direction === 'up') {
             for (let row = l.row1; row <= l.row2; row++) {
                 const eeMap = this.eeMap[gridModel.getPosition(row, l.col1)]
                 if (eeMap) totalLinks += eeMap.up.total + eeMap.down.total
             }
         }
-        else if (link1Direction === 'up') {
+        else if (link1Direction === 'up' && link2Direction === 'down') {
             for (let row = l.row1; row >= l.row2; row--) {
                 const eeMap = this.eeMap[gridModel.getPosition(row, l.col1)]
                 if (eeMap) totalLinks += eeMap.down.total + eeMap.up.total
             }
         }
-
-        if (link1Obj  && link2Obj) {
-            link1Obj.total += totalLinks + 1
-            link2Obj.total = link1Obj.total
-    
-            link1Obj.out[l.link2] = link1Obj.total
-            link2Obj.in[l.link1] = link2Obj.total
+        else if ((link1Direction === 'right' || link1Direction === 'left') && link2Direction === 'down') {
+            for (let row = l.row1; row >= l.row2; row--) {
+                const eeMap = this.eeMap[gridModel.getPosition(row, l.col2)]
+                if (eeMap) totalLinks += eeMap.up.total + eeMap.down.total
+            }
         }
-        
+        else if ((link1Direction === 'right' || link1Direction === 'left') && link2Direction === 'up') {
+            for (let row = l.row1; row <= l.row2; row++) {
+                const eeMap = this.eeMap[gridModel.getPosition(row, l.col2)]
+                if (eeMap) totalLinks += eeMap.up.total + eeMap.down.total
+            }
+        }
+
+        return totalLinks
     }
     getDiffEE(direction, link1, link2, inOut) {
         if (!this.eeMap[link1] || !this.eeMap[link1][direction]) return

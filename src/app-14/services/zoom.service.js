@@ -27,6 +27,9 @@ export const zoomService = {
         
         globalConfig.arrowWidth += 2
         globalConfig.droppointDimension += 10
+
+        globalConfig.arrowSizeW += 2
+        globalConfig.arrowSizeH += 1
     },
     zoomOut() {
         globalConfig.zoomLevel -= globalConfig.zoomDiff
@@ -39,6 +42,9 @@ export const zoomService = {
         
         globalConfig.arrowWidth -= 2
         globalConfig.droppointDimension -= 10
+
+        globalConfig.arrowSizeW -= 2
+        globalConfig.arrowSizeH -= 1
     },
     calculateSvgViewBox() {
         const gc = globalConfig

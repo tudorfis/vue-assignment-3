@@ -2,13 +2,12 @@
 import { globalConfig } from '../../../config/global.config'
 import linkEEhelper from './linkEE.helper'
 
-const arrowSizeW = globalConfig.arrowSizeW
-const arrowSizeH = globalConfig.arrowSizeH
+const gc = globalConfig
 
-const upArrowPath = `h${arrowSizeH} l-${arrowSizeH} ${arrowSizeW} l-${arrowSizeH} -${arrowSizeW} Z`
-const downArrowPath = `h${arrowSizeH} l-${arrowSizeH} -${arrowSizeW} l-${arrowSizeH} ${arrowSizeW} Z`
-const leftArrowPath = `v-${arrowSizeW} l${arrowSizeW} ${arrowSizeH} l-${arrowSizeW} ${arrowSizeH} Z`
-const rightArrowPath = `v-${arrowSizeW} l-${arrowSizeW} ${arrowSizeH} l${arrowSizeW} ${arrowSizeH} Z`
+const upArrowPath = _=> `h${gc.arrowSizeH} l-${gc.arrowSizeH} ${gc.arrowSizeW} l-${gc.arrowSizeH} -${gc.arrowSizeW} Z`
+const downArrowPath = _=> `h${gc.arrowSizeH} l-${gc.arrowSizeH} -${gc.arrowSizeW} l-${gc.arrowSizeH} ${gc.arrowSizeW} Z`
+const leftArrowPath = _=> `v-${gc.arrowSizeW} l${gc.arrowSizeW} ${gc.arrowSizeH} l-${gc.arrowSizeW} ${gc.arrowSizeH} Z`
+const rightArrowPath = _=> `v-${gc.arrowSizeW} l-${gc.arrowSizeW} ${gc.arrowSizeH} l${gc.arrowSizeW} ${gc.arrowSizeH} Z`
 
 const cell_size = globalConfig.cellSizeCalculation
 const cell_adjust = globalConfig.cellAdjustCalculation
@@ -164,24 +163,24 @@ export class LinkDrawHelper {
         if (direction === 'up') {
             left = this.get_left_m_arrow() + 125 + diff_ee
             top = this.get_top_m_arrow(true) + 30
-            arrow = `M${left} ${top} ${upArrowPath}`
+            arrow = `M${left} ${top} ${upArrowPath()}`
 
             // console.log(`diff_ee`, diff_ee)
         }
         else if (direction === 'down') {
             left = this.get_left_m_arrow() + 125 + diff_ee
             top = this.get_top_m_arrow(true) + (cell_size - 25)
-            arrow = `M${left} ${top} ${downArrowPath}`
+            arrow = `M${left} ${top} ${downArrowPath()}`
         }
         else if (direction === 'left') {
             left = this.get_left_m_arrow(true) + 28
             top = this.get_top_m_arrow() + 130 + diff_ee
-            arrow = `M${left} ${top} ${leftArrowPath}`
+            arrow = `M${left} ${top} ${leftArrowPath()}`
         }
         else if (direction === 'right') {
             left = this.get_left_m_arrow(true) + (cell_size - 23)
             top = this.get_top_m_arrow() + 130 + diff_ee
-            arrow = `M${left} ${top} ${rightArrowPath}`
+            arrow = `M${left} ${top} ${rightArrowPath()}`
         }
 
         return {a: 1, d: arrow}

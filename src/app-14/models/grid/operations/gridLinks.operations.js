@@ -2,8 +2,10 @@ import Vue from 'vue'
 import { gridModel } from "../grid.model"
 import { LinkDrawHelper } from '../helpers/linkDraw.helper'
 import linkEEhelper from '../helpers/linkEE.helper'
+import { globalConfig } from '../../../config/global.config'
 
 export const gridLinksOperations = {
+    colors: [],
     buildLinks() {
         linkEEhelper.generateEEmap()
         gridModel.paths = {}
@@ -14,6 +16,9 @@ export const gridLinksOperations = {
         
     },
     genPathTwoCells(linkKey) {
+        if (this.colors.length === 0)
+            this.colors = [...globalConfig.colorArray]
+
         Vue.set(gridModel.paths, linkKey, [])
 
         const l = new LinkDrawHelper(linkKey, gridModel)
@@ -24,7 +29,6 @@ export const gridLinksOperations = {
             direction2 = 'upDown'
             sameColRow = 'sameRow'
         }
-        
         else if (l.up || l.down) {
             direction1 = 'upDown'
             direction2 = 'rightLeft'
@@ -57,6 +61,12 @@ export const gridLinksOperations = {
             path.d += l.drawLine(l[direction2], 'arrow')
             arrow = l.drawArrow(l[direction2])
         }
+
+        /** @TODO: add the ids for cells so the colors don't scramble */
+        const color = this.colors.pop()
+
+        path.color = color
+        arrow.color = color
 
         gridModel.paths[linkKey].push(...[path, arrow])
     },

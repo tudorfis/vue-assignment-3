@@ -12,8 +12,8 @@
           :d="arrow.d" 
           :key="arrowIndex"
           v-for="(arrow, arrowIndex) of pathObj"
-          :fill="arrow.a ? globalConfig.arrowColor : 'none'"
-          :stroke="!arrow.a ? globalConfig.arrowColor : ''"
+          :fill="arrow.a ? (arrow.color || globalConfig.arrowColor) : 'none'"
+          :stroke="!arrow.a ? (arrow.color ||globalConfig.arrowColor) : ''"
           :stroke-width="!arrow.a ? globalConfig.arrowWidth : 0" />
     </svg>
     <div 

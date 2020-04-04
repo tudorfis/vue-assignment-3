@@ -90,8 +90,8 @@ export default {
   .drop-point {
     position: absolute;
     background: yellow;
-    border: 5px solid red;
-    box-shadow: 1px 1px 15px #ccc;
+    border: 3px solid red;
+    box-shadow: 1px 1px 5px #ccc;
   }
 }
 </style>
