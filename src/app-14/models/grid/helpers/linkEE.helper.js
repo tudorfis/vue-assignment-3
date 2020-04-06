@@ -30,83 +30,49 @@ class LinkEEHelper {
         }
     }
     setEEPathMap(l) {
+        function setEEPath(row, col, hv) {
+            const position = gridModel.getPosition(row, col)
+
+            if (!this.eePathMap[position]) 
+                this.eePathMap[position] = { h: 0, v: 0 }
+            
+            this.eePathMap[position][hv]++
+        }
+        function setEEDownUpPath(l) {
+            if (l.down)
+                for (let row = l.row1; row <= l.row2; row++)
+                    setEEPath.call(this, row, l.col2, 'v')
+            
+            else if (l.up)
+                for (let row = l.row1; row >= l.row2; row--)
+                    setEEPath.call(this, row, l.col2, 'v')
+        }
+
         if (l.right) {
-            for (let col = l.col1; col <= l.col2; col++) {
-                const position = gridModel.getPosition(l.row1, col)
-                if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-                
-                this.eePathMap[position].h++
-            }
-            if (l.down) {
-                for (let row = l.row1; row <= l.row2; row++) {
-                    const position = gridModel.getPosition(row, l.col2)
-                    if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-
-                    this.eePathMap[position].v++
-                }
-            } else if (l.up) {
-                for (let row = l.row1; row >= l.row2; row--) {
-                    const position = gridModel.getPosition(row, l.col2)
-                    if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-
-                    this.eePathMap[position].v++
-                }
-            }
+            for (let col = l.col1; col <= l.col2; col++)
+                setEEPath.call(this, l.row1, col, 'h')
+            setEEDownUpPath.call(this, l)
         }
         else if (l.left) {
-            for (let col = l.col1; col >= l.col2; col--) {
-                const position = gridModel.getPosition(col, l.row1)
-                if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-
-                this.eePathMap[position].h++
-            }
-            if (l.down) {
-                for (let row = l.row1; row <= l.row2; row++) {
-                    const position = gridModel.getPosition(row, l.col2)
-                    if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-
-                    this.eePathMap[position].v++
-                }
-            } else if (l.up) {
-                for (let row = l.row1; row >= l.row2; row--) {
-                    const position = gridModel.getPosition(row, l.col2)
-                    if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-
-                    this.eePathMap[position].v++
-                }
-            }
+            for (let col = l.col1; col >= l.col2; col--)
+                setEEPath.call(this, l.row1, col, 'h')
+            setEEDownUpPath.call(this, l)
         }
         else if (l.sameCol && l.down) {
-            for (let row = l.row1; row <= l.row2; row++) {
-                const position = gridModel.getPosition(row, l.col1)
-                if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-
-                this.eePathMap[position].v++
-            }
+            for (let row = l.row1; row <= l.row2; row++)
+                setEEPath.call(this, row, l.col1, 'v')
         }
         else if (l.sameCol && l.up) {
-            for (let row = l.row1; row >= l.row2; row--) {
-                const position = gridModel.getPosition(row, l.col1)
-                if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-
-                this.eePathMap[position].v++
-            }
+            for (let row = l.row1; row >= l.row2; row--)
+                setEEPath.call(this, row, l.col1, 'v')
         }
         else if (l.sameRow && l.right) {
-            for (let col = l.col1; col <= l.col2; col++) {
-                const position = gridModel.getPosition(l.row1, col)
-                if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-
-                this.eePathMap[position].h++
-            }
+            for (let col = l.col1; col <= l.col2; col++)
+                setEEPath.call(this, l.row1, col, 'h')
         }
         else if (l.sameRow && l.left) {
-            for (let col = l.col1; col >= l.col2; col--) {
-                const position = gridModel.getPosition(l.row1, col)
-                if (!this.eePathMap[position]) this.eePathMap[position] = { h: 0, v: 0 }
-
-                this.eePathMap[position].h++
-            }
+            for (let col = l.col1; col >= l.col2; col--)
+                setEEPath.call(this, l.row1, col, 'h')
         }
     }
     generateEEmap() {
@@ -153,168 +119,98 @@ class LinkEEHelper {
         const link2Obj = this.eeMap[l.link2][link2Direction]
         
         if (!link1Obj || !link2Obj) return
-        const totalLinks = this.getEETotalLinks(l, link1Direction, link2Direction)
+        const eeLinks = this.getEETotalLinks(l, link1Direction, link2Direction)
         
-        link1Obj.total = totalLinks
-        link2Obj.total = link1Obj.total
+        link1Obj.total += eeLinks
+        link2Obj.total += eeLinks
 
-        link1Obj.out[l.link2] = link1Obj.total
-        link2Obj.in[l.link1] = link2Obj.total
+        link1Obj.out[l.link2] = eeLinks
+        link2Obj.in[l.link1] = eeLinks
     }
     getEETotalLinks(l, link1Direction, link2Direction) {
-        let totalLinks = 0
+        let eeLinks = 0
+
+        function getEELinksEEPath(row, col, hv, eeLinks, extra = 0) {
+            const defaultHVobj = {h: 0, v: 0}
+            const eePathMap = this.eePathMap[gridModel.getPosition(row, col)] || defaultHVobj
+            
+            return Math.max(eeLinks, eePathMap[hv] + 1 + extra)
+        }
+        function getEELinksLink1Link2(direction1, direction2, onlyLink1, onlyLink2, eeLinks, l) {
+            const position1 = gridModel.getPosition(l.row1, l.col1)
+            const position2 = gridModel.getPosition(l.row2, l.col2)
+            
+            if (onlyLink1) {
+                eeLinks = Math.max(eeLinks, this.eeMap[position1][direction1].total + 1)
+            } 
+            else if (onlyLink2) {
+                eeLinks = Math.max(eeLinks, this.eeMap[position2][direction2].total + 1)
+            }
+            else {
+                eeLinks = Math.max(eeLinks, this.eeMap[position1][direction1].total + 1)
+                eeLinks = Math.max(eeLinks, this.eeMap[position2][direction2].total + 1)
+            }
+            
+            return eeLinks
+        }
+        function getEELinksUpDownDirection(link2Direction, eeLinks, l) {
+            if (link2Direction === 'down'){ 
+                for (let row = l.row1 + 1; row < l.row2; row++)
+                    eeLinks = getEELinksEEPath.call(this, row, l.col2, 'v', eeLinks, 1)
+
+                eeLinks = getEELinksLink1Link2.call(this, '', link2Direction, false, true, eeLinks, l)
+            }
+            else if (link2Direction === 'up') {
+                for (let row = l.row1 - 1; row > l.row2; row--)
+                    eeLinks = getEELinksEEPath.call(this, row, l.col2, 'v', eeLinks, 1)
+
+                eeLinks = getEELinksLink1Link2.call(this, '', link2Direction, false, true, eeLinks, l)
+            }
+
+            return eeLinks
+        }
 
         if (link1Direction === 'right' && link2Direction === 'left') {
-            for (let col = l.col1 + 1; col < l.col2; col++) {
-                const position = gridModel.getPosition(l.row1, col)
-                const eeMap = this.eeMap[position]
-                const eePathMap = (this.eePathMap[position] || {h: 0})
+            for (let col = l.col1 + 1; col < l.col2; col++)
+                eeLinks = getEELinksEEPath.call(this, l.row1, col, 'h', eeLinks)
 
-                if (eeMap)
-                    totalLinks = Math.max(totalLinks, eeMap.left.total + eeMap.right.total, eePathMap.h + 1)
-            }
-
-            const positionOut = gridModel.getPosition(l.row1, l.col1)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionOut].right.total + 1)
-
-            const positionIn = gridModel.getPosition(l.row2, l.col2)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionIn].left.total + 1)
+            eeLinks = getEELinksLink1Link2.call(this, link1Direction, link2Direction, false, false, eeLinks, l)
         } 
-
         else if (link1Direction === 'left' && link2Direction === 'right') {
-            for (let col = l.col1 - 1; col > l.col2; col--) {
-                const position = gridModel.getPosition(l.row1, col)
-                const eeMap = this.eeMap[position]
-                const eePathMap = (this.eePathMap[position] || {h: 0})
+            for (let col = l.col1 - 1; col > l.col2; col--)
+                eeLinks = getEELinksEEPath.call(this, l.row1, col, 'h', eeLinks)
 
-                if (eeMap)
-                    totalLinks = Math.max(totalLinks, eeMap.left.total + eeMap.right.total, eePathMap.h + 1)
-            }
-
-            const positionOut = gridModel.getPosition(l.row1, l.col1)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionOut].left.total + 1)
-
-            const positionIn = gridModel.getPosition(l.row2, l.col2)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionIn].right.total + 1)
+            eeLinks = getEELinksLink1Link2.call(this, link1Direction, link2Direction, false, false, eeLinks, l)
         }
-
         else if (link1Direction === 'down' && link2Direction === 'up') {
-            for (let row = l.row1 + 1; row < l.row2; row++) {
-                const position = gridModel.getPosition(row, l.col1)
-                const eeMap = this.eeMap[position]
-                const eePathMap = (this.eePathMap[position] || {v: 0})
+            for (let row = l.row1 + 1; row < l.row2; row++)
+                eeLinks = getEELinksEEPath.call(this, row, l.col1, 'v', eeLinks)
 
-                if (eeMap)
-                    totalLinks = Math.max(totalLinks, eeMap.up.total + eeMap.down.total, eePathMap.v + 1)
-            }
-
-            const positionOut = gridModel.getPosition(l.row1, l.col1)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionOut].down.total + 1)
-
-            const positionIn = gridModel.getPosition(l.row2, l.col2)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionIn].up.total + 1)
+            eeLinks = getEELinksLink1Link2.call(this, link1Direction, link2Direction, false, false, eeLinks, l)
         }
         else if (link1Direction === 'up' && link2Direction === 'down') {
-            for (let row = l.row1 - 1; row > l.row2; row--) {
-                const position = gridModel.getPosition(row, l.col1)
-                const eeMap = this.eeMap[position]
-                const eePathMap = (this.eePathMap[position] || {v: 0})
+            for (let row = l.row1 - 1; row > l.row2; row--)
+                eeLinks = getEELinksEEPath.call(this, row, l.col1, 'v', eeLinks)
 
-                if (eeMap)
-                    totalLinks = Math.max(totalLinks, eeMap.up.total + eeMap.down.total, eePathMap.v + 1)
-            }
-
-            const positionOut = gridModel.getPosition(l.row1, l.col1)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionOut].up.total + 1)
-
-            const positionIn = gridModel.getPosition(l.row2, l.col2)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionIn].down.total + 1)
+            eeLinks = getEELinksLink1Link2.call(this, link1Direction, link2Direction, false, false, eeLinks, l)
         }
-
         else if (link1Direction === 'right') {
-            for (let col = l.col1 + 1; col < l.col2; col++) {
-                const position = gridModel.getPosition(l.row1, col)
-                const eeMap = this.eeMap[position]
-                const eePathMap = (this.eePathMap[position] || {h: 0})
+            for (let col = l.col1 + 1; col < l.col2; col++)
+                eeLinks = getEELinksEEPath.call(this, l.row1, col, 'h', eeLinks)
 
-                if (eeMap)
-                    totalLinks = Math.max(totalLinks, eeMap.left.total + eeMap.right.total, eePathMap.h + 1)
-            }
-
-            const positionOut = gridModel.getPosition(l.row1, l.col1)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionOut].right.total + 1)
-
-            if (link2Direction === 'down'){ 
-                for (let row = l.row1 + 1; row < l.row2; row++) {
-                    const position = gridModel.getPosition(row, l.col2)
-                    const eeMap = this.eeMap[position]
-                    const eePathMap = (this.eePathMap[position] || {v: 0})
-    
-                    if (eeMap)
-                        totalLinks = Math.max(totalLinks, eeMap.up.total + eeMap.down.total, eePathMap.v + 1)
-                }
-
-                const positionIn = gridModel.getPosition(l.row2, l.col2)
-                totalLinks = Math.max(totalLinks, this.eeMap[positionIn].up.total + 1)
-            }
-            else if (link2Direction === 'up') {
-                for (let row = l.row1 - 1; row > l.row2; row--) {
-                    const position = gridModel.getPosition(row, l.col2)
-                    const eeMap = this.eeMap[position]
-                    const eePathMap = (this.eePathMap[position] || {v: 0})
-    
-                    if (eeMap)
-                        totalLinks = Math.max(totalLinks, eeMap.up.total + eeMap.down.total, eePathMap.v + 1)
-                }
-
-                const positionIn = gridModel.getPosition(l.row2, l.col2)
-                totalLinks = Math.max(totalLinks, this.eeMap[positionIn].down.total + 1)
-            }
+            eeLinks = getEELinksLink1Link2.call(this, link1Direction, '', true, false, eeLinks, l)
+            eeLinks = getEELinksUpDownDirection.call(this, link2Direction, eeLinks, l)
         }
         else if (link1Direction === 'left') {
-            for (let col = l.col1 - 1; col > l.col2; col--) {
-                const position = gridModel.getPosition(l.row1, col)
-                const eeMap = this.eeMap[position]
-                const eePathMap = (this.eePathMap[position] || {h: 0})
+            for (let col = l.col1 - 1; col > l.col2; col--)
+                eeLinks = getEELinksEEPath.call(this, l.row1, col, 'h', eeLinks)
 
-                if (eeMap)
-                    totalLinks = Math.max(totalLinks, eeMap.left.total + eeMap.right.total, eePathMap.h + 1)
-            }
-
-            const positionOut = gridModel.getPosition(l.row1, l.col1)
-            totalLinks = Math.max(totalLinks, this.eeMap[positionOut].left.total + 1)
-
-            if (link2Direction === 'down'){ 
-                for (let row = l.row1 + 1; row < l.row2; row++) {
-                    const position = gridModel.getPosition(row, l.col2)
-                    const eeMap = this.eeMap[position]
-                    const eePathMap = (this.eePathMap[position] || {v: 0})
-    
-                    if (eeMap)
-                        totalLinks = Math.max(totalLinks, eeMap.up.total + eeMap.down.total, eePathMap.v + 1)
-                }
-
-                const positionIn = gridModel.getPosition(l.row2, l.col2)
-                totalLinks = Math.max(totalLinks, this.eeMap[positionIn].up.total + 1)
-            }
-            else if (link2Direction === 'up') {
-                for (let row = l.row1 - 1; row > l.row2; row--) {
-                    const position = gridModel.getPosition(row, l.col2)
-                    const eeMap = this.eeMap[position]
-                    const eePathMap = (this.eePathMap[position] || {v: 0})
-    
-                    if (eeMap)
-                        totalLinks = Math.max(totalLinks, eeMap.up.total + eeMap.down.total, eePathMap.v + 1)
-                }
-
-                const positionIn = gridModel.getPosition(l.row2, l.col2)
-                totalLinks = Math.max(totalLinks, this.eeMap[positionIn].down.total + 1)
-            }
+            eeLinks = getEELinksLink1Link2.call(this, link1Direction, '', true, false, eeLinks, l)
+            eeLinks = getEELinksUpDownDirection.call(this, link2Direction, eeLinks, l)
         }
 
-        return totalLinks
+        return eeLinks
     }
-
 
     getDiffEE(direction, link1, link2, inOut) {
         if (!this.eeMap[link1] || !this.eeMap[link1][direction]) return

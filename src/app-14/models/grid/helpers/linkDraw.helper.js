@@ -164,8 +164,6 @@ export class LinkDrawHelper {
             left = this.get_left_m_arrow() + 125 + diff_ee
             top = this.get_top_m_arrow(true) + 30
             arrow = `M${left} ${top} ${upArrowPath()}`
-
-            // console.log(`diff_ee`, diff_ee)
         }
         else if (direction === 'down') {
             left = this.get_left_m_arrow() + 125 + diff_ee
