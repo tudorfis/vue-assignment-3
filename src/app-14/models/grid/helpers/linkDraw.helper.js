@@ -68,7 +68,7 @@ export class LinkDrawHelper {
 
     drawPath(direction) {
         let left, top, path
-        const diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'out')
+        const diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'out') || 0
 
         if (direction === 'up') {
             left = this.get_left_m_path() + 125 + diff_ee
@@ -134,13 +134,13 @@ export class LinkDrawHelper {
         let distance = this.left ? 117 : 123
 
         if (firstHalf) {
-            diff_ee = linkEEhelper.getDiffEE(this.oppositeDirection(directionInOut), this.link1, this.link2, 'in')
+            diff_ee = linkEEhelper.getDiffEE(this.oppositeDirection(directionInOut), this.link1, this.link2, 'in') || 0
 
             if (direction === 'left') distance -= diff_ee
             else if (direction === 'right') distance += diff_ee
         
         } else {
-            diff_ee = linkEEhelper.getDiffEE(directionInOut, this.link1, this.link2, 'out')
+            diff_ee = linkEEhelper.getDiffEE(directionInOut, this.link1, this.link2, 'out') || 0
 
             if (direction === 'up') distance += diff_ee
             else if (direction === 'down') distance -= diff_ee
@@ -152,12 +152,12 @@ export class LinkDrawHelper {
         let left, top, arrow, diff_ee
 
         if (sameRowCol) {
-            diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'out')
+            diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'out') || 0
             direction = this.oppositeDirection(direction)
         }
         else {
             direction = this.oppositeDirection(direction)
-            diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'in')
+            diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'in') || 0
         }
 
         if (direction === 'up') {

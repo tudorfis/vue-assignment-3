@@ -228,7 +228,7 @@ class LinkEEHelper {
             difference = this.getDifferenceByPoint(pointNr)
         }
 
-        return difference
+        return difference || 0
     }
     getDifferenceByPoint(pointNr) {
         if (pointNr === 2) return -gc.arrowSizeW

@@ -4,20 +4,6 @@
       <div class="row">
         <h3>Have Fun With The Controls</h3>
       </div>
-      <div class="row">
-        <div class="form-group">
-          <label for>Size</label>
-          <input type="number" v-model.number="size" class="form-control" />
-        </div>
-        <div class="form-group">
-          <label for>Grid Size</label>
-          <input type="number" v-model.number="gridSize" class="form-control" />
-        </div>
-        <div class="form-group">
-          <label for>Color</label>
-          <input type="text" v-model="strokeColor" class="form-control" />
-        </div>
-      </div>
     </div>
     <svg :viewBox="`0 0 ${size} ${size}`" :style="{border: `${lineWidth}px solid ${strokeColor}`}">
       <path

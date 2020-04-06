@@ -1,8 +1,9 @@
-import { gridcellOperationsService } from '../services/gridcellOperations.service'
-import { dragElementsService } from '../../../services/dragElements.service'
-import { gridModel } from '../../../models/grid/grid.model';
-import { VueUtils } from '../../../utils/vue.utils'
-import { toolboxService } from '../../toolbox/services/toolbox.service';
+import { gridcellOperationsService } from '../../services/gridcellOperations.service'
+import { dragElementsService } from '../../../../services/dragElements.service'
+import { gridModel } from '../../../../models/grid/grid.model';
+import { VueUtils } from '../../../../utils/vue.utils'
+import { toolboxService } from '../../../toolbox/services/toolbox.service';
+import { gridArrowService } from '../../services/gridArrow.service';
 
 export default {
     props: ['position', 'cell'],
@@ -24,14 +25,16 @@ export default {
     },
     methods: {
         onDrop() {
+            gridArrowService.hideArrowConnector()
             gridcellOperationsService.previousCellOperations()
+
             if (this.isSameGrid()) return;
 
             let oldPosition, newPosition
             if (this.dropppointDirection) {
                 newPosition = this.moveCellsByDroppoint()
                 this.setCellActive(newPosition)
-                this.removePreviousCell(newPosition)
+                this.removePreviousCell()
                 gridModel.rearangeLinksAfterDroppoint(newPosition, this.dropppointDirection)
             }
 
@@ -39,7 +42,7 @@ export default {
                 newPosition = this.position
                 this.setCellActive()
                 this.addRowOrColEnd()
-                oldPosition = this.removePreviousCell(this.position)
+                oldPosition = this.removePreviousCell()
                 gridModel.rearangeLinks(oldPosition, newPosition)
 
                 if (gridModel.hasNoLinks(this.position))
@@ -77,7 +80,7 @@ export default {
 
             return false
         },
-        removePreviousCell(newPosition) {
+        removePreviousCell() {
             if (dragElementsService.insideCell) {
                 const dragElement = dragElementsService.previousDragElement;
 

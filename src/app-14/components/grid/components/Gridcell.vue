@@ -5,6 +5,8 @@
     @dragstart="stopDragEmptyCell"
     @drop.prevent="onDrop"
     @dragover.prevent="onDragover"
+    @mouseenter="showGridArrow"
+    @mouseleave="hideGridArrow"
   >
     <krt-gridcell-droppoints
       v-if="showDroppoints"
@@ -24,11 +26,16 @@
 
 import { globalConfig } from '../../../config/global.config';
 import GridcellElementVue from './GridcellElement.vue';
-import GridcellDropPointsVue from './GridcellDropPoints.vue';
-import gridcellDragDropMixin from '../mixins/gridcellDragDrop.mixin'
+import GridcellDropPointsVue from './control-components/GridcellDropPoints.vue';
+import gridcellDragDropMixin from '../mixins/gridcell-mixins/gridcellDragDrop.mixin'
+import gridcellDroppointsMixin from '../mixins/gridcell-mixins/gridcellDroppoints.mixin'
+import { gridArrowService } from '../services/gridArrow.service';
 
 export default {
-  mixins: [gridcellDragDropMixin],
+  mixins: [
+    gridcellDragDropMixin,
+    gridcellDroppointsMixin
+  ],
   components: {
     krtGridcellElement: GridcellElementVue,
     krtGridcellDroppoints: GridcellDropPointsVue
@@ -37,17 +44,14 @@ export default {
     stopDragEmptyCell(event) {
       if (!event.target.classList.contains('gridtool'))
         event.preventDefault()
-    }      
-  },
-  computed: {
-    showDroppoints() {
-      const droppointsKeys = Object.keys(this.droppointsDisplay)
-      for (const key of droppointsKeys) {
-        if (this.droppointsDisplay[key])
-          return true
-      }
-
-      return false
+    },
+    showGridArrow(event) {
+      gridArrowService.prototype = this
+      return gridArrowService.init(event)
+    },
+    hideGridArrow() {
+      gridArrowService.prototype = this
+      return gridArrowService.destroy()
     }
   }
 };

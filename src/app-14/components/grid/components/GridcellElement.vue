@@ -35,7 +35,7 @@ import SendEmailVue from '../../toolbox/components/SendEmail.vue';
 import SendSmsVue from '../../toolbox/components/SendSms.vue';
 import AddRemoveTagVue from '../../toolbox/components/AddRemoveTag.vue';
 import { globalConfig } from '../../../config/global.config';
-import GridtoolModificationsVue from './GridtoolModifications.vue';
+import GridtoolModificationsVue from './control-components/GridtoolModifications.vue';
 export default {
   components: {
     krtGridtoolModifications: GridtoolModificationsVue,

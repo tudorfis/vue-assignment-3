@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { globalConfig } from '../../../config/global.config';
+import { globalConfig } from '../../../../config/global.config';
 export default {
   props: ['display'],
   computed: {

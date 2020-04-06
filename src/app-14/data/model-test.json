@@ -1,33 +1,88 @@
 {
     "numCols": 15,
     "numRows": 15,
-    "totalSteps": 5,
+    "totalSteps": 15,
     "steps": {
         "1-2": {
             "is": 1,
-            "type": "SEND_EMAIL"
+            "type": "SEND_SMS"
         },
-        "1-5": {
+        "1-4": {
             "is": 1,
             "type": "SEND_EMAIL"
         },
         "2-1": {
             "is": 1,
+            "type": "ADD_REMOVE_TAG"
+        },
+        "2-2": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG"
+        },
+        "2-3": {
+            "is": 1,
             "type": "SEND_SMS"
         },
-        "3-1": {
+        "2-5": {
             "is": 1,
             "type": "SEND_EMAIL"
         },
-        "5-1": {
+        "2-6": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG"
+        },
+        "2-7": {
+            "is": 1,
+            "type": "SEND_SMS"
+        },
+        "3-2": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG"
+        },
+        "3-4": {
             "is": 1,
             "type": "SEND_EMAIL"
+        },
+        "3-7": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG"
+        },
+        "4-3": {
+            "is": 1,
+            "type": "SEND_EMAIL"
+        },
+        "4-5": {
+            "is": 1,
+            "type": "SEND_SMS"
+        },
+        "5-2": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG"
+        },
+        "6-2": {
+            "is": 1,
+            "type": "SEND_EMAIL"
+        },
+        "7-2": {
+            "is": 1,
+            "type": "SEND_SMS"
         }
     },
     "links": [
-        "2-1__3-1",
-        "5-1__1-2",
-        "1-2__1-5",
-        "3-1__5-1"
+        "1-4__2-3",
+        "1-2__2-1",
+        "1-2__1-4",
+        "2-3__3-2",
+        "2-1__2-2",
+        "6-2__7-2",
+        "7-2__3-4",
+        "2-7__2-6",
+        "3-4__2-5",
+        "4-3__5-2",
+        "4-5__3-7",
+        "3-7__2-7",
+        "2-5__4-5",
+        "5-2__6-2",
+        "3-2__4-3"
     ]
 }

@@ -1,20 +1,26 @@
 <template>
-  <div class="gridcontent" @mouseover="resetGridView">
+  <div 
+    class="gridcontent"
+    @mousemove="drawPath"
+    @mouseover="resetGridView"
+    @mouseup="stopArrowDrag"
+  >
+
     <!-- @TODO: remove controls, used only for testing purposes
         add top menu controls, such as zoom in, zoom out etc -->
     <krt-gridcontent-controls></krt-gridcontent-controls>
     <svg
       id="svgGrid"
       :style="svgStyle"
-      :viewBox="zoomService.svgViewBox" 
+      :viewBox="zoomService.svgViewBox"
     >
-        <path 
-          :d="arrow.d" 
-          :key="arrowIndex"
-          v-for="(arrow, arrowIndex) of pathObj"
-          :fill="arrow.a ? (arrow.color || globalConfig.arrowColor) : 'none'"
-          :stroke="!arrow.a ? (arrow.color ||globalConfig.arrowColor) : ''"
-          :stroke-width="!arrow.a ? globalConfig.arrowWidth : 0" />
+      <path 
+        :d="arrow.d" 
+        :key="arrowIndex"
+        v-for="(arrow, arrowIndex) of pathObj"
+        :fill="arrow.a ? (arrow.color || globalConfig.arrowColor) : 'none'"
+        :stroke="!arrow.a ? (arrow.color ||globalConfig.arrowColor) : ''"
+        :stroke-width="!arrow.a ? globalConfig.arrowWidth : 0" />
     </svg>
     <div 
       class="gridlayout"
@@ -28,6 +34,7 @@
         :position="position"
       ></krt-gridcell>
     </div>
+    <krt-grid-arrow-connector></krt-grid-arrow-connector>
   </div>
 </template>
 
@@ -37,16 +44,19 @@ import GridcellVue from './components/Gridcell.vue';
 import mousemoveMixin from '../../mixins/mousemove.mixin';
 import { gridModel } from '../../models/grid/grid.model'
 import gridcontentMixin from './mixins/gridcontentStyles.mixin'
-import GridcontentControlsVue from './components/GridcontentControls.vue';
+import GridcontentControlsVue from './components/control-components/GridcontentControls.vue';
+import GridArrowConnectorVue from './components/control-components/GridArrowConnector.vue';
 import { zoomService } from '../../services/zoom.service'
 import { Utils } from '../../utils/utils';
+import { gridArrowService } from '../grid/services/gridArrow.service'
 
 export default {
   mixins: [mousemoveMixin, gridcontentMixin],
   props: ['toolboxWidth', 'topmenuHeight'],
   components: {
     krtGridcell: GridcellVue,
-    krtGridcontentControls: GridcontentControlsVue
+    krtGridcontentControls: GridcontentControlsVue,
+    krtGridArrowConnector: GridArrowConnectorVue
   },
   data() {
     return {
@@ -54,6 +64,12 @@ export default {
       gridModel,
       zoomService
     };
+  },
+  methods: {
+    drawPath(event) {
+      gridArrowService.prototype = this
+      return gridArrowService.drawPath()
+    }
   },
   computed: {
     gridObj() {

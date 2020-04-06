@@ -3,6 +3,7 @@ import { gridModel } from "../grid.model"
 import { LinkDrawHelper } from '../helpers/linkDraw.helper'
 import linkEEhelper from '../helpers/linkEE.helper'
 import { globalConfig } from '../../../config/global.config'
+import { gridArrowService } from '../../../components/grid/services/gridArrow.service'
 
 export const gridLinksOperations = {
     colors: [],
@@ -16,11 +17,14 @@ export const gridLinksOperations = {
                 gridLinksOperations.genPathTwoCells(linkKey)
         
     },
-    genPathTwoCells(linkKey) {
-        if (this.colors.length === 0)
-            this.colors = [...globalConfig.colorArray]
+    genPathTwoCells(linkKey, isDrag) {
+        const vm = gridLinksOperations
 
-        Vue.set(gridModel.paths, linkKey, [])
+        if (vm.colors.length === 0)
+            vm.colors = [...globalConfig.colorArray]
+
+        if (!isDrag)
+            Vue.set(gridModel.paths, linkKey, [])
 
         const l = new LinkDrawHelper(linkKey, gridModel)
         let path, arrow, direction1, direction2, sameColRow
@@ -38,7 +42,7 @@ export const gridLinksOperations = {
 
         path = l.drawPath(l[direction1])
         path.d += l.drawLine(l[direction1], 'full')
-
+        
         if (l[sameColRow]) {
             path.d += l.drawLine(l[direction1], 'arrow')
             arrow = l.drawArrow(l[direction1], true)
@@ -64,12 +68,18 @@ export const gridLinksOperations = {
         }
 
         /** @TODO: add the ids for cells so the colors don't scramble */
-        const color = this.colors.pop()
+        const color = (isDrag) ? '#000' : vm.colors.pop()
 
         path.color = color
         arrow.color = color
 
-        gridModel.paths[linkKey].push(...[path, arrow])
+        gridModel.paths[linkKey].push(path)
+        gridModel.paths[linkKey].push(arrow)
+
+        if (isDrag) {
+            gridArrowService.lastPath = path
+            gridArrowService.lastArrow = arrow
+        }
     },
     rearangeLinks(oldPosition, newPosition) {
         for (const i in gridModel.model.links) {
