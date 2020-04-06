@@ -3,6 +3,7 @@ import { globalConfig } from "../../../config/global.config"
 import { VueUtils } from "../../../utils/vue.utils"
 
 export const toolboxService = {
+    isInsideCell: false,
     tempDragStyles: {
         borderRadius: null,
         width: null,
@@ -33,8 +34,9 @@ export const toolboxService = {
     },
     beforeStartDrag(event) {
         const vueElement = event.srcElement.__vue__
+        this.isInsideCell = VueUtils.traverseByProp(vueElement, 'isInsideCell') || false
 
-        if (VueUtils.traverseByProp(vueElement, 'isInsideCell'))
+        if (this.isInsideCell)
             VueUtils.traverseByQuery(vueElement, '.gridtool-modifications').style.visibility = 'hidden'
 
         else this.setDragStyles(event.srcElement)

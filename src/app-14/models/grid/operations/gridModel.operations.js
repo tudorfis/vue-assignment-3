@@ -55,6 +55,7 @@ export const gridModelOperations = {
             const prevPos = this.getPosition(row, i - 1)
 
             this.model.cells[nextPos] = this.model.cells[prevPos]
+            this.rearangeLinks(prevPos, nextPos)
         }
         
         Vue.set(this.model.cells, position, {...cellBlueprint})
@@ -67,10 +68,11 @@ export const gridModelOperations = {
         const col = this.getCol(position)
         
         for (let i = this.model.numRows; i > row; i--) {
-            const currentPosition = this.getPosition(i, col)
-            const previousPosition = this.getPosition(i - 1, col)
+            const currPos = this.getPosition(i, col)
+            const prevPos = this.getPosition(i - 1, col)
 
-            this.model.cells[currentPosition] = this.model.cells[previousPosition]
+            this.model.cells[currPos] = this.model.cells[prevPos]
+            this.rearangeLinks(prevPos, currPos)
         }
 
         Vue.set(this.model.cells, position, {...cellBlueprint})

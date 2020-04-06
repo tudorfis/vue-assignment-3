@@ -84,5 +84,115 @@ export const gridLinksOperations = {
             else if (link2 === oldPosition)
                 gridModel.model.links[i] = LinkDrawHelper.genLinkKey(link1, newPosition)
         }
+    },
+    rearangeLinksAfterDroppoint(position, direction) {
+        let coordinates = [[],[]]
+
+        if (['right', 'left'].indexOf(direction) !== -1) {
+            coordinates[0] = [0, -1]
+            coordinates[1] = [0, 1]
+        }
+        else if (['up', 'down'].indexOf(direction) !== -1) {
+            coordinates[0] = [-1, 0]
+            coordinates[1] = [1, 0]
+        }
+
+        const prevPosition = gridModel.getPositionDiff(position, ...coordinates[0])
+        const nextPosition = gridModel.getPositionDiff(position, ...coordinates[1])
+        
+        this.connectLinks(prevPosition, nextPosition, position)
+        this.connectLinks(nextPosition, prevPosition, position)
+    },
+    connectLinks(position1, position2, position) {
+        const key = gridModel.model.links.indexOf(
+            LinkDrawHelper.genLinkKey(position1, position2))
+        
+        if (key !== -1) {
+            const newLinkKey1 = LinkDrawHelper.genLinkKey(position1, position)
+            const newLinkKey2 = LinkDrawHelper.genLinkKey(position, position2)
+
+            gridModel.model.links[key] = newLinkKey1
+            gridModel.model.links.push(newLinkKey2)
+        } 
+    },
+    hasNoLinks(position) {
+        if (gridModel.model.links && gridModel.model.links.length)
+            for (const linkKey of gridModel.model.links)
+                if (linkKey.indexOf(position) !== -1) return false
+
+        return true
+    },
+    rearangeLinksOnSinglePath(position) {
+        const eePathMap = linkEEhelper.eePathMap[position]
+        if (!eePathMap) return
+       
+        const moreThanOnePath = eePathMap.h > 1 || eePathMap.v > 1
+        if (moreThanOnePath) return
+
+        const notStraightLine = (eePathMap.h === 1 && eePathMap.v > 0) || (eePathMap.v === 1 && eePathMap.h > 0)
+        if (notStraightLine) return
+
+        const rowControl = gridModel.getRow(position)
+        const colControl = gridModel.getCol(position)
+
+        let prevPosition, nextPosition
+        if (eePathMap.h) {
+            getPrevNextPositionsHorizontal()
+
+            if (prevPosition && nextPosition) {
+                this.connectLinks(prevPosition, nextPosition, position)
+                this.connectLinks(nextPosition, prevPosition, position)
+            } 
+        }
+        else if (eePathMap.v) {
+            getPrevNextPositionsVertical()
+
+            if (prevPosition && nextPosition) {
+                this.connectLinks(prevPosition, nextPosition, position)
+                this.connectLinks(nextPosition, prevPosition, position)
+            } 
+        }
+
+        function getPrevNextPositionsHorizontal() {
+            for (let col = colControl - 1; col >= 1; col--) {
+                const position = gridModel.getPosition(rowControl, col)
+                if (gridModel.model.cells[position].is) {
+                    prevPosition = position
+                    break;
+                }
+            }
+            for (let col = colControl + 1; col <= gridModel.model.numCols; col++) {
+                const position = gridModel.getPosition(rowControl, col)
+                if (gridModel.model.cells[position].is) {
+                    nextPosition = position
+                    break;
+                }
+            }
+        }
+
+        function getPrevNextPositionsVertical() {
+            for (let row = rowControl - 1; row >= 1; row--) {
+                const position = gridModel.getPosition(row, colControl)
+                if (gridModel.model.cells[position].is) {
+                    prevPosition = position
+                    break;
+                }
+            }
+            for (let row = rowControl + 1; row <= gridModel.model.numRows; row++) {
+                const position = gridModel.getPosition(row, colControl)
+                if (gridModel.model.cells[position].is) {
+                    nextPosition = position
+                    break;
+                }
+            }
+        }
+    },
+    deleteAllLinks(position) {
+        const output = []
+        if (this.model.links && this.model.links.length)
+            for (const linkKey of this.model.links)
+                if (linkKey.indexOf(position) === -1) output.push(linkKey)
+
+        this.model.links = output
     }
 }

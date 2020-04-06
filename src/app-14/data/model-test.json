@@ -1,1 +1,33 @@
-{"numCols":15,"numRows":15,"totalSteps":5,"steps":{"2-1":{"is":1,"type":"SEND_SMS"},"2-2":{"is":1,"type":"SEND_EMAIL"},"2-3":{"is":1,"type":"SEND_EMAIL"},"3-3":{"is":1,"type":"ADD_REMOVE_TAG"},"3-4":{"is":1,"type":"SEND_EMAIL"}},"links":["2-1__3-3","3-3__3-4","2-2__3-3","3-3__2-3","2-1__2-2"]}
+{
+    "numCols": 15,
+    "numRows": 15,
+    "totalSteps": 5,
+    "steps": {
+        "1-2": {
+            "is": 1,
+            "type": "SEND_EMAIL"
+        },
+        "1-5": {
+            "is": 1,
+            "type": "SEND_EMAIL"
+        },
+        "2-1": {
+            "is": 1,
+            "type": "SEND_SMS"
+        },
+        "3-1": {
+            "is": 1,
+            "type": "SEND_EMAIL"
+        },
+        "5-1": {
+            "is": 1,
+            "type": "SEND_EMAIL"
+        }
+    },
+    "links": [
+        "2-1__3-1",
+        "5-1__1-2",
+        "1-2__1-5",
+        "3-1__5-1"
+    ]
+}

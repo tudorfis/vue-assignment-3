@@ -10,6 +10,11 @@
       @click="onEdit"
       class="fas fa-edit edit-icon"
       :style="{...generalIconStyle, ...editIconStyle}"></i>
+    <!-- <i
+      @mousedown="mousedownArrow"
+      @mouseup="mouseupArrow"
+      class="fas fa-sign-in-alt drag-arrow-icon"
+      :style="{...generalIconStyle, ...dragArrowIconStyle}"></i> -->
   </div>
 </template>
 
@@ -19,10 +24,14 @@ import { globalConfig } from '../../../config/global.config';
 import { gridcellOperationsService } from '../services/gridcellOperations.service';
 import { dragElementsEnum } from '../../../services/dragElements.service';
 export default {
+  props: ['position'],
   methods: {
     onDelete(event) {
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')
       gridcellOperationsService.resetCell(gridCellElement)
+      
+      gridModel.deleteAllLinks(this.position)
+      gridModel.buildLinks()
     },
     onEdit(event) {
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')
@@ -41,7 +50,64 @@ export default {
           $('#addRemoveTagsModal').modal();
           break;
       }
-    }
+    },
+    // onDragArrow(event) {
+    //   console.log('onDragArrow', event)
+    // },
+    // mouseupArrow(event) {
+    //   console.log('mouseupArrow', event)
+    // },
+    // mousedownArrow(event) {
+      
+
+    //   console.log(dragI)
+    //   // event.srcElement.style.position = 'fixed'
+    //   // event.srcElement.style.top = '60px'
+    //   // event.srcElement.style.left = '200px'
+    //   // event.srcElement.draggable = true
+
+    //   console.log('mousedownArrow', event)
+    // },
+    
+  },
+  mounted(event) {
+    console.log(this.$parent)
+      const parent = this.$parent.$el
+      const parentRect = parent.getBoundingClientRect()
+
+      const element = this.$el
+      const uid = element.__vue__._uid
+      let dragI
+
+      if (!document.querySelector(`#dragArrow${uid}`)) {
+        
+        dragI = document.createElement('i')
+        dragI.id = `dragArrow${uid}`
+
+        dragI.classList = 'fas fa-sign-in-alt drag-arrow-icon'
+        dragI.style.position = 'fixed'
+        dragI.style.fontSize = '30px'
+        dragI.style.zIndex = '4'
+        dragI.style.color = '#4D80CC'
+        dragI.style.cursor = 'pointer'
+
+        // const rect = element.getBoundingClientRect()
+        dragI.style.top = `${parentRect.top + parentRect.height - 30}px`
+        dragI.style.left = `${parentRect.left + parentRect.width - 30}px`
+
+        document.body.append(dragI)
+      } else {
+        dragI = document.querySelector(`#dragArrow${uid}`)
+        console.log(`dragI`, dragI)
+      }
+  },
+  beforeDestroy() {
+      const element = this.$el
+      const uid = element.__vue__._uid
+      const dragI = document.querySelector(`#dragArrow${uid}`)
+
+      console.log('uid', uid)
+      dragI.style.display = 'none'
   },
   computed: {
     generalIconStyle() {
@@ -67,7 +133,16 @@ export default {
         'top': `-${top}px`,
         'left': `${left}px`
       }
-    }
+    },
+    // dragArrowIconStyle() {
+    //   const left =  globalConfig.gridCellElementWidth - Math.floor(globalConfig.gridCellElementWidth / 15)
+    //   let top = globalConfig.gridCellElementHeight - Math.floor(globalConfig.gridCellElementHeight / 7)
+
+    //   return {
+    //     'top': `${top}px`,
+    //     'left': `${left}px`
+    //   }
+    // }
   }
 };
 </script>
@@ -89,14 +164,18 @@ export default {
 
     &.delete-icon {
       color: lightcoral;
-      top: -15px;
-      left: -10px;
     }
     &.edit-icon {
-      color: black;
-      top: -15px;
-      right: -10px;
+      color: #4DB380;
     }
+    // &.drag-arrow-icon {
+    //   color: #4D80CC;
+    //   transform: scale(1.20);
+    //   &:hover {
+    //     transition: transform 0.20s;
+    //     transform: scale(1.50);
+    //   }
+    // }
     
   }
 }

@@ -3,9 +3,9 @@
     class="drop-between-points" 
     v-show="display !== false">
       <div
-        class="drop-point drop-top"
-        :style="{...pointStyle, ...topPointStyle}"
-        v-show="display.showTop"
+        class="drop-point drop-up"
+        :style="{...pointStyle, ...upPointStyle}"
+        v-show="display.showUp"
       >&nbsp;</div>   
       <div 
         class="drop-point drop-right"
@@ -13,9 +13,9 @@
         v-show="display.showRight"
       >&nbsp;</div>   
       <div 
-        class="drop-point drop-bottom"
-        :style="{...pointStyle, ...bottomPointStyle}"
-        v-show="display.showBottom"
+        class="drop-point drop-down"
+        :style="{...pointStyle, ...downPointStyle}"
+        v-show="display.showDown"
       >&nbsp;</div>   
       <div 
         class="drop-point drop-left"
@@ -48,7 +48,7 @@ export default {
         'border-radius': `${this.halfPointDimension}px`
       };
     },
-    topPointStyle() {
+    upPointStyle() {
       return {
         top: `-${this.halfPointDimension}px`,
         left: `${this.halfCellWidth - this.halfPointDimension}px`
@@ -62,7 +62,7 @@ export default {
         left: `${left}px`
       };
     },
-    bottomPointStyle() {
+    downPointStyle() {
       const top = globalConfig.gridCellHeight - this.halfPointDimension;
       const left = this.halfCellWidth - this.halfPointDimension;
       return {

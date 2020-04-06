@@ -21,9 +21,6 @@ TODO:
 - lazy loading grids on big models
 - make the border lines svg paths instead of divs
 - make documentation for structure, drag and everything
-- put gridLinks operations in different files, polymorphism on left/right/up/down
-- fix the spliceCols/spliceRows problem when dragging a linked element between it's connections
-- sort the gridModel.model.links so we don't have overlapping lines
 - solve the problem when link paths come through from behind elements paths
 
 LIBRARIES FOR INSPIRATION
@@ -38,4 +35,4 @@ d3.js
 chart.js
 https://jsplumbtoolkit.com/demonstration/flowchart-builder
 https://www.jointjs.com/
-
+https://jsplumbtoolkit.com/

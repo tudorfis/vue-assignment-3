@@ -184,5 +184,17 @@ export const gridModel = {
     },
     rearangeLinks(oldPosition, newPosition) {
         gridLinksOperations.rearangeLinks.call(this, oldPosition, newPosition) 
+    },
+    rearangeLinksAfterDroppoint(position, direction) {
+        gridLinksOperations.rearangeLinksAfterDroppoint(position, direction) 
+    },
+    rearangeLinksOnSinglePath(position) {
+        gridLinksOperations.rearangeLinksOnSinglePath(position)
+    },
+    hasNoLinks(position) {
+        return gridLinksOperations.hasNoLinks(position)
+    },
+    deleteAllLinks(position) {
+        gridLinksOperations.deleteAllLinks.call(this, position)
     }
 }

@@ -14,6 +14,7 @@
     <krt-gridcell-element
       ref="gridcellelement"
       v-show="cell.is"
+      :position="position"
       :type="cell.type"
     ></krt-gridcell-element>
   </div>

@@ -36,4 +36,15 @@ export class VueUtils {
 
         return null
     }
+    static traverseByChildren(vueElement, prop) {
+        if (vueElement && vueElement[prop] !== undefined)
+            return vueElement[prop]
+
+        if (vueElement && vueElement.$children.length)
+            for (const key in vueElement.$children) {
+                return VueUtils.traverseByChildren(vueElement.$children[key], prop)
+            }
+
+        return null
+    }
 }

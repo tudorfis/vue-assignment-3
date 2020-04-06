@@ -5,6 +5,7 @@
     @mouseleave="showModifications = false"
   >
     <krt-gridtool-modifications
+      :position="position"
       v-if="showModifications"
     ></krt-gridtool-modifications>
     <krt-send-email
@@ -42,7 +43,7 @@ export default {
     krtSendSms: SendSmsVue,
     krtAddRemoveTag: AddRemoveTagVue
   },
-  props: ['allowDrop', 'type'],
+  props: ['allowDrop', 'type', 'position'],
   data() {
     return {
       dragElementsEnum,

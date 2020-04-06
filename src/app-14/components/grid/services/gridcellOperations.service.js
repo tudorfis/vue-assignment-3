@@ -1,9 +1,9 @@
 import { gridModel } from "../../../models/grid/grid.model"
 
 export const droppointsDisplayBlueprint = {
-    showTop: false,
+    showUp: false,
     showRight: false,
-    showBottom: false,
+    showDown: false,
     showLeft: false
 }
 
@@ -42,22 +42,24 @@ export const gridcellOperationsService = {
     resetCell(gridCellElement) {
         gridModel.model.totalSteps--
         gridCellElement.__vue__.$options.propsData['cell'].is = false
+
+        
     },
     setDroppoints(event, gridCell, position) {
         const isCellBellow = gridModel.hasElementBellow(position)
         const isMouseOnBottom = gridModel.isMouseOnBottomOutside(event, gridCell)
 
         if (isCellBellow && isMouseOnBottom) {
-            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showBottom: true}
-            return 'bottom'
+            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showDown: true}
+            return 'down'
         }
 
         const isCellAbove = gridModel.hasElementAbove(position)
         const isMouseOnTop = gridModel.isMouseOnTopOutside(event, gridCell)
 
         if (isCellAbove && isMouseOnTop) {
-            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showTop: true}
-            return 'top'
+            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showUp: true}
+            return 'up'
         }
 
         const isCellRight = gridModel.hasElementRight(position)
