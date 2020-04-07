@@ -24,7 +24,7 @@ export default {
         }
     },
     methods: {
-        onDrop() {
+        onDropGridCellElement() {
             gridArrowService.hideArrowConnector()
             gridcellOperationsService.previousCellOperations()
 
@@ -51,7 +51,7 @@ export default {
 
             gridModel.buildLinks()
         },
-        onDragover(event) {
+        onDragoverGridCellElement(event) {
             if (this.isSameGrid()) return;
 
             const gridCell = this.$refs.gridcell;

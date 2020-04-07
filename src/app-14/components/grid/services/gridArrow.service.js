@@ -13,7 +13,13 @@ export const gridArrowService = {
     linkKey: '',
     isHighlight: false,
     recentLink: false,
-
+    
+    startDrag() {
+        this.linkKey = ''
+        this.recentLink = false
+        this.startedDrag = true
+        this.startedPosition = this.currentPosition
+    },
     init(event) {
         this.saveGridCellElement(event)
 
@@ -39,37 +45,27 @@ export const gridArrowService = {
 
         this.prototype.$el.append(arrowConnector)
     },
+    saveGridCellElement(event) {
+        this.gridCellElement = VueUtils.traversePath(event, 'gridcell')
+    },
+    highlightCell() {
+        if (this.startedDrag && this.prototype.cell.is && this.startedPosition !== this.currentPosition) {
+            this.isHighlight = true
+            this.prototype.$el.style.boxShadow = '5px 5px 50px #efefef'
+        }
+    },
     destroy() {
-        if (!this.recentLink)
-            this.removeTempPaths()
-
+        this.removeTempPaths()
         this.dehighlightCell()
 
         if (!this.prototype.cell.is || this.startedDrag) return
 
         this.hideArrowConnector()
     },
-    startDrag() {
-        this.recentLink = false
-        this.startedPosition = this.currentPosition
-        this.startedDrag = true
-    },
     removeTempPaths() {
-        if (this.linkKey) {
-            Vue.set(gridModel.paths, this.linkKey, [])
+        if (this.linkKey && !this.recentLink) {
+            Vue.delete(gridModel.paths, this.linkKey)
             this.linkKey = ''
-        }
-    },
-    saveGridCellElement(event) {
-        this.gridCellElement = VueUtils.traversePath(event, 'gridcell')
-    },
-    hideArrowConnector() {
-        document.querySelector('#arrow-connector').style.display = `none`
-    },
-    highlightCell() {
-        if (this.startedDrag && this.prototype.cell.is && this.startedPosition !== this.currentPosition) {
-            this.isHighlight = true
-            this.prototype.$el.style.boxShadow = '5px 5px 50px #efefef'
         }
     },
     dehighlightCell(hideGridCell) {
@@ -81,18 +77,23 @@ export const gridArrowService = {
             this.prototype.$el.style.boxShadow = 'none'
         }
     },
+    hideArrowConnector() {
+        document.querySelector('#arrow-connector').style.display = `none`
+    },
     stopDrag() {
         if (this.isHighlight) {
-            gridModel.model.links.push(this.linkKey)
-            gridModel.buildLinks()
             this.recentLink = true
-        } else {
-            this.removeTempPaths()
+
+            if (!gridModel.model.links.includes(this.linkKey))
+                gridModel.model.links.push(this.linkKey)
         }
+        else this.removeTempPaths()
 
         this.startedDrag = false
         this.hideArrowConnector()
         this.dehighlightCell(true)
+
+        gridModel.buildLinks()
     },
     drawPath() {
         if (!this.startedDrag) return
@@ -107,7 +108,6 @@ export const gridArrowService = {
         if (this.linkKey === linkKey) return
         this.linkKey = linkKey
             
-        Vue.set(gridModel.paths, linkKey, [])
         gridLinksOperations.genPathTwoCells.call(gridModel, linkKey, true)
     }
 

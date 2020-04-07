@@ -30,17 +30,7 @@ class LinkEEHelper {
         }
     }
     setEEPathMap(l) {
-        if (l.right) {
-            for (let col = l.col1; col <= l.col2; col++)
-                setEEPath(l.row1, col, 'h')
-            setEEDownUpPath(l)
-        }
-        else if (l.left) {
-            for (let col = l.col1; col >= l.col2; col--)
-                setEEPath(l.row1, col, 'h')
-            setEEDownUpPath(l)
-        }
-        else if (l.sameCol && l.down) {
+        if (l.sameCol && l.down) {
             for (let row = l.row1; row <= l.row2; row++)
                 setEEPath(row, l.col1, 'v')
         }
@@ -55,6 +45,16 @@ class LinkEEHelper {
         else if (l.sameRow && l.left) {
             for (let col = l.col1; col >= l.col2; col--)
                 setEEPath(l.row1, col, 'h')
+        }
+        else if (l.right) {
+            for (let col = l.col1; col <= l.col2; col++)
+                setEEPath(l.row1, col, 'h')
+            setEEDownUpPath(l)
+        }
+        else if (l.left) {
+            for (let col = l.col1; col >= l.col2; col--)
+                setEEPath(l.row1, col, 'h')
+            setEEDownUpPath(l)
         }
 
         function setEEPath(row, col, hv) {
@@ -121,52 +121,52 @@ class LinkEEHelper {
         if (!link1Obj || !link2Obj) return
         const eeLinks = this.getEETotalLinks(l, link1Direction, link2Direction)
         
-        link1Obj.total += eeLinks
-        link2Obj.total += eeLinks
+        link1Obj.total = eeLinks
+        link2Obj.total = eeLinks
 
-        link1Obj.out[l.link2] = eeLinks
-        link2Obj.in[l.link1] = eeLinks
+        link1Obj.out[l.link2] = link1Obj.total
+        link2Obj.in[l.link1] = link2Obj.total
     }
     getEETotalLinks(l, link1Direction, link2Direction) {
         let eeLinks = 0
 
         if (link1Direction === 'right' && link2Direction === 'left') {
             for (let col = l.col1 + 1; col < l.col2; col++)
-                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, -1)
+                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 0)
 
             eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, l, 1)
         } 
         else if (link1Direction === 'left' && link2Direction === 'right') {
             for (let col = l.col1 - 1; col > l.col2; col--)
-                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, -1)
+                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 0)
 
             eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, l, 1)
         }
         else if (link1Direction === 'down' && link2Direction === 'up') {
             for (let row = l.row1 + 1; row < l.row2; row++)
-                eeLinks = getEELinksEEPath(row, l.col1, 'v', eeLinks, -1)
+                eeLinks = getEELinksEEPath(row, l.col1, 'v', eeLinks, 0)
 
             eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, l, 1)
         }
         else if (link1Direction === 'up' && link2Direction === 'down') {
             for (let row = l.row1 - 1; row > l.row2; row--)
-                eeLinks = getEELinksEEPath(row, l.col1, 'v', eeLinks, -1)
+                eeLinks = getEELinksEEPath(row, l.col1, 'v', eeLinks, 0)
 
             eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, l, 1)
         }
         else if (link1Direction === 'right') {
             for (let col = l.col1 + 1; col < l.col2; col++)
-                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 1)
+                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 0)
 
             eeLinks = getEELinksLink1Link2(link1Direction, '', true, false, eeLinks, l, 1)
-            eeLinks = getEELinksUpDownDirection(link2Direction, eeLinks, l)
+            eeLinks = getEELinksUpDownDirection(link2Direction, eeLinks, l, 0)
         }
         else if (link1Direction === 'left') {
             for (let col = l.col1 - 1; col > l.col2; col--)
-                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 1)
+                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 0)
 
             eeLinks = getEELinksLink1Link2(link1Direction, '', true, false, eeLinks, l, 1)
-            eeLinks = getEELinksUpDownDirection(link2Direction, eeLinks, l)
+            eeLinks = getEELinksUpDownDirection(link2Direction, eeLinks, l, 0)
         }
 
         return eeLinks
@@ -197,13 +197,13 @@ class LinkEEHelper {
         function getEELinksUpDownDirection(link2Direction, eeLinks, l) {
             if (link2Direction === 'down'){ 
                 for (let row = l.row1 + 1; row < l.row2; row++)
-                    eeLinks = getEELinksEEPath(row, l.col2, 'v', eeLinks, 2)
+                    eeLinks = getEELinksEEPath(row, l.col2, 'v', eeLinks, 1)
 
                 eeLinks = getEELinksLink1Link2('', link2Direction, false, true, eeLinks, l, 1)
             }
             else if (link2Direction === 'up') {
                 for (let row = l.row1 - 1; row > l.row2; row--)
-                    eeLinks = getEELinksEEPath(row, l.col2, 'v', eeLinks, 2)
+                    eeLinks = getEELinksEEPath(row, l.col2, 'v', eeLinks, 1)
 
                 eeLinks = getEELinksLink1Link2('', link2Direction, false, true, eeLinks, l, 1)
             }
@@ -237,6 +237,17 @@ class LinkEEHelper {
         else if (pointNr === 5) return (gc.arrowSizeW * 2)
         else if (pointNr === 6) return -(gc.arrowSizeW * 3)
         else if (pointNr === 7) return (gc.arrowSizeW * 3)
+        
+        else if (pointNr > 7) {
+            const rest = pointNr % 7
+            const isMinus = rest % 2 === 0
+            const total = gc.arrowSizeW * Math.floor(rest / 2)
+
+            if (isMinus)
+                return -total
+            
+            return total
+        } 
 
         return 0
     }

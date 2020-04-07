@@ -3,8 +3,8 @@
     ref="gridcell"
     class="gridcell"
     @dragstart="stopDragEmptyCell"
-    @drop.prevent="onDrop"
-    @dragover.prevent="onDragover"
+    @drop.prevent="onDropGridCellElement"
+    @dragover.prevent="onDragoverGridCellElement"
     @mouseenter="showGridArrow"
     @mouseleave="hideGridArrow"
   >
@@ -12,7 +12,7 @@
       v-if="showDroppoints"
       :display="droppointsDisplay"
     ></krt-gridcell-droppoints>
-    <small class="position-info">{{ position }}</small>
+    <!-- <small class="position-info">{{ position }}</small> -->
     <krt-gridcell-element
       ref="gridcellelement"
       v-show="cell.is"
@@ -62,7 +62,7 @@ export default {
   position: relative;
   color: #eee;
   z-index: 0;
-  border: 1px dashed #e0e0e0;
+  // border: 1px dashed #e0e0e0;
 
   .position-info {
     position: absolute;

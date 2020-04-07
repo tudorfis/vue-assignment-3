@@ -3,7 +3,6 @@ import { gridModel } from "../grid.model"
 import { LinkDrawHelper } from '../helpers/linkDraw.helper'
 import linkEEhelper from '../helpers/linkEE.helper'
 import { globalConfig } from '../../../config/global.config'
-import { gridArrowService } from '../../../components/grid/services/gridArrow.service'
 
 export const gridLinksOperations = {
     colors: [],
@@ -23,8 +22,7 @@ export const gridLinksOperations = {
         if (vm.colors.length === 0)
             vm.colors = [...globalConfig.colorArray]
 
-        if (!isDrag)
-            Vue.set(gridModel.paths, linkKey, [])
+        Vue.set(gridModel.paths, linkKey, [])
 
         const l = new LinkDrawHelper(linkKey, gridModel)
         let path, arrow, direction1, direction2, sameColRow
@@ -76,10 +74,6 @@ export const gridLinksOperations = {
         gridModel.paths[linkKey].push(path)
         gridModel.paths[linkKey].push(arrow)
 
-        if (isDrag) {
-            gridArrowService.lastPath = path
-            gridArrowService.lastArrow = arrow
-        }
     },
     rearangeLinks(oldPosition, newPosition) {
         for (const i in gridModel.model.links) {

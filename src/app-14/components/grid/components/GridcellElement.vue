@@ -1,12 +1,12 @@
 <template>
   <div
     class="gridcell-element"
-    @mouseenter="showModifications = true"
-    @mouseleave="showModifications = false"
+    @mouseenter="showGridToolModifications = true"
+    @mouseleave="showGridToolModifications = false"
   >
     <krt-gridtool-modifications
       :position="position"
-      v-if="showModifications"
+      v-if="showGridToolModifications"
     ></krt-gridtool-modifications>
     <krt-send-email
       ref="sendemail"
@@ -48,10 +48,10 @@ export default {
     return {
       dragElementsEnum,
       globalConfig,
-      showModifications: false
-    };
+      showGridToolModifications: false
+    }
   }
-};
+}
 </script>
 
 <style lang="scss">

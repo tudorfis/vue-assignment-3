@@ -5,7 +5,7 @@
         <h3>Have Fun With The Controls</h3>
       </div>
     </div>
-    <svg :viewBox="`0 0 ${size} ${size}`" :style="{border: `${lineWidth}px solid ${strokeColor}`}">
+    <!-- <svg :viewBox="`0 0 ${size} ${size}`" :style="{border: `${lineWidth}px solid ${strokeColor}`}">
       <path
         :stroke="strokeColor"
         :stroke-width="lineWidth"
@@ -24,61 +24,91 @@
       <path stroke="red" stroke-width="0.7" d="M30 20 H40" fill="none"></path>
       <path stroke="red" stroke-width="0.7" d="M40 20 V25" fill="none"></path>
       <path stroke="red" stroke-width="0.7" d="M40 25 H42.5" fill="none"></path>
-    </svg>
+    </svg> -->
   </div>
 </template>
 
 <script>
+class UIControl {
+  draw() {}
+}
+class TextBox extends UIControl {
+  draw() {
+    console.log('draw a textbox')
+  }
+}
+class Image extends UIControl {
+  draw() {
+    console.log('draw a image')
+  }
+}
+
 export default {
-  data() {
-    return {
-      size: 100,
-      gridSize: 10,
-      strokeColor: 'green',
-      visualColors: ['#000', '#222', '#333', '#666']
-    };
-  },
-  computed: {
-    lineWidth() {
-      return (this.size / 500).toFixed(2);
-    },
-    totalLines() {
-      const totalLines = Math.round(
-        (this.size - this.gridSize) / this.gridSize
-      );
-      return totalLines < 0 ? 1 : totalLines;
-    }
-  },
   methods: {
-    randomColor() {
-      const length = this.visualColors.length - 1;
-      let index = 0;
+    init() {
+      function drawUi(control) {
+        control.draw()
+      }
 
-      for (let i = 1; i <= length; i++) index += Math.round(Math.random());
+      drawUi(new TextBox())
+      drawUi(new Image())
 
-      return this.visualColors[index];
-    },
-    startRandomizingColors() {
-      const vm = this;
-      setInterval(function() {
-        vm.size++;
-
-        if (vm.size % 8 === 0) vm.strokeColor = vm.randomColor();
-
-        if (vm.size % 400 === 0) vm.gridSize++;
-      }, 20);
     }
   },
   mounted() {
-      return
-      this.startRandomizingColors()
+    this.init()
   }
-};
+  // data() {
+  //   return {
+  //     size: 100,
+  //     gridSize: 10,
+  //     strokeColor: 'green',
+  //     visualColors: ['#000', '#222', '#333', '#666']
+  //   };
+  // },
+  // computed: {
+  //   lineWidth() {
+  //     return (this.size / 500).toFixed(2);
+  //   },
+  //   totalLines() {
+  //     const totalLines = Math.round(
+  //       (this.size - this.gridSize) / this.gridSize
+  //     );
+  //     return totalLines < 0 ? 1 : totalLines;
+  //   }
+  // },
+  //   randomColor() {
+  //     const length = this.visualColors.length - 1;
+  //     let index = 0;
+
+  //     for (let i = 1; i <= length; i++) index += Math.round(Math.random());
+
+  //     return this.visualColors[index];
+  //   },
+  //   startRandomizingColors() {
+  //     const vm = this;
+  //     setInterval(function() {
+  //       vm.size++;
+
+  //       if (vm.size % 8 === 0) vm.strokeColor = vm.randomColor();
+
+  //       if (vm.size % 400 === 0) vm.gridSize++;
+  //     }, 20);
+  //   }
+  // },
+  // mounted() {
+  //     return
+  //     this.startRandomizingColors()
+  // }
+}
 </script>
 
-<style lang="scss" scoped>
-.form-group {
+<style>
+.loading-icon {
+  display: none;
+}
+/* .form-group {
   margin-right: 5px;
   width: 100px;
-}
+} */
 </style>
