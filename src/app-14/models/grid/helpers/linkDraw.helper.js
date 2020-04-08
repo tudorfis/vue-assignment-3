@@ -35,6 +35,12 @@ export class LinkDrawHelper {
     static genLinkKey(link1, link2) {
         return `${link1}${link_separator}${link2}`
     }
+    get idLink() {
+        const id1 = gridModel.model.cells[this.link1].id
+        const id2 = gridModel.model.cells[this.link2].id
+
+        return `${id1}=>${id2}`
+    }
     get right() {
         return this.col1 < this.col2
     }

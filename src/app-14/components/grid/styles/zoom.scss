@@ -1,0 +1,85 @@
+.gridlayout.zoom-50 {
+    .gridcell {
+        width: 120px;
+        height: 120px;
+        .gridcell-element {
+            width: 70px;
+            height: 70px;
+            top: 25px;
+            left: 25px;
+            .gridtool {
+                padding: 20px;
+                border-radius: 7.5px;
+                i { font-size: 26px; }
+            }
+        }
+    }
+}
+.gridlayout.zoom-75 {
+    .gridcell {
+        width: 180px;
+        height: 180px;
+        .gridcell-element {
+            width: 105px;
+            height: 105px;
+            top: 37.5px;
+            left: 37.5px;
+            .gridtool {
+                padding: 30px;
+                border-radius: 11.25px;
+                i { font-size: 42px; }
+            }
+        }
+    }
+}
+.gridlayout.zoom-100 {
+    .gridcell {
+        width: 240px;
+        height: 240px;
+        .gridcell-element {
+            width: 140px;
+            height: 140px;
+            top: 50px;
+            left: 50px;
+            .gridtool {
+                padding: 40px;
+                border-radius: 15px;
+                i { font-size: 56px; }
+            }
+        }
+    }
+}
+.gridlayout.zoom-125 {
+    .gridcell {
+        width: 300px;
+        height: 300px;
+        .gridcell-element {
+            width: 175px;
+            height: 175px;
+            top: 62.5px;
+            left: 62.5px;
+            .gridtool {
+                padding: 50px;
+                border-radius: 18.75px;
+                i { font-size: 70px; }
+            }
+        }
+    }
+}
+.gridlayout.zoom-150 {
+    .gridcell {
+        width: 360px;
+        height: 360px;
+        .gridcell-element {
+            width: 210px;
+            height: 210px;
+            top: 75px;
+            left: 75px;
+            .gridtool {
+                padding: 60px;
+                border-radius: 22.5px;
+                i { font-size: 84px; }
+            }
+        }
+    }
+}

@@ -44,6 +44,31 @@ export default {
         case dragElementsEnum.ADD_REMOVE_TAG:
           $('#addRemoveTagsModal').modal();
           break;
+          
+        case dragElementsEnum.SUBSCRIBE_LIST:
+          $('#subscribeListModal').modal();
+          break;
+          
+        case dragElementsEnum.SUBSCRIBE_SEQUENCE:
+          $('#subscribeSequenceModal').modal();
+          break;
+          
+        case dragElementsEnum.AUTOMATION:
+          $('#automationModal').modal();
+          break;
+          
+        case dragElementsEnum.SPLIT:
+          $('#splitModal').modal();
+          break;
+          
+        case dragElementsEnum.GO_TO:
+          $('#goToModal').modal();
+          break;
+          
+        case dragElementsEnum.WAIT:
+          $('#waitModal').modal();
+          break;
+          
       }
     }
   },
@@ -92,10 +117,10 @@ export default {
     }
 
     &.delete-icon {
-      color: lightcoral;
+      color: red;
     }
     &.edit-icon {
-      color: #4DB380;
+      color: black;
     }
   }
 }

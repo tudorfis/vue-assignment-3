@@ -6,6 +6,7 @@ import { globalConfig } from '../../../config/global.config'
 
 export const gridLinksOperations = {
     colors: [],
+    colorIds: [],
     buildLinks() {
         linkEEhelper.generateEEpath()
         linkEEhelper.generateEEmap()
@@ -66,10 +67,16 @@ export const gridLinksOperations = {
         }
 
         /** @TODO: add the ids for cells so the colors don't scramble */
-        const color = (isDrag) ? '#000' : vm.colors.pop()
+        if (l.idLink && !vm.colorIds[l.idLink] && !isDrag)
+            vm.colorIds[l.idLink] = vm.colors.pop()
+
+        const color = isDrag ? '#e9e9e9' : vm.colorIds[l.idLink]
 
         path.color = color
+        path.linkKey = linkKey
+
         arrow.color = color
+        arrow.linkKey = linkKey
 
         gridModel.paths[linkKey].push(path)
         gridModel.paths[linkKey].push(arrow)

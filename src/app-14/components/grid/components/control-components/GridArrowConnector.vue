@@ -4,7 +4,7 @@
     draggable="true"
     @dragstart.prevent="onDragstart"
   >
-    <i class="fas fa-sign-in-alt drag-arrow-icon"></i>
+    <i class="fas fa-arrow-alt-circle-right"></i>
   </div>
 </template>
 
@@ -21,10 +21,9 @@ export default {
 
 <style>
     #arrow-connector {
-        font-size: 30px;
         position: fixed;
         display: none;
-        color: #4D80CC;
+        color: black;
         z-index: 4;
         cursor: pointer;
     }

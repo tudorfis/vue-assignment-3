@@ -1,9 +1,11 @@
 import { dragElementsEnum, dragElementsService } from "../../../services/dragElements.service"
 import { globalConfig } from "../../../config/global.config"
 import { VueUtils } from "../../../utils/vue.utils"
+import { gridDeleteService } from "../../grid/services/gridDelete.service"
 
 export const toolboxService = {
     isInsideCell: false,
+    startedDrag: false,
     tempDragStyles: {
         borderRadius: null,
         width: null,
@@ -24,6 +26,13 @@ export const toolboxService = {
             case 'sendemail': dragType = dragElementsEnum.SEND_EMAIL; break;
             case 'sendsms': dragType = dragElementsEnum.SEND_SMS; break;
             case 'addremovetag': dragType = dragElementsEnum.ADD_REMOVE_TAG; break;
+            case 'subscribelist': dragType = dragElementsEnum.SUBSCRIBE_LIST; break;
+            case 'subscribesequence': dragType = dragElementsEnum.SUBSCRIBE_SEQUENCE; break;
+            case 'automation': dragType = dragElementsEnum.AUTOMATION; break;
+            case 'split': dragType = dragElementsEnum.SPLIT; break;
+            case 'go_to': dragType = dragElementsEnum.GO_TO; break;
+            case 'wait': dragType = dragElementsEnum.WAIT; break;
+            case 'complete': dragType = dragElementsEnum.COMPLETE; break;
         }
         dragElementsService.activeDragElementType = dragType
 
@@ -33,6 +42,9 @@ export const toolboxService = {
         this.afterStartDrag(event)
     },
     beforeStartDrag(event) {
+        this.startedDrag = true
+        gridDeleteService.hideArrowDelete()
+
         const vueElement = event.srcElement.__vue__
         this.isInsideCell = VueUtils.traverseByProp(vueElement, 'isInsideCell') || false
 

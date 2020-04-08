@@ -18,6 +18,8 @@ import TopmenuVue from './components/topmenu/Topmenu.vue';
 import ToolboxVue from './components/toolbox/Toolbox.vue';
 import GridContentVue from './components/grid/Gridcontent.vue';
 import { zoomService } from './services/zoom.service';
+import { gridArrowService } from './components/grid/services/gridArrow.service';
+import { gridDeleteService } from './components/grid/services/gridDelete.service';
 
 export default {
   components: {
@@ -41,16 +43,25 @@ export default {
   },
   beforeCreate() {
     /** @TODO - match an id of a sequence to get the output  */
-    // gridModel.newGridModel(undefined, undefined, true)
-    // return
-  
+    
     let modelType = null
     const matchRef = window.location.search.match(/model\=([\w\-]+)/)
     if (matchRef && matchRef[1]) modelType = matchRef[1]
 
+    if (!modelType) {
+      gridModel.newGridModel(undefined, undefined, true)
+      return
+    }
+
     fetch(`http://localhost:8080/src/app-14/data/model-${modelType || 'light'}.json`)
       .then(data => data.json())
       .then(model => { gridModel.loadGridModel(model) })
+  },
+  mounted() {
+    document.body.onscroll = function(event) { 
+      gridDeleteService.hideArrowDelete()
+      gridArrowService.hideArrowConnector()
+    }
   }
 };
 </script>

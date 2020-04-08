@@ -231,17 +231,17 @@ class LinkEEHelper {
         return difference || 0
     }
     getDifferenceByPoint(pointNr) {
-        if (pointNr === 2) return -gc.arrowSizeW
-        else if (pointNr === 3) return gc.arrowSizeW
-        else if (pointNr === 4) return -(gc.arrowSizeW * 2)
-        else if (pointNr === 5) return (gc.arrowSizeW * 2)
-        else if (pointNr === 6) return -(gc.arrowSizeW * 3)
-        else if (pointNr === 7) return (gc.arrowSizeW * 3)
+        if (pointNr === 2) return -gc.arrowSizeH
+        else if (pointNr === 3) return gc.arrowSizeH
+        else if (pointNr === 4) return -(gc.arrowSizeH * 2)
+        else if (pointNr === 5) return (gc.arrowSizeH * 2)
+        else if (pointNr === 6) return -(gc.arrowSizeH * 3)
+        else if (pointNr === 7) return (gc.arrowSizeH * 3)
         
         else if (pointNr > 7) {
             const rest = pointNr % 7
             const isMinus = rest % 2 === 0
-            const total = gc.arrowSizeW * Math.floor(rest / 2)
+            const total = gc.arrowSizeH * Math.floor(rest / 2)
 
             if (isMinus)
                 return -total

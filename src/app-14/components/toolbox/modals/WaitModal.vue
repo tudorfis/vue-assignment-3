@@ -1,19 +1,19 @@
 <template>
-  <div class="add-remove-tags-modal">
+  <div class="wait-modal">
     <div
       class="modal fade"
-      id="addRemoveTagsModal"
+      id="waitModal"
       tabindex="-1"
       role="dialog"
-      aria-labelledby="addRemoveTagsModalTitle"
+      aria-labelledby="waitModalTitle"
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="addRemoveTagsModalTitle">
-                <i class="fas fa-tags"></i>
-                Add/Remove Tags
+            <h5 class="modal-title" id="waitModalTitle">
+                <i class="fas fa-stopwatch"></i>
+                Wait Configuration
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">
@@ -40,10 +40,10 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-    .add-remove-tags-modal {
+    .wait-modal {
         .modal-header {
             padding: 20px 30px;
-            background: magenta;
+            background: #4aa1ff;
         }
         .modal-title {
             color: white;
@@ -56,7 +56,7 @@ export default {};
             }
         }
         .modal-body {
-            color: magenta;
+            color: #4aa1ff;
         }
         .modal-footer {
             button.btn-green {

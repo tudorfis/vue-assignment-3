@@ -8,7 +8,7 @@
       aria-labelledby="sendSmsModalTitle"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="sendSmsModalTitle">
@@ -60,12 +60,11 @@ export default {};
         }
         .modal-footer {
             button.btn-green {
-                font-size: 20px;
+                font-size: 18px;
             }
             button.btn-gray {
-                font-size: 14px;
+                font-size: 17px;
             }
-            
         }
     }
 </style>

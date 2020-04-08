@@ -5,7 +5,6 @@
     @mouseover="resetGridView"
     @mouseup="stopArrowDrag"
   >
-
     <!-- @TODO: remove controls, used only for testing purposes
         add top menu controls, such as zoom in, zoom out etc -->
     <krt-gridcontent-controls></krt-gridcontent-controls>
@@ -15,9 +14,10 @@
       :viewBox="zoomService.svgViewBox"
     >
       <path 
-        :d="arrow.d" 
-        :key="arrowIndex"
         v-for="(arrow, arrowIndex) of pathObj"
+        :key="arrowIndex"
+        :linkKey="arrow.linkKey"
+        :d="arrow.d" 
         :fill="arrow.a ? (arrow.color || globalConfig.arrowColor) : 'none'"
         :stroke="!arrow.a ? (arrow.color ||globalConfig.arrowColor) : ''"
         :stroke-width="!arrow.a ? globalConfig.arrowWidth : 0" />
@@ -26,6 +26,7 @@
       class="gridlayout"
       :class="gridLayoutClass"
       :style="gridLayoutStyle"
+      @mousemove="findSvgPath"
     >
       <krt-gridcell
         v-for="(cell,position) of gridObj"
@@ -35,6 +36,7 @@
       ></krt-gridcell>
     </div>
     <krt-grid-arrow-connector></krt-grid-arrow-connector>
+    <krt-grid-arrow-delete></krt-grid-arrow-delete>
   </div>
 </template>
 
@@ -49,6 +51,9 @@ import GridArrowConnectorVue from './components/control-components/GridArrowConn
 import { zoomService } from '../../services/zoom.service'
 import { Utils } from '../../utils/utils';
 import { gridArrowService } from '../grid/services/gridArrow.service'
+import { VueUtils } from '../../utils/vue.utils';
+import GridArrowDeleteVue from './components/control-components/GridArrowDelete.vue';
+import { gridDeleteService } from './services/gridDelete.service'
 
 export default {
   mixins: [mousemoveMixin, gridcontentMixin],
@@ -56,20 +61,29 @@ export default {
   components: {
     krtGridcell: GridcellVue,
     krtGridcontentControls: GridcontentControlsVue,
-    krtGridArrowConnector: GridArrowConnectorVue
+    krtGridArrowConnector: GridArrowConnectorVue,
+    krtGridArrowDelete: GridArrowDeleteVue
   },
   data() {
     return {
       globalConfig,
       gridModel,
-      zoomService
+      zoomService,
+      
     };
   },
   methods: {
-    drawPath(event) {
+    drawPath() {
       gridArrowService.prototype = this
       return gridArrowService.drawPath()
+    },
+    findSvgPath(event) {
+      gridDeleteService.findSvgPath(event, 1)
     }
+  },
+  mounted() {
+      gridDeleteService.svgEl = document.querySelector('#svgGrid')
+      gridDeleteService.gridlayoutEl = document.querySelector('.gridlayout')
   },
   computed: {
     gridObj() {
@@ -83,101 +97,20 @@ export default {
 </script>
 
 <style lang="scss">
+@import "./styles/zoom.scss";
+
 .gridcontent {
   svg {
     position: absolute;
-    z-index: 0;
+    z-index: 1;
+    path {
+      z-index: 3;
+    }
   }
   .gridlayout {
     display: grid;
     position: absolute;
-    z-index: 1;
-
-    &.zoom-50 {
-      .gridcell {
-        width: 120px;
-        height: 120px;
-        .gridcell-element {
-          width: 70px;
-          height: 70px;
-          top: 25px;
-          left: 25px;
-          .gridtool {
-            padding: 20px;
-            border-radius: 7.5px;
-            i { font-size: 26px; }
-          }
-        }
-      }
-    }
-    &.zoom-75 {
-      .gridcell {
-        width: 180px;
-        height: 180px;
-        .gridcell-element {
-          width: 105px;
-          height: 105px;
-          top: 37.5px;
-          left: 37.5px;
-          .gridtool {
-            padding: 30px;
-            border-radius: 11.25px;
-            i { font-size: 42px; }
-          }
-        }
-      }
-    }
-    &.zoom-100 {
-      .gridcell {
-        width: 240px;
-        height: 240px;
-        .gridcell-element {
-          width: 140px;
-          height: 140px;
-          top: 50px;
-          left: 50px;
-          .gridtool {
-            padding: 40px;
-            border-radius: 15px;
-            i { font-size: 56px; }
-          }
-        }
-      }
-    }
-    &.zoom-125 {
-      .gridcell {
-        width: 300px;
-        height: 300px;
-        .gridcell-element {
-          width: 175px;
-          height: 175px;
-          top: 62.5px;
-          left: 62.5px;
-          .gridtool {
-            padding: 50px;
-            border-radius: 18.75px;
-            i { font-size: 70px; }
-          }
-        }
-      }
-    }
-    &.zoom-150 {
-      .gridcell {
-        width: 360px;
-        height: 360px;
-        .gridcell-element {
-          width: 210px;
-          height: 210px;
-          top: 75px;
-          left: 75px;
-          .gridtool {
-            padding: 60px;
-            border-radius: 22.5px;
-            i { font-size: 84px; }
-          }
-        }
-      }
-    }
+    z-index: 2;
   }
 }
 </style>

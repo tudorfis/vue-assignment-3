@@ -4,6 +4,7 @@ import { gridModel } from '../../../../models/grid/grid.model';
 import { VueUtils } from '../../../../utils/vue.utils'
 import { toolboxService } from '../../../toolbox/services/toolbox.service';
 import { gridArrowService } from '../../services/gridArrow.service';
+import { Utils } from '../../../../utils/utils';
 
 export default {
     props: ['position', 'cell'],
@@ -27,6 +28,7 @@ export default {
         onDropGridCellElement() {
             gridArrowService.hideArrowConnector()
             gridcellOperationsService.previousCellOperations()
+            toolboxService.startedDrag = false
 
             if (this.isSameGrid()) return;
 
@@ -34,20 +36,27 @@ export default {
             if (this.dropppointDirection) {
                 newPosition = this.moveCellsByDroppoint()
                 this.setCellActive(newPosition)
+
                 this.removePreviousCell()
                 gridModel.rearangeLinksAfterDroppoint(newPosition, this.dropppointDirection)
             }
 
             else if (this.allowDrop) {
                 newPosition = this.position
-                this.setCellActive()
-                this.addRowOrColEnd()
                 oldPosition = this.removePreviousCell()
+                
+                this.setCellActive(newPosition, oldPosition)
+                this.addRowOrColEnd()
                 gridModel.rearangeLinks(oldPosition, newPosition)
 
                 if (gridModel.hasNoLinks(this.position))
                     gridModel.rearangeLinksOnSinglePath(this.position)
             }
+
+            /** @TODO: remove temporary auto id, to simulate saved step */
+            const newCell = gridModel.model.cells[newPosition]
+            if (newCell && newCell.id === 0)
+                gridModel.model.cells[newPosition].id = Utils.randomNumber(1, 100)
 
             gridModel.buildLinks()
         },
@@ -98,12 +107,13 @@ export default {
             if (gridModel.nearRowEnd(this.position))
                 gridModel.addRowAtEnd()
         },
-        setCellActive(position) {
-            position = position || this.position
-            gridModel.setCell(position, {
-                is: 1,
-                type: dragElementsService.activeDragElementType
-            })
+        setCellActive(newPosition, oldPosition) {
+            const cellObj = { is: 1, type: dragElementsService.activeDragElementType }
+
+            const oldCell = gridModel.model.cells[oldPosition]
+            if (oldCell && oldCell.id) cellObj.id = oldCell.id
+
+            gridModel.setCell(newPosition, cellObj)
         },
         moveCellsByDroppoint() {
             let position

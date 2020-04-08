@@ -23,7 +23,8 @@ const newGridBlueprint = {
 
 export const cellBlueprint = {
     is: 0,
-    type: ''
+    type: '',
+    id: 0
 }
 
 export const gridModel = {
@@ -68,17 +69,16 @@ export const gridModel = {
         const gridSize = gridModelOperations.reduceGridSize.call(this, model)
         this.newGridModel(gridSize.numRows, gridSize.numCols)
 
-        for (const position in model.steps) {
-            const step = model.steps[position]
-            
+        for (const position in model.steps)
             this.setCell(position, {
                 is: 1,
-                type: step.type
+                type: model.steps[position].type,
+                id: model.steps[position].id
             })
-        }
         
         this.model.steps = model.steps
         this.model.links = model.links
+
         this.afterGridLoaded()
     },
     afterGridLoaded() {
@@ -106,6 +106,7 @@ export const gridModel = {
 
         this.model.cells[position].is = properties.is
         this.model.cells[position].type = properties.type
+        this.model.cells[position].id = properties.id || 0
         
         this.model.totalSteps++
     },

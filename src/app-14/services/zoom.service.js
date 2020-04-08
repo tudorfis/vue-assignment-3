@@ -1,5 +1,6 @@
 import { globalConfig } from "../config/global.config"
 import { gridModel } from "../models/grid/grid.model"
+import { gridDeleteService } from '../components/grid/services/gridDelete.service'
 
 /**
     <button class="btn btn-info" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()">z in</button>
@@ -17,6 +18,9 @@ export const zoomService = {
         return (gc.zoomLevel - gc.zoomDiff < gc.zoomMin)
     },
     zoomIn() {
+        if (this.disableZoomIn()) return
+        gridDeleteService.hideArrowDelete()
+
         globalConfig.zoomLevel += globalConfig.zoomDiff
 
         globalConfig.gridCellWidth += 60
@@ -32,6 +36,9 @@ export const zoomService = {
         globalConfig.arrowSizeH += 1
     },
     zoomOut() {
+        if (this.disableZoomOut()) return
+        gridDeleteService.hideArrowDelete()
+
         globalConfig.zoomLevel -= globalConfig.zoomDiff
 
         globalConfig.gridCellWidth -= 60

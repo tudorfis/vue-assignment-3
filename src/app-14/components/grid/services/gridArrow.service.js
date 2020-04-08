@@ -34,13 +34,12 @@ export const gridArrowService = {
         const adjust = Math.floor(globalConfig.gridCellElementWidth / 2)
         const rect = element.getBoundingClientRect()
         const top = rect.top + rect.height - adjust
-        const left = rect.left + rect.width - adjust
+        const left = rect.left + rect.width - adjust + 10
         const fontSize = Math.floor(globalConfig.gridCellElementWidth / 4)
 
         arrowConnector.style.display = `block`
         arrowConnector.style.top = `${top}px`
         arrowConnector.style.left = `${left}px`
-        arrowConnector.style.display = `block`
         arrowConnector.style.fontSize = `${fontSize}px`
 
         this.prototype.$el.append(arrowConnector)

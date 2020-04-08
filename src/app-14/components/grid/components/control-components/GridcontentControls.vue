@@ -1,17 +1,10 @@
 <template>
-  <div class="controls">
-    <button class="btn btn-success" @click="incrementCols">++Cols</button>
-    <button class="btn btn-danger" @click="decrementCols">--Cols</button>
+  <div class="controls" :style="controlStyles">
+    <i class="fas fa-search-plus" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()"></i>
+    <i class="fas fa-search-minus" @click="zoomService.zoomOut()" :disabled="zoomService.disableZoomOut()"></i>
 
-    <button class="btn btn-success" @click="incrementRows">++Rows</button>
-    <button class="btn btn-danger" @click="decrementRows">--Rows</button>
-
-    <small>{{ globalConfig.zoomLevel }}</small>
-    <button class="btn btn-info" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()">z in</button>
-    <button class="btn btn-info" @click="zoomService.zoomOut()" :disabled="zoomService.disableZoomOut()">z out</button>
-
-    <button class="btn btn-success" @click="saveModel">save</button>
-    <button class="btn btn-danger" @click="loadModel">load</button>
+    <i class="far fa-save" @click="saveModel"></i>
+    <i class="fas fa-window-restore" @click="loadModel"></i>
   </div>
 </template>
 
@@ -29,18 +22,6 @@ export default {
         }
     },
     methods: {
-        incrementCols() {
-          gridModel.addColumnAtEnd()
-        },
-        decrementCols() {
-          gridModel.removeColumnAtEnd()
-        },
-        incrementRows() {
-          gridModel.addRowAtEnd()
-        },
-        decrementRows() {
-          gridModel.removeRowAtEnd()
-        },
         saveModel() {
           tempModel = gridModel.saveGridModel()
         },
@@ -48,6 +29,16 @@ export default {
           gridModel.loadGridModel(JSON.parse(tempModel))
           this.$forceUpdate()
         }
+    },
+    computed: {
+      controlStyles() {
+        const top = Math.floor(globalConfig.topmenuHeight / 3.5)
+        const left = globalConfig.toolboxWidth + 20
+        return {
+          top: `${top}px`,
+          left: `${left}px`
+        }
+      }
     }
 };
 </script>
@@ -55,19 +46,12 @@ export default {
 <style lang="scss" scoped>
 .controls {
   position: fixed;
-  top: 15px;
-  left: 200px;
   z-index: 4;
-  color: white;
-  input {
-    width: 35px;
-    vertical-align: middle;
-  }
-  button {
-    width: 40px;
-    font-size: 10px;
-    padding: 6px 2px;
-    vertical-align: middle;
+  i {
+    font-size: 24px;
+    color: white;
+    margin-right: 20px;
+    cursor: pointer;
   }
 }
 </style>
