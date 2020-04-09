@@ -1,7 +1,7 @@
 <template>
   <div 
     id="arrow-delete"
-    draggable="true"
+    draggable="false"
     @click="deleteLink"
   >
     <i class="fas fa-minus-circle fa-fill"></i>

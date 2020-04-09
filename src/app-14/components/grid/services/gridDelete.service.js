@@ -20,13 +20,16 @@ export const gridDeleteService = {
             const el = this.getSvgPath(event)
             if (el)
                 this.build(el, event)
+            else {
+                this.hideArrowDelete()
+            }
         } else {
-            this.arrowDeleteEl.style = 'none'
+            this.hideArrowDelete()
         }
 
         const vm = this
         this.waitMousemove = true;
-        setTimeout(function () { vm.waitMousemove = false; }, speed || 10);
+        setTimeout(function () { vm.waitMousemove = false; }, speed || 0);
     },
     getSvgPath(event) {
         this.svgEl.style.zIndex = 2

@@ -72,15 +72,15 @@ export default {
     toolboxStyle() {
       return {
         width: `${globalConfig.toolboxWidth}px`,
-        top: `${globalConfig.topmenuHeight}px`
+        top: `${globalConfig.topmenuHeight}px`,
       }
     },
     toolStyle() {
       let width = globalConfig.gridCellElementWidth
-      width -= Math.round(width / 7)
+      width += Math.round(width / 7)
       
       let height = globalConfig.gridCellElementHeight
-      height -= Math.round(height / 7)
+      height += Math.round(height / 7)
       
       return {
         width: `${width}px`,
@@ -107,8 +107,6 @@ export default {
         cursor: move;
       }
 
-      width: 120px;
-      height: 120px;
       margin: 20px auto;
       padding: 30px 15px;
       border: 0;

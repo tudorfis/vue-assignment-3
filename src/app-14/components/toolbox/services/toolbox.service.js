@@ -18,6 +18,8 @@ export const toolboxService = {
 
         this.beforeStartDrag(event)
 
+        if (!this.startedDrag) return
+
         const dragElement = event.target
         dragElementsService.activeDragElement = dragElement
 
@@ -48,9 +50,14 @@ export const toolboxService = {
         const vueElement = event.srcElement.__vue__
         this.isInsideCell = VueUtils.traverseByProp(vueElement, 'isInsideCell') || false
 
-        if (this.isInsideCell)
-            VueUtils.traverseByQuery(vueElement, '.gridtool-modifications').style.visibility = 'hidden'
+        if (this.isInsideCell) {
+            const gridtoolModifications = VueUtils.traverseByQuery(vueElement, '.gridtool-modifications')
 
+            if (gridtoolModifications)
+                gridtoolModifications.style.visibility = 'hidden'
+            
+            else this.startedDrag = false
+        }
         else this.setDragStyles(event.srcElement)
     },
     setDragStyles(element) {

@@ -11,14 +11,14 @@ export const globalConfig = {
     zoomMax: 150,
     zoomMin: 50,
 
-    gridCellWidth: 240,
-    gridCellHeight: 240,
+    gridCellWidth: 180,
+    gridCellHeight: 180,
 
-    gridCellElementWidth: 140,
-    gridCellElementHeight: 140,
+    gridCellElementWidth: 105,
+    gridCellElementHeight: 105,
 
-    droppointDimension: 40,
-    arrowWidth: 8,
+    droppointDimension: 30,
+    arrowWidth: 6,
     arrowColor: '#ccc',
     
     toolboxWidth: 200,
@@ -39,8 +39,8 @@ export const globalConfig = {
     cellSizeCalculation: 240,
     cellAdjustCalculation: 0.024,
 
-    arrowSizeW: 20,
-    arrowSizeH: 15,
+    arrowSizeW: 18,
+    arrowSizeH: 14,
 
     colorArray: [
         '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 

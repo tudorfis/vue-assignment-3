@@ -1,4 +1,22 @@
+
 .gridlayout.zoom-50 {
+    .gridcell {
+        width: 60px;
+        height: 60px;
+        .gridcell-element {
+            width: 35px;
+            height: 35px;
+            top: 12.5px;
+            left: 12.5px;
+            .gridtool {
+                padding: 5px;
+                border-radius: 3.75px;
+                i { font-size: 12px; }
+            }
+        }
+    }
+}
+.gridlayout.zoom-75 {
     .gridcell {
         width: 120px;
         height: 120px;
@@ -15,7 +33,7 @@
         }
     }
 }
-.gridlayout.zoom-75 {
+.gridlayout.zoom-100 {
     .gridcell {
         width: 180px;
         height: 180px;
@@ -32,7 +50,7 @@
         }
     }
 }
-.gridlayout.zoom-100 {
+.gridlayout.zoom-125 {
     .gridcell {
         width: 240px;
         height: 240px;
@@ -49,7 +67,7 @@
         }
     }
 }
-.gridlayout.zoom-125 {
+.gridlayout.zoom-150 {
     .gridcell {
         width: 300px;
         height: 300px;
@@ -62,23 +80,6 @@
                 padding: 50px;
                 border-radius: 18.75px;
                 i { font-size: 70px; }
-            }
-        }
-    }
-}
-.gridlayout.zoom-150 {
-    .gridcell {
-        width: 360px;
-        height: 360px;
-        .gridcell-element {
-            width: 210px;
-            height: 210px;
-            top: 75px;
-            left: 75px;
-            .gridtool {
-                padding: 60px;
-                border-radius: 22.5px;
-                i { font-size: 84px; }
             }
         }
     }

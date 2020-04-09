@@ -42,21 +42,28 @@
 
 <script>
 import { globalConfig } from '../../config/global.config'
-import GridcellVue from './components/Gridcell.vue';
-import mousemoveMixin from '../../mixins/mousemove.mixin';
 import { gridModel } from '../../models/grid/grid.model'
+
+import mousemoveMixin from '../../mixins/mousemove.mixin';
 import gridcontentMixin from './mixins/gridcontentStyles.mixin'
+import gridcontentSlideDrag from './mixins/gridcontentSlideDrag.mixin'
+
+import GridcellVue from './components/Gridcell.vue';
 import GridcontentControlsVue from './components/control-components/GridcontentControls.vue';
 import GridArrowConnectorVue from './components/control-components/GridArrowConnector.vue';
+import GridArrowDeleteVue from './components/control-components/GridArrowDelete.vue';
+
 import { zoomService } from '../../services/zoom.service'
 import { Utils } from '../../utils/utils';
 import { gridArrowService } from '../grid/services/gridArrow.service'
-import { VueUtils } from '../../utils/vue.utils';
-import GridArrowDeleteVue from './components/control-components/GridArrowDelete.vue';
 import { gridDeleteService } from './services/gridDelete.service'
 
 export default {
-  mixins: [mousemoveMixin, gridcontentMixin],
+  mixins: [
+    mousemoveMixin,
+    gridcontentMixin,
+    gridcontentSlideDrag
+  ],
   props: ['toolboxWidth', 'topmenuHeight'],
   components: {
     krtGridcell: GridcellVue,
@@ -78,7 +85,7 @@ export default {
       return gridArrowService.drawPath()
     },
     findSvgPath(event) {
-      gridDeleteService.findSvgPath(event, 1)
+      gridDeleteService.findSvgPath(event, 0)
     }
   },
   mounted() {
