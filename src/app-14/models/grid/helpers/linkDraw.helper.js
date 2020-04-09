@@ -17,6 +17,11 @@ const arrow_width = globalConfig.arrowWidth
 
 export class LinkDrawHelper {
     constructor(linkKey, gridModel) {
+        if (!linkKey) {
+            this.badLinkKey = true
+            return
+        }
+
         this.link1 = LinkDrawHelper.getLink1(linkKey)
         this.link2 = LinkDrawHelper.getLink2(linkKey)
 

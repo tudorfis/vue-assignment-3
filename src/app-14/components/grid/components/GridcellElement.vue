@@ -1,12 +1,12 @@
 <template>
   <div
     class="gridcell-element"
-    @mouseenter="showGridToolModifications = true"
-    @mouseleave="showGridToolModifications = false"
+    @mouseenter="showGridArrow"
+    @mouseleave="hideGridArrow"
   >
     <krt-gridtool-modifications
       :position="position"
-      v-if="showGridToolModifications"
+      v-if="showOtherIcons"
     ></krt-gridtool-modifications>
     <krt-send-email
       ref="sendemail"
@@ -72,11 +72,12 @@
 </template>
 
 <script>
+import { globalConfig } from '../../../config/global.config';
 import { dragElementsEnum } from '../../../services/dragElements.service';
+import { gridArrowService } from '../services/gridArrow.service';
 import SendEmailVue from '../../toolbox/components/SendEmail.vue';
 import SendSmsVue from '../../toolbox/components/SendSms.vue';
 import AddRemoveTagVue from '../../toolbox/components/AddRemoveTag.vue';
-import { globalConfig } from '../../../config/global.config';
 import GridtoolModificationsVue from './control-components/GridtoolModifications.vue';
 import SubscribeListVue from '../../toolbox/components/SubscribeList.vue';
 import SubscribeSequenceVue from '../../toolbox/components/SubscribeSequence.vue';
@@ -85,6 +86,7 @@ import SplitVue from '../../toolbox/components/Split.vue';
 import GoToVue from '../../toolbox/components/GoTo.vue';
 import WaitVue from '../../toolbox/components/Wait.vue';
 import CompleteVue from '../../toolbox/components/Complete.vue';
+
 export default {
   components: {
     krtGridtoolModifications: GridtoolModificationsVue,
@@ -104,7 +106,19 @@ export default {
     return {
       dragElementsEnum,
       globalConfig,
-      showGridToolModifications: false
+      showOtherIcons: false
+    }
+  },
+  methods: {
+    showGridArrow(event) {
+      gridArrowService.init(event)
+      
+      if (!gridArrowService.startedDrag)
+        this.showOtherIcons = !gridArrowService.isHighlight
+    },
+    hideGridArrow() {
+      gridArrowService.destroy()
+      this.showOtherIcons = gridArrowService.isHighlight
     }
   }
 }

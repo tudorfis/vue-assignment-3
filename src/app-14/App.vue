@@ -53,7 +53,7 @@ export default {
       return
     }
 
-    fetch(`http://localhost:8080/src/app-14/data/model-${modelType || 'light'}.json`)
+    fetch(`http://localhost:8080/src/app-14/assets/data/model-${modelType || 'light'}.json`)
       .then(data => data.json())
       .then(model => { gridModel.loadGridModel(model) })
   },

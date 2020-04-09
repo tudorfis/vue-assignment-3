@@ -7,14 +7,17 @@ import { globalConfig } from '../../../config/global.config'
 export const gridLinksOperations = {
     colors: [],
     colorIds: [],
+    oldLinks: [],
     buildLinks() {
         linkEEhelper.generateEEpath()
         linkEEhelper.generateEEmap()
         gridModel.paths = {}
 
         if (gridModel.model.links && gridModel.model.links.length)
-            for (const linkKey of gridModel.model.links)
+            for (const linkKey of gridModel.model.links) {
+                if (!linkKey) continue
                 gridLinksOperations.genPathTwoCells(linkKey)
+            }
         
     },
     genPathTwoCells(linkKey, isDrag) {
@@ -25,52 +28,53 @@ export const gridLinksOperations = {
 
         Vue.set(gridModel.paths, linkKey, [])
 
-        const l = new LinkDrawHelper(linkKey, gridModel)
-        let path, arrow, direction1, direction2, sameColRow
+        const ldh = new LinkDrawHelper(linkKey, gridModel)
+        if (ldh.badLinkKey) return
 
-        if (l.right || l.left) {
+        let path, arrow, direction1, direction2, sameColRow
+        if (ldh.right || ldh.left) {
             direction1 = 'rightLeft'
             direction2 = 'upDown'
             sameColRow = 'sameRow'
         }
-        else if (l.up || l.down) {
+        else if (ldh.up || ldh.down) {
             direction1 = 'upDown'
             direction2 = 'rightLeft'
             sameColRow = 'sameCol'
         }
 
-        path = l.drawPath(l[direction1])
-        path.d += l.drawLine(l[direction1], 'full')
+        path = ldh.drawPath(ldh[direction1])
+        path.d += ldh.drawLine(ldh[direction1], 'full')
         
-        if (l[sameColRow]) {
-            path.d += l.drawLine(l[direction1], 'arrow')
-            arrow = l.drawArrow(l[direction1], true)
+        if (ldh[sameColRow]) {
+            path.d += ldh.drawLine(ldh[direction1], 'arrow')
+            arrow = ldh.drawArrow(ldh[direction1], true)
         }
         else {
             
-            const position = gridModel.getPosition(l.row1, l.col2)
+            const position = gridModel.getPosition(ldh.row1, ldh.col2)
             const goAroundCell = gridModel.model.cells[position].is
             // const goAroundCell = Math.round(Math.random())
             
             if (goAroundCell) {
-                path.d += l.drawHalf(l[direction2], l[direction1], false)
-                path.d += l.drawHalf(l[direction1], l[direction2], true)
+                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false)
+                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true)
             
             } else {
-                path.d += l.drawHalf(l[direction1], l[direction2], true)
-                path.d += l.drawHalf(l[direction2], l[direction1], false)
+                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true)
+                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false)
             }
 
-            path.d += l.drawLine(l[direction2], 'full')
-            path.d += l.drawLine(l[direction2], 'arrow')
-            arrow = l.drawArrow(l[direction2])
+            path.d += ldh.drawLine(ldh[direction2], 'full')
+            path.d += ldh.drawLine(ldh[direction2], 'arrow')
+            arrow = ldh.drawArrow(ldh[direction2])
         }
 
         /** @TODO: add the ids for cells so the colors don't scramble */
-        if (l.idLink && !vm.colorIds[l.idLink] && !isDrag)
-            vm.colorIds[l.idLink] = vm.colors.pop()
+        if (ldh.idLink && !vm.colorIds[ldh.idLink] && !isDrag)
+            vm.colorIds[ldh.idLink] = vm.colors.pop()
 
-        const color = isDrag ? '#e9e9e9' : vm.colorIds[l.idLink]
+        const color = isDrag ? '#e9e9e9' : vm.colorIds[ldh.idLink]
 
         path.color = color
         path.linkKey = linkKey
@@ -85,6 +89,8 @@ export const gridLinksOperations = {
     rearangeLinks(oldPosition, newPosition) {
         for (const i in gridModel.model.links) {
             const linkKey = gridModel.model.links[i]
+
+            if (!linkKey) continue
 
             const link1 = LinkDrawHelper.getLink1(linkKey)
             const link2 = LinkDrawHelper.getLink2(linkKey)
@@ -126,10 +132,27 @@ export const gridLinksOperations = {
             gridModel.model.links.push(newLinkKey2)
         } 
     },
+    getEmptyPositionForDroppoint(newPosition, oldPosition) {
+        if (!newPosition || !oldPosition) return
+        
+        const rowNew = this.getRow(newPosition)
+        const colNew = this.getCol(newPosition)
+
+        const rowOld = this.getRow(oldPosition)
+        const colOld = this.getCol(oldPosition)
+
+        if (rowNew === rowOld && colNew < colOld)
+            return this.getPositionDiff(oldPosition, 0, 1)
+
+        else if (colNew === colOld &&  rowNew < rowOld)
+            return this.getPositionDiff(oldPosition, 1, 0)
+    
+        return oldPosition
+    },
     hasNoLinks(position) {
         if (gridModel.model.links && gridModel.model.links.length)
             for (const linkKey of gridModel.model.links)
-                if (linkKey.indexOf(position) !== -1) return false
+                if (linkKey && linkKey.indexOf(position) !== -1) return false
 
         return true
     },
@@ -199,11 +222,11 @@ export const gridLinksOperations = {
         }
     },
     deleteAllLinks(position) {
-        const output = []
-        if (this.model.links && this.model.links.length)
-            for (const linkKey of this.model.links)
-                if (linkKey.indexOf(position) === -1) output.push(linkKey)
+        for (const linkKey of this.model.links)
+            if (linkKey && linkKey.includes(position)) {
 
-        this.model.links = output
+                const index = this.model.links.indexOf(linkKey)
+                delete this.model.links[index]
+            }
     }
 }

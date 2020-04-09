@@ -48,6 +48,8 @@ export const toolboxService = {
         gridDeleteService.hideArrowDelete()
 
         const vueElement = event.srcElement.__vue__
+        
+        this.oldPosition = VueUtils.traverseByProp(vueElement, 'position')
         this.isInsideCell = VueUtils.traverseByProp(vueElement, 'isInsideCell') || false
 
         if (this.isInsideCell) {

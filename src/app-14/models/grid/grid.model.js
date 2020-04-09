@@ -189,6 +189,9 @@ export const gridModel = {
     rearangeLinksAfterDroppoint(position, direction) {
         gridLinksOperations.rearangeLinksAfterDroppoint(position, direction) 
     },
+    getEmptyPositionForDroppoint(newPosition, oldPosition) {
+        return gridLinksOperations.getEmptyPositionForDroppoint.call(this, newPosition, oldPosition)
+    },
     rearangeLinksOnSinglePath(position) {
         gridLinksOperations.rearangeLinksOnSinglePath(position)
     },

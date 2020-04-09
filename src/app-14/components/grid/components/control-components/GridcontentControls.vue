@@ -1,5 +1,5 @@
 <template>
-  <div class="controls" :style="controlStyles">
+  <div class="gridcontent-controls" :style="controlStyles">
     <i class="fas fa-search-plus" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()"></i>
     <i class="fas fa-search-minus" @click="zoomService.zoomOut()" :disabled="zoomService.disableZoomOut()"></i>
 
@@ -44,14 +44,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.controls {
+.gridcontent-controls {
   position: fixed;
   z-index: 4;
+  user-select: none;
+
   i {
+    cursor: pointer;
     font-size: 24px;
     color: white;
     margin-right: 20px;
-    cursor: pointer;
   }
 }
 </style>

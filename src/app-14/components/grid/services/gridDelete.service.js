@@ -8,9 +8,10 @@ export const gridDeleteService = {
     gridlayoutEl: null,
     arrowDeleteEl: null,
     waitMousemove: false,
+    waitMousemoveTimeout: null,
     linkKey: '',
 
-    findSvgPath(event, speed) {
+    findSvgPath(event) {
         if (!this.arrowDeleteEl)
             this.arrowDeleteEl = document.querySelector('#arrow-delete')
 
@@ -23,13 +24,11 @@ export const gridDeleteService = {
             else {
                 this.hideArrowDelete()
             }
-        } else {
-            this.hideArrowDelete()
         }
 
         const vm = this
         this.waitMousemove = true;
-        setTimeout(function () { vm.waitMousemove = false; }, speed || 0);
+        this.waitMousemoveTimeout = setTimeout(function () { vm.waitMousemove = false; }, 0);
     },
     getSvgPath(event) {
         this.svgEl.style.zIndex = 2

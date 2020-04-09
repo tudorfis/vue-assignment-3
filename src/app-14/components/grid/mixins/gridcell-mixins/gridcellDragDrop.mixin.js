@@ -36,9 +36,11 @@ export default {
             if (this.dropppointDirection) {
                 newPosition = this.moveCellsByDroppoint()
                 this.setCellActive(newPosition)
-
                 this.removePreviousCell()
+                
                 gridModel.rearangeLinksAfterDroppoint(newPosition, this.dropppointDirection)
+                const emptyPosition = gridModel.getEmptyPositionForDroppoint(newPosition, toolboxService.oldPosition)
+                gridModel.deleteAllLinks(emptyPosition)
             }
 
             else if (this.allowDrop) {
@@ -47,10 +49,11 @@ export default {
                 
                 this.setCellActive(newPosition, oldPosition)
                 this.addRowOrColEnd()
+                
                 gridModel.rearangeLinks(oldPosition, newPosition)
-
-                if (gridModel.hasNoLinks(this.position))
-                    gridModel.rearangeLinksOnSinglePath(this.position)
+                
+                if (gridModel.hasNoLinks(newPosition))
+                    gridModel.rearangeLinksOnSinglePath(newPosition)
             }
 
             /** @TODO: remove temporary auto id, to simulate saved step */

@@ -5,8 +5,7 @@
     @dragstart="stopDragEmptyCell"
     @drop.prevent="onDropGridCellElement"
     @dragover.prevent="onDragoverGridCellElement"
-    @mouseenter="showGridArrow"
-    @mouseleave="hideGridArrow"
+    @mouseenter="doGridArrowOperations"
   >
     <krt-gridcell-droppoints
       v-if="showDroppoints"
@@ -45,13 +44,8 @@ export default {
       if (!event.target.classList.contains('gridtool'))
         event.preventDefault()
     },
-    showGridArrow(event) {
-      gridArrowService.prototype = this
-      return gridArrowService.init(event)
-    },
-    hideGridArrow() {
-      gridArrowService.prototype = this
-      return gridArrowService.destroy()
+    doGridArrowOperations() {
+      gridArrowService.doGridcellOperations(this.position)
     }
   }
 };

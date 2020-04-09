@@ -1,9 +1,9 @@
 <template>
   <div 
     class="gridcontent"
-    @mousemove="drawPath"
     @mouseover="resetGridView"
     @mouseup="stopArrowDrag"
+    @mousemove="drawPath(); findSvgPath($event)"
   >
     <!-- @TODO: remove controls, used only for testing purposes
         add top menu controls, such as zoom in, zoom out etc -->
@@ -26,7 +26,6 @@
       class="gridlayout"
       :class="gridLayoutClass"
       :style="gridLayoutStyle"
-      @mousemove="findSvgPath"
     >
       <krt-gridcell
         v-for="(cell,position) of gridObj"
@@ -81,11 +80,10 @@ export default {
   },
   methods: {
     drawPath() {
-      gridArrowService.prototype = this
-      return gridArrowService.drawPath()
+      gridArrowService.drawPath()
     },
     findSvgPath(event) {
-      gridDeleteService.findSvgPath(event, 0)
+      gridDeleteService.findSvgPath(event)
     }
   },
   mounted() {
