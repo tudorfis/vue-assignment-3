@@ -3,6 +3,7 @@ import { Utils } from '../../../utils/utils'
 import { LinkDrawHelper } from './linkDraw.helper'
 import { globalConfig } from '../../../config/global.config'
 import { gridModel } from '../grid.model'
+import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
 
 const gc = globalConfig
 
@@ -22,11 +23,12 @@ class LinkEEHelper {
     generateEEpath() {
         this.eePathMap = {}
 
-        if (gridModel.model.links && gridModel.model.links.length) {
-            for (const linkKey of gridModel.model.links) {
-                const l = new LinkDrawHelper(linkKey, gridModel)
-                this.setEEPathMap(l)
-            }
+        const links = gridModel.model.links
+        const lki = new LinkKeyIterator(links)
+
+        while (lki.continue) {
+            const ldh = new LinkDrawHelper(lki.linkKey, gridModel)
+            this.setEEPathMap(ldh)
         }
     }
     setEEPathMap(l) {
@@ -254,6 +256,6 @@ class LinkEEHelper {
 }
 
 const linkEEhelper = new LinkEEHelper()
-window.linkEEhelper = linkEEhelper
+globalThis.linkEEhelper = linkEEhelper
 
 export default linkEEhelper

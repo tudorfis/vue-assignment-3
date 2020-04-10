@@ -7,8 +7,8 @@ import { gridMouseOperations } from './operations/gridMouse.operations'
 import { gridLinksOperations } from './operations/gridLinks.operations'
 import { zoomService } from "../../services/zoom.service"
 
-window.Vue = Vue
-window.gridLinksOperations = gridLinksOperations
+globalThis.Vue = Vue
+globalThis.gridLinksOperations = gridLinksOperations
 
 const cellSplitSymbol = globalConfig.cellSplitSymbol
 

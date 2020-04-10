@@ -11,7 +11,7 @@
 
 <script>
 import { gridModel } from './models/grid/grid.model';
-window.gridModel = gridModel
+globalThis.gridModel = gridModel
 
 import { globalConfig } from './config/global.config';
 import TopmenuVue from './components/topmenu/Topmenu.vue';
@@ -45,7 +45,7 @@ export default {
     /** @TODO - match an id of a sequence to get the output  */
     
     let modelType = null
-    const matchRef = window.location.search.match(/model\=([\w\-]+)/)
+    const matchRef = globalThis.location.search.match(/model\=([\w\-]+)/)
     if (matchRef && matchRef[1]) modelType = matchRef[1]
 
     if (!modelType) {
@@ -53,9 +53,12 @@ export default {
       return
     }
 
-    fetch(`http://localhost:8080/src/app-14/assets/data/model-${modelType || 'light'}.json`)
+    fetch(`/src/app-14/assets/data/model-${modelType}.json`)
       .then(data => data.json())
       .then(model => { gridModel.loadGridModel(model) })
+      .catch(e => {
+        gridModel.newGridModel(undefined, undefined, true)
+      })
   },
   mounted() {
     document.body.onscroll = function(event) { 

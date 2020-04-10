@@ -9,7 +9,7 @@
 </template>
 
 <script>
-window.tempModel = null
+globalThis.tempModel = null
 
 import { globalConfig } from '../../../../config/global.config'
 import { zoomService } from '../../../../services/zoom.service'
