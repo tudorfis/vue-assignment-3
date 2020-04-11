@@ -13,11 +13,11 @@ export const gridLinksOperations = {
 
         vm.colors = []
         vm.colorIds = []
-        gridModel.paths = {}
 
+        gridModel.paths = {}
         linkEEhelper.generateEEpath()
         linkEEhelper.generateEEmap()
-        
+
         const links = gridModel.model.links
         const lki = new LinkKeyIterator(links)
 

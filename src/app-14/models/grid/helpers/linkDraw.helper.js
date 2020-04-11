@@ -179,7 +179,7 @@ export class LinkDrawHelper {
         }
         else if (direction === 'down') {
             left = this.get_left_m_arrow() + 125 + diff_ee
-            top = this.get_top_m_arrow(true) + (cell_size - 25)
+            top = this.get_top_m_arrow(true) + (cell_size - 20)
             arrow = `M${left} ${top} ${downArrowPath()}`
         }
         else if (direction === 'left') {

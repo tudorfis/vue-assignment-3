@@ -49,15 +49,16 @@ export default {
     if (matchRef && matchRef[1]) modelType = matchRef[1]
 
     if (!modelType) {
-      gridModel.newGridModel(undefined, undefined, true)
+      gridModel.newGridModel(0, 0, true)
       return
     }
 
     fetch(`/src/app-14/assets/data/model-${modelType}.json`)
       .then(data => data.json())
       .then(model => { gridModel.loadGridModel(model) })
-      .catch(e => {
-        gridModel.newGridModel(undefined, undefined, true)
+      .catch(error => {
+        console.error(error)
+        gridModel.newGridModel(0, 0, true)
       })
   },
   mounted() {

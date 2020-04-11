@@ -2,9 +2,9 @@
   <div class="gridcontent-controls" :style="controlStyles">
     <i class="fas fa-search-plus" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()"></i>
     <i class="fas fa-search-minus" @click="zoomService.zoomOut()" :disabled="zoomService.disableZoomOut()"></i>
-
     <i class="far fa-save" @click="saveModel"></i>
     <i class="fas fa-window-restore" @click="loadModel"></i>
+    <i class="far fa-file" @click="newModel"></i>
   </div>
 </template>
 
@@ -28,6 +28,10 @@ export default {
         loadModel() {
           gridModel.loadGridModel(JSON.parse(tempModel))
           this.$forceUpdate()
+        },
+        newModel() {
+          gridModel.newGridModel()
+          gridModel.buildLinks()
         }
     },
     computed: {

@@ -7,11 +7,11 @@ export const toolboxService = {
     isInsideCell: false,
     startedDrag: false,
     tempDragStyles: {
-        borderRadius: null,
-        width: null,
-        height: null,
-        padding: null,
-        iconFontSize: null
+        borderRadius: '',
+        width: '',
+        height: '',
+        padding: '',
+        iconFontSize: ''
     },
     startDrag(event, type = '') {
         if (!type) return
