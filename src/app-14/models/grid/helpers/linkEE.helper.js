@@ -10,6 +10,7 @@ const gc = globalConfig
 class LinkEEHelper {
     constructor() {
         this.eePathMap = {}
+        this.eeLines = {}
         this.eeMap = {}
 
         const directionEEBlueprint = { out: {}, in: {}, total: 0 }
@@ -79,6 +80,7 @@ class LinkEEHelper {
     }
     generateEEmap() {
         this.eeMap = {}
+        this.eeLines = {}
 
         const links = gridModel.model.links
         const lki = new LinkKeyIterator(links)
@@ -90,12 +92,12 @@ class LinkEEHelper {
             this.setEEConnectionMaps(ldh)
         }
     }
-    setEELinks(l) {
-        if (!this.eeMap[l.link1])
-            this.eeMap[l.link1] = Utils.deepclone(this.linkEEblueprint)
+    setEELinks(ldh) {
+        if (!this.eeMap[ldh.link1])
+            this.eeMap[ldh.link1] = Utils.deepclone(this.linkEEblueprint)
                 
-        if (!this.eeMap[l.link2])
-            this.eeMap[l.link2] = Utils.deepclone(this.linkEEblueprint)
+        if (!this.eeMap[ldh.link2])
+            this.eeMap[ldh.link2] = Utils.deepclone(this.linkEEblueprint)
     }
     setEEConnectionMaps(ldh) {
         const link1Direction = this.getLink1Direction(ldh)
@@ -103,10 +105,19 @@ class LinkEEHelper {
 
         const link1Obj = this.eeMap[ldh.link1][link1Direction]
         const link2Obj =  this.eeMap[ldh.link2][link2Direction]
+        
+        const linkKey2 = LinkDrawHelper.genLinkKey(ldh.link2, ldh.link1)
+        const eePath2Total = this.getEELinesTotal(new LinkDrawHelper(linkKey2), ldh.link2, link2Direction)
+        const eePath1Total = this.getEELinesTotal(ldh, ldh.link1, link1Direction)
 
-        link1Obj.total++
-        link2Obj.total++
-
+        if (!ldh.sameCol && !ldh.sameRow) {
+            link1Obj.total = eePath1Total + 1
+            link2Obj.total = eePath2Total + 1
+        } else {
+            link1Obj.total++
+            link2Obj.total = link1Obj.total
+        }
+        
         link1Obj.out[ldh.link2] = link1Obj.total
         link2Obj.in[ldh.link1] = link2Obj.total
     }
@@ -125,6 +136,64 @@ class LinkEEHelper {
         else if (l.row1 > l.row2) return 'down'
 
         return ''
+    }
+    getEELinesTotal(ldh, link, direction) {
+        let total = 0
+
+        if (direction === 'up') {
+            let row = 0
+            while (row >= (ldh.row2 - ldh.row1)) {
+                const position = gridModel.getPositionDiff(link, row, 0)
+                
+                if (!this.eeLines[position])
+                    this.eeLines[position] = {h: 0, v: 0}
+                
+                total = Math.max(total, this.eeLines[position].v)
+                this.eeLines[position].v++
+                row--
+            }
+        }
+        else if (direction === 'down') {
+            let row = 0
+            while (row <= (ldh.row2 - ldh.row1)) {
+                const position = gridModel.getPositionDiff(link, row, 0)
+
+                if (!this.eeLines[position])
+                    this.eeLines[position] = {h: 0, v: 0}
+                
+                total = Math.max(total, this.eeLines[position].v)
+                this.eeLines[position].v++
+                row++
+            }
+        }
+        else if (direction === 'left') {
+            let col = 0
+            while (col >= (ldh.col2 - ldh.col1)) {
+                const position = gridModel.getPositionDiff(link, 0, col)
+
+                if (!this.eeLines[position])
+                    this.eeLines[position] = {h: 0, v: 0}
+
+                total = Math.max(total, this.eeLines[position].h)
+                this.eeLines[position].h++
+                col--
+            }
+        }
+        else if (direction === 'right') {
+            let col = 0
+            while (col <= (ldh.col2 - ldh.col1)) {
+                const position = gridModel.getPositionDiff(link, 0, col)
+
+                if (!this.eeLines[position])
+                    this.eeLines[position] = {h: 0, v: 0}
+                    
+                total = Math.max(total, this.eeLines[position].h)
+                this.eeLines[position].h++
+                col++
+            }
+        }
+
+        return total
     }
 
     getDiffEE(direction, link1, link2, inOut) {
@@ -152,9 +221,11 @@ class LinkEEHelper {
         else if (pointNr === 5) return (gc.arrowSizeH * 2)
         else if (pointNr === 6) return -(gc.arrowSizeH * 3)
         else if (pointNr === 7) return (gc.arrowSizeH * 3)
+        else if (pointNr === 8) return -(gc.arrowSizeH * 4)
+        else if (pointNr === 9) return (gc.arrowSizeH * 4)
         
-        else if (pointNr > 7) {
-            const rest = pointNr % 7
+        else if (pointNr > 9) {
+            const rest = pointNr % 9
             const isMinus = rest % 2 === 0
             const total = gc.arrowSizeH * Math.floor(rest / 2)
 

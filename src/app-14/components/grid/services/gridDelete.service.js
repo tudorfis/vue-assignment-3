@@ -34,7 +34,11 @@ export const gridDeleteService = {
         this.svgEl.style.zIndex = 2
         this.gridlayoutEl.style.zIndex = 1
 
-        const el = document.elementFromPoint(event.pageX, event.pageY);
+        const html = document.querySelector('html')
+        const x = event.pageX - html.scrollLeft
+        const y = event.pageY - html.scrollTop
+
+        const el = document.elementFromPoint(x, y);
 
         this.svgEl.style.zIndex = 1
         this.gridlayoutEl.style.zIndex = 2
@@ -57,8 +61,10 @@ export const gridDeleteService = {
         this.arrowDeleteEl.querySelector('i').style.top = `-${Math.round(adjust / 3.3)}px`
 
         const rect = this.arrowDeleteEl.getBoundingClientRect()
-        this.arrowDeleteEl.style.top = `${event.pageY - Math.ceil(rect.height / 2)}px`
-        this.arrowDeleteEl.style.left = `${event.pageX - Math.floor(rect.width / 2)}px`
+        const html = document.querySelector('html')
+        
+        this.arrowDeleteEl.style.top = `${event.pageY - Math.ceil(rect.height / 2) - html.scrollTop}px`
+        this.arrowDeleteEl.style.left = `${event.pageX - Math.floor(rect.width / 2) - html.scrollLeft}px`
     },
     deleteLink() {
         const index = gridModel.model.links.indexOf(this.linkKey)
