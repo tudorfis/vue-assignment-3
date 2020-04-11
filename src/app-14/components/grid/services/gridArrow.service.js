@@ -72,7 +72,7 @@ export const gridArrowService = {
     },
     removeTempPaths() {
         if (this.linkKey && !this.recentLink) {
-            Vue.delete(gridModel.paths, this.linkKey)
+            delete gridModel.paths[this.linkKey]
             this.linkKey = ''
         }
     },

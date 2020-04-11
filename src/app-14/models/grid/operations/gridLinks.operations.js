@@ -91,19 +91,18 @@ export const gridLinksOperations = {
 
     },
     rearangeLinks(oldPosition, newPosition) {
-        for (const i in gridModel.model.links) {
-            const linkKey = gridModel.model.links[i]
+        const links = gridModel.model.links
+        const lki = new LinkKeyIterator(links)
 
-            if (!linkKey) continue
-
-            const link1 = LinkDrawHelper.getLink1(linkKey)
-            const link2 = LinkDrawHelper.getLink2(linkKey)
+        while (lki.continue) {
+            const link1 = LinkDrawHelper.getLink1(lki.linkKey)
+            const link2 = LinkDrawHelper.getLink2(lki.linkKey)
 
             if (link1 === oldPosition)
-                gridModel.model.links[i] = LinkDrawHelper.genLinkKey(newPosition, link2)
+                gridModel.model.links[lki.i - 1] = LinkDrawHelper.genLinkKey(newPosition, link2)
 
             else if (link2 === oldPosition)
-                gridModel.model.links[i] = LinkDrawHelper.genLinkKey(link1, newPosition)
+                gridModel.model.links[lki.i - 1] = LinkDrawHelper.genLinkKey(link1, newPosition)
         }
     },
     rearangeLinksAfterDroppoint(position, direction) {
@@ -230,11 +229,14 @@ export const gridLinksOperations = {
         }
     },
     deleteAllLinks(position) {
-        for (const linkKey of this.model.links)
-            if (linkKey && linkKey.includes(position)) {
+        const links = this.model.links
+        const lki = new LinkKeyIterator(links)
 
-                const index = this.model.links.indexOf(linkKey)
+        while (lki.continue) {
+            if (lki.linkKey.includes(position)) {
+                const index = this.model.links.indexOf(lki.linkKey)
                 delete this.model.links[index]
             }
+        }
     }
 }

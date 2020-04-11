@@ -1,7 +1,7 @@
 import { dragElementsEnum, dragElementsService } from "../../../services/dragElements.service"
 import { globalConfig } from "../../../config/global.config"
 import { VueUtils } from "../../../utils/vue.utils"
-import { gridDeleteService } from "../../grid/services/gridDelete.service"
+import { gridArrowService } from "../../grid/services/gridArrow.service"
 
 export const toolboxService = {
     isInsideCell: false,
@@ -45,24 +45,26 @@ export const toolboxService = {
     },
     beforeStartDrag(event) {
         this.startedDrag = true
-        gridDeleteService.hideArrowDelete()
+        this.oldPosition = VueUtils.traverseByProp(event.srcElement.__vue__, 'position')
+        this.isInsideCell = VueUtils.traverseByProp(event.srcElement.__vue__, 'isInsideCell') || false
 
-        const vueElement = event.srcElement.__vue__
-        
-        this.oldPosition = VueUtils.traverseByProp(vueElement, 'position')
-        this.isInsideCell = VueUtils.traverseByProp(vueElement, 'isInsideCell') || false
-
-        if (this.isInsideCell) {
-            const gridtoolModifications = VueUtils.traverseByQuery(vueElement, '.gridtool-modifications')
-
-            if (gridtoolModifications)
-                gridtoolModifications.style.visibility = 'hidden'
-            
-            else this.startedDrag = false
+        if (!this.isInsideCell) {
+            this.setDragStyles(event.srcElement)
+            return
         }
-        else this.setDragStyles(event.srcElement)
+
+        const gridcellelement = VueUtils.traverseByRef(event.srcElement.__vue__, 'gridcellelement')
+        if (gridcellelement) {
+            gridArrowService.hideArrowConnector()
+            gridcellelement.showOtherIcons = false
+            return
+        }
+
+        this.startedDrag = false
     },
     setDragStyles(element) {
+        const gc = globalConfig
+
         this.tempDragStyles = {
             borderRadius: element.style.borderRadius,
             width: element.style.width,
@@ -71,22 +73,21 @@ export const toolboxService = {
             iconFontSize: element.querySelector('i').style.fontSize
         }
 
+        const padding = Math.floor(gc.gridCellElementWidth / 3.3)
+        const fontSize = Math.floor(gc.gridCellElementWidth / 2.7)
+        
         element.style.borderRadius = `0px`
-        element.style.width = `${globalConfig.gridCellElementWidth}px`
-        element.style.height = `${globalConfig.gridCellElementHeight}px`
-        element.style.padding = `${Math.floor(globalConfig.gridCellElementWidth / 3.3)}px`
+        element.style.width = `${gc.gridCellElementWidth}px`
+        element.style.height = `${gc.gridCellElementHeight}px`
+        element.style.padding = (gc.zoomLevel === 50) ? '5px' : `${padding}px`
 
-        element.querySelector('i').style.fontSize = `${Math.floor(globalConfig.gridCellElementWidth / 2.7)}px`
+        element.querySelector('i').style.fontSize = `${fontSize}px`
         element.querySelector('label').style.display = `none`
     },
     afterStartDrag(event) {
         setTimeout(_ => {
-            const vueElement = event.srcElement.__vue__
-
-            if (VueUtils.traverseByProp(vueElement, 'isInsideCell'))
-                VueUtils.traverseByQuery(vueElement, '.gridtool-modifications').style.visibility = 'visible'
-
-            else this.resetDragStyles(event.srcElement)
+            if (!this.isInsideCell) 
+                this.resetDragStyles(event.srcElement)
         }, 0)
     },
     resetDragStyles(element) {

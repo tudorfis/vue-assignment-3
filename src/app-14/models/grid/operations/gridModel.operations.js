@@ -28,7 +28,7 @@ export const gridModelOperations = {
 
         for (let row = 1; row <= this.model.numRows; row++) {
             const position = this.getPosition(row, this.model.numCols)
-            Vue.set(this.model.cells, position, {...cellBlueprint})
+            this.model.cells[position] = {...cellBlueprint}
         }
 
         zoomService.calculateSvgViewBox()
@@ -38,7 +38,7 @@ export const gridModelOperations = {
 
         for (let col = 1; col <= this.model.numCols; col++) {
             const position = this.getPosition(this.model.numRows, col)
-            Vue.set(this.model.cells, position, {...cellBlueprint})
+            this.model.cells[position] = {...cellBlueprint}
         }
 
         zoomService.calculateSvgViewBox()
@@ -58,7 +58,7 @@ export const gridModelOperations = {
             this.rearangeLinks(prevPos, nextPos)
         }
         
-        Vue.set(this.model.cells, position, {...cellBlueprint})
+        this.model.cells[position] = {...cellBlueprint}
     },
     spliceRows(position) {
         if (this.isElementsRowEnd(position))
@@ -75,7 +75,7 @@ export const gridModelOperations = {
             this.rearangeLinks(prevPos, currPos)
         }
 
-        Vue.set(this.model.cells, position, {...cellBlueprint})
+        this.model.cells[position] = {...cellBlueprint}
     },
     reduceGridSize(model) {
         let numRows = 0, 

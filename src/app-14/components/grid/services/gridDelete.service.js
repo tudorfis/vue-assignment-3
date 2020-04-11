@@ -62,7 +62,7 @@ export const gridDeleteService = {
     },
     deleteLink() {
         const index = gridModel.model.links.indexOf(this.linkKey)
-        Vue.delete(gridModel.model.links, index)
+        delete gridModel.model.links[index]
         
         gridModel.buildLinks()
 
