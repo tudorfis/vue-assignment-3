@@ -1,39 +1,53 @@
 import linkEEhelper from './linkEE.helper'
+import { LinkDrawHelper } from './linkDraw.helper'
 import { gridModel } from '../grid.model'
 
 describe('linkEEhelper', function () {
-    test('generateEEpath()', () => {
-        gridModel.model = {
-            links: [
-                "1-3__3-2",
-                "2-1__2-4",
-                "2-1__1-3",
-                "3-2__2-4",
-                "4-2__2-1",
-                "2-1__2-4",
-                "2-1__4-2",
-                "1-3__2-1",
-                "1-3__2-4"
-            ]
-        }
-        
-        linkEEhelper.generateEEpath()
+    test('constructor()', function () {
+        expect(linkEEhelper.eeMap).toEqual({})
+        expect(linkEEhelper.eePathMap).toEqual({})
 
-        expect(linkEEhelper.eePathMap).toEqual({
-            "1-3": { h: 3, v: 1 },
-            "1-2": { h: 2, v: 1 },
-            "2-2": { h: 4, v: 2 },
-            "3-2": { h: 1, v: 2 },
-            "2-1": { h: 4, v: 2 },
-            "2-3": { h: 3, v: 1 },
-            "2-4": { h: 2, v: 2 },
-            "3-3": { h: 1, v: 0 },
-            "3-4": { h: 1, v: 1 },
-            "4-2": { h: 1, v: 1 },
-            "4-1": { h: 1, v: 1 },
-            "3-1": { h: 0, v: 1 },
-            "1-1": { h: 1, v: 1 },
-            "1-4": { h: 1, v: 1 }
-        })
+        expect(linkEEhelper.linkEEblueprint.up).toEqual({ out: {}, in: {}, total: 0 })
+        expect(linkEEhelper.linkEEblueprint.down).toEqual({ out: {}, in: {}, total: 0 })
+        expect(linkEEhelper.linkEEblueprint.right).toEqual({ out: {}, in: {}, total: 0 })
+        expect(linkEEhelper.linkEEblueprint.left).toEqual({ out: {}, in: {}, total: 0 })
+    })
+    test('setEEPathMap(ldh) - 1.1', function() {
+        const ldh = new LinkDrawHelper('1-3__3-5')
+        linkEEhelper.setEEPathMap(ldh)
+        expect(linkEEhelper.eePathMap).toEqual({'1-4': { h: 1, v: 0 },'2-5': { h: 0, v: 1 }})
+    })
+    test('genereateEEpath() - 1.1', function() {
+        gridModel.model = {links: ["1-3__3-2","2-1__2-4","2-1__1-3","3-2__2-4","4-2__2-1","2-1__4-2","1-3__2-1","1-3__2-4"]}
+        linkEEhelper.generateEEpath()
+        expect(linkEEhelper.eePathMap).toEqual({"2-2":{"h":2,"v":1},"2-3":{"h":1,"v":0},"3-3":{"h":1,"v":0},"3-1":{"h":0,"v":1},"3-2":{"h":0,"v":1},"1-2":{"h":1,"v":0}})
+    })
+    test('genereateEEpath() - 1.2', function(){
+        gridModel.model = {links: ["1-3__3-2","2-1__2-4","2-1__1-3","3-2__2-4","4-2__2-1","2-1__4-2","1-3__2-1","1-3__2-4","3-3__5-3","2-4__5-3","1-3__5-3","2-1__5-3","3-2__5-3","4-2__5-3","3-1__5-3","5-3__3-3"]}
+        linkEEhelper.generateEEpath()
+        expect(linkEEhelper.eePathMap).toEqual({"2-2":{"h":3,"v":1},"2-3":{"h":1,"v":1},"3-3":{"h":1,"v":3},"3-1":{"h":0,"v":1},"3-2":{"h":1,"v":1},"1-2":{"h":1,"v":0},"4-3":{"h":0,"v":7}})
+    })
+    test('genereateEEpath() - 1.3', function(){
+        gridModel.model = {links: ["9-8__4-3","3-1__6-9","3-1__9-8","4-3__6-9","5-2__3-1","3-1__6-9","3-1__5-2","9-8__3-1","9-8__6-9","4-6__3-10","6-9__3-10","9-8__3-10","3-1__3-10","4-3__3-10","5-2__3-10","3-4__3-10","3-10__4-6","6-1__6-2","7-8__7-3","8-2__8-4","8-5__6-5","8-5__9-5","8-5__8-6","8-5__8-4","6-5__8-5","6-5__7-3","6-2__7-8","6-2__7-1","6-1__8-2","5-5__3-5","1-4__1-7","1-4__1-6","1-2__1-3","3-5__2-5","2-5__1-2","1-3__1-4"]}
+        linkEEhelper.generateEEpath()
+        expect(linkEEhelper.eePathMap).toEqual({"9-7":{"h":2,"v":0},"9-6":{"h":2,"v":0},"9-5":{"h":2,"v":0},"9-4":{"h":2,"v":0},"8-3":{"h":1,"v":1},"7-3":{"h":0,"v":1},"6-3":{"h":1,"v":1},"5-3":{"h":1,"v":1},"3-2":{"h":4,"v":0},"3-3":{"h":4,"v":0},"3-4":{"h":4,"v":0},"3-5":{"h":5,"v":0},"3-6":{"h":5,"v":0},"3-7":{"h":6,"v":0},"3-8":{"h":5,"v":0},"4-9":{"h":2,"v":2},"5-9":{"h":1,"v":3},"4-8":{"h":3,"v":1},"5-8":{"h":1,"v":1},"6-8":{"h":0,"v":1},"7-8":{"h":0,"v":1},"8-8":{"h":0,"v":1},"4-4":{"h":2,"v":0},"4-5":{"h":2,"v":1},"4-6":{"h":2,"v":0},"4-7":{"h":3,"v":0},"4-1":{"h":0,"v":2},"4-2":{"h":0,"v":1},"9-3":{"h":1,"v":0},"9-2":{"h":1,"v":0},"8-1":{"h":0,"v":1},"7-1":{"h":0,"v":1},"6-1":{"h":0,"v":1},"5-1":{"h":0,"v":1},"8-9":{"h":0,"v":1},"7-9":{"h":0,"v":1},"5-10":{"h":0,"v":2},"4-10":{"h":0,"v":3},"9-9":{"h":1,"v":0},"8-10":{"h":0,"v":1},"7-10":{"h":0,"v":1},"6-10":{"h":0,"v":1},"3-9":{"h":3,"v":0},"5-4":{"h":1,"v":0},"5-5":{"h":1,"v":0},"5-6":{"h":1,"v":0},"5-7":{"h":1,"v":0},"7-7":{"h":1,"v":0},"7-6":{"h":1,"v":0},"7-5":{"h":1,"v":2},"7-4":{"h":1,"v":0},"6-4":{"h":2,"v":0},"6-5":{"h":1,"v":0},"6-6":{"h":1,"v":0},"6-7":{"h":1,"v":0},"7-2":{"h":0,"v":1},"1-5":{"h":2,"v":0},"1-6":{"h":1,"v":0},"2-4":{"h":1,"v":0},"2-3":{"h":1,"v":0}})
+    })
+    test('generateEEmap() - 1.1', function(){
+        gridModel.model = {links: ["1-3__3-2","2-1__2-4","2-1__1-3","3-2__2-4","4-2__2-1","2-1__4-2","1-3__2-1","1-3__2-4"]}
+        linkEEhelper.generateEEpath()
+        linkEEhelper.generateEEmap()
+        expect(linkEEhelper.eeMap).toEqual({"1-3":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{"2-1":3},"total":3},"right":{"out":{"2-4":1},"in":{},"total":1},"left":{"out":{"3-2":1,"2-1":2},"in":{},"total":2}},"3-2":{"up":{"out":{},"in":{"1-3":1},"total":1},"down":{"out":{},"in":{},"total":0},"right":{"out":{"2-4":1},"in":{},"total":1},"left":{"out":{},"in":{},"total":0}},"2-1":{"up":{"out":{},"in":{"1-3":2},"total":2},"down":{"out":{},"in":{"4-2":1},"total":1},"right":{"out":{"2-4":2,"1-3":3,"4-2":4},"in":{},"total":4},"left":{"out":{},"in":{},"total":0}},"2-4":{"up":{"out":{},"in":{"1-3":1},"total":1},"down":{"out":{},"in":{"3-2":1},"total":1},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{"2-1":2},"total":2}},"4-2":{"up":{"out":{},"in":{"2-1":4},"total":4},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{},"total":0},"left":{"out":{"2-1":1},"in":{},"total":1}}})
+    })
+    test('generateEEmap() - 1.2', function(){
+        gridModel.model = {links: ["1-3__3-2","2-1__2-4","2-1__1-3","3-2__2-4","4-2__2-1","2-1__4-2","1-3__2-1","1-3__2-4","3-3__5-3","2-4__5-3","1-3__5-3","2-1__5-3","3-2__5-3","4-2__5-3","3-1__5-3","5-3__3-3"]}
+        linkEEhelper.generateEEpath()
+        linkEEhelper.generateEEmap()
+        expect(linkEEhelper.eeMap).toEqual({"1-3":{"up":{"out":{},"in":{},"total":0},"down":{"out":{"5-3":9},"in":{"2-1":4},"total":9},"right":{"out":{"2-4":1},"in":{},"total":1},"left":{"out":{"3-2":1,"2-1":2},"in":{},"total":2}},"3-2":{"up":{"out":{},"in":{"1-3":1},"total":1},"down":{"out":{},"in":{},"total":0},"right":{"out":{"2-4":1,"5-3":11},"in":{},"total":11},"left":{"out":{},"in":{},"total":0}},"2-1":{"up":{"out":{},"in":{"1-3":2},"total":2},"down":{"out":{},"in":{"4-2":1},"total":1},"right":{"out":{"2-4":3,"1-3":4,"4-2":5,"5-3":10},"in":{},"total":10},"left":{"out":{},"in":{},"total":0}},"2-4":{"up":{"out":{},"in":{"1-3":1},"total":1},"down":{"out":{},"in":{"3-2":1},"total":1},"right":{"out":{},"in":{},"total":0},"left":{"out":{"5-3":8},"in":{"2-1":3},"total":8}},"4-2":{"up":{"out":{},"in":{"2-1":5},"total":5},"down":{"out":{},"in":{},"total":0},"right":{"out":{"5-3":12},"in":{},"total":12},"left":{"out":{"2-1":1},"in":{},"total":1}},"3-3":{"up":{"out":{},"in":{},"total":0},"down":{"out":{"5-3":7},"in":{"5-3":14},"total":14},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{},"total":0}},"5-3":{"up":{"out":{"3-3":14},"in":{"3-3":7,"2-4":8,"1-3":9,"2-1":10,"3-2":11,"4-2":12,"3-1":13},"total":14},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{},"total":0}},"3-1":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{"5-3":13},"in":{},"total":13},"left":{"out":{},"in":{},"total":0}}})
+    })
+    test('generateEEmap() - 1.3', function(){
+        gridModel.model = {links: ["9-8__4-3","3-1__6-9","3-1__9-8","4-3__6-9","5-2__3-1","3-1__6-9","3-1__5-2","9-8__3-1","9-8__6-9","4-6__3-10","6-9__3-10","9-8__3-10","3-1__3-10","4-3__3-10","5-2__3-10","3-4__3-10","3-10__4-6","6-1__6-2","7-8__7-3","8-2__8-4","8-5__6-5","8-5__9-5","8-5__8-6","8-5__8-4","6-5__8-5","6-5__7-3","6-2__7-8","6-2__7-1","6-1__8-2","5-5__3-5","1-4__1-7","1-4__1-6","1-2__1-3","3-5__2-5","2-5__1-2","1-3__1-4"]}
+        linkEEhelper.generateEEpath()
+        linkEEhelper.generateEEmap()
+        expect(linkEEhelper.eeMap).toEqual({"9-8":{"up":{"out":{},"in":{"3-1":7},"total":7},"down":{"out":{},"in":{},"total":0},"right":{"out":{"6-9":1,"3-10":5},"in":{},"total":5},"left":{"out":{"4-3":2,"3-1":3},"in":{},"total":3}},"4-3":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{"9-8":2},"total":2},"right":{"out":{"6-9":7,"3-10":8},"in":{},"total":8},"left":{"out":{},"in":{},"total":0}},"3-1":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{"5-2":1,"9-8":3},"total":3},"right":{"out":{"6-9":8,"9-8":7,"5-2":9,"3-10":10},"in":{},"total":10},"left":{"out":{},"in":{},"total":0}},"6-9":{"up":{"out":{},"in":{"3-1":8,"4-3":7},"total":8},"down":{"out":{},"in":{"9-8":1},"total":1},"right":{"out":{"3-10":4},"in":{},"total":4},"left":{"out":{},"in":{},"total":0}},"5-2":{"up":{"out":{},"in":{"3-1":9},"total":9},"down":{"out":{},"in":{},"total":0},"right":{"out":{"3-10":9},"in":{},"total":9},"left":{"out":{"3-1":1},"in":{},"total":1}},"4-6":{"up":{"out":{},"in":{"3-10":12},"total":12},"down":{"out":{},"in":{},"total":0},"right":{"out":{"3-10":3},"in":{},"total":3},"left":{"out":{},"in":{},"total":0}},"3-10":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{"4-6":3,"6-9":4,"9-8":5,"4-3":8,"5-2":9},"total":9},"right":{"out":{},"in":{},"total":0},"left":{"out":{"4-6":12},"in":{"3-1":10,"3-4":11},"total":12}},"3-4":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{"3-10":11},"in":{},"total":11},"left":{"out":{},"in":{},"total":0}},"6-1":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{"6-2":1,"8-2":2},"in":{},"total":2},"left":{"out":{},"in":{},"total":0}},"6-2":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{"7-8":2},"in":{},"total":2},"left":{"out":{"7-1":2},"in":{"6-1":1},"total":2}},"7-8":{"up":{"out":{},"in":{"6-2":2},"total":2},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{},"total":0},"left":{"out":{"7-3":1},"in":{},"total":1}},"7-3":{"up":{"out":{},"in":{"6-5":2},"total":2},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{"7-8":1},"total":1},"left":{"out":{},"in":{},"total":0}},"8-2":{"up":{"out":{},"in":{"6-1":2},"total":2},"down":{"out":{},"in":{},"total":0},"right":{"out":{"8-4":1},"in":{},"total":1},"left":{"out":{},"in":{},"total":0}},"8-4":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{"8-5":1},"total":1},"left":{"out":{},"in":{"8-2":1},"total":1}},"8-5":{"up":{"out":{"6-5":2},"in":{"6-5":3},"total":3},"down":{"out":{"9-5":1},"in":{},"total":1},"right":{"out":{"8-6":1},"in":{},"total":1},"left":{"out":{"8-4":1},"in":{},"total":1}},"6-5":{"up":{"out":{},"in":{},"total":0},"down":{"out":{"8-5":3},"in":{"8-5":2},"total":3},"right":{"out":{},"in":{},"total":0},"left":{"out":{"7-3":2},"in":{},"total":2}},"9-5":{"up":{"out":{},"in":{"8-5":1},"total":1},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{},"total":0}},"8-6":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{"8-5":1},"total":1}},"7-1":{"up":{"out":{},"in":{"6-2":2},"total":2},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{},"total":0}},"5-5":{"up":{"out":{"3-5":1},"in":{},"total":1},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{},"total":0}},"3-5":{"up":{"out":{"2-5":1},"in":{},"total":1},"down":{"out":{},"in":{"5-5":1},"total":1},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{},"total":0}},"1-4":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{"1-7":2,"1-6":3},"in":{},"total":3},"left":{"out":{},"in":{"1-3":1},"total":1}},"1-7":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{"1-4":2},"total":2}},"1-6":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{},"in":{},"total":0},"left":{"out":{},"in":{"1-4":3},"total":3}},"1-2":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{"2-5":1},"total":1},"right":{"out":{"1-3":1},"in":{},"total":1},"left":{"out":{},"in":{},"total":0}},"1-3":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{},"total":0},"right":{"out":{"1-4":1},"in":{},"total":1},"left":{"out":{},"in":{"1-2":1},"total":1}},"2-5":{"up":{"out":{},"in":{},"total":0},"down":{"out":{},"in":{"3-5":1},"total":1},"right":{"out":{},"in":{},"total":0},"left":{"out":{"1-2":1},"in":{},"total":1}}})
     })
 })

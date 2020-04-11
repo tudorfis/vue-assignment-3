@@ -3,22 +3,26 @@ import { gridModel } from "../grid.model"
 import { LinkDrawHelper } from '../helpers/linkDraw.helper'
 import linkEEhelper from '../helpers/linkEE.helper'
 import { globalConfig } from '../../../config/global.config'
+import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
 
 export const gridLinksOperations = {
     colors: [],
     colorIds: [],
-    oldLinks: [],
     buildLinks() {
-        linkEEhelper.generateEEpath()
-        linkEEhelper.generateEEmap()
+        const vm = gridLinksOperations
+
+        vm.colors = []
+        vm.colorIds = []
         gridModel.paths = {}
 
-        if (gridModel.model.links && gridModel.model.links.length)
-            for (const linkKey of gridModel.model.links) {
-                if (!linkKey) continue
-                gridLinksOperations.genPathTwoCells(linkKey)
-            }
+        linkEEhelper.generateEEpath()
+        linkEEhelper.generateEEmap()
         
+        const links = gridModel.model.links
+        const lki = new LinkKeyIterator(links)
+
+        while(lki.continue)
+            gridLinksOperations.genPathTwoCells(lki.linkKey)
     },
     genPathTwoCells(linkKey, isDrag) {
         const vm = gridLinksOperations
@@ -28,7 +32,7 @@ export const gridLinksOperations = {
 
         Vue.set(gridModel.paths, linkKey, [])
 
-        const ldh = new LinkDrawHelper(linkKey, gridModel)
+        const ldh = new LinkDrawHelper(linkKey)
         if (ldh.badLinkKey) return
 
         let path, arrow, direction1, direction2, sameColRow
@@ -150,9 +154,13 @@ export const gridLinksOperations = {
         return oldPosition
     },
     hasNoLinks(position) {
-        if (gridModel.model.links && gridModel.model.links.length)
-            for (const linkKey of gridModel.model.links)
-                if (linkKey && linkKey.indexOf(position) !== -1) return false
+        const links = gridModel.model.links
+        const lki = new LinkKeyIterator(links)
+
+        while (lki.continue) {
+            if (lki.linkKey.includes(position))
+                return false
+        }
 
         return true
     },

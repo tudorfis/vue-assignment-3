@@ -1,6 +1,7 @@
 
 import { globalConfig } from '../../../config/global.config'
 import linkEEhelper from './linkEE.helper'
+import { gridModel } from '../grid.model'
 
 const gc = globalConfig
 
@@ -16,7 +17,7 @@ const link_separator = globalConfig.linkSeparator
 const arrow_width = globalConfig.arrowWidth
 
 export class LinkDrawHelper {
-    constructor(linkKey, gridModel) {
+    constructor(linkKey) {
         if (!linkKey) {
             this.badLinkKey = true
             return

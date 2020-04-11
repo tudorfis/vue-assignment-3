@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "test": "jest --rootDir=src/app-14"
+    "test": "jest --rootDir=src/app-14",
+    "test_watch": "jest --rootDir=src/app-14 --watchAll",
+    "test_file": "jest --rootDir=src/app-14/models/grid/helpers --runTestsByPath=linkEE.helper.test.js"
   },
   "dependencies": {
     "vue": "^2.5.11",

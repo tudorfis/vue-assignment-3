@@ -27,36 +27,36 @@ class LinkEEHelper {
         const lki = new LinkKeyIterator(links)
 
         while (lki.continue) {
-            const ldh = new LinkDrawHelper(lki.linkKey, gridModel)
+            const ldh = new LinkDrawHelper(lki.linkKey)
             this.setEEPathMap(ldh)
         }
     }
-    setEEPathMap(l) {
-        if (l.sameCol && l.down) {
-            for (let row = l.row1; row <= l.row2; row++)
-                setEEPath(row, l.col1, 'v')
+    setEEPathMap(ldh) {
+        if (ldh.sameCol && ldh.down) {
+            for (let row = ldh.row1 + 1; row < ldh.row2; row++)
+                setEEPath(row, ldh.col1, 'v')
         }
-        else if (l.sameCol && l.up) {
-            for (let row = l.row1; row >= l.row2; row--)
-                setEEPath(row, l.col1, 'v')
+        else if (ldh.sameCol && ldh.up) {
+            for (let row = ldh.row1 - 1; row > ldh.row2; row--)
+                setEEPath(row, ldh.col1, 'v')
         }
-        else if (l.sameRow && l.right) {
-            for (let col = l.col1; col <= l.col2; col++)
-                setEEPath(l.row1, col, 'h')
+        else if (ldh.sameRow && ldh.right) {
+            for (let col = ldh.col1 + 1; col < ldh.col2; col++)
+                setEEPath(ldh.row1, col, 'h')
         }
-        else if (l.sameRow && l.left) {
-            for (let col = l.col1; col >= l.col2; col--)
-                setEEPath(l.row1, col, 'h')
+        else if (ldh.sameRow && ldh.left) {
+            for (let col = ldh.col1 - 1; col > ldh.col2; col--)
+                setEEPath(ldh.row1, col, 'h')
         }
-        else if (l.right) {
-            for (let col = l.col1; col <= l.col2; col++)
-                setEEPath(l.row1, col, 'h')
-            setEEDownUpPath(l)
+        else if (ldh.right) {
+            for (let col = ldh.col1 + 1; col < ldh.col2; col++)
+                setEEPath(ldh.row1, col, 'h')
+            setEEDownUpPath(ldh)
         }
-        else if (l.left) {
-            for (let col = l.col1; col >= l.col2; col--)
-                setEEPath(l.row1, col, 'h')
-            setEEDownUpPath(l)
+        else if (ldh.left) {
+            for (let col = ldh.col1 - 1; col > ldh.col2; col--)
+                setEEPath(ldh.row1, col, 'h')
+            setEEDownUpPath(ldh)
         }
 
         function setEEPath(row, col, hv) {
@@ -67,30 +67,27 @@ class LinkEEHelper {
             
             linkEEhelper.eePathMap[position][hv]++
         }
-        function setEEDownUpPath(l) {
-            if (l.down)
-                for (let row = l.row1; row <= l.row2; row++)
-                    setEEPath(row, l.col2, 'v')
+        function setEEDownUpPath(ldh) {
+            if (ldh.down)
+                for (let row = ldh.row1 + 1; row < ldh.row2; row++)
+                    setEEPath(row, ldh.col2, 'v')
             
-            else if (l.up)
-                for (let row = l.row1; row >= l.row2; row--)
-                    setEEPath(row, l.col2, 'v')
+            else if (ldh.up)
+                for (let row = ldh.row1 - 1; row > ldh.row2; row--)
+                    setEEPath(row, ldh.col2, 'v')
         }
     }
     generateEEmap() {
         this.eeMap = {}
-        
-        if (gridModel.model.links && gridModel.model.links.length) {
-            for (const linkKey of gridModel.model.links) {
 
-                const l = new LinkDrawHelper(linkKey, gridModel)
-                this.setEELinkMaps(l)
-                
-                const link1Direction = this.getLink1Direction(l)
-                const link2Direction = this.getLink2Direction(l)
-                
-                this.setEEConnectionMaps(l, link1Direction, link2Direction)
-            }
+        const links = gridModel.model.links
+        const lki = new LinkKeyIterator(links)
+
+        while (lki.continue) {
+            const ldh = new LinkDrawHelper(lki.linkKey)
+            
+            this.setEELinkMaps(ldh)
+            this.setEEConnectionMaps(ldh)
         }
     }
     setEELinkMaps(l) {
@@ -116,59 +113,62 @@ class LinkEEHelper {
 
         return ''
     }
-    setEEConnectionMaps(l, link1Direction, link2Direction) {
-        const link1Obj = this.eeMap[l.link1][link1Direction]
-        const link2Obj = this.eeMap[l.link2][link2Direction]
+    setEEConnectionMaps(ldh) {
+        const link1Direction = this.getLink1Direction(ldh)
+        const link2Direction = this.getLink2Direction(ldh)
+
+        const link1Obj = this.eeMap[ldh.link1][link1Direction]
+        const link2Obj = this.eeMap[ldh.link2][link2Direction]
         
         if (!link1Obj || !link2Obj) return
-        const eeLinks = this.getEETotalLinks(l, link1Direction, link2Direction)
+        const eeLinks = this.getEETotalLinks(ldh, link1Direction, link2Direction)
         
         link1Obj.total = eeLinks
         link2Obj.total = eeLinks
 
-        link1Obj.out[l.link2] = link1Obj.total
-        link2Obj.in[l.link1] = link2Obj.total
+        link1Obj.out[ldh.link2] = link1Obj.total
+        link2Obj.in[ldh.link1] = link2Obj.total
     }
-    getEETotalLinks(l, link1Direction, link2Direction) {
+    getEETotalLinks(ldh, link1Direction, link2Direction) {
         let eeLinks = 0
 
         if (link1Direction === 'right' && link2Direction === 'left') {
-            for (let col = l.col1 + 1; col < l.col2; col++)
-                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 0)
+            for (let col = ldh.col1 + 1; col < ldh.col2; col++)
+                eeLinks = getEELinksEEPath(ldh.row1, col, 'h', eeLinks, 0)
 
-            eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, l, 1)
+            eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, ldh, 1)
         } 
         else if (link1Direction === 'left' && link2Direction === 'right') {
-            for (let col = l.col1 - 1; col > l.col2; col--)
-                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 0)
+            for (let col = ldh.col1 - 1; col > ldh.col2; col--)
+                eeLinks = getEELinksEEPath(ldh.row1, col, 'h', eeLinks, 0)
 
-            eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, l, 1)
+            eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, ldh, 1)
         }
         else if (link1Direction === 'down' && link2Direction === 'up') {
-            for (let row = l.row1 + 1; row < l.row2; row++)
-                eeLinks = getEELinksEEPath(row, l.col1, 'v', eeLinks, 0)
+            for (let row = ldh.row1 + 1; row < ldh.row2; row++)
+                eeLinks = getEELinksEEPath(row, ldh.col1, 'v', eeLinks, 0)
 
-            eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, l, 1)
+            eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, ldh, 1)
         }
         else if (link1Direction === 'up' && link2Direction === 'down') {
-            for (let row = l.row1 - 1; row > l.row2; row--)
-                eeLinks = getEELinksEEPath(row, l.col1, 'v', eeLinks, 0)
+            for (let row = ldh.row1 - 1; row > ldh.row2; row--)
+                eeLinks = getEELinksEEPath(row, ldh.col1, 'v', eeLinks, 0)
 
-            eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, l, 1)
+            eeLinks = getEELinksLink1Link2(link1Direction, link2Direction, false, false, eeLinks, ldh, 1)
         }
         else if (link1Direction === 'right') {
-            for (let col = l.col1 + 1; col < l.col2; col++)
-                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 0)
+            for (let col = ldh.col1 + 1; col <= ldh.col2; col++)
+                eeLinks = getEELinksEEPath(ldh.row1, col, 'h', eeLinks, 0)
 
-            eeLinks = getEELinksLink1Link2(link1Direction, '', true, false, eeLinks, l, 1)
-            eeLinks = getEELinksUpDownDirection(link2Direction, eeLinks, l, 0)
+            eeLinks = getEELinksLink1Link2(link1Direction, '', true, false, eeLinks, ldh, 1)
+            eeLinks = getEELinksUpDownDirection(link2Direction, eeLinks, ldh, 0)
         }
         else if (link1Direction === 'left') {
-            for (let col = l.col1 - 1; col > l.col2; col--)
-                eeLinks = getEELinksEEPath(l.row1, col, 'h', eeLinks, 0)
-
-            eeLinks = getEELinksLink1Link2(link1Direction, '', true, false, eeLinks, l, 1)
-            eeLinks = getEELinksUpDownDirection(link2Direction, eeLinks, l, 0)
+            for (let col = ldh.col1 - 1; col >= ldh.col2; col--)
+                eeLinks = getEELinksEEPath(ldh.row1, col, 'h', eeLinks, 0)
+                
+            eeLinks = getEELinksLink1Link2(link1Direction, '', true, false, eeLinks, ldh, 1)
+            eeLinks = getEELinksUpDownDirection(link2Direction, eeLinks, ldh, 0)
         }
 
         return eeLinks
@@ -179,9 +179,9 @@ class LinkEEHelper {
             
             return Math.max(eeLinks, eePathMap[hv] + extra)
         }
-        function getEELinksLink1Link2(direction1, direction2, onlyLink1, onlyLink2, eeLinks, l, extra = 0) {
-            const position1 = gridModel.getPosition(l.row1, l.col1)
-            const position2 = gridModel.getPosition(l.row2, l.col2)
+        function getEELinksLink1Link2(direction1, direction2, onlyLink1, onlyLink2, eeLinks, ldh, extra = 0) {
+            const position1 = gridModel.getPosition(ldh.row1, ldh.col1)
+            const position2 = gridModel.getPosition(ldh.row2, ldh.col2)
             
             if (onlyLink1) {
                 eeLinks = Math.max(eeLinks, linkEEhelper.eeMap[position1][direction1].total + extra)
@@ -196,18 +196,18 @@ class LinkEEHelper {
             
             return eeLinks
         }
-        function getEELinksUpDownDirection(link2Direction, eeLinks, l) {
+        function getEELinksUpDownDirection(link2Direction, eeLinks, ldh) {
             if (link2Direction === 'down'){ 
-                for (let row = l.row1 + 1; row < l.row2; row++)
-                    eeLinks = getEELinksEEPath(row, l.col2, 'v', eeLinks, 1)
+                for (let row = ldh.row1 + 1; row < ldh.row2; row++)
+                    eeLinks = getEELinksEEPath(row, ldh.col2, 'v', eeLinks, 1)
 
-                eeLinks = getEELinksLink1Link2('', link2Direction, false, true, eeLinks, l, 1)
+                eeLinks = getEELinksLink1Link2('', link2Direction, false, true, eeLinks, ldh, 1)
             }
             else if (link2Direction === 'up') {
-                for (let row = l.row1 - 1; row > l.row2; row--)
-                    eeLinks = getEELinksEEPath(row, l.col2, 'v', eeLinks, 1)
+                for (let row = ldh.row1 - 1; row > ldh.row2; row--)
+                    eeLinks = getEELinksEEPath(row, ldh.col2, 'v', eeLinks, 1)
 
-                eeLinks = getEELinksLink1Link2('', link2Direction, false, true, eeLinks, l, 1)
+                eeLinks = getEELinksLink1Link2('', link2Direction, false, true, eeLinks, ldh, 1)
             }
 
             return eeLinks
