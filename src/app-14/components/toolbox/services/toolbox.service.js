@@ -77,11 +77,11 @@ export const toolboxService = {
         const fontSize = Math.floor(gc.gridCellElementWidth / 2.7)
         
         element.style.borderRadius = `0px`
-        element.style.width = `${gc.gridCellElementWidth}px`
-        element.style.height = `${gc.gridCellElementHeight}px`
-        element.style.padding = (gc.zoomLevel === 50) ? '5px' : `${padding}px`
+        element.style.width = (gc.zoomLevel <= 75) ? `75px` : `${gc.gridCellElementWidth}px`
+        element.style.height = (gc.zoomLevel <= 75) ? `75px` : `${gc.gridCellElementHeight}px`
+        element.style.padding = (gc.zoomLevel <= 75) ? `20px` : `${padding}px`
 
-        element.querySelector('i').style.fontSize = `${fontSize}px`
+        element.querySelector('i').style.fontSize = (gc.zoomLevel <= 75) ? `30px` : `${fontSize}px`
         element.querySelector('label').style.display = `none`
     },
     afterStartDrag(event) {

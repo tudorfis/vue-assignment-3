@@ -1,6 +1,13 @@
 
 export default {
+    data() {
+      return {
+        waitScroll: false,
+        timeoutScroll: null
+      }
+    },
     mounted() {
+      const vm = this
       const sliderEl = document.querySelector('.gridcontent')
       let startedHtmlScroll = false
       let startX, startY
@@ -25,16 +32,24 @@ export default {
         startedHtmlScroll = false        
       })
 
+      
       document.querySelector('html').addEventListener('mousemove', event => {
         if(!startedHtmlScroll) return
         event.preventDefault()
 
-        const scrollLeft = (startX - event.pageX) / 18
-        const scrollTop = (startY - event.pageY) / 9
-        const html = document.querySelector('html')
-        
-        html.scrollLeft += scrollLeft
-        html.scrollTop += scrollTop
+        if (vm.waitScroll) return
+        vm.waitScroll = true
+
+        vm.timeoutScroll = setTimeout(function(){
+          const scrollLeft = (startX - event.pageX) / 7
+          const scrollTop = (startY - event.pageY) / 7
+          const html = document.querySelector('html')
+          
+          html.scrollLeft += scrollLeft
+          html.scrollTop += scrollTop
+
+          vm.waitScroll = false
+        }, 5)
       })
     }
 }

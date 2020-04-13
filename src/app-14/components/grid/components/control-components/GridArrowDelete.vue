@@ -23,7 +23,7 @@ export default {
     #arrow-delete {
         position: fixed;
         display: none;
-        z-index: 3;
+        z-index: 2;
         cursor: pointer;
         color: red;
         background: white;

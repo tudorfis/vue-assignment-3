@@ -15,6 +15,7 @@ export const zoomService = {
     zoomIn() {
         if (this.disableZoomIn()) return
         gridDeleteService.hideArrowDelete()
+        gridDeleteService.resetLeftTop()
 
         globalConfig.zoomLevel += globalConfig.zoomDiff
 
@@ -33,6 +34,7 @@ export const zoomService = {
     zoomOut() {
         if (this.disableZoomOut()) return
         gridDeleteService.hideArrowDelete()
+        gridDeleteService.resetLeftTop()
 
         globalConfig.zoomLevel -= globalConfig.zoomDiff
 
