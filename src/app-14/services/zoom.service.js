@@ -1,6 +1,6 @@
 import { globalConfig } from "../config/global.config"
 import { gridModel } from "../models/grid/grid.model"
-import { gridDeleteService } from '../components/grid/services/gridDelete.service'
+import { globalResetsService } from "./globalResets.service"
 
 export const zoomService = {
     svgViewBox: '0 0 0 0',
@@ -14,8 +14,7 @@ export const zoomService = {
     },
     zoomIn() {
         if (this.disableZoomIn()) return
-        gridDeleteService.hideArrowDelete()
-        gridDeleteService.resetLeftTop()
+        globalResetsService.reset
 
         globalConfig.zoomLevel += globalConfig.zoomDiff
 
@@ -33,8 +32,7 @@ export const zoomService = {
     },
     zoomOut() {
         if (this.disableZoomOut()) return
-        gridDeleteService.hideArrowDelete()
-        gridDeleteService.resetLeftTop()
+        globalResetsService.reset
 
         globalConfig.zoomLevel -= globalConfig.zoomDiff
 

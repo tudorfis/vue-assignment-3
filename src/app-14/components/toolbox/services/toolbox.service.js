@@ -1,7 +1,7 @@
 import { dragElementsEnum, dragElementsService } from "../../../services/dragElements.service"
 import { globalConfig } from "../../../config/global.config"
 import { VueUtils } from "../../../utils/vue.utils"
-import { gridArrowService } from "../../grid/services/gridArrow.service"
+import { globalResetsService } from "../../../services/globalResets.service"
 
 export const toolboxService = {
     isInsideCell: false,
@@ -44,6 +44,8 @@ export const toolboxService = {
         this.afterStartDrag(event)
     },
     beforeStartDrag(event) {
+        globalResetsService.reset()
+
         this.startedDrag = true
         this.oldPosition = VueUtils.traverseByProp(event.srcElement.__vue__, 'position')
         this.isInsideCell = VueUtils.traverseByProp(event.srcElement.__vue__, 'isInsideCell') || false
@@ -55,7 +57,6 @@ export const toolboxService = {
 
         const gridcellelement = VueUtils.traverseByRef(event.srcElement.__vue__, 'gridcellelement')
         if (gridcellelement) {
-            gridArrowService.hideArrowConnector()
             gridcellelement.showOtherIcons = false
             return
         }

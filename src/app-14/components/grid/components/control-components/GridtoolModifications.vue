@@ -18,10 +18,13 @@ import { VueUtils } from '../../../../utils/vue.utils';
 import { globalConfig } from '../../../../config/global.config';
 import { gridcellOperationsService } from '../../services/gridcellOperations.service';
 import { dragElementsEnum } from '../../../../services/dragElements.service';
+import { globalResetsService } from '../../../../services/globalResets.service';
 export default {
   props: ['position'],
   methods: {
     onDelete(event) {
+      globalResetsService.reset()
+
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')
       gridcellOperationsService.resetCell(gridCellElement)
       
@@ -31,6 +34,8 @@ export default {
       gridModel.saveModel()
     },
     onEdit(event) {
+      globalResetsService.reset()
+
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')
       const elementType = gridCellElement.__vue__.$options.propsData['cell'].type
 

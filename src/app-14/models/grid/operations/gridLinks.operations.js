@@ -34,19 +34,13 @@ export const gridLinksOperations = {
 
         const ldh = new LinkDrawHelper(linkKey)
         if (ldh.badLinkKey) return
+        
+        const pathDirections = ldh.genPathDirections()
+        const direction1 = pathDirections[0]
+        const direction2 = pathDirections[1]
+        const sameColRow = pathDirections[2]
 
-        let path, arrow, direction1, direction2, sameColRow
-        if (ldh.right || ldh.left) {
-            direction1 = 'rightLeft'
-            direction2 = 'upDown'
-            sameColRow = 'sameRow'
-        }
-        else if (ldh.up || ldh.down) {
-            direction1 = 'upDown'
-            direction2 = 'rightLeft'
-            sameColRow = 'sameCol'
-        }
-
+        let path, arrow
         path = ldh.drawPath(ldh[direction1])
         path.d += ldh.drawLine(ldh[direction1], 'full')
         
@@ -56,25 +50,24 @@ export const gridLinksOperations = {
         }
         else {
             
-            const position = gridModel.getPosition(ldh.row1, ldh.col2)
-            const goAroundCell = gridModel.model.cells[position].is
-            // const goAroundCell = Math.round(Math.random())
-            
-            if (goAroundCell) {
+            if (ldh.goOtherWay && ldh.goAroundCell) {
                 path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false)
                 path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true)
             
             } else {
-                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true)
-                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false)
+                const adjustOtherWay = ldh.goOtherWay && !ldh[sameColRow]
+                
+                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true, adjustOtherWay)
+                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false, adjustOtherWay)
             }
 
             path.d += ldh.drawLine(ldh[direction2], 'full')
             path.d += ldh.drawLine(ldh[direction2], 'arrow')
-            arrow = ldh.drawArrow(ldh[direction2])
+
+            const arrowAdjust = direction1 === 'upDown' && !ldh[sameColRow]
+            arrow = ldh.drawArrow(ldh[direction2], false, arrowAdjust, ldh[direction1])
         }
 
-        /** @TODO: add the ids for cells so the colors don't scramble */
         if (ldh.idLink && !vm.colorIds[ldh.idLink] && !isDrag)
             vm.colorIds[ldh.idLink] = vm.colors.pop()
 

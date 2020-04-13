@@ -72,6 +72,38 @@ export class LinkDrawHelper {
     get upDown() {
         return this.up ? 'up' : (this.down ? 'down' : '')
     }
+    get cornerPositionInitial() {
+        return gridModel.getPosition(this.row1, this.col2)
+    }
+    get goOtherWay() {
+        return gridModel.model.cells[this.cornerPositionInitial].is
+    }
+    get cornerPositionOther() {
+        return gridModel.getPosition(this.row2, this.col1)
+    }
+    get goAroundCell() {
+        return gridModel.model.cells[this.cornerPositionOther].is
+    }
+    genPathDirections() {
+        let direction1, direction2, sameColRow
+
+        function genDirections(first = true) {
+            direction1 = first ? 'rightLeft' : 'upDown'
+            direction2 = first ? 'upDown' : 'rightLeft'
+            sameColRow = first ? 'sameRow' : 'sameCol'
+        }
+        if (!this.goOtherWay || this.goAroundCell) {
+            if (this.right || this.left) genDirections()
+            else if (this.up || this.down) genDirections(false)
+        }
+        else {
+            if (this.up || this.down) genDirections(false)
+            else if (this.right || this.left) genDirections()
+        }
+
+        return [ direction1, direction2, sameColRow ]
+    }
+    
     oppositeDirection(dirrection) {
         if (dirrection === 'up') return 'down'
         if (dirrection === 'down') return 'up'
@@ -137,7 +169,7 @@ export class LinkDrawHelper {
 
         return ` ${d}${distance}`
     }
-    drawHalf(direction = '', directionInOut = '', firstHalf) {
+    drawHalf(direction = '', directionInOut = '', firstHalf, adjust) {
         let d, diff_ee
         if (direction === 'up') d = 'v-'
         if (direction === 'down') d = 'v'
@@ -151,19 +183,23 @@ export class LinkDrawHelper {
 
             if (direction === 'left') distance -= diff_ee
             else if (direction === 'right') distance += diff_ee
+            else if (direction === 'up' && directionInOut === 'right' && adjust) distance -= 6
+            else if (direction === 'down'&& directionInOut === 'left' && adjust) distance += 6
+
         
         } else {
             diff_ee = linkEEhelper.getDiffEE(directionInOut, this.link1, this.link2, 'out') || 0
 
             if (direction === 'up') distance += diff_ee
             else if (direction === 'down') distance -= diff_ee
+            else if (direction === 'right' && directionInOut === 'up' && adjust) distance -= 0
+            else if (direction === 'left'&& directionInOut === 'down' && adjust) distance += 0
         }
 
         return ` ${d}${distance}`
     }
-    drawArrow(direction, sameRowCol)  {
+    drawArrow(direction, sameRowCol = false, arrowAdjust = false, inDirection = '')  {
         let left, top, arrow, diff_ee
-
         if (sameRowCol) {
             diff_ee = linkEEhelper.getDiffEE(direction, this.link1, this.link2, 'out') || 0
             direction = this.oppositeDirection(direction)
@@ -186,11 +222,15 @@ export class LinkDrawHelper {
         else if (direction === 'left') {
             left = this.get_left_m_arrow(true) + 28
             top = this.get_top_m_arrow() + 130 + diff_ee
+        
+            top -= (arrowAdjust && ['down','up'].includes(inDirection)) ? diff_ee : 0
             arrow = `M${left} ${top} ${leftArrowPath()}`
         }
         else if (direction === 'right') {
             left = this.get_left_m_arrow(true) + (cell_size - 23)
             top = this.get_top_m_arrow() + 130 + diff_ee
+        
+            top -= (arrowAdjust && ['down','up'].includes(inDirection)) ? diff_ee : 0
             arrow = `M${left} ${top} ${rightArrowPath()}`
         }
 

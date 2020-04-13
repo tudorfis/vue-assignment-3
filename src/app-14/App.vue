@@ -18,8 +18,7 @@ import TopmenuVue from './components/topmenu/Topmenu.vue';
 import ToolboxVue from './components/toolbox/Toolbox.vue';
 import GridContentVue from './components/grid/Gridcontent.vue';
 import { zoomService } from './services/zoom.service';
-import { gridArrowService } from './components/grid/services/gridArrow.service';
-import { gridDeleteService } from './components/grid/services/gridDelete.service';
+import { globalResetsService } from './services/globalResets.service';
 
 export default {
   components: {
@@ -68,8 +67,7 @@ export default {
   },
   mounted() {
     document.body.onscroll = function(event) { 
-      gridDeleteService.hideArrowDelete()
-      gridArrowService.hideArrowConnector()
+      globalResetsService.reset()
     }
   }
 };

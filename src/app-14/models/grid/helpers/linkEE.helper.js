@@ -49,19 +49,15 @@ class LinkEEHelper {
             for (let col = ldh.col1 - 1; col > ldh.col2; col--)
                 setEEPath(ldh.row1, col, 'h')
         }
-        else if (ldh.right) {
-            for (let col = ldh.col1 + 1; col < ldh.col2; col++)
-                setEEPath(ldh.row1, col, 'h')
-
-            setEEPath(ldh.row1, ldh.col2, 'c', ldh.linkKey)
-            setEEDownUpPath(ldh)
+        else if (ldh.goOtherWay && !ldh.goAroundCell) {
+            setEEDownUpPath(ldh, ldh.col1)
+            setEEPath(ldh.row2, ldh.col1, 'c', ldh.linkKey)
+            setEERightLeftPath(ldh, ldh.row2)
         }
-        else if (ldh.left) {
-            for (let col = ldh.col1 - 1; col > ldh.col2; col--)
-                setEEPath(ldh.row1, col, 'h')
-
+        else {
+            setEERightLeftPath(ldh, ldh.row1)
             setEEPath(ldh.row1, ldh.col2, 'c', ldh.linkKey)
-            setEEDownUpPath(ldh)
+            setEEDownUpPath(ldh, ldh.col2)
         }
 
         function setEEPath(row, col, hv, linkKey) {
@@ -73,17 +69,26 @@ class LinkEEHelper {
             const eePathMap = linkEEhelper.eePathMap[position]
             eePathMap[hv]++
 
-            if (eePathMap.c === 1)
+            if (eePathMap.c === 1 && linkKey)
                 eePathMap.linkKey = linkKey
         }
-        function setEEDownUpPath(ldh) {
+        function setEEDownUpPath(ldh, col) {
             if (ldh.down)
                 for (let row = ldh.row1 + 1; row < ldh.row2; row++)
-                    setEEPath(row, ldh.col2, 'v')
+                    setEEPath(row, col, 'v')
             
             else if (ldh.up)
                 for (let row = ldh.row1 - 1; row > ldh.row2; row--)
-                    setEEPath(row, ldh.col2, 'v')
+                    setEEPath(row, col, 'v')
+        }
+        function setEERightLeftPath(ldh, row) {
+            if (ldh.right)
+                for (let col = ldh.col1 + 1; col < ldh.col2; col++)
+                    setEEPath(row, col, 'h')
+            
+            else if (ldh.left)
+                for (let col = ldh.col1 - 1; col > ldh.col2; col--)
+                    setEEPath(row, col, 'h')
         }
     }
     generateEEmap() {
@@ -121,27 +126,33 @@ class LinkEEHelper {
         if (!ldh.sameCol && !ldh.sameRow) {
             link1Obj.total = eePath1Total + 1
             link2Obj.total = eePath2Total + 1
-        } else {
-            link1Obj.total++
-            link2Obj.total = link1Obj.total
+
+            link1Obj.out[ldh.link2] = link1Obj.total
+            link2Obj.in[ldh.link1] = link2Obj.total
         }
-        
-        link1Obj.out[ldh.link2] = link1Obj.total
-        link2Obj.in[ldh.link1] = link2Obj.total
+        else {
+            link1Obj.total++
+            link2Obj.total++
+
+            link1Obj.out[ldh.link2] = link1Obj.total
+            link2Obj.in[ldh.link1] = link2Obj.total
+        }
     }
-    getLink1Direction(l) {
-        if (l.col1 === l.col2 && l.row1 < l.row2) return 'down'
-        else if (l.col1 === l.col2 && l.row1 > l.row2) return 'up'
-        else if (l.col1 < l.col2) return 'right'
-        else if (l.col1 > l.col2) return 'left'
+    getLink1Direction(ldh) {
+        if (ldh.col1 === ldh.col2 && ldh.row1 < ldh.row2) return 'down'
+        else if (ldh.col1 === ldh.col2 && ldh.row1 > ldh.row2) return 'up'
+        else if (ldh.goOtherWay && !ldh.goAroundCell) return ldh.upDown
+        else if (ldh.col1 < ldh.col2) return 'right'
+        else if (ldh.col1 > ldh.col2) return 'left'
 
         return ''
     }
-    getLink2Direction(l) {
-        if (l.row1 === l.row2 && l.col1 < l.col2) return 'left'
-        else if (l.row1 === l.row2 && l.col1 > l.col2) return 'right'
-        else if (l.row1 < l.row2) return 'up'
-        else if (l.row1 > l.row2) return 'down'
+    getLink2Direction(ldh) {
+        if (ldh.row1 === ldh.row2 && ldh.col1 < ldh.col2) return 'left'
+        else if (ldh.row1 === ldh.row2 && ldh.col1 > ldh.col2) return 'right'
+        else if (ldh.goOtherWay && !ldh.goAroundCell) return (ldh.rightLeft === 'right') ? 'left' : 'right'
+        else if (ldh.row1 < ldh.row2) return 'up'
+        else if (ldh.row1 > ldh.row2) return 'down'
 
         return ''
     }
