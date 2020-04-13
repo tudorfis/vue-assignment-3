@@ -27,6 +27,8 @@ export default {
       
       gridModel.deleteAllLinks(this.position)
       gridModel.buildLinks()
+      
+      gridModel.saveModel()
     },
     onEdit(event) {
       const gridCellElement = VueUtils.traversePath(event, 'gridcell')

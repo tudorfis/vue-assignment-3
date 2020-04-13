@@ -52,21 +52,29 @@ class LinkEEHelper {
         else if (ldh.right) {
             for (let col = ldh.col1 + 1; col < ldh.col2; col++)
                 setEEPath(ldh.row1, col, 'h')
+
+            setEEPath(ldh.row1, ldh.col2, 'c', ldh.linkKey)
             setEEDownUpPath(ldh)
         }
         else if (ldh.left) {
             for (let col = ldh.col1 - 1; col > ldh.col2; col--)
                 setEEPath(ldh.row1, col, 'h')
+
+            setEEPath(ldh.row1, ldh.col2, 'c', ldh.linkKey)
             setEEDownUpPath(ldh)
         }
 
-        function setEEPath(row, col, hv) {
+        function setEEPath(row, col, hv, linkKey) {
             const position = gridModel.getPosition(row, col)
 
             if (!linkEEhelper.eePathMap[position]) 
-                linkEEhelper.eePathMap[position] = { h: 0, v: 0 }
+                linkEEhelper.eePathMap[position] = { h: 0, v: 0, c: 0, linkKey: '' }
             
-            linkEEhelper.eePathMap[position][hv]++
+            const eePathMap = linkEEhelper.eePathMap[position]
+            eePathMap[hv]++
+
+            if (eePathMap.c === 1)
+                eePathMap.linkKey = linkKey
         }
         function setEEDownUpPath(ldh) {
             if (ldh.down)
@@ -142,53 +150,53 @@ class LinkEEHelper {
 
         if (direction === 'up') {
             let row = 0
-            while (row >= (ldh.row2 - ldh.row1)) {
+            while (row > (ldh.row2 - ldh.row1)) {
                 const position = gridModel.getPositionDiff(link, row, 0)
                 
                 if (!this.eeLines[position])
-                    this.eeLines[position] = {h: 0, v: 0}
+                    this.eeLines[position] = {up: 0, down: 0, left: 0, right: 0}
                 
-                total = Math.max(total, this.eeLines[position].v)
-                this.eeLines[position].v++
+                total = Math.max(total, this.eeLines[position].up)
+                this.eeLines[position].up++
                 row--
             }
         }
         else if (direction === 'down') {
             let row = 0
-            while (row <= (ldh.row2 - ldh.row1)) {
+            while (row < (ldh.row2 - ldh.row1)) {
                 const position = gridModel.getPositionDiff(link, row, 0)
 
                 if (!this.eeLines[position])
-                    this.eeLines[position] = {h: 0, v: 0}
+                    this.eeLines[position] = {up: 0, down: 0, left: 0, right: 0}
                 
-                total = Math.max(total, this.eeLines[position].v)
-                this.eeLines[position].v++
+                total = Math.max(total, this.eeLines[position].down)
+                this.eeLines[position].down++
                 row++
             }
         }
         else if (direction === 'left') {
             let col = 0
-            while (col >= (ldh.col2 - ldh.col1)) {
+            while (col > (ldh.col2 - ldh.col1)) {
                 const position = gridModel.getPositionDiff(link, 0, col)
 
                 if (!this.eeLines[position])
-                    this.eeLines[position] = {h: 0, v: 0}
+                    this.eeLines[position] = {up: 0, down: 0, left: 0, right: 0}
 
-                total = Math.max(total, this.eeLines[position].h)
-                this.eeLines[position].h++
+                total = Math.max(total, this.eeLines[position].left)
+                this.eeLines[position].left++
                 col--
             }
         }
         else if (direction === 'right') {
             let col = 0
-            while (col <= (ldh.col2 - ldh.col1)) {
+            while (col < (ldh.col2 - ldh.col1)) {
                 const position = gridModel.getPositionDiff(link, 0, col)
 
                 if (!this.eeLines[position])
-                    this.eeLines[position] = {h: 0, v: 0}
+                    this.eeLines[position] =  {up: 0, down: 0, left: 0, right: 0}
                     
-                total = Math.max(total, this.eeLines[position].h)
-                this.eeLines[position].h++
+                total = Math.max(total, this.eeLines[position].right)
+                this.eeLines[position].right++
                 col++
             }
         }

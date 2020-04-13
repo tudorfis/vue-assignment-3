@@ -25,19 +25,19 @@ export default {
         }
     },
     methods: {
-        onDropGridCellElement() {
+        onDropGridCellElement(event) {
             gridArrowService.hideArrowConnector()
             gridcellOperationsService.previousCellOperations()
             toolboxService.startedDrag = false
 
-            if (this.isSameGrid()) return;
+            if (dragElementsService.isSameElement(event.target)) return;
 
             let oldPosition, newPosition
             if (this.dropppointDirection) {
                 newPosition = this.moveCellsByDroppoint()
                 this.setCellActive(newPosition)
                 this.removePreviousCell()
-                
+
                 gridModel.rearangeLinksAfterDroppoint(newPosition, this.dropppointDirection)
                 const emptyPosition = gridModel.getEmptyPositionForDroppoint(newPosition, toolboxService.oldPosition)
                 gridModel.deleteAllLinks(emptyPosition)
@@ -49,28 +49,31 @@ export default {
                 
                 this.setCellActive(newPosition, oldPosition)
                 this.addRowOrColEnd()
-                
                 gridModel.rearangeLinks(oldPosition, newPosition)
                 
                 if (gridModel.hasNoLinks(newPosition))
                     gridModel.rearangeLinksOnSinglePath(newPosition)
             }
-
+            
             /** @TODO: remove temporary auto id, to simulate saved step */
             const newCell = gridModel.model.cells[newPosition]
             if (newCell && newCell.id === 0)
-                gridModel.model.cells[newPosition].id = Utils.randomNumber(1, 100)
-
+            gridModel.model.cells[newPosition].id = Utils.randomNumber(1, 100)
+            
             gridModel.buildLinks()
+            gridModel.saveModel()
+            
         },
         onDragoverGridCellElement(event) {
-            if (this.isSameGrid()) return;
-
+            if (this.position === toolboxService.oldPosition) return
             const gridCell = this.$refs.gridcell;
 
-            this.dropppointDirection = gridcellOperationsService.setDroppoints(event, gridCell, this.position)
+            const hasMiddleDroppoint = gridModel.hasMiddleDroppoint(this.position)
+            const isDroppointMiddle = gridModel.hasNoLinks(toolboxService.oldPosition) ? hasMiddleDroppoint : false
+            if (isDroppointMiddle) gridcellOperationsService.setMiddleDroppoint(gridCell)
 
-            if (!this.dropppointDirection) {
+            this.dropppointDirection = gridcellOperationsService.setDroppoints(event, gridCell, this.position)
+            if (!this.dropppointDirection && !isDroppointMiddle) {
                 gridCell.classList.add(`${!this.allowDrop ? 'not-' : ''}allowed-drop`)
                 gridcellOperationsService.hideDropPoints(gridCell)
             }
@@ -85,12 +88,6 @@ export default {
                 gridcellOperationsService.previousCellOperations();
 
             gridcellOperationsService.saveActiveCell(gridCell);
-        },
-        isSameGrid() {
-            const sameElement = dragElementsService.isSameElement(event.target);
-            if (sameElement) return true;
-
-            return false
         },
         removePreviousCell() {
             if (dragElementsService.insideCell) {

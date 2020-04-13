@@ -101,6 +101,8 @@ export const gridArrowService = {
 
             if (!gridModel.model.links.includes(this.linkKey))
                 gridModel.model.links.push(this.linkKey)
+
+            gridModel.saveModel()
         }
         else  {
             this.startedDrag = false

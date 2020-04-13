@@ -22,7 +22,8 @@ export class LinkDrawHelper {
             this.badLinkKey = true
             return
         }
-
+        this.linkKey = linkKey
+        
         this.link1 = LinkDrawHelper.getLink1(linkKey)
         this.link2 = LinkDrawHelper.getLink2(linkKey)
 

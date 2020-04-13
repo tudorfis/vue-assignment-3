@@ -4,7 +4,8 @@ export const droppointsDisplayBlueprint = {
     showUp: false,
     showRight: false,
     showDown: false,
-    showLeft: false
+    showLeft: false,
+    showMiddle: false
 }
 
 export const gridcellOperationsService = {
@@ -42,8 +43,9 @@ export const gridcellOperationsService = {
     resetCell(gridCellElement) {
         gridModel.model.totalSteps--
         gridCellElement.__vue__.$options.propsData['cell'].is = false
-
-        
+    },
+    setMiddleDroppoint(gridCell) {
+        gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showMiddle: true}
     },
     setDroppoints(event, gridCell, position) {
         const isCellBellow = gridModel.hasElementBellow(position)

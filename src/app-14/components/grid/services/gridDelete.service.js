@@ -88,7 +88,8 @@ export const gridDeleteService = {
         delete gridModel.model.links[index]
         
         gridModel.buildLinks()
-
+        gridModel.saveModel()
+        
         this.linkKey = ''
         this.waitMousemove = false
         this.hideArrowDelete()

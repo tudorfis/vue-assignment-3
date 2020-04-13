@@ -163,38 +163,29 @@ export const gridLinksOperations = {
 
         return true
     },
-    rearangeLinksOnSinglePath(position) {
+    rearangeLinksOnSinglePath(position, droppointDot) {
         const eePathMap = linkEEhelper.eePathMap[position]
-        if (!eePathMap) return
+        if (!eePathMap) return false
        
-        const moreThanOnePath = eePathMap.h > 1 || eePathMap.v > 1
-        if (moreThanOnePath) return
+        const moreThanOnePath = eePathMap.h > 1 || eePathMap.v > 1 || eePathMap.c > 1
+        if (moreThanOnePath) return false
 
-        const notStraightLine = (eePathMap.h === 1 && eePathMap.v > 0) || (eePathMap.v === 1 && eePathMap.h > 0)
-        if (notStraightLine) return
+        let notValid = true
+        notValid &= eePathMap.h === 1 && (eePathMap.v > 0 || eePathMap.c > 0)
+        notValid &= eePathMap.v === 1 && (eePathMap.h > 0 || eePathMap.c > 0)
+        notValid &= eePathMap.c === 1 && (eePathMap.h > 0 || eePathMap.v > 0)
+        if (notValid) return false
+
+        if (droppointDot && gridModel.model.cells[position].is) return false
 
         const rowControl = gridModel.getRow(position)
         const colControl = gridModel.getCol(position)
 
-        let prevPosition, nextPosition
-        if (eePathMap.h) {
-            getPrevNextPositionsHorizontal()
-
-            if (prevPosition && nextPosition) {
-                this.connectLinks(prevPosition, nextPosition, position)
-                this.connectLinks(nextPosition, prevPosition, position)
-            } 
-        }
-        else if (eePathMap.v) {
-            getPrevNextPositionsVertical()
-
-            if (prevPosition && nextPosition) {
-                this.connectLinks(prevPosition, nextPosition, position)
-                this.connectLinks(nextPosition, prevPosition, position)
-            } 
-        }
+        const objH = getPrevNextPositionsHorizontal()
+        const objV = getPrevNextPositionsVertical()
 
         function getPrevNextPositionsHorizontal() {
+            let prevPosition, nextPosition
             for (let col = colControl - 1; col >= 1; col--) {
                 const position = gridModel.getPosition(rowControl, col)
                 if (gridModel.model.cells[position].is) {
@@ -209,9 +200,12 @@ export const gridLinksOperations = {
                     break;
                 }
             }
+
+            return { prevPosition, nextPosition }
         }
 
         function getPrevNextPositionsVertical() {
+            let prevPosition, nextPosition
             for (let row = rowControl - 1; row >= 1; row--) {
                 const position = gridModel.getPosition(row, colControl)
                 if (gridModel.model.cells[position].is) {
@@ -226,7 +220,35 @@ export const gridLinksOperations = {
                     break;
                 }
             }
+
+            return { prevPosition, nextPosition }
         }
+
+        if (eePathMap.h && (objH.prevPosition && objH.nextPosition)) {
+            if (droppointDot) return true
+
+            this.connectLinks(objH.prevPosition, objH.nextPosition, position)
+            this.connectLinks(objH.nextPosition, objH.prevPosition, position)
+        }
+        else if (eePathMap.v && (objV.prevPosition && objV.nextPosition)) {
+            if (droppointDot) return true
+            
+            this.connectLinks(objV.prevPosition, objV.nextPosition, position)
+            this.connectLinks(objV.nextPosition, objV.prevPosition, position)
+        }
+        else if (eePathMap.c && eePathMap.linkKey) {
+            const ldh = new LinkDrawHelper(eePathMap.linkKey)
+            const prevPosition = ldh.link1
+            const nextPosition = ldh.link2
+
+            if (prevPosition && nextPosition) {
+                if (droppointDot) return true
+
+                this.connectLinks(prevPosition, nextPosition, position)
+            }
+        }
+
+        if (droppointDot) return false
     },
     deleteAllLinks(position) {
         const links = this.model.links

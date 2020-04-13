@@ -50,15 +50,20 @@ export default {
 
     if (!modelType) {
       gridModel.newGridModel(0, 0, true)
+      gridModel.saveModel()
       return
     }
 
     fetch(`/src/app-14/assets/data/model-${modelType}.json`)
       .then(data => data.json())
-      .then(model => { gridModel.loadGridModel(model) })
+      .then(model => { 
+        gridModel.loadGridModel(model) 
+        gridModel.saveModel()
+      })
       .catch(error => {
         console.error(error)
         gridModel.newGridModel(0, 0, true)
+        gridModel.saveModel()
       })
   },
   mounted() {

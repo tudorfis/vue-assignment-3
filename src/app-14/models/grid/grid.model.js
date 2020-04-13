@@ -30,6 +30,9 @@ export const cellBlueprint = {
 export const gridModel = {
     paths: {},
     model: null,
+    modelHistory: [],
+    modelVersion: -1,
+
     newGridModel(numRows, numCols, doAfterGridLoaded = false) {
         this.model = {...newGridBlueprint}
 
@@ -138,6 +141,27 @@ export const gridModel = {
     nearRowEnd(position) {
         return this.getRow(position) > (this.model.numRows - globalConfig.rowsFromTheEnd)
     },
+    saveModel() {
+        this.modelHistory.push(this.saveGridModel())
+        this.modelVersion++
+    },
+    newModel() {
+        this.newGridModel()
+        this.buildLinks()
+        this.saveModel()
+    },
+    undoModel() {
+        if (this.modelHistory[this.modelVersion - 1]) {
+            this.modelVersion--
+            this.loadGridModel(JSON.parse(this.modelHistory[this.modelVersion]))
+        }
+    },
+    redoModel() {
+        if (this.modelHistory[this.modelVersion + 1]) {
+            this.modelVersion++
+            this.loadGridModel(JSON.parse(this.modelHistory[this.modelVersion]))
+        }
+    },
     removeColumnAtEnd() {
         gridModelOperations.removeColumnAtEnd.call(this)
     },
@@ -194,6 +218,9 @@ export const gridModel = {
     },
     rearangeLinksOnSinglePath(position) {
         gridLinksOperations.rearangeLinksOnSinglePath(position)
+    },
+    hasMiddleDroppoint(position) {
+        return gridLinksOperations.rearangeLinksOnSinglePath(position, true)
     },
     hasNoLinks(position) {
         return gridLinksOperations.hasNoLinks(position)

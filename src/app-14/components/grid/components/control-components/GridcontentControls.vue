@@ -1,16 +1,14 @@
 <template>
   <div class="gridcontent-controls" :style="controlStyles">
-    <i class="fas fa-search-plus" @click="zoomService.zoomIn()" :disabled="zoomService.disableZoomIn()"></i>
-    <i class="fas fa-search-minus" @click="zoomService.zoomOut()" :disabled="zoomService.disableZoomOut()"></i>
-    <i class="far fa-save" @click="saveModel"></i>
-    <i class="fas fa-window-restore" @click="loadModel"></i>
-    <i class="far fa-file" @click="newModel"></i>
+    <i class="fas fa-search-plus" @click="zoomService.zoomIn()"></i>
+    <i class="fas fa-search-minus" @click="zoomService.zoomOut()"></i>
+    <i class="far fa-file" @click="gridModel.newModel()"></i>
+    <i class="fas fa-undo" @click="undo"></i>
+    <i class="fas fa-redo" @click="redo"></i>
   </div>
 </template>
 
 <script>
-globalThis.tempModel = null
-
 import { globalConfig } from '../../../../config/global.config'
 import { zoomService } from '../../../../services/zoom.service'
 import { gridModel } from '../../../../models/grid/grid.model';
@@ -18,21 +16,18 @@ export default {
     data() {
         return {
             zoomService,
-            globalConfig
+            gridModel
         }
     },
     methods: {
-        saveModel() {
-          tempModel = gridModel.saveGridModel()
-        },
-        loadModel() {
-          gridModel.loadGridModel(JSON.parse(tempModel))
-          this.$forceUpdate()
-        },
-        newModel() {
-          gridModel.newGridModel()
-          gridModel.buildLinks()
-        }
+      undo() {
+        gridModel.undoModel()
+        this.$forceUpdate()
+      },
+      redo() {
+        gridModel.redoModel()
+        this.$forceUpdate()
+      }
     },
     computed: {
       controlStyles() {

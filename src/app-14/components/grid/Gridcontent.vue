@@ -45,7 +45,7 @@ import { gridModel } from '../../models/grid/grid.model'
 
 import mousemoveMixin from '../../mixins/mousemove.mixin';
 import gridcontentMixin from './mixins/gridcontentStyles.mixin'
-import gridcontentSlideDrag from './mixins/gridcontentSlideDrag.mixin'
+import gridcontentPan from './mixins/gridcontentPan.mixin'
 
 import GridcellVue from './components/Gridcell.vue';
 import GridcontentControlsVue from './components/control-components/GridcontentControls.vue';
@@ -61,7 +61,7 @@ export default {
   mixins: [
     mousemoveMixin,
     gridcontentMixin,
-    gridcontentSlideDrag
+    gridcontentPan
   ],
   props: ['toolboxWidth', 'topmenuHeight'],
   components: {

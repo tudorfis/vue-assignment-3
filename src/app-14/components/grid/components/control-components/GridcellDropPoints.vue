@@ -21,7 +21,13 @@
         class="drop-point drop-left"
         :style="{...pointStyle, ...leftPointStyle}"
         v-show="display.showLeft"
-      >&nbsp;</div> </div>
+      >&nbsp;</div>
+      <div
+        class="drop-point drop-middle"
+        :style="{...pointStyle, ...middlePointStyle}"
+        v-show="display.showMiddle"
+      >&nbsp;</div>
+    </div>  
 </template>
 
 <script>
@@ -76,6 +82,14 @@ export default {
         top: `${top}px`,
         left: `-${this.halfPointDimension}px`
       };
+    },
+    middlePointStyle() {
+      const top = this.halfCellHeight - (this.halfPointDimension / 2) - (this.pointDimension / 3);
+      const left = this.halfCellWidth - (this.halfPointDimension / 2) - (this.pointDimension / 3);
+      return {
+        top: `${top}px`,
+        left: `${left}px`
+      };
     }
   }
 };
@@ -92,6 +106,10 @@ export default {
     background: yellow;
     border: 3px solid red;
     box-shadow: 1px 1px 5px #ccc;
+
+    &.drop-middle {
+      z-index: 3;
+    }
   }
 }
 </style>
