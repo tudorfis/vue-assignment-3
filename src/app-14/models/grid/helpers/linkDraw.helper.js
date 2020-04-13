@@ -76,13 +76,19 @@ export class LinkDrawHelper {
         return gridModel.getPosition(this.row1, this.col2)
     }
     get goOtherWay() {
-        return gridModel.model.cells[this.cornerPositionInitial].is
+        if (gridModel.model.cells[this.cornerPositionInitial])
+            return gridModel.model.cells[this.cornerPositionInitial].is
+
+        return false
     }
     get cornerPositionOther() {
         return gridModel.getPosition(this.row2, this.col1)
     }
     get goAroundCell() {
-        return gridModel.model.cells[this.cornerPositionOther].is
+        if (gridModel.model.cells[this.cornerPositionOther])
+            return gridModel.model.cells[this.cornerPositionOther].is
+
+        return false
     }
     genPathDirections() {
         let direction1, direction2, sameColRow
@@ -193,7 +199,7 @@ export class LinkDrawHelper {
             if (direction === 'up') distance += diff_ee
             else if (direction === 'down') distance -= diff_ee
             else if (direction === 'right' && directionInOut === 'up' && adjust) distance -= 0
-            else if (direction === 'left'&& directionInOut === 'down' && adjust) distance += 0
+            else if (direction === 'left' && directionInOut === 'down' && adjust) distance += 0
         }
 
         return ` ${d}${distance}`
