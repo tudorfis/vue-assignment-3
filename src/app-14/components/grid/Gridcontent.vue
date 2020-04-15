@@ -3,8 +3,8 @@
     ref="gridcontent"
     class="gridcontent"
     :style="gridcontentStyle"
-    @mouseover="resetGridView"
-    @mouseup="stopArrowDrag"
+    @mouseover="grs.resetGridView()"
+    @mouseup="grs.stopArrowDrag()"
     @mousemove="drawPath(); findSvgPath($event)"
   >
     <svg
@@ -41,12 +41,9 @@
 <script>
 import { globalConfig } from '../../config/global.config'
 import { gridModel } from '../../models/grid/grid.model'
-
-import mousemoveMixin from '../../mixins/mousemove.mixin';
 import GridcellVue from './components/Gridcell.vue';
 import GridArrowConnectorVue from './components/control-components/GridArrowConnector.vue';
 import GridArrowDeleteVue from './components/control-components/GridArrowDelete.vue';
-
 import { gridSvgService } from './services/gridSvg.service'
 import { Utils } from '../../utils/utils';
 import { gridArrowService } from '../grid/services/gridArrow.service'
@@ -54,9 +51,9 @@ import { gridDeleteService } from './services/gridDelete.service'
 import { gridPanService } from './services/gridPan.service';
 import { gridIOservice } from '../../models/grid/services/gridIO.service';
 import { gridLinksService } from '../../models/grid/services/gridLinks.service';
+import { globalResetsService } from '../../services/globalResets.service';
 
 export default {
-  mixins: [mousemoveMixin],
   props: ['toolboxWidth', 'topmenuHeight'],
   components: {
     krtGridcell: GridcellVue,
@@ -68,6 +65,7 @@ export default {
       gc: globalConfig,
       gm: gridModel,
       gl: gridLinksService,
+      grs: globalResetsService,
       gridSvgService
     };
   },

@@ -1,5 +1,9 @@
 <template>
-  <div class="topmenu" @mouseover="resetGridView" :style="topmenuStyle">
+  <div 
+    class="topmenu"
+    @mouseover="grs.resetGridView()"
+    :style="topmenuStyle"
+  >
     <img src="src/app-14/assets/img/kartra-logo.png" :style="imgStyle">
     <krt-topmenu-controls></krt-topmenu-controls>
     <button class="btn btn-success btn-green">
@@ -9,11 +13,10 @@
 </template>
 
 <script>
-import mousemoveMixin from '../../mixins/mousemove.mixin'
 import { globalConfig } from '../../config/global.config'
 import TopmenuControlsVue from './components/TopmenuControls.vue';
+import { globalResetsService } from '../../services/globalResets.service';
 export default {
-  mixins: [mousemoveMixin],
   components: {
     krtTopmenuControls: TopmenuControlsVue
   },
@@ -31,6 +34,11 @@ export default {
         height: `${globalConfig.topmenuHeight - 10}px`,
         margin: `auto 10px`
       }
+    }
+  },
+  data() {
+    return {
+      grs: globalResetsService
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div 
     class="toolbox"
-    @mouseover="resetGridView"
+    @mouseover="grs.resetGridView()"
     :style="toolboxStyle"
   >
     <krt-send-email class="tool"></krt-send-email>
@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import mousemoveMixin from '../../mixins/mousemove.mixin'
 import SendEmailVue from './components/SendEmail.vue'
 import SendSmsVue from './components/SendSms.vue'
 import AddRemoveTagVue from './components/AddRemoveTag.vue'
@@ -49,8 +48,8 @@ import GoToModalVue from './modals/GoToModal.vue'
 import WaitVue from './components/Wait.vue'
 import WaitModalVue from './modals/WaitModal.vue'
 import CompleteVue from './components/Complete.vue'
+import { globalResetsService } from '../../services/globalResets.service'
 export default {
-  mixins: [mousemoveMixin],
   components: {
     krtSendEmail: SendEmailVue,
     krtSendEmailModal: SendEmailModalVue,
@@ -80,6 +79,11 @@ export default {
         top: `${gc.topmenuHeight}px`,
         height: `calc(100% - ${gc.topmenuHeight}px)`
       }
+    }
+  },
+  data() {
+    return {
+      grs: globalResetsService
     }
   }
 }
