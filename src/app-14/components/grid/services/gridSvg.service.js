@@ -1,6 +1,7 @@
 
 import { globalConfig } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
+import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
 
 export const gridSvgService = {
     svgStyle: null,
@@ -16,6 +17,6 @@ export const gridSvgService = {
         this.svgViewBox = `0 0 ${width} ${height}`
 
         if (rebuildLinks)
-            gridModel.buildLinks()
+            gridLinksService.buildLinks()
     }
 }

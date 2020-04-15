@@ -3,6 +3,8 @@ import { globalConfig } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
 import { toolboxService } from "../../toolbox/services/toolbox.service"
 import { gridPanService } from "./gridPan.service"
+import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
+import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
 
 export const gridDeleteService = {
     svgEl: null,
@@ -98,8 +100,8 @@ export const gridDeleteService = {
         const index = gridModel.model.links.indexOf(this.linkKey)
         delete gridModel.model.links[index]
         
-        gridModel.buildLinks()
-        gridModel.saveModel()
+        gridLinksService.buildLinks()
+        gridHistoryService.saveState()
         
         this.linkKey = ''
         this.waitMousemove = false

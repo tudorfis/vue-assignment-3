@@ -1,5 +1,5 @@
 <template>
-  <div class="builder" :style="builderStyle">
+  <div class="builder">
     <krt-topmenu></krt-topmenu>
     <krt-toolbox></krt-toolbox>
     <krt-grid
@@ -19,6 +19,8 @@ import ToolboxVue from './components/toolbox/Toolbox.vue';
 import GridContentVue from './components/grid/Gridcontent.vue';
 import { zoomService } from './services/zoom.service';
 import { globalResetsService } from './services/globalResets.service';
+import { gridHistoryService } from './models/grid/services/gridHistory.service'
+import { gridIOservice } from './models/grid/services/gridIO.service'
 
 export default {
   components: {
@@ -32,14 +34,6 @@ export default {
       topmenuHeight: globalConfig.topmenuHeight
     };
   },
-  computed: {
-    builderStyle() {
-      return {
-        'grid-template-columns': `${this.toolboxWidth}px 1fr`,
-        'grid-template-rows': `${this.topmenuHeight}px auto`
-      };
-    }
-  },
   beforeCreate() {
     /** @TODO - match an id of a sequence to get the output  */
     
@@ -48,27 +42,22 @@ export default {
     if (matchRef && matchRef[1]) modelType = matchRef[1]
 
     if (!modelType) {
-      gridModel.newGridModel(0, 0, true)
-      gridModel.saveModel()
+      gridIOservice.newGridModel(0, 0, true)
+      gridHistoryService.saveState()
       return
     }
 
     fetch(`/src/app-14/assets/data/model-${modelType}.json`)
       .then(data => data.json())
       .then(model => { 
-        gridModel.loadGridModel(model) 
-        gridModel.saveModel()
+        gridIOservice.loadGridModel(model) 
+        gridHistoryService.saveState()
       })
       .catch(error => {
         console.error(error)
-        gridModel.newGridModel(0, 0, true)
-        gridModel.saveModel()
+        gridIOservice.newGridModel(0, 0, true)
+        gridHistoryService.saveState()
       })
-  },
-  mounted() {
-    document.body.onscroll = function(event) { 
-      globalResetsService.reset()
-    }
   }
 };
 </script>

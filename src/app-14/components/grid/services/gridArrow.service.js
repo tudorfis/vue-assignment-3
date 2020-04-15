@@ -2,8 +2,9 @@ import { globalConfig } from '../../../config/global.config'
 import { VueUtils } from '../../../utils/vue.utils'
 import { gridModel } from '../../../models/grid/grid.model'
 import { LinkDrawHelper } from '../../../models/grid/helpers/linkDraw.helper'
-import { gridLinksOperations } from '../../../models/grid/operations/gridLinks.operations'
 import { gridPanService } from './gridPan.service'
+import { gridHistoryService } from '../../../models/grid/services/gridHistory.service'
+import { gridLinksService } from '../../../models/grid/services/gridLinks.service'
 
 export const gridArrowService = {
     arrowConnectorId: '#arrow-connector',
@@ -73,7 +74,7 @@ export const gridArrowService = {
     },
     removeTempPaths() {
         if (this.linkKey && !this.recentLink) {
-            delete gridModel.paths[this.linkKey]
+            delete gridLinksService.paths[this.linkKey]
             this.linkKey = ''
         }
     },
@@ -103,7 +104,7 @@ export const gridArrowService = {
             if (!gridModel.model.links.includes(this.linkKey))
                 gridModel.model.links.push(this.linkKey)
 
-            gridModel.saveModel()
+            gridHistoryService.saveState()
         }
         else  {
             this.startedDrag = false
@@ -112,7 +113,7 @@ export const gridArrowService = {
         }
 
         this.dehighlightCell(true)
-        gridModel.buildLinks()
+        gridLinksService.buildLinks()
     },
     drawPath() {
         if (!this.startedDrag) return
@@ -127,7 +128,7 @@ export const gridArrowService = {
         if (this.linkKey === linkKey) return
         this.linkKey = linkKey
         
-        gridLinksOperations.genPathTwoCells.call(gridModel, linkKey, true)
+        gridLinksService.genPathTwoCells(linkKey, true)
     },
     doGridcellOperations(position) {
         this.currentPosition = position

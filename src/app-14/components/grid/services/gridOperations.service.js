@@ -1,4 +1,5 @@
 import { gridModel } from "../../../models/grid/grid.model"
+import { gridMouseDroppointsService } from "../../../models/grid/services/gridMouseDroppoints.service"
 
 export const droppointsDisplayBlueprint = {
     showUp: false,
@@ -48,32 +49,32 @@ export const gridOperationsService = {
         gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showMiddle: true}
     },
     setDroppoints(event, gridCell, position) {
-        const isCellBellow = gridModel.hasElementBellow(position)
-        const isMouseOnBottom = gridModel.isMouseOnBottomOutside(event, gridCell)
+        const isCellBellow = gridMouseDroppointsService.hasElementBellow(position)
+        const isMouseOnBottom = gridMouseDroppointsService.isMouseOnBottomOutside(event, gridCell)
 
         if (isCellBellow && isMouseOnBottom) {
             gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showDown: true}
             return 'down'
         }
 
-        const isCellAbove = gridModel.hasElementAbove(position)
-        const isMouseOnTop = gridModel.isMouseOnTopOutside(event, gridCell)
+        const isCellAbove = gridMouseDroppointsService.hasElementAbove(position)
+        const isMouseOnTop = gridMouseDroppointsService.isMouseOnTopOutside(event, gridCell)
 
         if (isCellAbove && isMouseOnTop) {
             gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showUp: true}
             return 'up'
         }
 
-        const isCellRight = gridModel.hasElementRight(position)
-        const isMouseOnRight = gridModel.isMouseOnRightOutside(event, gridCell)
+        const isCellRight = gridMouseDroppointsService.hasElementRight(position)
+        const isMouseOnRight = gridMouseDroppointsService.isMouseOnRightOutside(event, gridCell)
 
         if (isCellRight && isMouseOnRight) {
             gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showRight: true}
             return 'right'
         }
 
-        const isCellLeft = gridModel.hasElementLeft(position)
-        const isMouseOnLeft = gridModel.isMouseOnLeftOutside(event, gridCell)
+        const isCellLeft = gridMouseDroppointsService.hasElementLeft(position)
+        const isMouseOnLeft = gridMouseDroppointsService.isMouseOnLeftOutside(event, gridCell)
 
         if (isCellLeft && isMouseOnLeft) {
             gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showLeft: true}

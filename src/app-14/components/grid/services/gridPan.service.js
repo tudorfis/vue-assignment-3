@@ -29,5 +29,8 @@ export const gridPanService = {
             sliderEl.scrollBy(event.movementX * 2, event.movementY * 2)
         })
 
+        sliderEl.onscroll = function() { 
+            globalResetsService.reset()
+        }
     }
 }

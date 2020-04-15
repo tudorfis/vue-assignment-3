@@ -52,6 +52,8 @@ import { Utils } from '../../utils/utils';
 import { gridArrowService } from '../grid/services/gridArrow.service'
 import { gridDeleteService } from './services/gridDelete.service'
 import { gridPanService } from './services/gridPan.service';
+import { gridIOservice } from '../../models/grid/services/gridIO.service';
+import { gridLinksService } from '../../models/grid/services/gridLinks.service';
 
 export default {
   mixins: [mousemoveMixin],
@@ -65,8 +67,8 @@ export default {
     return {
       gc: globalConfig,
       gm: gridModel,
+      gl: gridLinksService,
       gridSvgService
-      
     };
   },
   methods: {
@@ -84,10 +86,10 @@ export default {
   },
   computed: {
     gridObj() {
-      return gridModel.buildGridCells('get')
+      return gridIOservice.buildGridCells('get')
     },
     pathObj() {
-      return Utils.reduceobj(gridModel.paths)
+      return Utils.reduceobj(gridLinksService.paths)
     },
     gridcontentStyle() {
         const gc = globalConfig
@@ -105,13 +107,11 @@ export default {
         }
     },
     gridLayoutStyle() {
-        if (!gridModel.model) return {}
-        const gm = gridModel.model
-
-        return {
-            'grid-template-columns': `repeat(${gm.numCols}, 1fr)`,
-            'grid-template-rows': `repeat(${gm.numRows}, 1fr)`
-        }
+      if (!gridModel.model) return {}
+      return {
+          'grid-template-columns': `repeat(${gridModel.model.numCols}, 1fr)`,
+          'grid-template-rows': `repeat(${gridModel.model.numRows}, 1fr)`
+      }
     }
   }
 };

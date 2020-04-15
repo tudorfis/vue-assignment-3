@@ -2,7 +2,7 @@
   <div class="topmenu-controls" :style="topmenuControlsStyle">
     <i class="fas fa-search-plus" @click="zoomService.zoomIn()"></i>
     <i class="fas fa-search-minus" @click="zoomService.zoomOut()"></i>
-    <i class="far fa-file" @click="gridModel.newModel()"></i>
+    <i class="far fa-file" @click="gridIOservice.newModel()"></i>
     <i class="fas fa-undo" @click="undo"></i>
     <i class="fas fa-redo" @click="redo"></i>
   </div>
@@ -11,21 +11,22 @@
 <script>
 import { globalConfig } from '../../../config/global.config'
 import { zoomService } from '../../../services/zoom.service'
-import { gridModel } from '../../../models/grid/grid.model';
+import { gridIOservice } from '../../../models/grid/services/gridIO.service';
+import { gridHistoryService } from '../../../models/grid/services/gridHistory.service';
 export default {
     data() {
         return {
             zoomService,
-            gridModel
+            gridIOservice
         }
     },
     methods: {
       undo() {
-        gridModel.undoModel()
+        gridHistoryService.undoModelState()
         this.$forceUpdate()
       },
       redo() {
-        gridModel.redoModel()
+        gridHistoryService.redoModelState()
         this.$forceUpdate()
       }
     },

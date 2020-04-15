@@ -5,6 +5,11 @@ import { VueUtils } from '../../../utils/vue.utils'
 import { toolboxService } from '../../toolbox/services/toolbox.service';
 import { Utils } from '../../../utils/utils';
 import { globalResetsService } from '../../../services/globalResets.service';
+import { gridAdjustService } from '../../../models/grid/services/gridAdjust.service';
+import { gridHistoryService } from '../../../models/grid/services/gridHistory.service';
+import { gridIOservice } from '../../../models/grid/services/gridIO.service';
+import { gridLinksService } from '../../../models/grid/services/gridLinks.service';
+import { gridLinksDroppointService } from '../../../models/grid/services/gridLinksDroppoints.service';
 
 export default {
     props: ['position', 'cell'],
@@ -58,17 +63,18 @@ export default {
             if (newCell && newCell.id === 0)
             gridModel.model.cells[newPosition].id = Utils.randomNumber(1, 100)
             
-            gridModel.buildLinks()
-            gridModel.saveModel()
+            gridLinksService.buildLinks()
+            gridHistoryService.saveState()
         },
         onDropDoDroppoints(newPosition) {
             newPosition = this.moveCellsByDroppoint()
             this.setCellActive(newPosition)
             this.removePreviousCell()
 
-            gridModel.rearangeLinksAfterDroppoint(newPosition, this.dropppointDirection)
-            const emptyPosition = gridModel.getEmptyPositionForDroppoint(newPosition, toolboxService.oldPosition)
-            gridModel.deleteAllLinks(emptyPosition)
+            gridLinksDroppointService.rearangeLinksByDirection(newPosition, this.dropppointDirection)
+            
+            const emptyPosition = gridLinksDroppointService.getEmptyPosition(newPosition, toolboxService.oldPosition)
+            gridLinksService.deleteAllLinks(emptyPosition)
         },
         onDropDoAllowDrop(newPosition, oldPosition) {
             newPosition = this.position
@@ -76,14 +82,14 @@ export default {
             
             this.setCellActive(newPosition, oldPosition)
             this.addRowOrColEnd()
-            gridModel.rearangeLinks(oldPosition, newPosition)
+            gridLinksService.rearangeLinks(oldPosition, newPosition)
             
-            if (gridModel.hasNoLinks(newPosition))
-                gridModel.rearangeLinksOnSinglePath(newPosition)
+            if (gridLinksService.hasNoLinks(newPosition))
+                gridLinksDroppointService.rearangeLinksByPaths(newPosition)
         },
         onDragoverDoDroppoints(event, gridCell) {
-            const hasMiddleDroppoint = gridModel.hasMiddleDroppoint(this.position)
-            const isDroppointMiddle = gridModel.hasNoLinks(toolboxService.oldPosition) ? hasMiddleDroppoint : false
+            const hasMiddleDroppoint = gridLinksDroppointService.hasMiddleDroppoint(this.position)
+            const isDroppointMiddle = gridLinksService.hasNoLinks(toolboxService.oldPosition) ? hasMiddleDroppoint : false
 
             if (isDroppointMiddle)
                 gridOperationsService.setMiddleDroppoint(gridCell)
@@ -104,22 +110,22 @@ export default {
             gridOperationsService.saveActiveCell(gridCell);
         },
         removePreviousCell() {
-            if (dragElementsService.insideCell) {
-                const dragElement = dragElementsService.previousDragElement;
+            if (!dragElementsService.insideCell) return
+                
+            const dragElement = dragElementsService.previousDragElement;
 
-                const gridCellElement = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell');
-                gridOperationsService.resetCell(gridCellElement);
+            const gridcell = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell');
+            gridOperationsService.resetCell(gridcell);
 
-                const oldPosition = gridCellElement.__vue__.position
-                return oldPosition
-            }
+            const oldPosition = gridcell.__vue__.position
+            return oldPosition
         },
         addRowOrColEnd() {
-            if (gridModel.nearColEnd(this.position))
-                gridModel.addColumnAtEnd()
+            if (gridAdjustService.nearColEnd(this.position))
+                gridAdjustService.addColumnAtEnd()
 
-            if (gridModel.nearRowEnd(this.position))
-                gridModel.addRowAtEnd()
+            if (gridAdjustService.nearRowEnd(this.position))
+                gridAdjustService.addRowAtEnd()
         },
         setCellActive(newPosition, oldPosition) {
             const cellObj = { is: 1, type: dragElementsService.activeDragElementType }
@@ -127,29 +133,29 @@ export default {
             const oldCell = gridModel.model.cells[oldPosition]
             if (oldCell && oldCell.id) cellObj.id = oldCell.id
 
-            gridModel.setCell(newPosition, cellObj)
+            gridIOservice.setCell(newPosition, cellObj)
         },
         moveCellsByDroppoint() {
             let position
 
             if (this.dropppointDirection === 'down') {
                 position = gridModel.getPositionDiff(this.position, 1, 0)
-                gridModel.spliceRows(position)
+                gridAdjustService.spliceRows(position)
             }
 
             else if (this.dropppointDirection === 'up') {
                 position = gridModel.getPositionDiff(this.position, 0, 0)
-                gridModel.spliceRows(position)
+                gridAdjustService.spliceRows(position)
             }
 
             if (this.dropppointDirection === 'right') {
                 position = gridModel.getPositionDiff(this.position, 0, 1)
-                gridModel.spliceCols(position)
+                gridAdjustService.spliceCols(position)
             }
 
             else if (this.dropppointDirection === 'left') {
                 position = gridModel.getPositionDiff(this.position, 0, 0)
-                gridModel.spliceCols(position)
+                gridAdjustService.spliceCols(position)
             }
 
             return position

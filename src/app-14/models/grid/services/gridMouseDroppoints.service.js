@@ -1,34 +1,20 @@
 import { globalConfig } from "../../../config/global.config"
 import { VueUtils } from "../../../utils/vue.utils"
 import { dragElementsService } from "../../../services/dragElements.service"
+import { gridModel } from "../grid.model"
 
-export const gridMouseOperations = {
-    isSameGridCells(prev, next) {
-
-        const dragElement = dragElementsService.activeDragElement
-        const gridCellElement = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell');
-
-        if (gridCellElement.__vue__) {
-            const cell = gridCellElement.__vue__.$options.propsData['cell']
-            const prevCell = this.model.cells[prev]
-            const nextCell = this.model.cells[next]
-            
-            return !(cell !== prevCell && cell !== nextCell)
-        }
-
-        return false
-    },
+export const gridMouseDroppointsService = {
     hasElementAbove(position) {
-        const row = this.getRow(position)
+        const row = gridModel.getRow(position)
 
         if (row === 1)
             return false
         
-        const abovePosition = this.getPositionDiff(position, -1, 0)
-        const isSameGridCells = gridMouseOperations.isSameGridCells.call(this, position, abovePosition)
+        const abovePosition = gridModel.getPositionDiff(position, -1, 0)
+        const isSameGridCells = this.isSameGridCells(position, abovePosition)
 
-        const hasElementAbove = this.model.cells[abovePosition].is
-        const hasElement = this.model.cells[position].is
+        const hasElementAbove = gridModel.model.cells[abovePosition].is
+        const hasElement = gridModel.model.cells[position].is
 
         return !isSameGridCells && hasElement && hasElementAbove
     },
@@ -45,16 +31,16 @@ export const gridMouseOperations = {
         return isAbovePoint
     },
     hasElementBellow(position) {
-        const row = this.getRow(position)
+        const row = gridModel.getRow(position)
 
-        if (row === this.model.numRows)
+        if (row === gridModel.model.numRows)
             return false
         
-        const bellowPosition = this.getPositionDiff(position, 1, 0)
-        const isSameGridCells = gridMouseOperations.isSameGridCells.call(this, bellowPosition, position)
+        const bellowPosition = gridModel.getPositionDiff(position, 1, 0)
+        const isSameGridCells = this.isSameGridCells(bellowPosition, position)
 
-        const hasElementBellow = this.model.cells[bellowPosition].is
-        const hasElement = this.model.cells[position].is
+        const hasElementBellow = gridModel.model.cells[bellowPosition].is
+        const hasElement = gridModel.model.cells[position].is
 
         return !isSameGridCells && hasElement && hasElementBellow
     },
@@ -65,16 +51,16 @@ export const gridMouseOperations = {
         return mouseY >= gc.gridCellHeight + gc.droppointDimension
     },
     hasElementRight(position) {
-        const col = this.getCol(position)
+        const col = gridModel.getCol(position)
 
-        if (col === this.model.numCols)
+        if (col === gridModel.model.numCols)
             return false
 
-        const nextPosition = this.getPositionDiff(position, 0, 1)
-        const isSameGridCells = gridMouseOperations.isSameGridCells.call(this, position, nextPosition)
+        const nextPosition = gridModel.getPositionDiff(position, 0, 1)
+        const isSameGridCells = this.isSameGridCells(position, nextPosition)
 
-        const hasElementNext = this.model.cells[nextPosition].is
-        const hasElement = this.model.cells[position].is
+        const hasElementNext = gridModel.model.cells[nextPosition].is
+        const hasElement = gridModel.model.cells[position].is
 
         return !isSameGridCells && hasElement && hasElementNext
     },
@@ -88,16 +74,16 @@ export const gridMouseOperations = {
         return mouseX >= control
     },
     hasElementLeft(position) {
-        const col = this.getCol(position)
+        const col = gridModel.getCol(position)
 
         if (col === 1)
             return false
 
-        const prevPosition = this.getPositionDiff(position, 0, -1)
-        const isSameGridCells = gridMouseOperations.isSameGridCells.call(this, prevPosition, position)
+        const prevPosition = gridModel.getPositionDiff(position, 0, -1)
+        const isSameGridCells = this.isSameGridCells(prevPosition, position)
 
-        const hasElementPrev = this.model.cells[prevPosition].is
-        const hasElement = this.model.cells[position].is
+        const hasElementPrev = gridModel.model.cells[prevPosition].is
+        const hasElement = gridModel.model.cells[position].is
 
         return !isSameGridCells && hasElement && hasElementPrev
     },
@@ -109,5 +95,19 @@ export const gridMouseOperations = {
         const control = gc.gridCellWidth + gc.droppointDimension + halfDroppoint
 
         return mouseX <= control
+    },
+    isSameGridCells(prev, next) {
+        const dragElement = dragElementsService.activeDragElement
+        const gridcell = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell');
+
+        if (gridcell.__vue__) {
+            const cell = gridcell.__vue__.$options.propsData['cell']
+            const prevCell = gridModel.model.cells[prev]
+            const nextCell = gridModel.model.cells[next]
+            
+            return !(cell !== prevCell && cell !== nextCell)
+        }
+
+        return false
     }
 }

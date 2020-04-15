@@ -19,6 +19,8 @@ import { globalConfig } from '../../../../config/global.config';
 import { gridOperationsService } from '../../services/gridOperations.service';
 import { dragElementsEnum } from '../../../../services/dragElements.service';
 import { globalResetsService } from '../../../../services/globalResets.service';
+import { gridHistoryService } from '../../../../models/grid/services/gridHistory.service';
+import { gridLinksService } from '../../../../models/grid/services/gridLinks.service';
 export default {
   props: ['position'],
   methods: {
@@ -28,10 +30,10 @@ export default {
       const gridcell = VueUtils.traversePath(event, 'gridcell')
       gridOperationsService.resetCell(gridcell)
       
-      gridModel.deleteAllLinks(this.position)
-      gridModel.buildLinks()
+      gridLinksService.deleteAllLinks(this.position)
+      gridLinksService.buildLinks()
       
-      gridModel.saveModel()
+      gridHistoryService.saveState()
     },
     onEdit(event) {
       globalResetsService.reset()

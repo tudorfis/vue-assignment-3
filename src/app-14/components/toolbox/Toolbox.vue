@@ -1,15 +1,19 @@
 <template>
-  <div class="toolbox" @mouseover="resetGridView" :style="toolboxStyle">
-    <krt-send-email class="tool" :style="toolStyle"></krt-send-email>
-    <krt-send-sms class="tool" :style="toolStyle"></krt-send-sms>
-    <krt-add-remove-tag class="tool" :style="toolStyle"></krt-add-remove-tag>
-    <krt-subscribe-list class="tool" :style="toolStyle"></krt-subscribe-list>
-    <krt-subscribe-sequence class="tool" :style="toolStyle"></krt-subscribe-sequence>
-    <krt-automation class="tool" :style="toolStyle"></krt-automation>
-    <krt-split class="tool" :style="toolStyle"></krt-split>
-    <krt-go-to class="tool" :style="toolStyle"></krt-go-to>
-    <krt-wait class="tool" :style="toolStyle"></krt-wait>
-    <krt-complete class="tool" :style="toolStyle"></krt-complete>
+  <div 
+    class="toolbox"
+    @mouseover="resetGridView"
+    :style="toolboxStyle"
+  >
+    <krt-send-email class="tool"></krt-send-email>
+    <krt-send-sms class="tool"></krt-send-sms>
+    <krt-add-remove-tag class="tool"></krt-add-remove-tag>
+    <krt-subscribe-list class="tool"></krt-subscribe-list>
+    <krt-subscribe-sequence class="tool"></krt-subscribe-sequence>
+    <krt-automation class="tool"></krt-automation>
+    <krt-split class="tool"></krt-split>
+    <krt-go-to class="tool"></krt-go-to>
+    <krt-wait class="tool"></krt-wait>
+    <krt-complete class="tool"></krt-complete>
 
     <krt-send-email-modal></krt-send-email-modal>
     <krt-send-sms-modal></krt-send-sms-modal>
@@ -76,20 +80,6 @@ export default {
         top: `${gc.topmenuHeight}px`,
         height: `calc(100% - ${gc.topmenuHeight}px)`
       }
-    },
-    toolStyle() {
-      const gc = globalConfig
-
-      let width = gc.gridCellElementWidth
-      width += Math.round(width / 7)
-      
-      let height = gc.gridCellElementHeight
-      height += Math.round(height / 7)
-      
-      return {
-        width: `${width}px`,
-        height: `${height}px`
-      }
     }
   }
 }
@@ -105,10 +95,8 @@ export default {
     box-shadow: 2px 0px 5px #1e7baf;
     
     .tool {
-      &:hover {
-        cursor: move;
-      }
-
+      width: 120px;
+      height: 120px;
       margin: 20px auto;
       padding: 30px 15px;
       border: 0;
@@ -117,6 +105,9 @@ export default {
       text-align: center;
       font-weight: bold;
 
+      &:hover {
+        cursor: move;
+      }
       i {
         font-size: 40px;
       }
