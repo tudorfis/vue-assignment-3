@@ -1,7 +1,6 @@
 import { globalConfig } from "../../../config/global.config"
-import { VueUtils } from "../../../utils/vue.utils"
-import { dragElementsService } from "../../../services/dragElements.service"
 import { gridModel } from "../grid.model"
+import { toolboxDragService } from "../../../components/toolbox/services/toolboxDrag.service"
 
 export const gridMouseDroppointsService = {
     hasElementAbove(position) {
@@ -97,17 +96,6 @@ export const gridMouseDroppointsService = {
         return mouseX <= control
     },
     isSameGridCells(prev, next) {
-        const dragElement = dragElementsService.activeDragElement
-        const gridcell = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell');
-
-        if (gridcell.__vue__) {
-            const cell = gridcell.__vue__.$options.propsData['cell']
-            const prevCell = gridModel.model.cells[prev]
-            const nextCell = gridModel.model.cells[next]
-            
-            return !(cell !== prevCell && cell !== nextCell)
-        }
-
-        return false
+        return [prev, next].includes(toolboxDragService.dragPosition)
     }
 }

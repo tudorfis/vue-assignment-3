@@ -120,7 +120,7 @@ export const gridLinksDroppointService = {
         } 
     },
     getEmptyPosition(newPosition, oldPosition) {
-        if (!newPosition || !oldPosition) return
+        if (!newPosition || !oldPosition) return null
         
         const rowNew = gridModel.getRow(newPosition)
         const colNew = gridModel.getCol(newPosition)

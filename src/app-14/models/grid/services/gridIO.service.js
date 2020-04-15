@@ -3,6 +3,7 @@ import { Utils } from "../../../utils/utils"
 import { gridAdjustService } from "./gridAdjust.service"
 import { gridSvgService } from "../../../components/grid/services/gridSvg.service"
 import { gridLinksService } from "./gridLinks.service"
+import { gridHistoryService } from "./gridHistory.service"
 
 export const gridIOservice = {
     newGridModel(numRows, numCols, doAfterGridLoaded = false) {

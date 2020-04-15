@@ -12,68 +12,67 @@
       ref="sendemail"
       class="gridtool"
       :isInsideCell="true"
-      v-if="type === dragElementsEnum.SEND_EMAIL"
+      v-if="type === toolboxElementsEnum.SEND_EMAIL"
     ></krt-send-email>
     <krt-send-sms
       ref="sendsms"
       class="gridtool"
       :isInsideCell="true"
-      v-else-if="type === dragElementsEnum.SEND_SMS"
+      v-else-if="type === toolboxElementsEnum.SEND_SMS"
     ></krt-send-sms>
     <krt-add-remove-tag
       ref="addremovetag"
       class="gridtool"
       :isInsideCell="true"
-      v-else-if="type === dragElementsEnum.ADD_REMOVE_TAG"
+      v-else-if="type === toolboxElementsEnum.ADD_REMOVE_TAG"
     ></krt-add-remove-tag>
     <krt-subscribe-list
       ref="subscribelist"
       class="gridtool"
       :isInsideCell="true"
-      v-else-if="type === dragElementsEnum.SUBSCRIBE_LIST"
+      v-else-if="type === toolboxElementsEnum.SUBSCRIBE_LIST"
     ></krt-subscribe-list>
     <krt-subscribe-sequence
       ref="subscribesequence"
       class="gridtool"
       :isInsideCell="true"
-      v-else-if="type === dragElementsEnum.SUBSCRIBE_SEQUENCE"
+      v-else-if="type === toolboxElementsEnum.SUBSCRIBE_SEQUENCE"
     ></krt-subscribe-sequence>
     <krt-automation
       ref="automation"
       class="gridtool"
       :isInsideCell="true"
-      v-else-if="type === dragElementsEnum.AUTOMATION"
+      v-else-if="type === toolboxElementsEnum.AUTOMATION"
     ></krt-automation>
     <krt-split
       ref="split"
       class="gridtool"
       :isInsideCell="true"
-      v-else-if="type === dragElementsEnum.SPLIT"
+      v-else-if="type === toolboxElementsEnum.SPLIT"
     ></krt-split>
     <krt-go-to
       ref="go-to"
       class="gridtool"
       :isInsideCell="true"
-      v-else-if="type === dragElementsEnum.GO_TO"
+      v-else-if="type === toolboxElementsEnum.GO_TO"
     ></krt-go-to>
     <krt-wait
       ref="wait"
       class="gridtool"
       :isInsideCell="true"
-      v-else-if="type === dragElementsEnum.WAIT"
+      v-else-if="type === toolboxElementsEnum.WAIT"
     ></krt-wait>
     <krt-complete
       ref="complete"
       class="gridtool"
       :isInsideCell="true"
-      v-else-if="type === dragElementsEnum.COMPLETE"
+      v-else-if="type === toolboxElementsEnum.COMPLETE"
     ></krt-complete>
   </div>
 </template>
 
 <script>
 import { globalConfig } from '../../../config/global.config';
-import { dragElementsEnum } from '../../../services/dragElements.service';
 import { gridArrowService } from '../services/gridArrow.service';
 import SendEmailVue from '../../toolbox/components/SendEmail.vue';
 import SendSmsVue from '../../toolbox/components/SendSms.vue';
@@ -87,6 +86,7 @@ import GoToVue from '../../toolbox/components/GoTo.vue';
 import WaitVue from '../../toolbox/components/Wait.vue';
 import CompleteVue from '../../toolbox/components/Complete.vue';
 import { gridPanService } from '../services/gridPan.service';
+import { toolboxElementsEnum } from '../../toolbox/enum/toolboxElements.enum'
 
 export default {
   components: {
@@ -105,7 +105,7 @@ export default {
   props: ['allowDrop', 'type', 'position'],
   data() {
     return {
-      dragElementsEnum,
+      toolboxElementsEnum,
       globalConfig,
       showOtherIcons: false
     }

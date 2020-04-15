@@ -2,6 +2,7 @@
   <div
     ref="gridcell"
     class="gridcell"
+    position="position"
     @dragstart="stopDragEmptyCell"
     @drop.prevent="onDropGridCellElement"
     @dragover.prevent="onDragoverGridCellElement"

@@ -44,3 +44,4 @@ export const globalConfig = {
         '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'
     ]
 }
+

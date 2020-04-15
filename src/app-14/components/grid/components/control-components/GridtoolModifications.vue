@@ -16,11 +16,11 @@
 <script>
 import { VueUtils } from '../../../../utils/vue.utils';
 import { globalConfig } from '../../../../config/global.config';
-import { gridOperationsService } from '../../services/gridOperations.service';
-import { dragElementsEnum } from '../../../../services/dragElements.service';
+import { gridCellService } from '../../services/gridCell.service';
 import { globalResetsService } from '../../../../services/globalResets.service';
 import { gridHistoryService } from '../../../../models/grid/services/gridHistory.service';
 import { gridLinksService } from '../../../../models/grid/services/gridLinks.service';
+import { toolboxElementsEnum } from '../../../toolbox/enum/toolboxElements.enum';
 export default {
   props: ['position'],
   methods: {
@@ -28,7 +28,7 @@ export default {
       globalResetsService.reset()
 
       const gridcell = VueUtils.traversePath(event, 'gridcell')
-      gridOperationsService.resetCell(gridcell)
+      gridCellService.resetCell(gridcell)
       
       gridLinksService.deleteAllLinks(this.position)
       gridLinksService.buildLinks()
@@ -42,39 +42,39 @@ export default {
       const elementType = gridcell.__vue__.$options.propsData['cell'].type
 
       switch (elementType) {
-        case dragElementsEnum.SEND_EMAIL:
+        case toolboxElementsEnum.SEND_EMAIL:
           $('#sendEmailModal').modal();
           break;
         
-        case dragElementsEnum.SEND_SMS:
+        case toolboxElementsEnum.SEND_SMS:
           $('#sendSmsModal').modal();
           break;
 
-        case dragElementsEnum.ADD_REMOVE_TAG:
+        case toolboxElementsEnum.ADD_REMOVE_TAG:
           $('#addRemoveTagsModal').modal();
           break;
           
-        case dragElementsEnum.SUBSCRIBE_LIST:
+        case toolboxElementsEnum.SUBSCRIBE_LIST:
           $('#subscribeListModal').modal();
           break;
           
-        case dragElementsEnum.SUBSCRIBE_SEQUENCE:
+        case toolboxElementsEnum.SUBSCRIBE_SEQUENCE:
           $('#subscribeSequenceModal').modal();
           break;
           
-        case dragElementsEnum.AUTOMATION:
+        case toolboxElementsEnum.AUTOMATION:
           $('#automationModal').modal();
           break;
           
-        case dragElementsEnum.SPLIT:
+        case toolboxElementsEnum.SPLIT:
           $('#splitModal').modal();
           break;
           
-        case dragElementsEnum.GO_TO:
+        case toolboxElementsEnum.GO_TO:
           $('#goToModal').modal();
           break;
           
-        case dragElementsEnum.WAIT:
+        case toolboxElementsEnum.WAIT:
           $('#waitModal').modal();
           break;
           

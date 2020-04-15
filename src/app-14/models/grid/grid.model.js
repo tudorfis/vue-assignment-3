@@ -1,6 +1,7 @@
 
 import Vue from 'vue'
 import { globalConfig } from "../../config/global.config"
+import { VueUtils } from '../../utils/vue.utils'
 
 globalThis.Vue = Vue
 globalThis.globalConfig = globalConfig
@@ -38,5 +39,9 @@ export const gridModel = {
         const col = this.getCol(position)
 
         return `${row + rowDiff}${globalConfig.positionSplitSymbol}${col + colDiff}`
+    },
+    getPositionByEventTarget(event) {
+        const gridcell = VueUtils.traverseByRef(event.target.__vue__, 'gridcell')
+        return (!gridcell.__vue__) ? null : gridcell.__vue__.position
     }
 }

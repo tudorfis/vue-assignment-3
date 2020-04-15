@@ -7,12 +7,13 @@
 </template>
 
 <script>
-import { toolboxService } from '../services/toolbox.service'
+import { toolboxDragService } from '../services/toolboxDrag.service'
+import { toolboxElementsEnum } from '../enum/toolboxElements.enum';
 export default {
     props: ['isInsideCell'],
     methods: {
         onDrag(event) {
-          toolboxService.startDrag(event, 'wait')
+          toolboxDragService.startDrag(event, toolboxElementsEnum.WAIT)
         }
     }
 };

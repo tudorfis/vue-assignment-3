@@ -1,7 +1,7 @@
 import { gridArrowService } from "./gridArrow.service"
 import { globalConfig } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
-import { toolboxService } from "../../toolbox/services/toolbox.service"
+import { toolboxDragService } from "../../toolbox/services/toolboxDrag.service"
 import { gridPanService } from "./gridPan.service"
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
 import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
@@ -21,7 +21,7 @@ export const gridDeleteService = {
         if (!this.arrowDeleteEl)
             this.arrowDeleteEl = document.querySelector('#arrow-delete')
 
-        if (this.waitMousemove || gridArrowService.startedDrag || toolboxService.startedDrag || gridPanService.startedPan) return
+        if (this.waitMousemove || gridArrowService.startedDrag || toolboxDragService.startedDrag || gridPanService.startedPan) return
 
         if (event.target.classList.contains('gridcell')) {
             const el = this.getSvgPath(event)

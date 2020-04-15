@@ -96,6 +96,8 @@ export const gridLinksService = {
         }
     },
     hasNoLinks(position) {
+        if (!position) return true
+
         const links = gridModel.model.links
         const lki = new LinkKeyIterator(links)
 
@@ -107,6 +109,8 @@ export const gridLinksService = {
         return true
     },
     deleteAllLinks(position) {
+        if (!position) return
+        
         const links = gridModel.model.links
         const lki = new LinkKeyIterator(links)
 

@@ -9,7 +9,7 @@ export const droppointsDisplayBlueprint = {
     showMiddle: false
 }
 
-export const gridOperationsService = {
+export const gridCellService = {
     activeUid: null,
     activeCell: null,
     addClasses(classListArr = []) {
@@ -24,64 +24,66 @@ export const gridOperationsService = {
         for (const className of classListArr)
             this.activeCell.classList[method](className)
     },
-    isDifferentCell(gridCell) {
-        return gridCell.__vue__._uid !== this.activeUid
+    isDifferentCell(gridcell) {
+        return gridcell.__vue__._uid !== this.activeUid
     },
     previousCellOperations() {
         this.hideDropPoints()
         this.removeClasses(['allowed-drop', 'not-allowed-drop'])
     },
-    hideDropPoints(gridCell) {
-        gridCell = gridCell || this.activeCell
+    hideDropPoints(gridcell) {
+        gridcell = gridcell || this.activeCell
         
-        if (gridCell && gridCell.__vue__)
-            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint}
+        if (gridcell && gridcell.__vue__)
+            gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint}
     },
-    saveActiveCell(gridCell) {
-        this.activeCell = gridCell
-        this.activeUid = gridCell.__vue__._uid
+    saveActiveCell(gridcell) {
+        this.activeCell = gridcell
+        this.activeUid = gridcell.__vue__._uid
     },
-    resetCell(gridCell) {
+    resetCell(gridcell) {
         gridModel.model.totalSteps--
-        gridCell.__vue__.$options.propsData['cell'].is = false
+        gridcell.__vue__.$options.propsData['cell'].is = false
     },
-    setMiddleDroppoint(gridCell) {
-        gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showMiddle: true}
+    setMiddleDroppoint(gridcell) {
+        gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showMiddle: true}
     },
-    setDroppoints(event, gridCell, position) {
+    setDroppoints(event, gridcell, position) {
         const isCellBellow = gridMouseDroppointsService.hasElementBellow(position)
-        const isMouseOnBottom = gridMouseDroppointsService.isMouseOnBottomOutside(event, gridCell)
+        const isMouseOnBottom = gridMouseDroppointsService.isMouseOnBottomOutside(event, gridcell)
 
         if (isCellBellow && isMouseOnBottom) {
-            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showDown: true}
+            gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showDown: true}
             return 'down'
         }
 
         const isCellAbove = gridMouseDroppointsService.hasElementAbove(position)
-        const isMouseOnTop = gridMouseDroppointsService.isMouseOnTopOutside(event, gridCell)
+        const isMouseOnTop = gridMouseDroppointsService.isMouseOnTopOutside(event, gridcell)
 
         if (isCellAbove && isMouseOnTop) {
-            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showUp: true}
+            gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showUp: true}
             return 'up'
         }
 
         const isCellRight = gridMouseDroppointsService.hasElementRight(position)
-        const isMouseOnRight = gridMouseDroppointsService.isMouseOnRightOutside(event, gridCell)
+        const isMouseOnRight = gridMouseDroppointsService.isMouseOnRightOutside(event, gridcell)
 
         if (isCellRight && isMouseOnRight) {
-            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showRight: true}
+            gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showRight: true}
             return 'right'
         }
 
         const isCellLeft = gridMouseDroppointsService.hasElementLeft(position)
-        const isMouseOnLeft = gridMouseDroppointsService.isMouseOnLeftOutside(event, gridCell)
+        const isMouseOnLeft = gridMouseDroppointsService.isMouseOnLeftOutside(event, gridcell)
 
         if (isCellLeft && isMouseOnLeft) {
-            gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showLeft: true}
+            gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showLeft: true}
             return 'left'
         }
         
         return ''
     },
+
+    
     
 }
