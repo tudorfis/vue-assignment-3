@@ -8,7 +8,7 @@ export const droppointsDisplayBlueprint = {
     showMiddle: false
 }
 
-export const gridcellOperationsService = {
+export const gridOperationsService = {
     activeUid: null,
     activeCell: null,
     addClasses(classListArr = []) {
@@ -40,9 +40,9 @@ export const gridcellOperationsService = {
         this.activeCell = gridCell
         this.activeUid = gridCell.__vue__._uid
     },
-    resetCell(gridCellElement) {
+    resetCell(gridCell) {
         gridModel.model.totalSteps--
-        gridCellElement.__vue__.$options.propsData['cell'].is = false
+        gridCell.__vue__.$options.propsData['cell'].is = false
     },
     setMiddleDroppoint(gridCell) {
         gridCell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showMiddle: true}

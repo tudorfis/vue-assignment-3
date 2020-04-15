@@ -2,6 +2,7 @@ import { gridArrowService } from "./gridArrow.service"
 import { globalConfig } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
 import { toolboxService } from "../../toolbox/services/toolbox.service"
+import { gridPanService } from "./gridPan.service"
 
 export const gridDeleteService = {
     svgEl: null,
@@ -18,7 +19,7 @@ export const gridDeleteService = {
         if (!this.arrowDeleteEl)
             this.arrowDeleteEl = document.querySelector('#arrow-delete')
 
-        if (this.waitMousemove || gridArrowService.startedDrag || toolboxService.startedDrag) return
+        if (this.waitMousemove || gridArrowService.startedDrag || toolboxService.startedDrag || gridPanService.startedPan) return
 
         if (event.target.classList.contains('gridcell')) {
             const el = this.getSvgPath(event)
@@ -71,17 +72,27 @@ export const gridDeleteService = {
         this.arrowDeleteEl.style.borderRadius = `${adjust}px`
         this.arrowDeleteEl.querySelector('i').style.top = `-${Math.round(adjust / 3.3)}px`
 
-        const rect = this.arrowDeleteEl.getBoundingClientRect()
         const html = document.querySelector('html')
-
-        if (el.getAttribute('linkKey') !== this.linkKey || (!this.top && !this.left)) {
-            this.top = event.pageY - Math.ceil(rect.height / 2) - html.scrollTop + this.i
-            this.left = event.pageX - Math.floor(rect.width / 2) - html.scrollLeft + this.i
-        }
+        this.setTopLeft(el, event, html, adjust)
 
         this.linkKey = el.getAttribute('linkKey')
         this.arrowDeleteEl.style.top = `${this.top}px`
         this.arrowDeleteEl.style.left = `${this.left}px`
+    },
+    setTopLeft(el, event, html, adjust) {
+        if (el.getAttribute('linkKey') !== this.linkKey || (!this.top && !this.left)) {
+            this.top = event.pageY - html.scrollTop - adjust / 2
+            this.left = event.pageX - html.scrollLeft - adjust / 2
+
+            if (Math.sign(this.i) === -1) {
+                this.top += this.i
+                this.left += this.i + 1.5
+            }
+            else if (Math.sign(this.i) === 1) {
+                this.top += this.i + 1.5
+                this.left += this.i + 3
+            }
+        }
     },
     deleteLink() {
         const index = gridModel.model.links.indexOf(this.linkKey)

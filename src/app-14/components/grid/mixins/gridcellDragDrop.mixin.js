@@ -1,10 +1,10 @@
-import { gridcellOperationsService } from '../../services/gridcellOperations.service'
-import { dragElementsService } from '../../../../services/dragElements.service'
-import { gridModel } from '../../../../models/grid/grid.model';
-import { VueUtils } from '../../../../utils/vue.utils'
-import { toolboxService } from '../../../toolbox/services/toolbox.service';
-import { Utils } from '../../../../utils/utils';
-import { globalResetsService } from '../../../../services/globalResets.service';
+import { gridOperationsService } from '../services/gridOperations.service'
+import { dragElementsService } from '../../../services/dragElements.service'
+import { gridModel } from '../../../models/grid/grid.model';
+import { VueUtils } from '../../../utils/vue.utils'
+import { toolboxService } from '../../toolbox/services/toolbox.service';
+import { Utils } from '../../../utils/utils';
+import { globalResetsService } from '../../../services/globalResets.service';
 
 export default {
     props: ['position', 'cell'],
@@ -47,7 +47,7 @@ export default {
         onDropBefore(event) {
             globalResetsService.reset()
 
-            gridcellOperationsService.previousCellOperations()
+            gridOperationsService.previousCellOperations()
             toolboxService.startedDrag = false
 
             if (dragElementsService.isSameElement(event.target)) return;
@@ -86,29 +86,29 @@ export default {
             const isDroppointMiddle = gridModel.hasNoLinks(toolboxService.oldPosition) ? hasMiddleDroppoint : false
 
             if (isDroppointMiddle)
-                gridcellOperationsService.setMiddleDroppoint(gridCell)
+                gridOperationsService.setMiddleDroppoint(gridCell)
 
-            this.dropppointDirection = gridcellOperationsService.setDroppoints(event, gridCell, this.position)
+            this.dropppointDirection = gridOperationsService.setDroppoints(event, gridCell, this.position)
             
             if (!this.dropppointDirection && !isDroppointMiddle) {
                 gridCell.classList.add(`${!this.allowDrop ? 'not-' : ''}allowed-drop`)
-                gridcellOperationsService.hideDropPoints(gridCell)
+                gridOperationsService.hideDropPoints(gridCell)
             }
             else if (gridCell.classList.contains('not-allowed-drop'))
                 gridCell.classList.remove('not-allowed-drop')
         },
         handlePreviousCell(gridCell) {
-            if (gridcellOperationsService.isDifferentCell(gridCell))
-                gridcellOperationsService.previousCellOperations();
+            if (gridOperationsService.isDifferentCell(gridCell))
+                gridOperationsService.previousCellOperations();
 
-            gridcellOperationsService.saveActiveCell(gridCell);
+            gridOperationsService.saveActiveCell(gridCell);
         },
         removePreviousCell() {
             if (dragElementsService.insideCell) {
                 const dragElement = dragElementsService.previousDragElement;
 
                 const gridCellElement = VueUtils.traverseByRef(dragElement.__vue__, 'gridcell');
-                gridcellOperationsService.resetCell(gridCellElement);
+                gridOperationsService.resetCell(gridCellElement);
 
                 const oldPosition = gridCellElement.__vue__.position
                 return oldPosition

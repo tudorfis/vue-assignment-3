@@ -5,12 +5,11 @@ import { globalConfig } from "../../config/global.config"
 import { gridModelOperations } from './operations/gridModel.operations'
 import { gridMouseOperations } from './operations/gridMouse.operations'
 import { gridLinksOperations } from './operations/gridLinks.operations'
-import { zoomService } from "../../services/zoom.service"
+import { gridSvgService } from '../../components/grid/services/gridSvg.service'
 
 globalThis.Vue = Vue
 globalThis.gridLinksOperations = gridLinksOperations
-
-const cellSplitSymbol = globalConfig.cellSplitSymbol
+globalThis.globalConfig = globalConfig
 
 const newGridBlueprint = {
     numRows: 0,
@@ -36,8 +35,8 @@ export const gridModel = {
     newGridModel(numRows, numCols, doAfterGridLoaded = false) {
         this.model = {...newGridBlueprint}
 
-        this.model.numRows = numRows || globalConfig.gridRows
-        this.model.numCols = numCols || globalConfig.gridColumns
+        this.model.numRows = numRows || globalConfig.minGridRows
+        this.model.numCols = numCols || globalConfig.minGridColumns
 
         this.model.cells = this.buildGridCells('new')
 
@@ -85,24 +84,28 @@ export const gridModel = {
         this.afterGridLoaded()
     },
     afterGridLoaded() {
-        zoomService.calculateSvgViewBox()
+        gridSvgService.calculateSvg()
         document.querySelector('.loading-icon').style.visibility = 'hidden'
         gridModel.buildLinks()
     },
     getRow(position) {
-        return parseInt(position.split(cellSplitSymbol)[0])
+        if (!position) return -1
+
+        return parseInt(position.split(globalConfig.positionSplitSymbol)[0])
     },
     getCol(position) {
-        return parseInt(position.split(cellSplitSymbol)[1])
+        if (!position) return -1
+        
+        return parseInt(position.split(globalConfig.positionSplitSymbol)[1])
     },
     getPosition(row, col) {
-        return `${row}${cellSplitSymbol}${col}`
+        return `${row}${globalConfig.positionSplitSymbol}${col}`
     },
     getPositionDiff(position, rowDiff = 0, colDiff = 0) {
         const row = this.getRow(position)
         const col = this.getCol(position)
 
-        return `${row + rowDiff}${cellSplitSymbol}${col + colDiff}`
+        return `${row + rowDiff}${globalConfig.positionSplitSymbol}${col + colDiff}`
     },
     setCell(position, properties) {
         this.model.cells[position] = this.model.cells[position] || { ...cellBlueprint }

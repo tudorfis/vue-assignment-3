@@ -3,6 +3,7 @@ import { VueUtils } from '../../../utils/vue.utils'
 import { gridModel } from '../../../models/grid/grid.model'
 import { LinkDrawHelper } from '../../../models/grid/helpers/linkDraw.helper'
 import { gridLinksOperations } from '../../../models/grid/operations/gridLinks.operations'
+import { gridPanService } from './gridPan.service'
 
 export const gridArrowService = {
     arrowConnectorId: '#arrow-connector',
@@ -39,7 +40,7 @@ export const gridArrowService = {
             this.highlightCell()
         }
 
-        if (!this.hasCell || this.startedDrag) return
+        if (!this.hasCell || this.startedDrag || gridPanService.startedPan) return
         const arrowConnector = document.querySelector(this.arrowConnectorId)
 
         const adjust = Math.floor(globalConfig.gridCellElementWidth / 2)

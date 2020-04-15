@@ -1,5 +1,5 @@
 <template>
-  <div class="gridcontent-controls" :style="controlStyles">
+  <div class="topmenu-controls" :style="topmenuControlsStyle">
     <i class="fas fa-search-plus" @click="zoomService.zoomIn()"></i>
     <i class="fas fa-search-minus" @click="zoomService.zoomOut()"></i>
     <i class="far fa-file" @click="gridModel.newModel()"></i>
@@ -9,9 +9,9 @@
 </template>
 
 <script>
-import { globalConfig } from '../../../../config/global.config'
-import { zoomService } from '../../../../services/zoom.service'
-import { gridModel } from '../../../../models/grid/grid.model';
+import { globalConfig } from '../../../config/global.config'
+import { zoomService } from '../../../services/zoom.service'
+import { gridModel } from '../../../models/grid/grid.model';
 export default {
     data() {
         return {
@@ -30,12 +30,10 @@ export default {
       }
     },
     computed: {
-      controlStyles() {
-        const top = Math.floor(globalConfig.topmenuHeight / 3.5)
-        const left = globalConfig.toolboxWidth + 20
+      topmenuControlsStyle() {
+        const gc = globalConfig
         return {
-          top: `${top}px`,
-          left: `${left}px`
+          padding: `${gc.topmenuHeight / 4}px 0`
         }
       }
     }
@@ -43,9 +41,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.gridcontent-controls {
-  position: fixed;
-  z-index: 4;
+.topmenu-controls {
   user-select: none;
 
   i {

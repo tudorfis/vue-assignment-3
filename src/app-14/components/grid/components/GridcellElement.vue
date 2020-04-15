@@ -86,6 +86,7 @@ import SplitVue from '../../toolbox/components/Split.vue';
 import GoToVue from '../../toolbox/components/GoTo.vue';
 import WaitVue from '../../toolbox/components/Wait.vue';
 import CompleteVue from '../../toolbox/components/Complete.vue';
+import { gridPanService } from '../services/gridPan.service';
 
 export default {
   components: {
@@ -111,12 +112,16 @@ export default {
   },
   methods: {
     showGridArrow(event) {
+      if (gridPanService.startedPan) return
+
       gridArrowService.init(event)
       
       if (!gridArrowService.startedDrag)
         this.showOtherIcons = !gridArrowService.isHighlight
     },
     hideGridArrow() {
+      if (gridPanService.startedPan) return
+      
       gridArrowService.destroy()
       this.showOtherIcons = gridArrowService.isHighlight
     }

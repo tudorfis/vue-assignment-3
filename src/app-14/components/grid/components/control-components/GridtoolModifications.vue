@@ -16,7 +16,7 @@
 <script>
 import { VueUtils } from '../../../../utils/vue.utils';
 import { globalConfig } from '../../../../config/global.config';
-import { gridcellOperationsService } from '../../services/gridcellOperations.service';
+import { gridOperationsService } from '../../services/gridOperations.service';
 import { dragElementsEnum } from '../../../../services/dragElements.service';
 import { globalResetsService } from '../../../../services/globalResets.service';
 export default {
@@ -25,8 +25,8 @@ export default {
     onDelete(event) {
       globalResetsService.reset()
 
-      const gridCellElement = VueUtils.traversePath(event, 'gridcell')
-      gridcellOperationsService.resetCell(gridCellElement)
+      const gridcell = VueUtils.traversePath(event, 'gridcell')
+      gridOperationsService.resetCell(gridcell)
       
       gridModel.deleteAllLinks(this.position)
       gridModel.buildLinks()
@@ -36,8 +36,8 @@ export default {
     onEdit(event) {
       globalResetsService.reset()
 
-      const gridCellElement = VueUtils.traversePath(event, 'gridcell')
-      const elementType = gridCellElement.__vue__.$options.propsData['cell'].type
+      const gridcell = VueUtils.traversePath(event, 'gridcell')
+      const elementType = gridcell.__vue__.$options.propsData['cell'].type
 
       switch (elementType) {
         case dragElementsEnum.SEND_EMAIL:
@@ -81,13 +81,15 @@ export default {
   },
   computed: {
     generalIconStyle() {
-      const fontSize = Math.floor(globalConfig.gridCellElementWidth / 5)
+      const gc = globalConfig
+      const fontSize = Math.floor(gc.gridCellElementWidth / 5)
       return {
         'font-size': `${fontSize}px`
       }
     },
     deleteIconStyle() {
-      const left =  Math.floor(globalConfig.gridCellElementWidth / 14)
+      const gc = globalConfig
+      const left =  Math.floor(gc.gridCellElementWidth / 14)
       const top = left + Math.floor(left / 2)
 
       return {
@@ -96,8 +98,9 @@ export default {
       }
     },
     editIconStyle() {
-      const left =  globalConfig.gridCellElementWidth - Math.floor(globalConfig.gridCellElementWidth / 7)
-      let top = Math.floor(globalConfig.gridCellElementHeight / 11)
+      const gc = globalConfig
+      const left =  gc.gridCellElementWidth - Math.floor(gc.gridCellElementWidth / 7)
+      const top = Math.floor(gc.gridCellElementHeight / 11)
 
       return {
         'top': `-${top}px`,

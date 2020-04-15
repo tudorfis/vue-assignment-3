@@ -1,9 +1,8 @@
 import { globalConfig } from "../config/global.config"
-import { gridModel } from "../models/grid/grid.model"
 import { globalResetsService } from "./globalResets.service"
+import { gridSvgService } from "../components/grid/services/gridSvg.service"
 
 export const zoomService = {
-    svgViewBox: '0 0 0 0',
     disableZoomIn() {
         const gc = globalConfig
         return (gc.zoomLevel + gc.zoomDiff > gc.zoomMax)
@@ -16,46 +15,42 @@ export const zoomService = {
         if (this.disableZoomIn()) return
         globalResetsService.reset
 
-        globalConfig.zoomLevel += globalConfig.zoomDiff
+        const gc = globalConfig
+        gc.zoomLevel += gc.zoomDiff
 
-        globalConfig.gridCellWidth += 60
-        globalConfig.gridCellHeight += 60
+        gc.gridCellWidth += 60
+        gc.gridCellHeight += 60
 
-        globalConfig.gridCellElementWidth += 35
-        globalConfig.gridCellElementHeight += 35
+        gc.gridCellElementWidth += 35
+        gc.gridCellElementHeight += 35
         
-        globalConfig.arrowWidth += 2
-        globalConfig.droppointDimension += 10
+        gc.arrowLineWidth += 2
+        gc.droppointDimension += 10
 
-        globalConfig.arrowSizeW += 2
-        globalConfig.arrowSizeH += 1
+        gc.arrowPointerWidth += 5
+        gc.arrowPointerHeight += 5
+
+        gridSvgService.calculateSvg(true)
     },
     zoomOut() {
         if (this.disableZoomOut()) return
         globalResetsService.reset
 
-        globalConfig.zoomLevel -= globalConfig.zoomDiff
-
-        globalConfig.gridCellWidth -= 60
-        globalConfig.gridCellHeight -= 60
-
-        globalConfig.gridCellElementWidth -= 35
-        globalConfig.gridCellElementHeight -= 35
-        
-        globalConfig.arrowWidth -= 2
-        globalConfig.droppointDimension -= 10
-
-        globalConfig.arrowSizeW -= 2
-        globalConfig.arrowSizeH -= 1
-    },
-    calculateSvgViewBox() {
         const gc = globalConfig
-        const gm = gridModel.model
+        gc.zoomLevel -= gc.zoomDiff
 
-        const width = (gc.cellSizeCalculation * gm.numCols) + (gc.arrowWidth * 2)
-        const height = (gc.cellSizeCalculation * gm.numRows) + (gc.arrowWidth * 2)
-            
-        const viewBox = `0 0 ${width} ${height}`
-        this.svgViewBox = viewBox
+        gc.gridCellWidth -= 60
+        gc.gridCellHeight -= 60
+
+        gc.gridCellElementWidth -= 35
+        gc.gridCellElementHeight -= 35
+        
+        gc.arrowLineWidth -= 2
+        gc.droppointDimension -= 10
+
+        gc.arrowPointerWidth -= 5
+        gc.arrowPointerHeight -= 5
+
+        gridSvgService.calculateSvg(true)
     }
 }

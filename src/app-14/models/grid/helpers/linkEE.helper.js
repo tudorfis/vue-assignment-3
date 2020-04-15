@@ -123,20 +123,20 @@ class LinkEEHelper {
         const eePath2Total = this.getEELinesTotal(new LinkDrawHelper(linkKey2), ldh.link2, link2Direction)
         const eePath1Total = this.getEELinesTotal(ldh, ldh.link1, link1Direction)
 
-        if (!ldh.sameCol && !ldh.sameRow) {
+        // if (!ldh.sameCol && !ldh.sameRow) {
             link1Obj.total = eePath1Total + 1
             link2Obj.total = eePath2Total + 1
 
             link1Obj.out[ldh.link2] = link1Obj.total
             link2Obj.in[ldh.link1] = link2Obj.total
-        }
-        else {
-            link1Obj.total++
-            link2Obj.total++
+        // }
+        // else {
+        //     link1Obj.total++
+        //     link2Obj.total++
 
-            link1Obj.out[ldh.link2] = link1Obj.total
-            link2Obj.in[ldh.link1] = link2Obj.total
-        }
+        //     link1Obj.out[ldh.link2] = link1Obj.total
+        //     link2Obj.in[ldh.link1] = link2Obj.total
+        // }
     }
     getLink1Direction(ldh) {
         if (ldh.col1 === ldh.col2 && ldh.row1 < ldh.row2) return 'down'
@@ -234,19 +234,20 @@ class LinkEEHelper {
         return difference || 0
     }
     getDifferenceByPoint(pointNr) {
-        if (pointNr === 2) return -gc.arrowSizeH
-        else if (pointNr === 3) return gc.arrowSizeH
-        else if (pointNr === 4) return -(gc.arrowSizeH * 2)
-        else if (pointNr === 5) return (gc.arrowSizeH * 2)
-        else if (pointNr === 6) return -(gc.arrowSizeH * 3)
-        else if (pointNr === 7) return (gc.arrowSizeH * 3)
-        else if (pointNr === 8) return -(gc.arrowSizeH * 4)
-        else if (pointNr === 9) return (gc.arrowSizeH * 4)
+        const diff = gc.arrowPointerHeight
+        if (pointNr === 2) return -diff
+        else if (pointNr === 3) return diff
+        else if (pointNr === 4) return -(diff * 2)
+        else if (pointNr === 5) return (diff * 2)
+        else if (pointNr === 6) return -(diff * 3)
+        else if (pointNr === 7) return (diff * 3)
+        else if (pointNr === 8) return -(diff * 4)
+        else if (pointNr === 9) return (diff * 4)
         
         else if (pointNr > 9) {
             const rest = pointNr % 9
             const isMinus = rest % 2 === 0
-            const total = gc.arrowSizeH * Math.floor(rest / 2)
+            const total = diff * Math.floor(rest / 2)
 
             if (isMinus)
                 return -total

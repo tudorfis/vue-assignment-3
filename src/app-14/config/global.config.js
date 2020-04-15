@@ -1,8 +1,5 @@
 
 export const globalConfig = {
-    gridColumns: 27,
-    gridRows: 15,
-
     minGridColumns: 27,
     minGridRows: 15,
 
@@ -18,29 +15,21 @@ export const globalConfig = {
     gridCellElementHeight: 105,
 
     droppointDimension: 30,
-    arrowWidth: 6,
-    arrowColor: '#ccc',
+    
+    arrowLineWidth: 6,
+    arrowLineColor: '#ccc',
     
     toolboxWidth: 200,
     topmenuHeight: 60,
 
-    gridContentLeftPadding: 20,
-    gridContentTopPadding: 20,
-
-    svgBorderSize: 1,
-    svgBorderColor: '#ccc',
-
     rowsFromTheEnd: 2,
     colsFromTheEnd: 2,
     
-    cellSplitSymbol: '-',
-    linkSeparator: '__',
+    positionSplitSymbol: '-',
+    linkSeparatorSymbol: '__',
 
-    cellSizeCalculation: 240,
-    cellAdjustCalculation: 0.024,
-
-    arrowSizeW: 18,
-    arrowSizeH: 14,
+    arrowPointerWidth: 18,
+    arrowPointerHeight: 14,
 
     colorArray: [
         '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 

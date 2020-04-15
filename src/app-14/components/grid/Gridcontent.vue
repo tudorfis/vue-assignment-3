@@ -1,26 +1,25 @@
 <template>
   <div 
+    ref="gridcontent"
     class="gridcontent"
+    :style="gridcontentStyle"
     @mouseover="resetGridView"
     @mouseup="stopArrowDrag"
     @mousemove="drawPath(); findSvgPath($event)"
   >
-    <!-- @TODO: remove controls, used only for testing purposes
-        add top menu controls, such as zoom in, zoom out etc -->
-    <krt-gridcontent-controls></krt-gridcontent-controls>
     <svg
       id="svgGrid"
-      :style="svgStyle"
-      :viewBox="zoomService.svgViewBox"
+      :style="gridSvgService.svgStyle"
+      :viewBox="gridSvgService.svgViewBox"
     >
       <path 
         v-for="(arrow, arrowIndex) of pathObj"
         :key="arrowIndex"
         :linkKey="arrow.linkKey"
         :d="arrow.d" 
-        :fill="arrow.a ? (arrow.color || globalConfig.arrowColor) : 'none'"
-        :stroke="!arrow.a ? (arrow.color ||globalConfig.arrowColor) : ''"
-        :stroke-width="!arrow.a ? globalConfig.arrowWidth : 0" />
+        :fill="arrow.a ? (arrow.color || gc.arrowLineColor) : 'none'"
+        :stroke="!arrow.a ? (arrow.color ||gc.arrowLineColor) : ''"
+        :stroke-width="!arrow.a ? gc.arrowLineWidth : 0" />
     </svg>
     <div 
       class="gridlayout"
@@ -44,37 +43,29 @@ import { globalConfig } from '../../config/global.config'
 import { gridModel } from '../../models/grid/grid.model'
 
 import mousemoveMixin from '../../mixins/mousemove.mixin';
-import gridcontentMixin from './mixins/gridcontentStyles.mixin'
-import gridcontentPan from './mixins/gridcontentPan.mixin'
-
 import GridcellVue from './components/Gridcell.vue';
-import GridcontentControlsVue from './components/control-components/GridcontentControls.vue';
 import GridArrowConnectorVue from './components/control-components/GridArrowConnector.vue';
 import GridArrowDeleteVue from './components/control-components/GridArrowDelete.vue';
 
-import { zoomService } from '../../services/zoom.service'
+import { gridSvgService } from './services/gridSvg.service'
 import { Utils } from '../../utils/utils';
 import { gridArrowService } from '../grid/services/gridArrow.service'
 import { gridDeleteService } from './services/gridDelete.service'
+import { gridPanService } from './services/gridPan.service';
 
 export default {
-  mixins: [
-    mousemoveMixin,
-    gridcontentMixin,
-    gridcontentPan
-  ],
+  mixins: [mousemoveMixin],
   props: ['toolboxWidth', 'topmenuHeight'],
   components: {
     krtGridcell: GridcellVue,
-    krtGridcontentControls: GridcontentControlsVue,
     krtGridArrowConnector: GridArrowConnectorVue,
     krtGridArrowDelete: GridArrowDeleteVue
   },
   data() {
     return {
-      globalConfig,
-      gridModel,
-      zoomService,
+      gc: globalConfig,
+      gm: gridModel,
+      gridSvgService
       
     };
   },
@@ -89,6 +80,7 @@ export default {
   mounted() {
       gridDeleteService.svgEl = document.querySelector('#svgGrid')
       gridDeleteService.gridlayoutEl = document.querySelector('.gridlayout')
+      gridPanService.init(this.$refs.gridcontent)
   },
   computed: {
     gridObj() {
@@ -96,6 +88,30 @@ export default {
     },
     pathObj() {
       return Utils.reduceobj(gridModel.paths)
+    },
+    gridcontentStyle() {
+        const gc = globalConfig
+
+        return {
+            height: `calc(100% - ${gc.topmenuHeight + 4}px)`,
+            width: `calc(100% - ${gc.toolboxWidth + 7}px)`,
+            left: `${gc.toolboxWidth + 5}px`,
+            top: `${gc.topmenuHeight + 1}px`
+        }
+    },
+    gridLayoutClass() {
+        return {
+            [`zoom-${globalConfig.zoomLevel}`]: true
+        }
+    },
+    gridLayoutStyle() {
+        if (!gridModel.model) return {}
+        const gm = gridModel.model
+
+        return {
+            'grid-template-columns': `repeat(${gm.numCols}, 1fr)`,
+            'grid-template-rows': `repeat(${gm.numRows}, 1fr)`
+        }
     }
   }
 };
@@ -105,9 +121,13 @@ export default {
 @import "./styles/zoom.scss";
 
 .gridcontent {
+  overflow: auto;
+  position: absolute;
   svg {
     position: absolute;
     z-index: 1;
+    left: 0;
+    top: 0;
     path {
       z-index: 3;
     }
@@ -116,6 +136,8 @@ export default {
     display: grid;
     position: absolute;
     z-index: 2;
+    left: 0;
+    top: 0;
   }
 }
 </style>

@@ -34,7 +34,7 @@ export const gridLinksOperations = {
 
         const ldh = new LinkDrawHelper(linkKey)
         if (ldh.badLinkKey) return
-        
+
         const pathDirections = ldh.genPathDirections()
         const direction1 = pathDirections[0]
         const direction2 = pathDirections[1]
@@ -46,26 +46,25 @@ export const gridLinksOperations = {
         
         if (ldh[sameColRow]) {
             path.d += ldh.drawLine(ldh[direction1], 'arrow')
-            arrow = ldh.drawArrow(ldh[direction1], true)
+            arrow = ldh.drawArrow(path.d, ldh[direction1])
         }
         else {
             
             if (ldh.goOtherWay && ldh.goAroundCell) {
-                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false)
-                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true)
+                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false, linkKey)
+                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true, linkKey)
             
             } else {
-                const adjustOtherWay = ldh.goOtherWay && !ldh[sameColRow]
+                // const adjustOtherWay = ldh.goOtherWay && !ldh[sameColRow]
                 
-                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true, adjustOtherWay)
-                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false, adjustOtherWay)
+                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true, linkKey)
+                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false, linkKey)
             }
 
             path.d += ldh.drawLine(ldh[direction2], 'full')
             path.d += ldh.drawLine(ldh[direction2], 'arrow')
 
-            const arrowAdjust = direction1 === 'upDown' && !ldh[sameColRow]
-            arrow = ldh.drawArrow(ldh[direction2], false, arrowAdjust, ldh[direction1])
+            arrow = ldh.drawArrow(path.d, ldh[direction2])
         }
 
         if (ldh.idLink && !vm.colorIds[ldh.idLink] && !isDrag)

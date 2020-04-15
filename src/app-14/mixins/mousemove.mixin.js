@@ -1,11 +1,11 @@
-import { gridcellOperationsService } from "../components/grid/services/gridcellOperations.service"
+import { gridOperationsService } from "../components/grid/services/gridOperations.service"
 import { gridArrowService } from "../components/grid/services/gridArrow.service"
 import { toolboxService } from "../components/toolbox/services/toolbox.service"
 
 export default {
     methods: {
         resetGridView() {
-            gridcellOperationsService.previousCellOperations()
+            gridOperationsService.previousCellOperations()
             toolboxService.startedDrag = false
         },
         stopArrowDrag() {

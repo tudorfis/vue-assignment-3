@@ -11,7 +11,7 @@
       v-if="showDroppoints"
       :display="droppointsDisplay"
     ></krt-gridcell-droppoints>
-    <!-- <small class="position-info">{{ position }}</small> -->
+    <small class="position-info">{{ position }}</small>
     <krt-gridcell-element
       ref="gridcellelement"
       v-show="cell.is"
@@ -26,15 +26,11 @@
 import { globalConfig } from '../../../config/global.config';
 import GridcellElementVue from './GridcellElement.vue';
 import GridcellDropPointsVue from './control-components/GridcellDropPoints.vue';
-import gridcellDragDropMixin from '../mixins/gridcell-mixins/gridcellDragDrop.mixin'
-import gridcellDroppointsMixin from '../mixins/gridcell-mixins/gridcellDroppoints.mixin'
+import gridcellDragDropMixin from '../mixins/gridcellDragDrop.mixin'
 import { gridArrowService } from '../services/gridArrow.service';
 
 export default {
-  mixins: [
-    gridcellDragDropMixin,
-    gridcellDroppointsMixin
-  ],
+  mixins: [gridcellDragDropMixin],
   components: {
     krtGridcellElement: GridcellElementVue,
     krtGridcellDroppoints: GridcellDropPointsVue
@@ -47,6 +43,14 @@ export default {
     doGridArrowOperations() {
       gridArrowService.doGridcellOperations(this.position)
     }
+  },
+  computed: {
+    showDroppoints() {
+        for (const key of Object.keys(this.droppointsDisplay))
+            if (this.droppointsDisplay[key]) return true
+
+        return false
+    }
   }
 };
 </script>
@@ -56,7 +60,7 @@ export default {
   position: relative;
   color: #eee;
   z-index: 0;
-  // border: 1px dashed #e0e0e0;
+  border: 1px dashed #e0e0e0;
 
   .position-info {
     position: absolute;

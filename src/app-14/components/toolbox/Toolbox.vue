@@ -70,16 +70,20 @@ export default {
   },
   computed: {
     toolboxStyle() {
+      const gc = globalConfig
       return {
-        width: `${globalConfig.toolboxWidth}px`,
-        top: `${globalConfig.topmenuHeight}px`,
+        width: `${gc.toolboxWidth}px`,
+        top: `${gc.topmenuHeight}px`,
+        height: `calc(100% - ${gc.topmenuHeight}px)`
       }
     },
     toolStyle() {
-      let width = globalConfig.gridCellElementWidth
+      const gc = globalConfig
+
+      let width = gc.gridCellElementWidth
       width += Math.round(width / 7)
       
-      let height = globalConfig.gridCellElementHeight
+      let height = gc.gridCellElementHeight
       height += Math.round(height / 7)
       
       return {
@@ -93,9 +97,7 @@ export default {
 
 <style lang="scss">
   .toolbox {
-    height: 100%;
     overflow: auto;
-    padding-bottom: 80px;
     position: fixed;
     z-index: 3;
     background: #3792bc;
