@@ -1,33 +1,31 @@
 import { gridModel, gridBlueprint, cellBlueprint } from "../grid.model"
 import { Utils } from "../../../utils/utils"
-import { gridAdjustService } from "./gridAdjust.service"
 import { gridSvgService } from "../../../components/grid/services/gridSvg.service"
 import { gridLinksService } from "./gridLinks.service"
 import { gridHistoryService } from "./gridHistory.service"
+import { GridPositionIterator } from "../iterators/GridPositionIterator"
+import { globalConfig } from "../../../config/global.config"
 
 export const gridIOservice = {
-    newGridModel(numRows, numCols, doAfterGridLoaded = false) {
+    newGridModel(numRows, numCols, doAfterGridLoaded = true) {
         gridModel.model = {...gridBlueprint}
 
         gridModel.model.numRows = numRows || globalConfig.minGridRows
-        gridModel.model.numCols = numCols || globalConfig.minGridColumns
+        gridModel.model.numCols = numCols || globalConfig.minGridCols
 
-        gridModel.model.cells = this.buildGridCells('new')
+        gridModel.model.cells = this.buildGridCells()
 
         if (doAfterGridLoaded)
             this.afterGridLoaded()
     },
-    buildGridCells(type = '') {
+    buildGridCells() {
       if (!gridModel.model) return {}
 
       const output = {}
-      for (let row = 1; row <= gridModel.model.numRows; row++) 
-        for (let col = 1; col <= gridModel.model.numCols; col++) {
-
-          const position = gridModel.getPosition(row, col)
-          output[position] = type === 'new' ? {...cellBlueprint} : gridModel.model.cells[position]
-        }
-
+      GridPositionIterator.getPositionsMatrix(position => {
+        output[position] = {...cellBlueprint}
+      })
+      
       return output
     },
     saveGridModel() {
@@ -43,8 +41,7 @@ export const gridIOservice = {
         return JSON.stringify(output)
     },
     loadGridModel(model) {
-        const gridSize = gridAdjustService.reduceGridSize(model)
-        this.newGridModel(gridSize.numRows, gridSize.numCols)
+        this.newGridModel(model.numRows, model.numCols, false)
 
         for (const position in model.steps)
             this.setCell(position, {

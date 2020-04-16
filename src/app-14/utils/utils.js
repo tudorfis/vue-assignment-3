@@ -33,4 +33,16 @@ export class Utils {
     static randomNumber(from, to) {
         return Math.floor(Math.random() * (to + 1)) + from
     }
+    static rangeArray(start, end) {
+        const output = []
+        if (start > end)
+            for (let i = start; i >= end; i--)
+                output.push(i)
+
+        else if (end > start)
+            for (let i = start; i <= end; i++)
+                output.push(i)
+
+        return output
+    }
 }

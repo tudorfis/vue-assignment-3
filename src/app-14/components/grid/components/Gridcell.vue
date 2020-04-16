@@ -15,9 +15,9 @@
     <small class="position-info">{{ position }}</small>
     <krt-gridcell-element
       ref="gridcellelement"
-      v-show="cell.is"
+      v-show="cellIs"
       :position="position"
-      :type="cell.type"
+      :type="cellType"
     ></krt-gridcell-element>
   </div>
 </template>
@@ -29,9 +29,15 @@ import GridcellElementVue from './GridcellElement.vue';
 import GridcellDropPointsVue from './control-components/GridcellDropPoints.vue';
 import gridcellDragDropMixin from '../mixins/gridcellDragDrop.mixin'
 import { gridArrowService } from '../services/gridArrow.service';
+import { gridModel } from '../../../models/grid/grid.model';
 
 export default {
   mixins: [gridcellDragDropMixin],
+  data() {
+    return {
+      gm: gridModel
+    }
+  },
   components: {
     krtGridcellElement: GridcellElementVue,
     krtGridcellDroppoints: GridcellDropPointsVue
@@ -49,6 +55,18 @@ export default {
     showDroppoints() {
         for (const key of Object.keys(this.droppointsDisplay))
             if (this.droppointsDisplay[key]) return true
+
+        return false
+    },
+    cellType() {
+      const cell = gridModel.model.cells[this.position]
+      if (!!cell) return cell.type
+
+      return ''
+    },
+    cellIs() {
+        const cell = gridModel.model.cells[this.position]
+        if (!!cell) return cell.is
 
         return false
     }

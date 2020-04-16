@@ -260,6 +260,4 @@ class LinkEEHelper {
 }
 
 const linkEEhelper = new LinkEEHelper()
-globalThis.linkEEhelper = linkEEhelper
-
 export default linkEEhelper

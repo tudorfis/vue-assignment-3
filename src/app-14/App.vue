@@ -11,8 +11,6 @@
 
 <script>
 import { gridModel } from './models/grid/grid.model';
-globalThis.gridModel = gridModel
-
 import { globalConfig } from './config/global.config';
 import TopmenuVue from './components/topmenu/Topmenu.vue';
 import ToolboxVue from './components/toolbox/Toolbox.vue';
@@ -42,7 +40,7 @@ export default {
     if (matchRef && matchRef[1]) modelType = matchRef[1]
 
     if (!modelType) {
-      gridIOservice.newGridModel(0, 0, true)
+      gridIOservice.newGridModel()
       gridHistoryService.saveState()
       return
     }
@@ -55,7 +53,7 @@ export default {
       })
       .catch(error => {
         console.error(error)
-        gridIOservice.newGridModel(0, 0, true)
+        gridIOservice.newGridModel()
         gridHistoryService.saveState()
       })
   }

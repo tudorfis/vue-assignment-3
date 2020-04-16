@@ -1,5 +1,6 @@
 import { LinkDrawHelper } from "../helpers/linkDraw.helper"
 import linkEEhelper from "../helpers/linkEE.helper"
+import { gridModel } from "../grid.model"
 
 export const gridLinksDroppointService = {
     rearangeLinksByDirection(position, direction) {

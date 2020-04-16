@@ -27,8 +27,7 @@
       :style="gridLayoutStyle"
     >
       <krt-gridcell
-        v-for="(cell,position) of gridObj"
-        :cell="cell"
+        v-for="position of gridPositions"
         :key="position"
         :position="position"
       ></krt-gridcell>
@@ -49,9 +48,9 @@ import { Utils } from '../../utils/utils';
 import { gridArrowService } from '../grid/services/gridArrow.service'
 import { gridDeleteService } from './services/gridDelete.service'
 import { gridPanService } from './services/gridPan.service';
-import { gridIOservice } from '../../models/grid/services/gridIO.service';
 import { gridLinksService } from '../../models/grid/services/gridLinks.service';
 import { globalResetsService } from '../../services/globalResets.service';
+import { GridPositionIterator } from '../../models/grid/iterators/GridPositionIterator';
 
 export default {
   props: ['toolboxWidth', 'topmenuHeight'],
@@ -83,8 +82,10 @@ export default {
       gridPanService.init(this.$refs.gridcontent)
   },
   computed: {
-    gridObj() {
-      return gridIOservice.buildGridCells('get')
+    gridPositions() {
+      if (!gridModel.model) return
+      
+      return GridPositionIterator.getPositionsMatrix()
     },
     pathObj() {
       return Utils.reduceobj(gridLinksService.paths)

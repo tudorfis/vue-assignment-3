@@ -3,9 +3,6 @@ import Vue from 'vue'
 import { globalConfig } from "../../config/global.config"
 import { VueUtils } from '../../utils/vue.utils'
 
-globalThis.Vue = Vue
-globalThis.globalConfig = globalConfig
-
 export const gridBlueprint = {
     numRows: 0,
     numCols: 0,
@@ -23,6 +20,14 @@ export const cellBlueprint = {
 
 export const gridModel = {
     model: null,
+    getId(position) {
+        if (!position || !this.model.cells[position]) return -1
+        return this.model.cells[position].id
+    },
+    getType(position) {
+        if (!position || !this.model.cells[position]) return ''
+        return this.model.cells[position].type
+    },
     getRow(position) {
         if (!position) return -1
         return parseInt(position.split(globalConfig.positionSplitSymbol)[0])

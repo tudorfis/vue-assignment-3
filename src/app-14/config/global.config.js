@@ -1,6 +1,6 @@
 
 export const globalConfig = {
-    minGridColumns: 27,
+    minGridCols: 27,
     minGridRows: 15,
 
     zoomLevel: 100,

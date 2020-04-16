@@ -15,10 +15,9 @@ export const gridArrowService = {
     linkKey: '',
     isHighlight: false,
     recentLink: false,
-    showOtherIcons: false,
     
     get hasCell() {
-        return this.gridcell.__vue__.$options.propsData.cell.is
+        return gridModel.model.cells[this.position].is
     },
     get sameCell() {
         return this.startedPosition === this.currentPosition
@@ -90,7 +89,10 @@ export const gridArrowService = {
         }
     },
     hideArrowConnector() {
-        document.querySelector('#arrow-connector').style.display = `none`
+        const arrowConnector = document.querySelector('#arrow-connector')
+        arrowConnector.style.display = `none`
+        
+        document.querySelector('.gridcontent').append(arrowConnector)
     },
     stopDrag() {
         if (this.isHighlight) {

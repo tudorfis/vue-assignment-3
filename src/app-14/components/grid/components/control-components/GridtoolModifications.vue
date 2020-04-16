@@ -14,71 +14,17 @@
 </template>
 
 <script>
-import { VueUtils } from '../../../../utils/vue.utils';
 import { globalConfig } from '../../../../config/global.config';
-import { gridCellService } from '../../services/gridCell.service';
-import { globalResetsService } from '../../../../services/globalResets.service';
-import { gridHistoryService } from '../../../../models/grid/services/gridHistory.service';
-import { gridLinksService } from '../../../../models/grid/services/gridLinks.service';
-import { toolboxElementsEnum } from '../../../toolbox/enum/toolboxElements.enum';
+import { gridToolService } from '../../services/gridTool.service'
+
 export default {
   props: ['position'],
   methods: {
-    onDelete(event) {
-      globalResetsService.reset()
-
-      const gridcell = VueUtils.traversePath(event, 'gridcell')
-      gridCellService.resetCell(gridcell)
-      
-      gridLinksService.deleteAllLinks(this.position)
-      gridLinksService.buildLinks()
-      
-      gridHistoryService.saveState()
+    onDelete() {
+      gridToolService.deleteGridcell(this.position)
     },
-    onEdit(event) {
-      globalResetsService.reset()
-
-      const gridcell = VueUtils.traversePath(event, 'gridcell')
-      const elementType = gridcell.__vue__.$options.propsData['cell'].type
-
-      switch (elementType) {
-        case toolboxElementsEnum.SEND_EMAIL:
-          $('#sendEmailModal').modal();
-          break;
-        
-        case toolboxElementsEnum.SEND_SMS:
-          $('#sendSmsModal').modal();
-          break;
-
-        case toolboxElementsEnum.ADD_REMOVE_TAG:
-          $('#addRemoveTagsModal').modal();
-          break;
-          
-        case toolboxElementsEnum.SUBSCRIBE_LIST:
-          $('#subscribeListModal').modal();
-          break;
-          
-        case toolboxElementsEnum.SUBSCRIBE_SEQUENCE:
-          $('#subscribeSequenceModal').modal();
-          break;
-          
-        case toolboxElementsEnum.AUTOMATION:
-          $('#automationModal').modal();
-          break;
-          
-        case toolboxElementsEnum.SPLIT:
-          $('#splitModal').modal();
-          break;
-          
-        case toolboxElementsEnum.GO_TO:
-          $('#goToModal').modal();
-          break;
-          
-        case toolboxElementsEnum.WAIT:
-          $('#waitModal').modal();
-          break;
-          
-      }
+    onEdit() {
+        gridToolService.editGridcell(this.position)
     }
   },
   computed: {

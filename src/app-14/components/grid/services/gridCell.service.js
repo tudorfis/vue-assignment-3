@@ -1,5 +1,8 @@
 import { gridModel } from "../../../models/grid/grid.model"
 import { gridMouseDroppointsService } from "../../../models/grid/services/gridMouseDroppoints.service"
+import { toolboxDragService } from "../../toolbox/services/toolboxDrag.service"
+import { gridIOservice } from "../../../models/grid/services/gridIO.service"
+import { gridAdjustService } from "../../../models/grid/services/gridAdjust.service"
 
 export const droppointsDisplayBlueprint = {
     showUp: false,
@@ -11,44 +14,53 @@ export const droppointsDisplayBlueprint = {
 
 export const gridCellService = {
     activeUid: null,
-    activeCell: null,
-    addClasses(classListArr = []) {
-        this.handleAddingRemoving(classListArr, 'add')
-    },
-    removeClasses(classListArr = []) {
-        this.handleAddingRemoving(classListArr, 'remove')
-    },
-    handleAddingRemoving(classListArr = [], method = '') {
-        if (!this.activeCell) return
+    activeGridcell: null,
 
-        for (const className of classListArr)
-            this.activeCell.classList[method](className)
-    },
     isDifferentCell(gridcell) {
         return gridcell.__vue__._uid !== this.activeUid
     },
     previousCellOperations() {
-        this.hideDropPoints()
-        this.removeClasses(['allowed-drop', 'not-allowed-drop'])
+        if (!this.activeGridcell) return
+        
+        this.hideDroppoints()
+        this.activeGridcell.classList.remove('allowed-drop')
+        this.activeGridcell.classList.remove('not-allowed-drop')
     },
-    hideDropPoints(gridcell) {
-        gridcell = gridcell || this.activeCell
+    hideDroppoints(gridcell) {
+        gridcell = gridcell || this.activeGridcell
         
         if (gridcell && gridcell.__vue__)
             gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint}
     },
-    saveActiveCell(gridcell) {
-        this.activeCell = gridcell
+    savePreviousCell(gridcell) {
+        this.activeGridcell = gridcell
         this.activeUid = gridcell.__vue__._uid
     },
-    resetCell(gridcell) {
+    resetCell(position) {
         gridModel.model.totalSteps--
-        gridcell.__vue__.$options.propsData['cell'].is = false
+        gridModel.model.cells[position].is = false
     },
-    setMiddleDroppoint(gridcell) {
+    removePreviousCell() {
+        if (!toolboxDragService.dragPosition) return
+            
+        gridCellService.resetCell(toolboxDragService.dragPosition);
+        return toolboxDragService.dragPosition
+    },
+    setCellActive(newPosition, oldPosition) {
+        const cellObj = { is: 1, type: toolboxDragService.dragType }
+
+        const oldCell = gridModel.model.cells[oldPosition]
+        if (oldCell && oldCell.id) {
+            cellObj.id = oldCell.id
+            oldCell.id = 0
+        }
+
+        gridIOservice.setCell(newPosition, cellObj)
+    },
+    setMiddleDroppointActive(gridcell) {
         gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showMiddle: true}
     },
-    setDroppoints(event, gridcell, position) {
+    getDroppointDirection(event, gridcell, position) {
         const isCellBellow = gridMouseDroppointsService.hasElementBellow(position)
         const isMouseOnBottom = gridMouseDroppointsService.isMouseOnBottomOutside(event, gridcell)
 
@@ -83,7 +95,29 @@ export const gridCellService = {
         
         return ''
     },
+    moveCellsByDroppointDirection(direction, position) {
+        let droppointPosition
 
-    
-    
+        if (direction === 'down') {
+            droppointPosition = gridModel.getPositionDiff(position, 1, 0)
+            gridAdjustService.spliceRows(droppointPosition)
+        }
+
+        else if (direction === 'up') {
+            droppointPosition = gridModel.getPositionDiff(position, 0, 0)
+            gridAdjustService.spliceRows(droppointPosition)
+        }
+
+        if (direction === 'right') {
+            droppointPosition = gridModel.getPositionDiff(position, 0, 1)
+            gridAdjustService.spliceCols(droppointPosition)
+        }
+
+        else if (direction === 'left') {
+            droppointPosition = gridModel.getPositionDiff(position, 0, 0)
+            gridAdjustService.spliceCols(droppointPosition)
+        }
+
+        return droppointPosition
+    }
 }
