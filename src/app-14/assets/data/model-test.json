@@ -1,7 +1,7 @@
 {
     "numCols": 27,
     "numRows": 15,
-    "totalSteps": 7,
+    "totalSteps": 10,
     "steps": {
         "1-1": {
             "is": 1,
@@ -37,6 +37,21 @@
             "is": 1,
             "type": "WAIT",
             "id": 15
+        },
+        "5-1": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG",
+            "id": 79
+        },
+        "6-1": {
+            "is": 1,
+            "type": "SUBSCRIBE_LIST",
+            "id": 46
+        },
+        "7-1": {
+            "is": 1,
+            "type": "SUBSCRIBE_SEQUENCE",
+            "id": 2
         }
     },
     "links": [
@@ -50,6 +65,8 @@
         "4-2__2-6",
         "1-3__1-2",
         null,
-        "1-4__1-3"
+        "1-4__1-3",
+        "5-1__6-1",
+        "6-1__7-1"
     ]
 }

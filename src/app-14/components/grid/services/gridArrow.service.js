@@ -24,6 +24,7 @@ export const gridArrowService = {
         return this.startedPosition === this.currentPosition
     },
     get position() {
+        if (!this.gridcell) return ''
         return this.gridcell.__vue__.$options.propsData.position
     },
     get gridcellElement() {

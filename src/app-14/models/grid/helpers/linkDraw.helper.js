@@ -189,17 +189,6 @@ export class LinkDrawHelper {
             }
         }
 
-        if (linkKey === '4-2__6-1')
-            console.log(`
-                diff_ee < 0=${diff_ee < 0}
-                firstHalf=${firstHalf}
-                direction=${direction}
-                eeDirection=${eeDirection}
-                oppositeDirection=${oppositeDirection}
-                this.diff_ee_in_out(oppositeDirection, 'in')=${this.diff_ee_in_out(oppositeDirection, 'in')}
-                this.diff_ee_in_out(eeDirection, 'out')=${this.diff_ee_in_out(eeDirection, 'out')}
-            `)
-
         let d
         if (direction === 'up') d = 'v-'
         if (direction === 'down') d = 'v'

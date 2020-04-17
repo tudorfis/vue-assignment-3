@@ -1,7 +1,7 @@
 {
-  "name": "vue-assignment-3",
-  "description": "A Vue.js project",
-  "version": "1.0.0",
+  "name": "kartra_sequence_builder",
+  "description": "Kartra Sequence Builder",
+  "version": "0.0.1",
   "author": "todorescu <todorescu.consulting@gmail.com>",
   "license": "MIT",
   "private": true,

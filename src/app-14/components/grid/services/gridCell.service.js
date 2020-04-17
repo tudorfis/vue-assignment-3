@@ -79,7 +79,7 @@ export const gridCellService = {
 
         const isCellRight = gridMouseDroppointsService.hasElementRight(position)
         const isMouseOnRight = gridMouseDroppointsService.isMouseOnRightOutside(event, gridcell)
-
+        
         if (isCellRight && isMouseOnRight) {
             gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showRight: true}
             return 'right'

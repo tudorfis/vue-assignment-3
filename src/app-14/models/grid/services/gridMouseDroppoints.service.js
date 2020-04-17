@@ -17,17 +17,12 @@ export const gridMouseDroppointsService = {
 
         return !isSameGridCells && hasElement && hasElementAbove
     },
-    isMouseOnTopOutside(event, gridCell) {
-        const mouseY = event.pageY - gridCell.offsetTop;
+    isMouseOnTopOutside(event, gridcell) {
+        const mouseY = event.pageY
+        const rect = gridcell.getBoundingClientRect()
+        const control = rect.top + (rect.height / 2) - globalConfig.droppointDimension
 
-        const gc = globalConfig
-        const halfCellHeight = Math.round(gc.gridCellHeight / 2)
-        const halfDroppoint = Math.round(gc.droppointDimension / 2)
-
-        let isAbovePoint = (mouseY >= (halfCellHeight - halfDroppoint))
-        isAbovePoint &= (mouseY <= (halfCellHeight + halfDroppoint))
-
-        return isAbovePoint
+        return mouseY <= control
     },
     hasElementBellow(position) {
         const row = gridModel.getRow(position)
@@ -43,11 +38,12 @@ export const gridMouseDroppointsService = {
 
         return !isSameGridCells && hasElement && hasElementBellow
     },
-    isMouseOnBottomOutside(event, gridCell) {
-        const mouseY = event.pageY - gridCell.offsetTop;
-        const gc = globalConfig
+    isMouseOnBottomOutside(event, gridcell) {
+        const mouseY = event.pageY
+        const rect = gridcell.getBoundingClientRect()
+        const control = rect.top + rect.height - globalConfig.droppointDimension
 
-        return mouseY >= gc.gridCellHeight + gc.droppointDimension
+        return mouseY >= control
     },
     hasElementRight(position) {
         const col = gridModel.getCol(position)
@@ -63,12 +59,10 @@ export const gridMouseDroppointsService = {
 
         return !isSameGridCells && hasElement && hasElementNext
     },
-    isMouseOnRightOutside(event, gridCell) {
-        const mouseX = event.pageX - gridCell.offsetLeft;
-        const gc = globalConfig
-
-        const halfDroppoint = Math.round(gc.droppointDimension / 2)
-        const control = (gc.gridCellWidth * 2) - gc.droppointDimension - halfDroppoint
+    isMouseOnRightOutside(event, gridcell) {
+        const mouseX = event.pageX
+        const rect = gridcell.getBoundingClientRect()
+        const control = rect.left + rect.width - globalConfig.droppointDimension
 
         return mouseX >= control
     },
@@ -86,12 +80,10 @@ export const gridMouseDroppointsService = {
 
         return !isSameGridCells && hasElement && hasElementPrev
     },
-    isMouseOnLeftOutside(event, gridCell) {
-        const mouseX = event.pageX - gridCell.offsetLeft;
-        const gc = globalConfig
-
-        const halfDroppoint = Math.round(gc.droppointDimension / 2)
-        const control = gc.gridCellWidth + gc.droppointDimension + halfDroppoint
+    isMouseOnLeftOutside(event, gridcell) {
+        const mouseX = event.pageX
+        const rect = gridcell.getBoundingClientRect()
+        const control = rect.left + (rect.width / 2) - globalConfig.droppointDimension
 
         return mouseX <= control
     },
