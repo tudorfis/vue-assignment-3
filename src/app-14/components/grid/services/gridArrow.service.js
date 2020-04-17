@@ -1,10 +1,11 @@
-import { globalConfig } from '../../../config/global.config'
-import { VueUtils } from '../../../utils/vue.utils'
-import { gridModel } from '../../../models/grid/grid.model'
-import { LinkDrawHelper } from '../../../models/grid/helpers/linkDraw.helper'
-import { gridPanService } from './gridPan.service'
-import { gridHistoryService } from '../../../models/grid/services/gridHistory.service'
-import { gridLinksService } from '../../../models/grid/services/gridLinks.service'
+import { globalConfig } from "../../../config/global.config"
+import { VueUtils } from "../../../utils/vue.utils"
+import { gridModel } from "../../../models/grid/grid.model"
+import { LinkDrawHelper } from "../../../models/grid/helpers/linkDraw.helper"
+import { gridPanService } from "./gridPan.service"
+import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
+import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
+import linkMapHelper from "../../../models/grid/helpers/linkMap.helper"
 
 export const gridArrowService = {
     arrowConnectorId: '#arrow-connector',
@@ -73,6 +74,7 @@ export const gridArrowService = {
     },
     removeTempPaths() {
         if (this.linkKey && !this.recentLink) {
+            
             delete gridLinksService.paths[this.linkKey]
             this.linkKey = ''
         }

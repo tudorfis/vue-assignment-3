@@ -48,6 +48,7 @@ export default {
             return true
         },
         onDropDoDroppoints() {
+            console.log('onDropDoDroppoints')
             const newPosition = gridCellService.moveCellsByDroppointDirection(this.dropppointDirection, this.position)
             
             gridCellService.setCellActive(newPosition)

@@ -1,4 +1,3 @@
-import { gridModel } from "../grid.model"
 import { gridIOservice } from "./gridIO.service"
 
 export const gridHistoryService = {

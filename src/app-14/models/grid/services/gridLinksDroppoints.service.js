@@ -1,5 +1,5 @@
 import { LinkDrawHelper } from "../helpers/linkDraw.helper"
-import linkEEhelper from "../helpers/linkEE.helper"
+import linkMapHelper from "../helpers/linkMap.helper"
 import { gridModel } from "../grid.model"
 
 export const gridLinksDroppointService = {
@@ -22,7 +22,7 @@ export const gridLinksDroppointService = {
         this.connectLinksDroppoint(nextPosition, prevPosition, position)
     },
     rearangeLinksByPaths(position, droppointDot) {
-        const eePathMap = linkEEhelper.eePathMap[position]
+        const eePathMap = linkMapHelper.eePathMap[position]
         if (!eePathMap) return false
        
         const moreThanOnePath = eePathMap.h > 1 || eePathMap.v > 1 || eePathMap.c > 1

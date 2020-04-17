@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { gridModel } from "../grid.model"
 import { LinkDrawHelper } from '../helpers/linkDraw.helper'
-import linkEEhelper from '../helpers/linkEE.helper'
+import linkMapHelper from '../helpers/linkMap.helper'
 import { globalConfig } from '../../../config/global.config'
 import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
 
@@ -15,8 +15,8 @@ export const gridLinksService = {
         this.colors = []
         this.colorIds = []
 
-        linkEEhelper.generateEEpath()
-        linkEEhelper.generateEEmap()
+        linkMapHelper.generateEEmap()
+        linkMapHelper.eePathMap = {}
 
         const links = gridModel.model.links
         const lki = new LinkKeyIterator(links)
@@ -24,52 +24,40 @@ export const gridLinksService = {
         while(lki.continue)
             this.genPathTwoCells(lki.linkKey)
     },
+
     genPathTwoCells(linkKey = '', isDrag = false) {
-        if (this.colors.length === 0)
-            this.colors = [...globalConfig.colorArray]
-
         Vue.set(this.paths, linkKey, [])
-
-        const ldh = new LinkDrawHelper(linkKey)
-        if (ldh.badLinkKey) return
-
-        const pathDirections = ldh.genPathDirections()
-        const direction1 = pathDirections[0]
-        const direction2 = pathDirections[1]
-        const sameColRow = pathDirections[2]
-
-        let path, arrow
-        path = ldh.drawPath(ldh[direction1])
-        path.d += ldh.drawLine(ldh[direction1], 'full')
         
-        if (ldh[sameColRow]) {
-            path.d += ldh.drawLine(ldh[direction1], 'arrow')
-            arrow = ldh.drawArrow(path.d, ldh[direction1])
+        let path = {}, arrow = {}
+        const ldh = new LinkDrawHelper(linkKey)
+
+        linkMapHelper.restoreEEforGenPath()
+        linkMapHelper.generateEEforGenPath(ldh, isDrag)
+        
+        path = ldh.drawPath(ldh.directionOut)
+        path.d += ldh.drawLine(ldh.directionOut, 'full')
+        linkMapHelper.setPathMap(ldh, ldh.directionOut, false)
+
+        if (ldh.sameRow || ldh.sameCol) {
+            path.d += ldh.drawLine(ldh.directionOut, 'arrow')
+            arrow = ldh.drawArrow(path.d, ldh.directionOut)
         }
         else {
-            
-            if (ldh.goOtherWay && ldh.goAroundCell) {
-                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false, linkKey)
-                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true, linkKey)
-            
-            } else {
-                // const adjustOtherWay = ldh.goOtherWay && !ldh[sameColRow]
-                
-                path.d += ldh.drawHalf(ldh[direction1], ldh[direction2], true, linkKey)
-                path.d += ldh.drawHalf(ldh[direction2], ldh[direction1], false, linkKey)
-            }
+            path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true, linkKey)
+            path.d += ldh.drawHalf(ldh.directionIn, ldh.directionOut, false, linkKey)
+            linkMapHelper.setPathMapCorner(ldh)
 
-            path.d += ldh.drawLine(ldh[direction2], 'full')
-            path.d += ldh.drawLine(ldh[direction2], 'arrow')
+            path.d += ldh.drawLine(ldh.directionIn, 'full')
+            linkMapHelper.setPathMap(ldh, ldh.directionIn, true)
 
-            arrow = ldh.drawArrow(path.d, ldh[direction2])
+            path.d += ldh.drawLine(ldh.directionIn, 'arrow')
+            arrow = ldh.drawArrow(path.d, ldh.directionIn)
         }
-
-        if (ldh.idLink && !this.colorIds[ldh.idLink] && !isDrag)
-            this.colorIds[ldh.idLink] = this.colors.pop()
-
-        const color = isDrag ? '#e9e9e9' : this.colorIds[ldh.idLink]
-
+        
+        const color = this.getPathColor(ldh, isDrag)
+        this.setPaths(path, arrow, linkKey, color)
+    },
+    setPaths(path, arrow, linkKey, color) {
         path.color = color
         path.linkKey = linkKey
 
@@ -78,7 +66,15 @@ export const gridLinksService = {
 
         this.paths[linkKey].push(path)
         this.paths[linkKey].push(arrow)
+    },
+    getPathColor(ldh, isDrag) {
+        if (this.colors.length === 0)
+            this.colors = [...globalConfig.colorArray]
+        
+        if (ldh.idLink && !this.colorIds[ldh.idLink] && !isDrag)
+            this.colorIds[ldh.idLink] = this.colors.pop()
 
+        return isDrag ? '#e9e9e9' : this.colorIds[ldh.idLink]
     },
     rearangeLinks(oldPosition, newPosition) {
         const links = gridModel.model.links
