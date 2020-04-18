@@ -4,6 +4,7 @@ import { LinkDrawHelper } from '../helpers/linkDraw.helper'
 import linkMapHelper from '../helpers/linkMap.helper'
 import { globalConfig } from '../../../config/global.config'
 import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
+import { GridLinksIterator } from '../iterators/GridLinksIterator'
 
 export const gridLinksService = {
     paths: {},
@@ -34,6 +35,102 @@ export const gridLinksService = {
         linkMapHelper.restoreEEforGenPath()
         linkMapHelper.generateEEforGenPath(ldh, isDrag)
         
+        const leftOrRight = LinkDrawHelper.leftOrRight(ldh.directionOut)
+        const potentialDirection = ldh.potentialDirections[leftOrRight ? 0 : 1]
+
+        const hasCellsOut = GridLinksIterator.hasCellsOut(ldh, ldh.directionOut)
+        // const hasCellsOut = false
+        const hasCellsOutCorner = GridLinksIterator.hasCellsOutCorner(ldh, ldh.directionOut)
+        // const hasCellsOutCorner = false
+        const hasCellsIn = GridLinksIterator.hasCellsIn(ldh, potentialDirection)
+        // const hasCellsIn = false
+
+        // if (linkKey === '3-4__4-1')
+        //     console.log(`
+        //         linkKey=${linkKey}
+        //         ldh.directionOut=${ldh.directionOut}
+        //         ldh.directionIn=${ldh.directionIn}
+
+        //         hasCellsOut=${hasCellsOut}
+        //         hasCellsIn=${hasCellsIn}
+
+        //         hasCellsOutCorner=${hasCellsOutCorner}
+        //         ldh.sameDirection=${ldh.sameDirection}
+
+        //         ldh.potentialDirections[0]=${ldh.potentialDirections[0]}
+        //         ldh.potentialDirections[1]=${ldh.potentialDirections[1]}
+
+        //         LinkDrawHelper.upOrDown(ldh.directionOut)=${LinkDrawHelper.upOrDown(ldh.directionOut)}
+        //         LinkDrawHelper.leftOrRight(ldh.directionOut)=${LinkDrawHelper.leftOrRight(ldh.directionOut)}
+
+        //         potentialDirection=${potentialDirection}
+        //     `)
+        
+        /** @TODO: make a way to go down/up | left/right around function in case of elements in the way */
+        if (ldh.sameRow || ldh.sameCol) {
+            const directionIn = LinkDrawHelper.oppositeDirection(ldh.directionIn)
+            path = ldh.drawPath(directionIn)
+            path.d += ldh.drawLine(directionIn, 'full')
+            path.d += ldh.drawLine(directionIn, 'arrow')
+            arrow = ldh.drawArrow(path.d, directionIn)
+        }
+
+        else if (hasCellsOut || hasCellsOutCorner) {
+            path = ldh.drawPath(ldh.directionOut)
+
+            if (hasCellsOut) {
+                path.d += ldh.drawHalf(potentialDirection, ldh.directionOut, false)
+                path.d += ldh.drawLine(ldh.directionOut, 'full')
+            }
+            else if (hasCellsOutCorner) {
+                path.d += ldh.drawLine(ldh.directionOut, 'full')
+                path.d += ldh.drawHalf(potentialDirection, ldh.directionOut, false)
+            }
+
+            if (hasCellsIn || ldh.sameDirection) {
+                path.d += ldh.drawLine(potentialDirection, 'full')
+                path.d += ldh.drawHalf(potentialDirection, ldh.directionOut, false)
+                path.d += ldh.drawLine(ldh.directionOut, 'arrow')
+                arrow = ldh.drawArrow(path.d, ldh.directionOut)
+            }
+            else {
+                path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true)
+                path.d += ldh.drawLine(ldh.directionIn, 'full')
+                path.d += ldh.drawLine(ldh.directionIn, 'arrow')
+                arrow = ldh.drawArrow(path.d, ldh.directionIn)
+            }
+        }
+        
+        else if (hasCellsIn || ldh.sameDirection) {
+            path = ldh.drawPath(ldh.directionOut)
+
+            path.d += ldh.drawLine(ldh.directionOut, 'full')
+            path.d += ldh.drawHalf(potentialDirection, ldh.directionOut, false)
+            path.d += ldh.drawLine(potentialDirection, 'full')
+
+            if (ldh.sameDirection) {
+                path.d += ldh.drawHalf(potentialDirection, ldh.directionOut, false)
+                path.d += ldh.drawLine(ldh.directionOut, 'arrow')
+                arrow = ldh.drawArrow(path.d, ldh.directionOut)
+            }
+            else {
+                path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true)
+                path.d += ldh.drawLine(ldh.directionIn, 'arrow')
+                arrow = ldh.drawArrow(path.d, ldh.directionIn)
+            }
+        }
+
+        else {
+            path = ldh.drawPath(ldh.directionOut)
+            path.d += ldh.drawLine(ldh.directionOut, 'full')
+            path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true)
+            path.d += ldh.drawHalf(ldh.directionIn, ldh.directionOut, false)
+            path.d += ldh.drawLine(ldh.directionIn, 'full')
+            path.d += ldh.drawLine(ldh.directionIn, 'arrow')
+            arrow = ldh.drawArrow(path.d, ldh.directionIn)
+        }
+                
+        /*
         path = ldh.drawPath(ldh.directionOut)
         path.d += ldh.drawLine(ldh.directionOut, 'full')
         linkMapHelper.setPathMap(ldh, ldh.directionOut, false)
@@ -43,8 +140,8 @@ export const gridLinksService = {
             arrow = ldh.drawArrow(path.d, ldh.directionOut)
         }
         else {
-            path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true, linkKey)
-            path.d += ldh.drawHalf(ldh.directionIn, ldh.directionOut, false, linkKey)
+            path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true)
+            path.d += ldh.drawHalf(ldh.directionIn, ldh.directionOut, false)
             linkMapHelper.setPathMapCorner(ldh)
 
             path.d += ldh.drawLine(ldh.directionIn, 'full')
@@ -53,6 +150,7 @@ export const gridLinksService = {
             path.d += ldh.drawLine(ldh.directionIn, 'arrow')
             arrow = ldh.drawArrow(path.d, ldh.directionIn)
         }
+        */
         
         const color = this.getPathColor(ldh, isDrag)
         this.setPaths(path, arrow, linkKey, color)

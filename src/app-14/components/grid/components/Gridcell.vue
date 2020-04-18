@@ -12,7 +12,7 @@
       v-if="showDroppoints"
       :display="droppointsDisplay"
     ></krt-gridcell-droppoints>
-    <!-- <small class="position-info">{{ position }}</small> -->
+    <small class="position-info">{{ position }}</small>
     <krt-gridcell-element
       ref="gridcellelement"
       v-show="cellIs"
@@ -79,7 +79,7 @@ export default {
   position: relative;
   color: #eee;
   z-index: 0;
-  // border: 1px dashed #e0e0e0;
+  border: 1px dashed #e0e0e0;
 
   .position-info {
     position: absolute;

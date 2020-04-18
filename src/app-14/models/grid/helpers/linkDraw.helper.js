@@ -79,6 +79,16 @@ export class LinkDrawHelper {
     get upDown() {
         return this.up ? 'up' : (this.down ? 'down' : '')
     }
+    get sameDirection() {
+        return (LinkDrawHelper.upOrDown(this.directionOut) && LinkDrawHelper.upOrDown(this.directionIn) ||
+            LinkDrawHelper.leftOrRight(this.directionIn) && LinkDrawHelper.leftOrRight(this.directionOut))
+    }
+    static upOrDown(direction) {
+        return (direction === 'up' || direction === 'down')
+    }
+    static leftOrRight(direction) {
+        return (direction === 'left' || direction === 'right')
+    }
     get directionOut() {
         const eeMap = linkMapHelper.eeMap[this.link1]
         const directionOut = Object.keys(eeMap).find(direction => !!eeMap[direction].out[this.link2])
@@ -157,7 +167,7 @@ export class LinkDrawHelper {
 
         return ` ${d}${distance}`
     }
-    drawHalf(direction = '', eeDirection, firstHalf, linkKey) {
+    drawHalf(direction = '', eeDirection, firstHalf) {
         let distance = this.center_big
         const oppositeDirection = LinkDrawHelper.oppositeDirection(eeDirection)
 

@@ -5,6 +5,7 @@ import { globalConfig } from '../../../config/global.config'
 import { gridModel } from '../grid.model'
 import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
 import { gridArrowService } from '../../../components/grid/services/gridArrow.service'
+import { GridLinksIterator } from '../iterators/GridLinksIterator'
 
 const gc = globalConfig
 
@@ -57,40 +58,95 @@ class LinkMapHelper {
     }
     setEEConnectionMaps(ldh) {
         const ldh2 = new LinkDrawHelper(ldh.linkKey, true)
+        const linkDirections = this.getLinkDirections(ldh, ldh2)
 
-        const link1Direction = this.getLinkDirection(ldh)
-        const link2Direction = this.getLinkDirection(ldh2, link1Direction)
+        const link1Obj = this.eeMap[ldh.link1][linkDirections[0]]
+        const link2Obj =  this.eeMap[ldh2.link1][linkDirections[1]]
 
-        const link1Obj = this.eeMap[ldh.link1][link1Direction]
-        const link2Obj =  this.eeMap[ldh2.link1][link2Direction]
-
-        link1Obj.total++
-        link2Obj.total++
-
-        link1Obj.out[ldh.link2] = link1Obj.total
-        link2Obj.in[ldh.link1] = link2Obj.total
+        link1Obj.out[ldh.link2] = ++link1Obj.total
+        link2Obj.in[ldh.link1] = ++link2Obj.total
     }
-    getLinkDirection(ldh, link1Direction) {
-        const eeMap = this.eeMap[ldh.link1]
-        const pdir = ldh.potentialDirections
+    getLinkDirections(ldh, ldh2) {
+        let link1Direction, link2Direction
 
-        if (!pdir[1]) return pdir[0]
+        const eeMap1 = this.eeMap[ldh.link1]
+        const eeMap2 = this.eeMap[ldh2.link1]
+        
+        const pdir1 = ldh.potentialDirections
+        const pdir2 = ldh2.potentialDirections
 
-        if (link1Direction) {
-            let link2Direction = (eeMap[pdir[1]].total > eeMap[pdir[0]].total) ? pdir[0] : pdir[1]
-            
-            const sameHorizontal = ['left','right'].includes(link1Direction) && ['left','right'].includes(link2Direction)
-            const sameVertical = ['up','down'].includes(link1Direction) && ['up','down'].includes(link2Direction)
+        if (!pdir1[1])
+            return [ pdir1[0], pdir1[0] ]
+        
+        const pickAnyEE1 = eeMap1[pdir1[0]].total === eeMap1[pdir1[1]].total
+        const pickAnyEE2 = eeMap2[pdir2[0]].total === eeMap2[pdir2[1]].total
+        
+        let changedEE1 = false
+        let changedEE2 = false
 
-            if (sameHorizontal) return ldh.upDown
-            if (sameVertical) return ldh.rightLeft
-
-            return link2Direction
+        if (!pickAnyEE1) {
+            if (eeMap1[pdir1[1]].total > eeMap1[pdir1[0]].total) link1Direction = pdir1[0]
+            else if (eeMap1[pdir1[0]].total > eeMap1[pdir1[1]].total) link1Direction = pdir1[1]
+        }
+        if (!pickAnyEE2) {
+            if (eeMap2[pdir2[1]].total > eeMap2[pdir2[0]].total) link2Direction = pdir2[0]
+            else if (eeMap2[pdir2[0]].total > eeMap2[pdir2[1]].total) link2Direction = pdir2[1]
         }
 
-        return (eeMap[pdir[0]].total > eeMap[pdir[1]].total) ? pdir[1] : pdir[0]
-    }
+        if (pickAnyEE1) {
+            if (!link2Direction)
+                link2Direction = !!eeMap2[pdir2[0]].in[ldh.link1] ? pdir2[0] : pdir2[1]
 
+            if (LinkDrawHelper.upOrDown(link2Direction)) {
+                link1Direction = ldh.rightLeft
+                changedEE1 = true
+            }
+            else if (LinkDrawHelper.leftOrRight(link2Direction)) {
+                link1Direction = ldh.upDown
+                changedEE1 = true
+            }
+        }
+        if (pickAnyEE2 && !changedEE1) {
+            if (!link1Direction)
+                link1Direction = !!eeMap1[pdir1[0]].out[ldh2.link1] ? pdir1[1] : pdir1[0]
+
+            if (LinkDrawHelper.upOrDown(link1Direction)) {
+                link2Direction = ldh2.rightLeft
+                changedEE2 = true
+            }
+            else if (LinkDrawHelper.leftOrRight(link1Direction)) {
+                link2Direction = ldh2.upDown
+                changedEE2 = true
+            }
+        }
+        if (!changedEE1 && changedEE2) {
+            if (LinkDrawHelper.upOrDown(link2Direction)) link1Direction = ldh.rightLeft
+            else if (LinkDrawHelper.leftOrRight(link2Direction)) link1Direction = ldh.upDown
+        }
+
+        const hasCellsOut1 = GridLinksIterator.hasCellsOut(ldh, link1Direction)
+        const hasCellsOutCorner1 = GridLinksIterator.hasCellsOutCorner(ldh, link1Direction)
+
+        if (eeMap1[link1Direction].total !== 0 && (hasCellsOut1 || hasCellsOutCorner1)) {
+            if (LinkDrawHelper.upOrDown(link1Direction)) {
+                link1Direction = ldh.rightLeft
+                
+                if (LinkDrawHelper.leftOrRight(link2Direction))
+                    link2Direction = ldh2.upDown
+            }
+            else if (LinkDrawHelper.leftOrRight(link1Direction)) {
+                link1Direction = ldh.upDown
+
+                if (LinkDrawHelper.upOrDown(link2Direction))
+                    link2Direction = ldh2.leftOrRight
+            }
+        }
+
+        if (!link2Direction)
+            link2Direction = link1Direction
+
+        return [ link1Direction, link2Direction ]
+    }
     setPathMapCorner(ldh) {
         const position = gridModel.getPosition(ldh.row2, ldh.col1)
             
