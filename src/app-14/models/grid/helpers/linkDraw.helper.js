@@ -1,7 +1,7 @@
 
 import { globalConfig } from '../../../config/global.config'
 import { gridModel } from '../grid.model'
-import linkMapHelper from './linkMap.helper'
+import linkEEMapHelper from './linkEEMap.helper'
 
 export class LinkDrawHelper {
     constructor(linkKey, opposite = false) {
@@ -93,13 +93,13 @@ export class LinkDrawHelper {
         return (direction === 'left' || direction === 'right')
     }
     get directionOut() {
-        const eeMap = linkMapHelper.eeMap[this.link1]
+        const eeMap = linkEEMapHelper.eeMap[this.link1]
         const directionOut = Object.keys(eeMap).find(direction => !!eeMap[direction].out[this.link2])
 
         return directionOut
     }
     get directionIn() {
-        const eeMap = linkMapHelper.eeMap[this.link2]
+        const eeMap = linkEEMapHelper.eeMap[this.link2]
         const directionIn = Object.keys(eeMap).find(direction => !!eeMap[direction].in[this.link1])
 
         return LinkDrawHelper.oppositeDirection(directionIn)
@@ -246,7 +246,7 @@ export class LinkDrawHelper {
     }
     
     diff_ee_in_out(direction, inOut) {
-        return linkMapHelper.getDiffEE(direction, this.link1, this.link2, inOut) || 0
+        return linkEEMapHelper.getDiffEE(direction, this.link1, this.link2, inOut) || 0
     }
 
     get hm_path() {

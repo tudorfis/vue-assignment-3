@@ -1,29 +1,29 @@
 import { LinkDrawHelper } from "../helpers/linkDraw.helper"
-import linkMapHelper from "../helpers/linkMap.helper"
 import { gridModel } from "../grid.model"
+import { linkPathMapHelper } from "../helpers/linkPathMap.helper"
 
 export const gridLinksDroppointService = {
     hasDroppointMiddle(position) {
-        if (!linkMapHelper.eePathMap[position]) return false  
+        if (!linkPathMapHelper.pathMap[position]) return false  
         if (gridModel.model.cells[position].is) return false
 
-        const eePathMap = linkMapHelper.eePathMap[position]
-        return eePathMap.h.length > 0 || eePathMap.v.length > 0 || eePathMap.c.length
+        const pathMap = linkPathMapHelper.pathMap[position]
+        return pathMap.h.length > 0 || pathMap.v.length > 0 || pathMap.c.length
     },
     setDroppointLinksByMiddle(position) {
-        if (!linkMapHelper.eePathMap[position]) return
-        const eePathMap = linkMapHelper.eePathMap[position]
+        if (!linkPathMapHelper.pathMap[position]) return
+        const pathMap = linkPathMapHelper.pathMap[position]
 
-        if (eePathMap.v.length > 0)
-            for (const linkKey of eePathMap.v)
+        if (pathMap.v.length > 0)
+            for (const linkKey of pathMap.v)
                 this.connectDroppointLinksByMiddle(linkKey, position)
 
-        if (eePathMap.h.length > 0)
-            for (const linkKey of eePathMap.h)
+        if (pathMap.h.length > 0)
+            for (const linkKey of pathMap.h)
                 this.connectDroppointLinksByMiddle(linkKey, position)
         
-        if (eePathMap.c.length > 0)
-            for (const linkKey of eePathMap.c)
+        if (pathMap.c.length > 0)
+            for (const linkKey of pathMap.c)
                 this.connectDroppointLinksByMiddle(linkKey, position)
         
     },

@@ -1,6 +1,7 @@
 import { LinkDrawHelper } from "../helpers/linkDraw.helper"
 import { GridLinksIterator } from "../iterators/GridLinksIterator"
 import { gridModel } from "../grid.model"
+import { linkPathMapHelper } from '../helpers/linkPathMap.helper'
 
 const gridLinksDrawService = {
     createPathAndArrow(ldh) {
@@ -27,10 +28,10 @@ const gridLinksDrawService = {
         }
 
         else if (cellsOverlapHelper.hasCellsOut || cellsOverlapHelper.hasCellsCorner)
-            output = this.drawHasCellsInOverlapOut(ldh, cellsOverlapHelper)
+            output = this.drawHasCellsOverlapOut(ldh, cellsOverlapHelper)
         
         else if (cellsOverlapHelper.hasCellsIn || ldh.sameDirection)
-            output = this.drawHasCellsInOverlapIn(ldh, cellsOverlapHelper)
+            output = this.drawHasCellsOverlapIn(ldh, cellsOverlapHelper)
 
         else 
             output = this.drawWithoutOverlapingCells(ldh)
@@ -38,12 +39,13 @@ const gridLinksDrawService = {
         return [ output[0], output[1] ]
     },
     drawSameRowButUpOrDown(ldh) {
+        console.log(ldh.linkKey)
         let path, arrow
 
         const row1 =  ldh.row1 + (ldh.directionOut === 'down' ? 1 : -1)
         const row2 =  ldh.row2 + (ldh.directionOut === 'down' ? 1 : -1)
         
-        let hasCellsOutSameRow
+        let hasCellsOutSameRow, hasCellsLdh
         if (row1 === 0 || row2 === 0)
             hasCellsOutSameRow = true
         
@@ -52,7 +54,7 @@ const gridLinksDrawService = {
                 gridModel.getPosition(row1, ldh.col1), 
                 gridModel.getPosition(row2, ldh.col2))
                 
-            const hasCellsLdh = new LinkDrawHelper(hasCellsLinkKey)
+            hasCellsLdh = new LinkDrawHelper(hasCellsLinkKey)
 
             hasCellsOutSameRow = GridLinksIterator.hasCellsOut(hasCellsLdh, ldh.rightLeft)
             hasCellsOutSameRow |= gridModel.model.cells[gridModel.getPosition(row1, ldh.col1)].is
@@ -61,15 +63,26 @@ const gridLinksDrawService = {
         
         path = ldh.drawPath(ldh.directionOut)
         
-        if (!hasCellsOutSameRow)
+        if (!hasCellsOutSameRow) {
             path.d += ldh.drawHalf(ldh.directionOut, ldh.leftRight, true)
+
+            if (hasCellsLdh)
+                linkPathMapHelper.setCorner(hasCellsLdh.link1, ldh.linkKey)
+        }
         
         path.d += ldh.drawHalf(ldh.rightLeft, ldh.directionOut, false)
         path.d += ldh.drawLine(ldh.rightLeft, 'full')
+
+        if (!hasCellsOutSameRow && hasCellsLdh)
+            linkPathMapHelper.setStraight(hasCellsLdh, ldh.rightLeft, false, ldh.linkKey)
+
         path.d += ldh.drawHalf(ldh.rightLeft, ldh.directionIn, false)
-        
-        if (!hasCellsOutSameRow)
+        if (!hasCellsOutSameRow) {
             path.d += ldh.drawHalf(ldh.directionIn, ldh.rightLeft, true)
+            
+            if (hasCellsLdh) 
+                linkPathMapHelper.setCorner(hasCellsLdh.link2, ldh.linkKey)
+        }
         
         path.d += ldh.drawLine(ldh.directionIn, 'arrow')
         arrow = ldh.drawArrow(path.d, ldh.directionIn)
@@ -82,7 +95,7 @@ const gridLinksDrawService = {
         const col1 =  ldh.col1 + (ldh.directionOut === 'right' ? 1 : -1)
         const col2 =  ldh.col2 + (ldh.directionOut === 'right' ? 1 : -1)
         
-        let hasCellsOutSameCol
+        let hasCellsOutSameCol, hasCellsLdh
         if (col1 === 0 || col2 === 0)
             hasCellsOutSameCol = true
         
@@ -91,7 +104,7 @@ const gridLinksDrawService = {
                 gridModel.getPosition(ldh.row1, col1), 
                 gridModel.getPosition(ldh.row2, col2))
                 
-            const hasCellsLdh = new LinkDrawHelper(hasCellsLinkKey)
+            hasCellsLdh = new LinkDrawHelper(hasCellsLinkKey)
 
             hasCellsOutSameCol = GridLinksIterator.hasCellsOut(hasCellsLdh, ldh.upDown)
             hasCellsOutSameCol |= gridModel.model.cells[gridModel.getPosition(ldh.row1, col1)].is
@@ -100,15 +113,27 @@ const gridLinksDrawService = {
 
         path = ldh.drawPath(ldh.directionOut)
         
-        if (!hasCellsOutSameCol)
+        if (!hasCellsOutSameCol) {
             path.d += ldh.drawHalf(ldh.directionOut, ldh.upDown, true)
+            
+            if (hasCellsLdh)
+                linkPathMapHelper.setCorner(hasCellsLdh.link1, ldh.linkKey)
+        }
         
         path.d += ldh.drawHalf(ldh.upDown, ldh.directionOut, false)
         path.d += ldh.drawLine(ldh.upDown, 'full')
+        
+        if (!hasCellsOutSameCol && hasCellsLdh)
+            linkPathMapHelper.setStraight(hasCellsLdh, ldh.upDown, false, ldh.linkKey)
+
         path.d += ldh.drawHalf(ldh.upDown, ldh.directionIn, false)
         
-        if (!hasCellsOutSameCol)
+        if (!hasCellsOutSameCol) {
             path.d += ldh.drawHalf(ldh.directionIn, ldh.upDown, true)
+            
+            if (hasCellsLdh) 
+                linkPathMapHelper.setCorner(hasCellsLdh.link2, ldh.linkKey)
+        }
         
         path.d += ldh.drawLine(ldh.directionIn, 'arrow')
         arrow = ldh.drawArrow(path.d, ldh.directionIn)
@@ -120,12 +145,15 @@ const gridLinksDrawService = {
 
         path = ldh.drawPath(ldh.directionIn)
         path.d += ldh.drawLine(ldh.directionIn, 'full')
+
+        linkPathMapHelper.setStraight(ldh, ldh.directionIn, false, ldh.linkKey)
+
         path.d += ldh.drawLine(ldh.directionIn, 'arrow')
         arrow = ldh.drawArrow(path.d, ldh.directionIn)
 
         return [ path, arrow ]
     },
-    drawHasCellsInOverlapOut(ldh, coh) {
+    drawHasCellsOverlapOut(ldh, coh) {
         let path, arrow
 
         path = ldh.drawPath(ldh.directionOut)
@@ -136,6 +164,8 @@ const gridLinksDrawService = {
         }
         else if (coh.hasCellsCorner) {
             path.d += ldh.drawLine(ldh.directionOut, 'full')
+            
+            linkPathMapHelper.setStraight(ldh, ldh.directionOut, false, ldh.linkKey)
             path.d += ldh.drawHalf(coh.potentialDirection, ldh.directionOut, false)
         }
 
@@ -148,18 +178,21 @@ const gridLinksDrawService = {
         else {
             path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true)
             path.d += ldh.drawLine(ldh.directionIn, 'full')
+
+            linkPathMapHelper.setStraight(ldh, ldh.directionIn, true, ldh.linkKey)
             path.d += ldh.drawLine(ldh.directionIn, 'arrow')
             arrow = ldh.drawArrow(path.d, ldh.directionIn)
         }
 
         return [ path, arrow ]
     },
-    drawHasCellsInOverlapIn(ldh, coh) {
+    drawHasCellsOverlapIn(ldh, coh) {
         let path, arrow
 
         path = ldh.drawPath(ldh.directionOut)
-
         path.d += ldh.drawLine(ldh.directionOut, 'full')
+        linkPathMapHelper.setStraight(ldh, ldh.directionOut, false, ldh.linkKey)
+
         path.d += ldh.drawHalf(coh.potentialDirection, ldh.directionOut, false)
         path.d += ldh.drawLine(coh.potentialDirection, 'full')
 
@@ -181,9 +214,19 @@ const gridLinksDrawService = {
 
         path = ldh.drawPath(ldh.directionOut)
         path.d += ldh.drawLine(ldh.directionOut, 'full')
+        linkPathMapHelper.setStraight(ldh, ldh.directionOut, false, ldh.linkKey)
+
         path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true)
         path.d += ldh.drawHalf(ldh.directionIn, ldh.directionOut, false)
+        
+        let link
+        if (LinkDrawHelper.leftOrRight(ldh.directionOut)) link = gridModel.getPosition(ldh.row1, ldh.col2)
+        else if (LinkDrawHelper.upOrDown(ldh.directionOut)) link = gridModel.getPosition(ldh.row2, ldh.col1)
+        linkPathMapHelper.setCorner(link, ldh.linkKey)
+
         path.d += ldh.drawLine(ldh.directionIn, 'full')
+        linkPathMapHelper.setStraight(ldh, ldh.directionIn, true, ldh.linkKey)
+
         path.d += ldh.drawLine(ldh.directionIn, 'arrow')
         arrow = ldh.drawArrow(path.d, ldh.directionIn)
 

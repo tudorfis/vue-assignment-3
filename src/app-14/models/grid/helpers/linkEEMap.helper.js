@@ -9,10 +9,9 @@ import { linkDirectionsHelper } from './linkDirections.helper'
 
 const gc = globalConfig
 
-class LinkMapHelper {
+class LinkEEMapHelper {
     constructor() {
         this.eeMap = {}
-        this.eePathMap = {}
 
         const directionEEBlueprint = { out: {}, in: {}, total: 0 }
         this.linkEEblueprint = {
@@ -66,48 +65,6 @@ class LinkMapHelper {
         link1Obj.out[ldh.link2] = ++link1Obj.total
         link2Obj.in[ldh.link1] = ++link2Obj.total
     }
-    
-    setPathMapCorner(ldh) {
-        return
-
-        const position = gridModel.getPosition(ldh.row2, ldh.col1)
-            
-        if (!this.eePathMap[position])
-            this.eePathMap[position] = {v: [], h: [], c: []}
-
-        this.eePathMap[position].c.push(ldh.linkKey)
-    }
-    setPathMap(ldh, direction, next = false) {
-        return
-
-        const linkKey = ldh.linkKey
-
-        if (direction === 'down')
-            for (let row = ldh.row1 + 1; row < ldh.row2; row++)
-                setPositionPathMap.call(this, row, !next ? ldh.col1 : ldh.col2, 'v', linkKey)
-
-        else if (direction === 'up')
-            for (let row = ldh.row1 - 1; row > ldh.row2; row--)
-                setPositionPathMap.call(this, row, !next ? ldh.col1 : ldh.col2, 'v', linkKey)
-        
-        else if (direction === 'left')
-            for (let col = ldh.col1 - 1; col > ldh.col2; col--)
-                setPositionPathMap.call(this, !next ? ldh.row1 : ldh.row2, col, 'h', linkKey)
-            
-        else if (direction === 'right')
-            for (let col = ldh.col1 + 1; col < ldh.col2; col++)
-                setPositionPathMap.call(this, !next ? ldh.row1 : ldh.row2, col, 'h', linkKey)
-
-        function setPositionPathMap(row, col, hvc, linkKey) {
-            const position = gridModel.getPosition(row, col)
-            
-            if (!this.eePathMap[position])
-                this.eePathMap[position] = {v: [], h: [], c: []}
-
-            this.eePathMap[position][hvc].push(linkKey)
-        }
-    }
-
     getDiffEE(direction, link1, link2, inOut) {
         if (!this.eeMap[link1] || !this.eeMap[link1][direction]) return
         if (!this.eeMap[link2] || !this.eeMap[link2][direction]) return
@@ -152,7 +109,7 @@ class LinkMapHelper {
     }
 }
 
-const linkMapHelper = new LinkMapHelper()
-globalThis.linkMapHelper = linkMapHelper
+const linkEEMapHelper = new LinkEEMapHelper()
+globalThis.linkEEMapHelper = linkEEMapHelper
 
-export default linkMapHelper
+export default linkEEMapHelper

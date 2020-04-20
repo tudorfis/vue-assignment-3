@@ -20,8 +20,6 @@ import { globalResetsService } from './services/globalResets.service';
 import { gridHistoryService } from './models/grid/services/gridHistory.service'
 import { gridIOservice } from './models/grid/services/gridIO.service'
 
-globalThis.gridHistoryService = gridHistoryService
-
 export default {
   components: {
     krtTopmenu: TopmenuVue,

@@ -5,7 +5,6 @@ import { LinkDrawHelper } from "../../../models/grid/helpers/linkDraw.helper"
 import { gridPanService } from "./gridPan.service"
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
 import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
-import linkMapHelper from "../../../models/grid/helpers/linkMap.helper"
 
 export const gridArrowService = {
     arrowConnectorId: '#arrow-connector',

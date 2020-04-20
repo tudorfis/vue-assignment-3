@@ -1,4 +1,4 @@
-import linkMapHelper from './linkMap.helper'
+import linkEEMapHelper from './linkEEMap.helper'
 import { GridLinksIterator } from '../iterators/GridLinksIterator'
 import { LinkDrawHelper } from './linkDraw.helper'
 
@@ -7,8 +7,8 @@ const linkDirectionsHelper = {
     getLinkDirections(ldh, ldh2) {
         let link1Direction, link2Direction
 
-        const eeMap1 = linkMapHelper.eeMap[ldh.link1]
-        const eeMap2 = linkMapHelper.eeMap[ldh2.link1]
+        const eeMap1 = linkEEMapHelper.eeMap[ldh.link1]
+        const eeMap2 = linkEEMapHelper.eeMap[ldh2.link1]
 
         const pdir1 = ldh.potentialDirections
         const pdir2 = ldh2.potentialDirections

@@ -1,6 +1,6 @@
 import { gridIOservice } from "./gridIO.service"
 
-export const gridHistoryService = {
+const gridHistoryService = {
     modelHistory: [],
     modelVersion: -1,
 
@@ -30,3 +30,6 @@ export const gridHistoryService = {
         console.log(this.modelHistory[this.modelVersion])
     }
 }
+
+globalThis.gridHistoryService = gridHistoryService
+export { gridHistoryService }

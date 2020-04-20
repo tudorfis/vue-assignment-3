@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import { gridModel } from "../grid.model"
 import { LinkDrawHelper } from '../helpers/linkDraw.helper'
-import linkMapHelper from '../helpers/linkMap.helper'
+import linkEEMapHelper from '../helpers/linkEEMap.helper'
 import { globalConfig } from '../../../config/global.config'
 import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
 import { gridLinksDrawService } from './gridLinksDraw.service'
+import { linkPathMapHelper } from '../helpers/linkPathMap.helper'
 
 export const gridLinksService = {
     paths: {},
@@ -16,8 +17,8 @@ export const gridLinksService = {
         this.colors = []
         this.colorIds = []
 
-        linkMapHelper.generateEEmap()
-        linkMapHelper.eePathMap = {}
+        linkEEMapHelper.generateEEmap()
+        linkPathMapHelper.resetPathMap()
 
         const links = gridModel.model.links
         const lki = new LinkKeyIterator(links)
@@ -30,8 +31,8 @@ export const gridLinksService = {
         Vue.set(this.paths, linkKey, [])
         const ldh = new LinkDrawHelper(linkKey)
 
-        linkMapHelper.restoreEEforGenPath()
-        linkMapHelper.generateEEforGenPath(ldh, isDrag)
+        linkEEMapHelper.restoreEEforGenPath()
+        linkEEMapHelper.generateEEforGenPath(ldh, isDrag)
         
         const pathArrow = gridLinksDrawService.createPathAndArrow(ldh)
         const color = this.getPathColor(ldh, isDrag)
