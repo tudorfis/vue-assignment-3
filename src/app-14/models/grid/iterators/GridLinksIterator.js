@@ -10,6 +10,7 @@ export class GridLinksIterator {
 
         if (rowControl2 === 0) return false
         if (rowControl1 === rowControl2 + 1) return false
+        if (colControl === 0) return false
 
         if (rowControl1 === rowControl2) {
             const position = gridModel.getPosition(rowControl1, colControl)
@@ -31,6 +32,7 @@ export class GridLinksIterator {
 
         if (rowControl1 === 0) return false
         if (rowControl1 === rowControl2 - 1) return false
+        if (colControl === 0) return false
 
         if (rowControl1 === rowControl2) {
             const position = gridModel.getPosition(rowControl1, colControl)
@@ -52,6 +54,7 @@ export class GridLinksIterator {
 
         if (colControl2 === 0) return false
         if (colControl1 === colControl2 + 1) return false
+        if (rowControl === 0) return false
 
         if (colControl1 === colControl2) {
             const position = gridModel.getPosition(rowControl, colControl1)
@@ -73,6 +76,7 @@ export class GridLinksIterator {
         
         if (colControl1 === 0) return false
         if (colControl1 === colControl2 - 1) return false
+        if (rowControl === 0) return false
 
         if (colControl1 === colControl2) {
             const position = gridModel.getPosition(rowControl, colControl1)
@@ -95,6 +99,7 @@ export class GridLinksIterator {
 
         if (rowControl1 === 0) return false
         if (rowControl1 === rowControl2 - 1) return false
+        if (colControl === 0) return false
 
         if (rowControl1 === rowControl2) {
             const position = gridModel.getPosition(rowControl1, colControl)
@@ -116,6 +121,7 @@ export class GridLinksIterator {
 
         if (rowControl2 === 0) return false
         if (rowControl1 === rowControl2 + 1) return false
+        if (colControl === 0) return false
 
         if (rowControl1 === rowControl2) {
             const position = gridModel.getPosition(rowControl1, colControl)
@@ -137,6 +143,7 @@ export class GridLinksIterator {
 
         if (colControl1 === 0) return false
         if (colControl1 === colControl2 - 1) return false
+        if (rowControl === 0) return false
 
         if (colControl1 === colControl2) {
             const position = gridModel.getPosition(rowControl, colControl1)
@@ -158,6 +165,7 @@ export class GridLinksIterator {
 
         if (colControl2 === 0) return false
         if (colControl1 === colControl2 + 1) return false
+        if (rowControl === 0) return false
 
         if (colControl1 === colControl2) {
             const position = gridModel.getPosition(rowControl, colControl1)
@@ -192,7 +200,7 @@ export class GridLinksIterator {
     }
 
     static hasCellsOutCorner(ldh, directionOut) {
-        if (ldh.sameRow || ldh.sameCol) return false
+        if (ldh.sameRowCol) return false
 
         let position
         if (['down','up'].includes(directionOut))
@@ -204,7 +212,7 @@ export class GridLinksIterator {
         return !!gridModel.model.cells[position].is
     }
     static hasCellsInCorner(ldh, directionIn) {
-        if (ldh.sameRow || ldh.sameCol) return false
+        if (ldh.sameRowCol) return false
 
         let position
         if (['down','up'].includes(directionIn))

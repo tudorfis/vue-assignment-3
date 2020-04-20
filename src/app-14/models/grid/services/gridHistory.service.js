@@ -25,5 +25,8 @@ export const gridHistoryService = {
             const model = JSON.parse(this.modelHistory[this.modelVersion])
             gridIOservice.loadGridModel(model)
         }
+    },
+    log() {
+        console.log(this.modelHistory[this.modelVersion])
     }
 }

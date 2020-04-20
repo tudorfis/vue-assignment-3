@@ -39,7 +39,7 @@ export const gridReduceService = {
         for (let i = 1; i <= gc.rowsFromTheEnd; i++)
             gridAdjustService.addRowAtEnd()
 
-        gridSvgService.calculateSvg(true)
+        gridSvgService.calculateSvg()
     },
     reduceGridRight() {
         const gc = globalConfig
@@ -72,7 +72,7 @@ export const gridReduceService = {
         for (let i = 1; i <= gc.colsFromTheEnd; i++)
             gridAdjustService.addColAtEnd()
 
-        gridSvgService.calculateSvg(true)
+        gridSvgService.calculateSvg()
     },
     increaseGrid() {
         const gc = globalConfig

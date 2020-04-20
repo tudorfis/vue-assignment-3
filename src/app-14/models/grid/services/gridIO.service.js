@@ -56,7 +56,7 @@ export const gridIOservice = {
         gridModel.model.steps = model.steps
         gridModel.model.links = model.links
 
-        this.afterGridLoaded()
+        this.afterGridLoaded(false)
     },
     afterGridLoaded() {
         gridSvgService.calculateSvg()

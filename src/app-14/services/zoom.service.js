@@ -82,7 +82,7 @@ export const zoomService = {
         }
         else if (gc.zoomLevel === 75) {
             gc.minGridCols = 14
-            gc.minGridRows = 8
+            gc.minGridRows = 7
 
             gridReduceService.increaseGrid()
             gridReduceService.reduceGrid()

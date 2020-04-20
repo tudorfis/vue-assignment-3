@@ -73,6 +73,9 @@ export class LinkDrawHelper {
     get sameRow() {
         return this.row1 === this.row2
     }
+    get sameRowCol() {
+        return this.sameRow || this.sameCol
+    }
     get rightLeft() {
         return this.right ? 'right' : (this.left ? 'left' : '')
     }
