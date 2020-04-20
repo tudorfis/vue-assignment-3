@@ -198,30 +198,18 @@ export class GridLinksIterator {
 
         return false
     }
-
-    static hasCellsOutCorner(ldh, directionOut) {
+    static hasCellsCorner(ldh, direction) {
         if (ldh.sameRowCol) return false
 
         let position
-        if (['down','up'].includes(directionOut))
+        if (['down','up'].includes(direction))
             position = gridModel.getPosition(ldh.row2, ldh.col1)
 
-        else if (['left','right'].includes(directionOut))
+        else if (['left','right'].includes(direction))
             position = gridModel.getPosition(ldh.row1, ldh.col2)
 
-        return !!gridModel.model.cells[position].is
-    }
-    static hasCellsInCorner(ldh, directionIn) {
-        if (ldh.sameRowCol) return false
-
-        let position
-        if (['down','up'].includes(directionIn))
-            position = gridModel.getPosition(ldh.row1, ldh.col2)
+        if (!position) return false
         
-        else if (['left','right'].includes(directionIn))
-            position = gridModel.getPosition(ldh.row2, ldh.col1)
-
         return !!gridModel.model.cells[position].is
     }
-    
 }
