@@ -84,6 +84,9 @@ export const gridAdjustService = {
 
         return gridModel.getRow(position) > gm.numRows - gc.rowsFromTheEnd
     },
+    isNearColOrRowEnd(position) {
+        return this.nearColEnd(position) || this.nearRowEnd(position)
+    },
     isElementNearColEnd(position) {
         const gm = gridModel.model
         let foundIt = false

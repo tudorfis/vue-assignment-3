@@ -67,15 +67,19 @@ export default {
         onDropDoAllowDrop() {
             const newPosition = this.position
             const oldPosition = gridCellService.removePreviousCell()
+            const isNearColOrRowEnd = gridAdjustService.isNearColOrRowEnd(newPosition)
             
-            gridAdjustService.addRowOrColEnd(newPosition)
+            if (isNearColOrRowEnd)
+                gridAdjustService.addRowOrColEnd(newPosition)
+
             gridCellService.setCellActive(newPosition, oldPosition)
             gridLinksService.rearangeLinks(oldPosition, newPosition)
             
             if (gridLinksService.hasNoLinks(newPosition))
                 gridLinksDroppointService.setDroppointLinksByMiddle(newPosition)
             
-            gridReduceService.reduceGrid()
+            if (!isNearColOrRowEnd)
+                gridReduceService.reduceGrid()
         },
         onDropAfter() {
             /** @TODO: remove temporary auto id, to simulate saved step */

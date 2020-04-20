@@ -1,6 +1,7 @@
 import { globalConfig } from "../config/global.config"
 import { globalResetsService } from "./globalResets.service"
 import { gridSvgService } from "../components/grid/services/gridSvg.service"
+import { gridReduceService } from "../models/grid/services/gridReduce.service"
 
 export const zoomService = {
     disableZoomIn() {
@@ -30,6 +31,7 @@ export const zoomService = {
         gc.arrowPointerWidth += 5
         gc.arrowPointerHeight += 5
 
+        this.recalculateGridSize()
         gridSvgService.calculateSvg(true)
     },
     zoomOut() {
@@ -51,6 +53,46 @@ export const zoomService = {
         gc.arrowPointerWidth -= 5
         gc.arrowPointerHeight -= 5
 
+        this.recalculateGridSize()
         gridSvgService.calculateSvg(true)
+    },
+    recalculateGridSize() {
+        const gc = globalConfig
+
+        if (gc.zoomLevel === 150) {
+            gc.minGridCols = 6
+            gc.minGridRows = 3
+
+            gridReduceService.increaseGrid()
+            gridReduceService.reduceGrid()
+        }
+        else if (gc.zoomLevel === 125) {
+            gc.minGridCols = 7
+            gc.minGridRows = 4
+
+            gridReduceService.increaseGrid()
+            gridReduceService.reduceGrid()
+        }
+        else if (gc.zoomLevel === 100) {
+            gc.minGridCols = 9
+            gc.minGridRows = 5
+
+            gridReduceService.increaseGrid()
+            gridReduceService.reduceGrid()
+        }
+        else if (gc.zoomLevel === 75) {
+            gc.minGridCols = 14
+            gc.minGridRows = 8
+
+            gridReduceService.increaseGrid()
+            gridReduceService.reduceGrid()
+        }
+        else if (gc.zoomLevel === 50) {
+            gc.minGridCols = 27
+            gc.minGridRows = 15
+
+            gridReduceService.increaseGrid()
+            gridReduceService.reduceGrid()
+        }
     }
 }

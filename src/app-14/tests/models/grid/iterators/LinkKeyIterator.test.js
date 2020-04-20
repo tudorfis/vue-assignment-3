@@ -1,4 +1,4 @@
-import { LinkKeyIterator } from './LinkKeyIterator'
+import { LinkKeyIterator } from '../../../../models/grid/iterators/LinkKeyIterator'
 
 
 describe('LinkKeyIterator', function () {

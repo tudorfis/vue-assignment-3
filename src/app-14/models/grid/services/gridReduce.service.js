@@ -73,5 +73,15 @@ export const gridReduceService = {
             gridAdjustService.addColAtEnd()
 
         gridSvgService.calculateSvg(true)
-    }
+    },
+    increaseGrid() {
+        const gc = globalConfig
+        const gm = gridModel.model
+
+        for (let i = gm.numCols; i <= gc.minGridCols; i++)
+            gridAdjustService.addColAtEnd()
+        
+        for (let i = gm.numRows; i <= gc.minGridRows; i++)
+            gridAdjustService.addRowAtEnd()
+    }   
 }

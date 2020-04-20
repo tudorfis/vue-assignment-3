@@ -5,6 +5,9 @@ import { gridLinksService } from "./gridLinks.service"
 import { gridHistoryService } from "./gridHistory.service"
 import { GridPositionIterator } from "../iterators/GridPositionIterator"
 import { globalConfig } from "../../../config/global.config"
+import { gridReduceService } from "./gridReduce.service"
+
+globalThis.gridModel = gridModel
 
 export const gridIOservice = {
     newGridModel(numRows, numCols, doAfterGridLoaded = true) {
@@ -57,8 +60,12 @@ export const gridIOservice = {
     },
     afterGridLoaded() {
         gridSvgService.calculateSvg()
+        
         document.querySelector('.loading-icon').style.visibility = 'hidden'
         gridLinksService.buildLinks()
+        
+        gridReduceService.increaseGrid()
+        gridReduceService.reduceGrid()
     },
     setCell(position, properties) {
         const cell = gridModel.model.cells[position] = gridModel.model.cells[position] || { ...cellBlueprint }
@@ -71,6 +78,9 @@ export const gridIOservice = {
     },
     newModel() {
         this.newGridModel()
+        
+        gridModel.model.links = []
+        gridSvgService.calculateSvg()
 
         gridLinksService.buildLinks()
         gridHistoryService.saveState()
