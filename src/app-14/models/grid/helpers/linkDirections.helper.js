@@ -101,10 +101,11 @@ const linkDirectionsHelper = {
             }
 
             function switchDirectionsForMinimumCorners() {
+                const hasCellsOut = GridLinksIterator.hasCellsOut(ldh, link1Direction)
                 const hasCellsIn = GridLinksIterator.hasCellsIn(ldh, LinkDrawHelper.oppositeDirection(link2Direction))
                 const hasCellsCorner = GridLinksIterator.hasCellsCorner(ldh, link1Direction)
      
-                if (hasCellsIn || hasCellsCorner) {
+                if (hasCellsIn || hasCellsCorner || hasCellsOut) {
                     if (link2Direction === pdir2[0]) link2Direction = pdir2[1]
                     else if (link2Direction === pdir2[1]) link2Direction = pdir2[0]
     

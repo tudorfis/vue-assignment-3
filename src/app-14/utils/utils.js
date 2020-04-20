@@ -1,5 +1,5 @@
 
-export class Utils {
+class Utils {
     static objfilter(obj, predicate) {
         let result = {}, key;
     
@@ -45,4 +45,11 @@ export class Utils {
 
         return output
     }
+    static arrayHasDuplicates(array) {
+        array = array.filter(item => !!item)
+        return (new Set(array)).size !== array.length;
+    }
 }
+
+globalThis.Utils = Utils
+export { Utils }

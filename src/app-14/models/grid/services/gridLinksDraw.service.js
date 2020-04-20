@@ -39,7 +39,6 @@ const gridLinksDrawService = {
         return [ output[0], output[1] ]
     },
     drawSameRowButUpOrDown(ldh) {
-        console.log(ldh.linkKey)
         let path, arrow
 
         const row1 =  ldh.row1 + (ldh.directionOut === 'down' ? 1 : -1)
@@ -187,6 +186,9 @@ const gridLinksDrawService = {
         return [ path, arrow ]
     },
     drawHasCellsOverlapIn(ldh, coh) {
+        if (ldh.linkKey === '1-4__5-3')
+            console.log('a')
+
         let path, arrow
 
         path = ldh.drawPath(ldh.directionOut)

@@ -62,8 +62,11 @@ class LinkEEMapHelper {
         const link1Obj = this.eeMap[ldh.link1][linkDirections[0]]
         const link2Obj =  this.eeMap[ldh2.link1][linkDirections[1]]
 
-        link1Obj.out[ldh.link2] = ++link1Obj.total
-        link2Obj.in[ldh.link1] = ++link2Obj.total
+        link1Obj.total++
+        link2Obj.total++
+
+        link1Obj.out[ldh.link2] = link1Obj.total
+        link2Obj.in[ldh.link1] = link2Obj.total
     }
     getDiffEE(direction, link1, link2, inOut) {
         if (!this.eeMap[link1] || !this.eeMap[link1][direction]) return

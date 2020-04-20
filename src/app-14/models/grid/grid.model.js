@@ -1,5 +1,4 @@
 
-import Vue from 'vue'
 import { globalConfig } from "../../config/global.config"
 import { VueUtils } from '../../utils/vue.utils'
 

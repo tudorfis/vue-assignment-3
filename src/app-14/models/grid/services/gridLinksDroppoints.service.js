@@ -29,15 +29,19 @@ export const gridLinksDroppointService = {
     },
     connectDroppointLinksByMiddle(linkKey, position) {
         const ldh = new LinkDrawHelper(linkKey)
+        const gm = gridModel.model
 
         const newLinkKey1 = LinkDrawHelper.genLinkKey(ldh.link1, position)
         const newLinkKey2 = LinkDrawHelper.genLinkKey(position, ldh.link2)
 
-        gridModel.model.links.push(newLinkKey1)
-        gridModel.model.links.push(newLinkKey2)
+        if (gm.links.indexOf(newLinkKey1) === -1)
+            gm.links.push(newLinkKey1)
 
-        const index = gridModel.model.links.indexOf(linkKey)
-        delete gridModel.model.links[index]
+        if (gm.links.indexOf(newLinkKey2) === -1)
+            gm.links.push(newLinkKey2)
+
+        const index = gm.links.indexOf(linkKey)
+        delete gm.links[index]
     },
     getEmptyPositionAfterDroppoint(newPosition, oldPosition) {
         if (!newPosition || !oldPosition) return null
