@@ -186,9 +186,6 @@ const gridLinksDrawService = {
         return [ path, arrow ]
     },
     drawHasCellsOverlapIn(ldh, coh) {
-        if (ldh.linkKey === '1-4__5-3')
-            console.log('a')
-
         let path, arrow
 
         path = ldh.drawPath(ldh.directionOut)

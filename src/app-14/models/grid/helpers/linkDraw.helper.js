@@ -119,7 +119,7 @@ export class LinkDrawHelper {
         if (direction === 'up') {
             left = this.hm_path + this.center_big + diff_ee_path
             top =  this.vm_path + this.center_small
-            path = `M${left} ${top} v-${this.center_small}`
+            path = `M${left} ${top} v-${this.center_small + (this.row1 === 1 ? -5 : 0)}`
         }
         else if (direction === 'down') {
             left = this.hm_path + this.center_big + diff_ee_path
@@ -129,7 +129,7 @@ export class LinkDrawHelper {
         else if (direction === 'left') {
             left = this.hm_path + this.center_small
             top =  this.vm_path + this.center_big + diff_ee_path
-            path = `M${left} ${top} h-${this.center_small}`
+            path = `M${left} ${top} h-${this.center_small + (this.col1 === 1 ? -5 : 0)}`
         }
         else if (direction === 'right') {
             left = this.hm_path + (this.cell_size - this.center_small)
@@ -140,7 +140,7 @@ export class LinkDrawHelper {
         return { a: 0, d: path }
     }
     drawLine(direction = '', lineType = '') {
-        let d, distance, cell1, cell2
+        let d, distance, cell1, cell2, adjust = 0
         if (direction === 'up') {
             d = 'v-'
             cell1 = this.row1
@@ -150,11 +150,13 @@ export class LinkDrawHelper {
             d = 'v';
             cell1 = this.row2
             cell2 = this.row1
+            adjust = (this.row1 === 1 ? -5 : 0)
         }
         else if (direction === 'right') {
             d = 'h';    
             cell1 = this.col2
             cell2 = this.col1
+            adjust = (this.col1 === 1 ? -5 : 0)
         }
         else if (direction === 'left') {
             d = 'h-'
@@ -162,8 +164,8 @@ export class LinkDrawHelper {
             cell2 = this.col2
         }
  
-        if (lineType === 'arrow') 
-            distance = this.center_small - this.arrow_w + 3
+        if (lineType === 'arrow')
+            distance = this.center_small - this.arrow_w + 3 + adjust
         
         else if (lineType === 'full') 
             distance = this.cell_size * (cell1 - cell2 - 1)

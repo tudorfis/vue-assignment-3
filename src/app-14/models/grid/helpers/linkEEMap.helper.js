@@ -67,6 +67,35 @@ class LinkEEMapHelper {
 
         link1Obj.out[ldh.link2] = link1Obj.total
         link2Obj.in[ldh.link1] = link2Obj.total
+
+        this.adjustTrickyEE(link1Obj, linkDirections[0])
+    }
+    adjustTrickyEE(linkObj, linkDirection) {
+        const outPositions = Object.keys(linkObj.out)
+        if (outPositions.length === 2) {
+            const row1 = gridModel.getRow(outPositions[0])
+            const col1 = gridModel.getCol(outPositions[0])
+            const row2 = gridModel.getRow(outPositions[1])
+            const col2 = gridModel.getCol(outPositions[1])
+            
+            if (LinkDrawHelper.leftOrRight(linkDirection)) {
+                if (col1 === col2) {
+                    if (linkObj.out[outPositions[0]] < linkObj.out[outPositions[1]]) {
+                        const temp = linkObj.out[outPositions[0]]
+                        linkObj.out[outPositions[0]] = linkObj.out[outPositions[1]]
+                        linkObj.out[outPositions[1]] = temp
+                    }
+                }
+            } else if (LinkDrawHelper.upOrDown(linkDirection)) {
+                if (row1 === row2) {
+                    if (linkObj.out[outPositions[0]] < linkObj.out[outPositions[1]]) {
+                        const temp = linkObj.out[outPositions[0]]
+                        linkObj.out[outPositions[0]] = linkObj.out[outPositions[1]]
+                        linkObj.out[outPositions[1]] = temp
+                    }
+                }
+            }
+        }
     }
     getDiffEE(direction, link1, link2, inOut) {
         if (!this.eeMap[link1] || !this.eeMap[link1][direction]) return
