@@ -1,19 +1,19 @@
-import { gridDeleteService } from "../components/grid/services/gridDelete.service"
-import { gridArrowService } from "../components/grid/services/gridArrow.service"
+import { gridDeleteArrowService } from "../components/grid/services/gridDeleteArrow.service"
+import { gridArrowConnectorService } from "../components/grid/services/gridArrowConnector.service"
 import { gridCellService } from "../components/grid/services/gridCell.service"
 import { toolboxDragService } from "../components/toolbox/services/toolboxDrag.service"
 
 export const globalResetsService = {
     reset() {
-       gridArrowService.hideArrowConnector()
-       gridDeleteService.hideArrowDelete()
-       gridDeleteService.resetLeftTop()
+       gridArrowConnectorService.hideArrowConnector()
+       gridDeleteArrowService.hideArrowDelete()
+       gridDeleteArrowService.resetLeftTop()
     },
     resetGridView() {
         gridCellService.previousCellOperations()
         toolboxDragService.startedDrag = false
     },
     stopArrowDrag() {
-        gridArrowService.stopDrag()
+        gridArrowConnectorService.stopDrag()
     }
 }

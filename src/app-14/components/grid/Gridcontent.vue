@@ -45,8 +45,8 @@ import GridArrowConnectorVue from './components/control-components/GridArrowConn
 import GridArrowDeleteVue from './components/control-components/GridArrowDelete.vue';
 import { gridSvgService } from './services/gridSvg.service'
 import { Utils } from '../../utils/utils';
-import { gridArrowService } from '../grid/services/gridArrow.service'
-import { gridDeleteService } from './services/gridDelete.service'
+import { gridArrowConnectorService } from '../grid/services/gridArrowConnector.service'
+import { gridDeleteArrowService } from './services/gridDeleteArrow.service'
 import { gridPanService } from './services/gridPan.service';
 import { gridLinksService } from '../../models/grid/services/gridLinks.service';
 import { globalResetsService } from '../../services/globalResets.service';
@@ -70,15 +70,15 @@ export default {
   },
   methods: {
     drawPath() {
-      gridArrowService.drawPath()
+      gridArrowConnectorService.drawPath()
     },
     findSvgPath(event) {
-      gridDeleteService.findSvgPath(event)
+      gridDeleteArrowService.findSvgPath(event)
     }
   },
   mounted() {
-      gridDeleteService.svgEl = document.querySelector('#svgGrid')
-      gridDeleteService.gridlayoutEl = document.querySelector('.gridlayout')
+      gridDeleteArrowService.svgEl = document.querySelector('#svgGrid')
+      gridDeleteArrowService.gridlayoutEl = document.querySelector('.gridlayout')
       gridPanService.init(this.$refs.gridcontent)
   },
   computed: {

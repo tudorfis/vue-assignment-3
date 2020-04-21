@@ -73,7 +73,7 @@
 
 <script>
 import { globalConfig } from '../../../config/global.config';
-import { gridArrowService } from '../services/gridArrow.service';
+import { gridArrowConnectorService } from '../services/gridArrowConnector.service';
 import SendEmailVue from '../../toolbox/components/SendEmail.vue';
 import SendSmsVue from '../../toolbox/components/SendSms.vue';
 import AddRemoveTagVue from '../../toolbox/components/AddRemoveTag.vue';
@@ -114,16 +114,16 @@ export default {
     showGridArrow(event) {
       if (gridPanService.startedPan) return
 
-      gridArrowService.init(event)
+      gridArrowConnectorService.init(event)
       
-      if (!gridArrowService.startedDrag)
-        this.showOtherIcons = !gridArrowService.isHighlight
+      if (!gridArrowConnectorService.startedDrag)
+        this.showOtherIcons = !gridArrowConnectorService.isHighlight
     },
     hideGridArrow() {
       if (gridPanService.startedPan) return
       
-      gridArrowService.destroy()
-      this.showOtherIcons = gridArrowService.isHighlight
+      gridArrowConnectorService.destroy()
+      this.showOtherIcons = gridArrowConnectorService.isHighlight
     }
   }
 }

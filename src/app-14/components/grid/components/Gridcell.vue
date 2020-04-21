@@ -28,7 +28,7 @@ import { globalConfig } from '../../../config/global.config';
 import GridcellElementVue from './GridcellElement.vue';
 import GridcellDropPointsVue from './control-components/GridcellDropPoints.vue';
 import gridcellDragDropMixin from '../mixins/gridcellDragDrop.mixin'
-import { gridArrowService } from '../services/gridArrow.service';
+import { gridArrowConnectorService } from '../services/gridArrowConnector.service';
 import { gridModel } from '../../../models/grid/grid.model';
 
 export default {
@@ -48,7 +48,7 @@ export default {
         event.preventDefault()
     },
     doGridArrowOperations() {
-      gridArrowService.doGridcellOperations(this.position)
+      gridArrowConnectorService.doGridcellOperations(this.position)
     }
   },
   computed: {

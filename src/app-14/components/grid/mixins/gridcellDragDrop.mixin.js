@@ -42,8 +42,8 @@ export default {
             gridCellService.previousCellOperations()
             toolboxDragService.startedDrag = false
     
-            if (toolboxDragService.isSameElement(event)) 
-                return false;
+            // if (toolboxDragService.isSameElement(event)) 
+                // return false;
             
             return true
         },

@@ -4,12 +4,12 @@ import { LinkDrawHelper } from './linkDraw.helper'
 import { globalConfig } from '../../../config/global.config'
 import { gridModel } from '../grid.model'
 import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
-import { gridArrowService } from '../../../components/grid/services/gridArrow.service'
+import { gridArrowConnectorService } from '../../../components/grid/services/gridArrowConnector.service'
 import { linkDirectionsHelper } from './linkDirections.helper'
 
 const gc = globalConfig
 
-class LinkEEMapHelper {
+class LinkEntryExitPointsMapHelper {
     constructor() {
         this.eeMap = {}
 
@@ -20,6 +20,12 @@ class LinkEEMapHelper {
             right: Utils.deepclone(directionEEBlueprint),
             left: Utils.deepclone(directionEEBlueprint)
         }
+    }
+    get eeMap() {
+        return this.entryExitPointsMap
+    }
+    set eeMap(entryExitPointsMap) {
+        this.entryExitPointsMap = entryExitPointsMap
     }
     generateEEmap() {
         this.eeMap = {}
@@ -45,7 +51,7 @@ class LinkEEMapHelper {
     restoreEEforGenPath() {
         if (!this.backup_eeMap) return
         
-        if (!gridArrowService.recentLink && gridArrowService.startedDrag)
+        if (!gridArrowConnectorService.recentLink && gridArrowConnectorService.startedDrag)
             this.eeMap = Utils.deepclone(this.backup_eeMap)
     }
     setEELinks(ldh) {
@@ -68,9 +74,9 @@ class LinkEEMapHelper {
         link1Obj.out[ldh.link2] = link1Obj.total
         link2Obj.in[ldh.link1] = link2Obj.total
 
-        this.adjustTrickyEE(link1Obj, linkDirections[0])
+        this.adjustOverlappingEE(link1Obj, linkDirections[0])
     }
-    adjustTrickyEE(linkObj, linkDirection) {
+    adjustOverlappingEE(linkObj, linkDirection) {
         const outPositions = Object.keys(linkObj.out)
         if (outPositions.length === 2) {
             const row1 = gridModel.getRow(outPositions[0])
@@ -141,7 +147,7 @@ class LinkEEMapHelper {
     }
 }
 
-const linkEEMapHelper = new LinkEEMapHelper()
+const linkEEMapHelper = new LinkEntryExitPointsMapHelper()
 globalThis.linkEEMapHelper = linkEEMapHelper
 
 export default linkEEMapHelper

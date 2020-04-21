@@ -9,11 +9,11 @@
 </template>
 
 <script>
-import { gridDeleteService } from '../../services/gridDelete.service'
+import { gridDeleteArrowService } from '../../services/gridDeleteArrow.service'
 export default {
   methods: {
     deleteLink() {
-      gridDeleteService.deleteLink()
+      gridDeleteArrowService.deleteLink()
     }
   }
 }

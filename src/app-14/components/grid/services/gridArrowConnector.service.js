@@ -6,7 +6,7 @@ import { gridPanService } from "./gridPan.service"
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
 import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
 
-export const gridArrowService = {
+export const gridArrowConnectorService = {
     arrowConnectorId: '#arrow-connector',
     startedDrag: false,
     startedPosition: '',

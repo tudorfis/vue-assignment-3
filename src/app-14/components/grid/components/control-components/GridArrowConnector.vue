@@ -9,11 +9,11 @@
 </template>
 
 <script>
-import { gridArrowService } from '../../services/gridArrow.service'
+import { gridArrowConnectorService } from '../../services/gridArrowConnector.service'
 export default {
   methods: {
     onDragstart(event) {
-      gridArrowService.startDrag()
+      gridArrowConnectorService.startDrag()
     }
   }
 }
