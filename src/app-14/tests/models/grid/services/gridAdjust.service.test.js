@@ -1,12 +1,12 @@
-import { globalConfig } from '../../../../config/global.config'
-import { gridModel } from '../../../../models/grid/grid.model'
-import { gridAdjustService } from '../../../../models/grid/services/gridAdjust.service'
+import { globalConfig as gc } from '../../../../config/global.config';
+import { gridModel } from '../../../../models/grid/grid.model';
+import { gridAdjustService } from '../../../../models/grid/services/gridAdjust.service';
 
 describe('gridAdjustService', function () {
     beforeEach(() => {
         gridModel.model = { cells: {}, numCols: 9, numRows: 5 }
-        globalConfig.rowsFromTheEnd = 2
-        globalConfig.colsFromTheEnd = 2
+        gc.rowsFromTheEnd = 2
+        gc.colsFromTheEnd = 2
     });
 
     test(`nearColEnd()`, () => {

@@ -1,25 +1,20 @@
-import { gridModel, gridBlueprint, cellBlueprint } from "../grid.model"
-import { Utils } from "../../../utils/utils"
 import { gridSvgService } from "../../../components/grid/services/gridSvg.service"
-import { gridLinksService } from "./gridLinks.service"
-import { gridHistoryService } from "./gridHistory.service"
+import { globalConfig as gc } from "../../../config/global.config"
+import { Utils } from "../../../utils/utils"
+import { cellBlueprint, gridBlueprint, gridModel } from "../grid.model"
 import { GridPositionIterator } from "../iterators/GridPositionIterator"
-import { globalConfig } from "../../../config/global.config"
+import { gridHistoryService } from "./gridHistory.service"
+import { gridLinksService } from "./gridLinks.service"
 import { gridReduceService } from "./gridReduce.service"
 
-globalThis.gridModel = gridModel
-
 export const gridIOservice = {
-    newGridModel(numRows, numCols, doAfterGridLoaded = true) {
+    newGridModel(numRows, numCols) {
         gridModel.model = {...gridBlueprint}
 
-        gridModel.model.numRows = numRows || globalConfig.minGridRows
-        gridModel.model.numCols = numCols || globalConfig.minGridCols
+        gridModel.model.numRows = numRows || gc.minGridRows
+        gridModel.model.numCols = numCols || gc.minGridCols
 
         gridModel.model.cells = this.buildGridCells()
-
-        if (doAfterGridLoaded)
-            this.afterGridLoaded()
     },
     buildGridCells() {
       if (!gridModel.model) return {}
@@ -44,7 +39,7 @@ export const gridIOservice = {
         return JSON.stringify(output)
     },
     loadGridModel(model) {
-        this.newGridModel(model.numRows, model.numCols, false)
+        this.newGridModel(model.numRows, model.numCols)
 
         for (const position in model.steps)
             this.setCell(position, {
@@ -59,13 +54,13 @@ export const gridIOservice = {
         this.afterGridLoaded(false)
     },
     afterGridLoaded() {
-        gridSvgService.calculateSvg()
-        
         document.querySelector('.loading-icon').style.visibility = 'hidden'
         gridLinksService.buildLinks()
         
         gridReduceService.increaseGrid()
         gridReduceService.reduceGrid()
+
+        gridSvgService.calculateSvg()
     },
     setCell(position, properties) {
         const cell = gridModel.model.cells[position] = gridModel.model.cells[position] || { ...cellBlueprint }
@@ -78,11 +73,7 @@ export const gridIOservice = {
     },
     newModel() {
         this.newGridModel()
-        
-        gridModel.model.links = []
-        gridSvgService.calculateSvg()
-
-        gridLinksService.buildLinks()
+        this.afterGridLoaded()
         gridHistoryService.saveState()
     },
 }

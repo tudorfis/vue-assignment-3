@@ -1,7 +1,6 @@
-import linkEEMapHelper from './linkEEMap.helper'
 import { GridLinksIterator } from '../iterators/GridLinksIterator'
 import { LinkDrawHelper } from './linkDraw.helper'
-
+import linkEEMapHelper from './linkEEMap.helper'
 
 const linkDirectionsHelper = {
     getLinkDirections(ldh, ldh2) {
@@ -155,3 +154,4 @@ const linkDirectionsHelper = {
 }
 
 export { linkDirectionsHelper }
+

@@ -13,13 +13,13 @@
       :viewBox="gridSvgService.svgViewBox"
     >
       <path 
-        v-for="(arrow, arrowIndex) of pathObj"
-        :key="arrowIndex"
-        :linkKey="arrow.linkKey"
-        :d="arrow.d" 
-        :fill="arrow.a ? (arrow.color || gc.arrowLineColor) : 'none'"
-        :stroke="!arrow.a ? (arrow.color ||gc.arrowLineColor) : ''"
-        :stroke-width="!arrow.a ? gc.arrowLineWidth : 0" />
+        v-for="(svgPath, svgIndex) of svgPaths"
+        :key="svgIndex"
+        :linkKey="svgPath.linkKey"
+        :d="svgPath.svgD" 
+        :fill="svgPath.isArrow ? (svgPath.color || gc.arrowLineColor) : 'none'"
+        :stroke="!svgPath.isArrow ? (svgPath.color ||gc.arrowLineColor) : ''"
+        :stroke-width="!svgPath.isArrow ? gc.arrowLineWidth : 0" />
     </svg>
     <div 
       class="gridlayout"
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { globalConfig } from '../../config/global.config'
+import { globalConfig as gc } from '../../config/global.config'
 import { gridModel } from '../../models/grid/grid.model'
 import GridcellVue from './components/Gridcell.vue';
 import GridArrowConnectorVue from './components/control-components/GridArrowConnector.vue';
@@ -61,7 +61,7 @@ export default {
   },
   data() {
     return {
-      gc: globalConfig,
+      gc,
       gm: gridModel,
       gl: gridLinksService,
       grs: globalResetsService,
@@ -87,12 +87,10 @@ export default {
       
       return GridPositionIterator.getPositionsMatrix()
     },
-    pathObj() {
-      return Utils.reduceobj(gridLinksService.paths)
+    svgPaths() {
+      return Utils.reduceobj(gridLinksService.svgPaths)
     },
     gridcontentStyle() {
-        const gc = globalConfig
-
         return {
             height: `calc(100% - ${gc.topmenuHeight + 4}px)`,
             width: `calc(100% - ${gc.toolboxWidth + 7}px)`,
@@ -102,7 +100,7 @@ export default {
     },
     gridLayoutClass() {
         return {
-            [`zoom-${globalConfig.zoomLevel}`]: true
+            [`zoom-${gc.zoomLevel}`]: true
         }
     },
     gridLayoutStyle() {

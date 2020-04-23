@@ -1,7 +1,7 @@
-import { LinkDrawHelper } from "../helpers/linkDraw.helper"
-import { GridLinksIterator } from "../iterators/GridLinksIterator"
 import { gridModel } from "../grid.model"
+import { LinkDrawHelper } from "../helpers/linkDraw.helper"
 import { linkPathMapHelper } from '../helpers/linkPathMap.helper'
+import { GridLinksIterator } from "../iterators/GridLinksIterator"
 
 const gridLinksDrawService = {
     createPathAndArrow(ldh) {
@@ -34,7 +34,7 @@ const gridLinksDrawService = {
             output = this.drawHasCellsOverlapIn(ldh, cellsOverlapHelper)
 
         else 
-            output = this.drawWithoutOverlapingCells(ldh)
+            output = this.drawWithoutOverlappingCells(ldh)
 
         return [ output[0], output[1] ]
     },
@@ -63,28 +63,28 @@ const gridLinksDrawService = {
         path = ldh.drawPath(ldh.directionOut)
         
         if (!hasCellsOutSameRow) {
-            path.d += ldh.drawHalf(ldh.directionOut, ldh.leftRight, true)
+            path.svgD += ldh.drawHalfOut(ldh.directionOut, ldh.leftRight)
 
             if (hasCellsLdh)
                 linkPathMapHelper.setCorner(hasCellsLdh.link1, ldh.linkKey)
         }
         
-        path.d += ldh.drawHalf(ldh.rightLeft, ldh.directionOut, false)
-        path.d += ldh.drawLine(ldh.rightLeft, 'full')
+        path.svgD += ldh.drawHalfIn(ldh.rightLeft, ldh.directionOut)
+        path.svgD += ldh.drawLine(ldh.rightLeft, 'full')
 
         if (!hasCellsOutSameRow && hasCellsLdh)
-            linkPathMapHelper.setStraight(hasCellsLdh, ldh.rightLeft, false, ldh.linkKey)
+            linkPathMapHelper.setDirectionOut(hasCellsLdh, ldh.rightLeft, ldh.linkKey)
 
-        path.d += ldh.drawHalf(ldh.rightLeft, ldh.directionIn, false)
+        path.svgD += ldh.drawHalfIn(ldh.rightLeft, ldh.directionIn)
         if (!hasCellsOutSameRow) {
-            path.d += ldh.drawHalf(ldh.directionIn, ldh.rightLeft, true)
+            path.svgD += ldh.drawHalfOut(ldh.directionIn, ldh.rightLeft)
             
             if (hasCellsLdh) 
                 linkPathMapHelper.setCorner(hasCellsLdh.link2, ldh.linkKey)
         }
         
-        path.d += ldh.drawLine(ldh.directionIn, 'arrow')
-        arrow = ldh.drawArrow(path.d, ldh.directionIn)
+        path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
+        arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
 
         return [ path, arrow ]
     },
@@ -113,29 +113,29 @@ const gridLinksDrawService = {
         path = ldh.drawPath(ldh.directionOut)
         
         if (!hasCellsOutSameCol) {
-            path.d += ldh.drawHalf(ldh.directionOut, ldh.upDown, true)
+            path.svgD += ldh.drawHalfOut(ldh.directionOut, ldh.upDown)
             
             if (hasCellsLdh)
                 linkPathMapHelper.setCorner(hasCellsLdh.link1, ldh.linkKey)
         }
         
-        path.d += ldh.drawHalf(ldh.upDown, ldh.directionOut, false)
-        path.d += ldh.drawLine(ldh.upDown, 'full')
+        path.svgD += ldh.drawHalfIn(ldh.upDown, ldh.directionOut)
+        path.svgD += ldh.drawLine(ldh.upDown, 'full')
         
         if (!hasCellsOutSameCol && hasCellsLdh)
-            linkPathMapHelper.setStraight(hasCellsLdh, ldh.upDown, false, ldh.linkKey)
+            linkPathMapHelper.setDirectionOut(hasCellsLdh, ldh.upDown, ldh.linkKey)
 
-        path.d += ldh.drawHalf(ldh.upDown, ldh.directionIn, false)
+        path.svgD += ldh.drawHalfIn(ldh.upDown, ldh.directionIn)
         
         if (!hasCellsOutSameCol) {
-            path.d += ldh.drawHalf(ldh.directionIn, ldh.upDown, true)
+            path.svgD += ldh.drawHalfOut(ldh.directionIn, ldh.upDown)
             
             if (hasCellsLdh) 
                 linkPathMapHelper.setCorner(hasCellsLdh.link2, ldh.linkKey)
         }
         
-        path.d += ldh.drawLine(ldh.directionIn, 'arrow')
-        arrow = ldh.drawArrow(path.d, ldh.directionIn)
+        path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
+        arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
 
         return [ path, arrow ]
     },
@@ -143,12 +143,12 @@ const gridLinksDrawService = {
         let path, arrow
 
         path = ldh.drawPath(ldh.directionIn)
-        path.d += ldh.drawLine(ldh.directionIn, 'full')
+        path.svgD += ldh.drawLine(ldh.directionIn, 'full')
 
-        linkPathMapHelper.setStraight(ldh, ldh.directionIn, false, ldh.linkKey)
+        linkPathMapHelper.setDirectionOut(ldh, ldh.directionIn, ldh.linkKey)
 
-        path.d += ldh.drawLine(ldh.directionIn, 'arrow')
-        arrow = ldh.drawArrow(path.d, ldh.directionIn)
+        path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
+        arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
 
         return [ path, arrow ]
     },
@@ -158,29 +158,29 @@ const gridLinksDrawService = {
         path = ldh.drawPath(ldh.directionOut)
 
         if (coh.hasCellsOut) {
-            path.d += ldh.drawHalf(coh.potentialDirection, ldh.directionOut, false)
-            path.d += ldh.drawLine(ldh.directionOut, 'full')
+            path.svgD += ldh.drawHalfIn(coh.potentialDirection, ldh.directionOut)
+            path.svgD += ldh.drawLine(ldh.directionOut, 'full')
         }
         else if (coh.hasCellsCorner) {
-            path.d += ldh.drawLine(ldh.directionOut, 'full')
+            path.svgD += ldh.drawLine(ldh.directionOut, 'full')
             
-            linkPathMapHelper.setStraight(ldh, ldh.directionOut, false, ldh.linkKey)
-            path.d += ldh.drawHalf(coh.potentialDirection, ldh.directionOut, false)
+            linkPathMapHelper.setDirectionOut(ldh, ldh.directionOut, ldh.linkKey)
+            path.svgD += ldh.drawHalfIn(coh.potentialDirection, ldh.directionOut)
         }
 
         if (coh.hasCellsIn || ldh.sameDirection) {
-            path.d += ldh.drawLine(coh.potentialDirection, 'full')
-            path.d += ldh.drawHalf(coh.potentialDirection, ldh.directionOut, false)
-            path.d += ldh.drawLine(ldh.directionOut, 'arrow')
-            arrow = ldh.drawArrow(path.d, ldh.directionOut)
+            path.svgD += ldh.drawLine(coh.potentialDirection, 'full')
+            path.svgD += ldh.drawHalfIn(coh.potentialDirection, ldh.directionOut)
+            path.svgD += ldh.drawLine(ldh.directionOut, 'arrow')
+            arrow = ldh.drawArrow(path.svgD, ldh.directionOut)
         }
         else {
-            path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true)
-            path.d += ldh.drawLine(ldh.directionIn, 'full')
+            path.svgD += ldh.drawHalfOut(ldh.directionOut, ldh.directionIn)
+            path.svgD += ldh.drawLine(ldh.directionIn, 'full')
 
-            linkPathMapHelper.setStraight(ldh, ldh.directionIn, true, ldh.linkKey)
-            path.d += ldh.drawLine(ldh.directionIn, 'arrow')
-            arrow = ldh.drawArrow(path.d, ldh.directionIn)
+            linkPathMapHelper.setDirectionIn(ldh, ldh.directionIn, ldh.linkKey)
+            path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
+            arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
         }
 
         return [ path, arrow ]
@@ -189,45 +189,45 @@ const gridLinksDrawService = {
         let path, arrow
 
         path = ldh.drawPath(ldh.directionOut)
-        path.d += ldh.drawLine(ldh.directionOut, 'full')
-        linkPathMapHelper.setStraight(ldh, ldh.directionOut, false, ldh.linkKey)
+        path.svgD += ldh.drawLine(ldh.directionOut, 'full')
+        linkPathMapHelper.setDirectionOut(ldh, ldh.directionOut, ldh.linkKey)
 
-        path.d += ldh.drawHalf(coh.potentialDirection, ldh.directionOut, false)
-        path.d += ldh.drawLine(coh.potentialDirection, 'full')
+        path.svgD += ldh.drawHalfIn(coh.potentialDirection, ldh.directionOut)
+        path.svgD += ldh.drawLine(coh.potentialDirection, 'full')
 
         if (ldh.sameDirection) {
-            path.d += ldh.drawHalf(coh.potentialDirection, ldh.directionOut, false)
-            path.d += ldh.drawLine(ldh.directionOut, 'arrow')
-            arrow = ldh.drawArrow(path.d, ldh.directionOut)
+            path.svgD += ldh.drawHalfIn(coh.potentialDirection, ldh.directionOut)
+            path.svgD += ldh.drawLine(ldh.directionOut, 'arrow')
+            arrow = ldh.drawArrow(path.svgD, ldh.directionOut)
         }
         else {
-            path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true)
-            path.d += ldh.drawLine(ldh.directionIn, 'arrow')
-            arrow = ldh.drawArrow(path.d, ldh.directionIn)
+            path.svgD += ldh.drawHalfOut(ldh.directionOut, ldh.directionIn)
+            path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
+            arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
         }
 
         return [ path, arrow ]
     },
-    drawWithoutOverlapingCells(ldh) {
+    drawWithoutOverlappingCells(ldh) {
         let path, arrow
 
         path = ldh.drawPath(ldh.directionOut)
-        path.d += ldh.drawLine(ldh.directionOut, 'full')
-        linkPathMapHelper.setStraight(ldh, ldh.directionOut, false, ldh.linkKey)
+        path.svgD += ldh.drawLine(ldh.directionOut, 'full')
+        linkPathMapHelper.setDirectionOut(ldh, ldh.directionOut, ldh.linkKey)
 
-        path.d += ldh.drawHalf(ldh.directionOut, ldh.directionIn, true)
-        path.d += ldh.drawHalf(ldh.directionIn, ldh.directionOut, false)
+        path.svgD += ldh.drawHalfOut(ldh.directionOut, ldh.directionIn)
+        path.svgD += ldh.drawHalfIn(ldh.directionIn, ldh.directionOut)
         
         let link
         if (LinkDrawHelper.leftOrRight(ldh.directionOut)) link = gridModel.getPosition(ldh.row1, ldh.col2)
         else if (LinkDrawHelper.upOrDown(ldh.directionOut)) link = gridModel.getPosition(ldh.row2, ldh.col1)
         linkPathMapHelper.setCorner(link, ldh.linkKey)
 
-        path.d += ldh.drawLine(ldh.directionIn, 'full')
-        linkPathMapHelper.setStraight(ldh, ldh.directionIn, true, ldh.linkKey)
+        path.svgD += ldh.drawLine(ldh.directionIn, 'full')
+        linkPathMapHelper.setDirectionIn(ldh, ldh.directionIn, ldh.linkKey)
 
-        path.d += ldh.drawLine(ldh.directionIn, 'arrow')
-        arrow = ldh.drawArrow(path.d, ldh.directionIn)
+        path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
+        arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
 
         return [ path, arrow ]
     }

@@ -1,13 +1,14 @@
-import { gridCellService } from '../services/gridCell.service'
 import { gridModel } from '../../../models/grid/grid.model';
-import { toolboxDragService } from '../../toolbox/services/toolboxDrag.service';
-import { Utils } from '../../../utils/utils';
-import { globalResetsService } from '../../../services/globalResets.service';
 import { gridAdjustService } from '../../../models/grid/services/gridAdjust.service';
 import { gridHistoryService } from '../../../models/grid/services/gridHistory.service';
 import { gridLinksService } from '../../../models/grid/services/gridLinks.service';
 import { gridLinksDroppointService } from '../../../models/grid/services/gridLinksDroppoints.service';
 import { gridReduceService } from '../../../models/grid/services/gridReduce.service';
+import { globalResetsService } from '../../../services/globalResets.service';
+import { Utils } from '../../../utils/utils';
+import { toolboxDragService } from '../../toolbox/services/toolboxDrag.service';
+import { gridCellService } from '../services/gridCell.service';
+import { gridSvgService } from '../services/gridSvg.service';
 
 export default {
     props: ['position'],
@@ -25,8 +26,8 @@ export default {
         }
     },
     methods: {
-        onDropGridCellElement(event) {
-            if (!this.onDropBefore(event)) return
+        onDropGridCellElement() {
+            this.onDropBefore()
 
             if (this.dropppointDirection)
                 this.onDropDoDroppoints()
@@ -36,16 +37,11 @@ export default {
             
             this.onDropAfter()
         },
-        onDropBefore(event) {
+        onDropBefore() {
             globalResetsService.reset()
     
             gridCellService.previousCellOperations()
             toolboxDragService.startedDrag = false
-    
-            // if (toolboxDragService.isSameElement(event)) 
-                // return false;
-            
-            return true
         },
         onDropDoDroppoints() {
             const newPosition = gridCellService.moveCellsByDroppointDirection(this.dropppointDirection, this.position)
@@ -69,8 +65,10 @@ export default {
             const oldPosition = gridCellService.removePreviousCell()
             const isNearColOrRowEnd = gridAdjustService.isNearColOrRowEnd(newPosition)
             
-            if (isNearColOrRowEnd)
+            if (isNearColOrRowEnd) {
                 gridAdjustService.addRowOrColEnd(newPosition)
+                gridSvgService.calculateSvg()
+            }
 
             gridCellService.setCellActive(newPosition, oldPosition)
             gridLinksService.rearangeLinks(oldPosition, newPosition)

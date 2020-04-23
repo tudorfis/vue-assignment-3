@@ -1,14 +1,15 @@
-import { gridArrowConnectorService } from "./gridArrowConnector.service"
-import { globalConfig } from "../../../config/global.config"
+import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
-import { toolboxDragService } from "../../toolbox/services/toolboxDrag.service"
-import { gridPanService } from "./gridPan.service"
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
 import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
+import { toolboxDragService } from "../../toolbox/services/toolboxDrag.service"
+import { gridArrowConnectorService } from "./gridArrowConnector.service"
+import { gridPanService } from "./gridPan.service"
 
 export const gridDeleteArrowService = {
     svgEl: null,
     gridlayoutEl: null,
+    selectorId: '',
     arrowDeleteEl: null,
     waitMousemove: false,
     waitMousemoveTimeout: null,
@@ -18,18 +19,18 @@ export const gridDeleteArrowService = {
     left: 0,
 
     findSvgPath(event) {
-        if (!this.arrowDeleteEl)
-            this.arrowDeleteEl = document.querySelector('#arrow-delete')
+        if (!this.selectorId)
+            throw new Error('Please specificy a selectorId for gridDeleteArrow service before initializing')
 
-        if (this.waitMousemove || gridArrowConnectorService.startedDrag || toolboxDragService.startedDrag || gridPanService.startedPan) return
+        if (!this.arrowDeleteEl)
+            this.arrowDeleteEl = document.querySelector(`#${this.selectorId}`)
+
+        if (this.waitMousemove || gridArrowConnectorService.startedDrag 
+            || toolboxDragService.startedDrag || gridPanService.startedPan) return
 
         if (event.target.classList.contains('gridcell')) {
             const el = this.getSvgPath(event)
-            if (el)
-                this.build(el, event)
-            else {
-                this.hideArrowDelete()
-            }
+            el ? this.build(el, event) : this.hideArrowDelete()
         }
 
         const vm = this
@@ -63,23 +64,27 @@ export const gridDeleteArrowService = {
         return null
     },
     build(el, event) {
-        
-        const adjust = Math.floor(globalConfig.gridCellElementWidth / 4)
+        const adjust = Math.floor(gc.gridCellElementWidth / 4)
 
-        this.arrowDeleteEl.style.display = `block`
-        this.arrowDeleteEl.style.fontSize = `${adjust}px`
+        Object.assign(this.arrowDeleteEl.style, {
+            display: `block`,
+            fontSize: `${adjust}px`,
+            width: `${adjust}px`,
+            height: `${adjust}px`,
+            borderRadius: `${adjust}px`
+        })
 
-        this.arrowDeleteEl.style.width = `${adjust}px`
-        this.arrowDeleteEl.style.height = `${adjust}px`
-        this.arrowDeleteEl.style.borderRadius = `${adjust}px`
         this.arrowDeleteEl.querySelector('i').style.top = `-${Math.round(adjust / 3.3)}px`
 
         const html = document.querySelector('html')
         this.setTopLeft(el, event, html, adjust)
 
         this.linkKey = el.getAttribute('linkKey')
-        this.arrowDeleteEl.style.top = `${this.top}px`
-        this.arrowDeleteEl.style.left = `${this.left}px`
+
+        Object.assign(this.arrowDeleteEl.style, {
+            top: `${this.top}px`,
+            left: `${this.left}px`
+        })
     },
     setTopLeft(el, event, html, adjust) {
         if (el.getAttribute('linkKey') !== this.linkKey || (!this.top && !this.left)) {

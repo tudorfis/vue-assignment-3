@@ -1,6 +1,6 @@
+import { toolboxDragService } from "../../../components/toolbox/services/toolboxDrag.service"
 import { globalConfig } from "../../../config/global.config"
 import { gridModel } from "../grid.model"
-import { toolboxDragService } from "../../../components/toolbox/services/toolboxDrag.service"
 
 export const gridMouseDroppointsService = {
     hasElementAbove(position) {

@@ -1,19 +1,19 @@
 import Vue from 'vue'
+import { globalConfig } from '../../../config/global.config'
 import { gridModel } from "../grid.model"
 import { LinkDrawHelper } from '../helpers/linkDraw.helper'
 import linkEEMapHelper from '../helpers/linkEEMap.helper'
-import { globalConfig } from '../../../config/global.config'
+import { linkPathMapHelper } from '../helpers/linkPathMap.helper'
 import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
 import { gridLinksDrawService } from './gridLinksDraw.service'
-import { linkPathMapHelper } from '../helpers/linkPathMap.helper'
 
 export const gridLinksService = {
-    paths: {},
+    svgPaths: {},
     colors: [],
     colorIds: [],
 
     buildLinks() {
-        this.paths = {}
+        this.svgPaths = {}
         this.colors = []
         this.colorIds = []
 
@@ -24,15 +24,15 @@ export const gridLinksService = {
         const lki = new LinkKeyIterator(links)
 
         while(lki.continue)
-            this.genPathTwoCells(lki.linkKey)
+            this.generateSvgPath(lki.linkKey)
     },
 
-    genPathTwoCells(linkKey = '', isDrag = false) {
-        Vue.set(this.paths, linkKey, [])
+    generateSvgPath(linkKey = '', isDrag = false) {
+        Vue.set(this.svgPaths, linkKey, [])
         const ldh = new LinkDrawHelper(linkKey)
 
-        linkEEMapHelper.restoreEEforGenPath()
-        linkEEMapHelper.generateEEforGenPath(ldh, isDrag)
+        linkEEMapHelper.restoreEEMapState()
+        if (isDrag) linkEEMapHelper.saveEEMapState(ldh)
         
         const pathArrow = gridLinksDrawService.createPathAndArrow(ldh)
         const color = this.getPathColor(ldh, isDrag)
@@ -46,8 +46,8 @@ export const gridLinksService = {
         arrow.color = color
         arrow.linkKey = linkKey
 
-        this.paths[linkKey].push(path)
-        this.paths[linkKey].push(arrow)
+        this.svgPaths[linkKey].push(path)
+        this.svgPaths[linkKey].push(arrow)
     },
     getPathColor(ldh, isDrag) {
         if (this.colors.length === 0)

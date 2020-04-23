@@ -11,7 +11,7 @@
 
 <script>
 import { gridModel } from './models/grid/grid.model';
-import { globalConfig } from './config/global.config';
+import { globalConfig as gc } from './config/global.config';
 import TopmenuVue from './components/topmenu/Topmenu.vue';
 import ToolboxVue from './components/toolbox/Toolbox.vue';
 import GridContentVue from './components/grid/Gridcontent.vue';
@@ -28,19 +28,19 @@ export default {
   },
   data() {
     return {
-      toolboxWidth: globalConfig.toolboxWidth,
-      topmenuHeight: globalConfig.topmenuHeight
+      toolboxWidth: gc.toolboxWidth,
+      topmenuHeight: gc.topmenuHeight
     };
   },
   beforeCreate() {
     /** @TODO - match an id of a sequence to get the output  */
-    
     let modelType = null
     const matchRef = globalThis.location.search.match(/model\=([\w\-]+)/)
     if (matchRef && matchRef[1]) modelType = matchRef[1]
 
     if (!modelType) {
       gridIOservice.newGridModel()
+      gridIOservice.afterGridLoaded()
       gridHistoryService.saveState()
       return
     }
@@ -54,6 +54,7 @@ export default {
       .catch(error => {
         console.error(error)
         gridIOservice.newGridModel()
+        gridIOservice.afterGridLoaded()
         gridHistoryService.saveState()
       })
   }

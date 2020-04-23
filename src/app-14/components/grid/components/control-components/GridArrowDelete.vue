@@ -1,6 +1,6 @@
 <template>
   <div 
-    id="arrow-delete"
+    id="grid-arrow-delete"
     draggable="false"
     @click="deleteLink"
   >
@@ -15,12 +15,15 @@ export default {
     deleteLink() {
       gridDeleteArrowService.deleteLink()
     }
+  },
+  mounted() {
+    gridDeleteArrowService.selectorId = 'grid-arrow-delete'
   }
 }
 </script>
 
 <style lang="scss">
-    #arrow-delete {
+    #grid-arrow-delete {
         position: fixed;
         display: none;
         z-index: 2;

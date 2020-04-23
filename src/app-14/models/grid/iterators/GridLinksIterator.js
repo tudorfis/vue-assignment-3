@@ -1,7 +1,6 @@
 import { Utils } from "../../../utils/utils";
 import { gridModel } from "../grid.model";
 
-
 export class GridLinksIterator {
     static hasDownCellsOut(ldh) {
         const rowControl1 = ldh.row1 + 1

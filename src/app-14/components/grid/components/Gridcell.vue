@@ -23,8 +23,6 @@
 </template>
 
 <script>
-
-import { globalConfig } from '../../../config/global.config';
 import GridcellElementVue from './GridcellElement.vue';
 import GridcellDropPointsVue from './control-components/GridcellDropPoints.vue';
 import gridcellDragDropMixin from '../mixins/gridcellDragDrop.mixin'

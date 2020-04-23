@@ -1,4 +1,6 @@
-import Vue from "vue"
+
+import { Utils } from '../../../utils/utils'
+import { gridModel } from '../grid.model'
 
 const linkPathMapHelper = {
     pathMap: {},
@@ -6,38 +8,95 @@ const linkPathMapHelper = {
         this.pathMap = {}
     },
     setCorner(link, linkKey) {
-        if (!this.pathMap[link])
-            Vue.set(this.pathMap, link, {v: [], h: [], c: []})
-
-        this.pathMap[link].c.push(linkKey)
+        this.setEmptyPathMap(link)
+        this.pathMap[link]['corner'].push(linkKey)
     },
-    setStraight(ldh, direction, next = false, linkKey) {
-        if (direction === 'down')
-            for (let row = ldh.row1 + 1; row < ldh.row2; row++)
-                setPathMap.call(this, row, !next ? ldh.col1 : ldh.col2, 'v', linkKey)
+    setDirectionOut(ldh, direction, linkKey) {
+        this.iterateDirection(ldh.row1, ldh.col1, { 
+            ldh,
+            direction,
+            linkKey
+        })
+    },
+    setDirectionIn(ldh, direction, linkKey) {
+        this.iterateDirection(ldh.row2, ldh.col2, {
+            ldh,
+            direction,
+            linkKey
+        })
+    },
 
-        else if (direction === 'up')
-            for (let row = ldh.row1 - 1; row > ldh.row2; row--)
-                setPathMap.call(this, row, !next ? ldh.col1 : ldh.col2, 'v', linkKey)
+    iterateDirection(row, col, query) {
+        if (query.direction === 'left') 
+            this.iterateLeft(query.ldh, row, query.linkKey)
+
+        else if (query.direction === 'right')
+            this.iterateRight(query.ldh, row, query.linkKey)
+
+        else if (query.direction === 'up')
+            this.iterateUp(query.ldh, col, query.linkKey)
+
+        else if (query.direction === 'down')
+            this.iterateDown(query.ldh, col, query.linkKey)
+    },
+
+    iterateDown(ldh, col, linkKey) {
+        for (let row = ldh.row1 + 1; row < ldh.row2; row++)
+            this.setPathMap(row, col, 'vertical', linkKey)
+    },
+    iterateUp(ldh, col, linkKey) {
+        for (let row = ldh.row1 - 1; row > ldh.row2; row--)
+            this.setPathMap(row, col, 'vertical', linkKey)
+    },
+    iterateLeft(ldh, row, linkKey) {
+        for (let col = ldh.col1 - 1; col > ldh.col2; col--)
+            this.setPathMap(row, col, 'horizontal', linkKey)
+    },
+    iterateRight(ldh, row, linkKey) {
+        for (let col = ldh.col1 + 1; col < ldh.col2; col++)
+            this.setPathMap(row, col, 'horizontal', linkKey)
+    },
+
+    setPathMap(row, col, pathType, linkKey) {
+        const position = gridModel.getPosition(row, col)
+        this.setEmptyPathMap(position)
+
+        this.pathMap[position][pathType].push(linkKey)
+    },
+    setEmptyPathMap(link) {
+        if (!!this.pathMap[link]) return
+
+        this.pathMap[link] = pathMapItemFactory.getNew()
+    },
+
+    getLinkKeys(position) {
+        const output = []
+
+        if (!this.pathMap[position]) return output
         
-        else if (direction === 'left')
-            for (let col = ldh.col1 - 1; col > ldh.col2; col--)
-                setPathMap.call(this, !next ? ldh.row1 : ldh.row2, col, 'h', linkKey)
-            
-        else if (direction === 'right')
-            for (let col = ldh.col1 + 1; col < ldh.col2; col++)
-                setPathMap.call(this, !next ? ldh.row1 : ldh.row2, col, 'h', linkKey)
+        const pathMapItem = this.pathMap[position]
 
-        function setPathMap(row, col, hvc, linkKey) {
-            const position = gridModel.getPosition(row, col)
-            
-            if (!this.pathMap[position])
-                this.pathMap[position] = {v: [], h: [], c: []}
-
-            this.pathMap[position][hvc].push(linkKey)
+        for (const orientation of Object.keys(pathMapItem)) { 
+            for (const linkKey of pathMapItem[orientation]) {
+                output.push(linkKey)
+            }
         }
+                
+        return output
+    }
+}
+
+const pathMapItemFactory = {
+    blueprint: {
+        vertical: [],
+        horizontal: [],
+        corner: []
+    },
+    getNew() {
+        return Utils.deepclone(this.blueprint)
     }
 }
 
 globalThis.linkPathMapHelper = linkPathMapHelper
 export { linkPathMapHelper }
+

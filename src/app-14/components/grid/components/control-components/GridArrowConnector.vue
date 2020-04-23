@@ -1,6 +1,6 @@
 <template>
   <div 
-    id="arrow-connector"
+    id="grid-arrow-connector"
     draggable="true"
     @dragstart.prevent="onDragstart"
   >
@@ -15,12 +15,15 @@ export default {
     onDragstart(event) {
       gridArrowConnectorService.startDrag()
     }
+  },
+  mounted() {
+    gridArrowConnectorService.selectorId = 'grid-arrow-connector'
   }
 }
 </script>
 
 <style>
-    #arrow-connector {
+    #grid-arrow-connector {
         position: fixed;
         display: none;
         color: black;

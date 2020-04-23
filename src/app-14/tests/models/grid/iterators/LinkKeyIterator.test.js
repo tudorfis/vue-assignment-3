@@ -1,6 +1,5 @@
 import { LinkKeyIterator } from '../../../../models/grid/iterators/LinkKeyIterator'
 
-
 describe('LinkKeyIterator', function () {
   test(`LINKS = ['1-1__1-2', '1-2__1-3', '1-4__1-5']`, () => {
     const links = ['1-1__1-2', '1-2__1-3', '1-4__1-5']

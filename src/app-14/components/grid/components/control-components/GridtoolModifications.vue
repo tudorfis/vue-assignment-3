@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { globalConfig } from '../../../../config/global.config';
+import { globalConfig as gc } from '../../../../config/global.config';
 import { gridToolService } from '../../services/gridTool.service'
 
 export default {
@@ -29,14 +29,12 @@ export default {
   },
   computed: {
     generalIconStyle() {
-      const gc = globalConfig
       const fontSize = Math.floor(gc.gridCellElementWidth / 5)
       return {
         'font-size': `${fontSize}px`
       }
     },
     deleteIconStyle() {
-      const gc = globalConfig
       const left =  Math.floor(gc.gridCellElementWidth / 14)
       const top = left + Math.floor(left / 2)
 
@@ -46,7 +44,6 @@ export default {
       }
     },
     editIconStyle() {
-      const gc = globalConfig
       const left =  gc.gridCellElementWidth - Math.floor(gc.gridCellElementWidth / 7)
       const top = Math.floor(gc.gridCellElementHeight / 11)
 

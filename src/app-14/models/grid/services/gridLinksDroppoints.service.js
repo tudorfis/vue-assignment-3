@@ -1,31 +1,19 @@
-import { LinkDrawHelper } from "../helpers/linkDraw.helper"
 import { gridModel } from "../grid.model"
+import { LinkDrawHelper } from "../helpers/linkDraw.helper"
 import { linkPathMapHelper } from "../helpers/linkPathMap.helper"
 
 export const gridLinksDroppointService = {
     hasDroppointMiddle(position) {
-        if (!linkPathMapHelper.pathMap[position]) return false  
         if (gridModel.model.cells[position].is) return false
+        const linkKeys = linkPathMapHelper.getLinkKeys(position)
 
-        const pathMap = linkPathMapHelper.pathMap[position]
-        return pathMap.h.length > 0 || pathMap.v.length > 0 || pathMap.c.length
+        return linkKeys.length > 0
     },
     setDroppointLinksByMiddle(position) {
-        if (!linkPathMapHelper.pathMap[position]) return
-        const pathMap = linkPathMapHelper.pathMap[position]
-
-        if (pathMap.v.length > 0)
-            for (const linkKey of pathMap.v)
-                this.connectDroppointLinksByMiddle(linkKey, position)
-
-        if (pathMap.h.length > 0)
-            for (const linkKey of pathMap.h)
-                this.connectDroppointLinksByMiddle(linkKey, position)
+        const linkKeys = linkPathMapHelper.getLinkKeys(position)
         
-        if (pathMap.c.length > 0)
-            for (const linkKey of pathMap.c)
-                this.connectDroppointLinksByMiddle(linkKey, position)
-        
+        for (const linkKey of linkKeys)
+            this.connectDroppointLinksByMiddle(linkKey, position)
     },
     connectDroppointLinksByMiddle(linkKey, position) {
         const ldh = new LinkDrawHelper(linkKey)
@@ -44,7 +32,7 @@ export const gridLinksDroppointService = {
         delete gm.links[index]
     },
     getEmptyPositionAfterDroppoint(newPosition, oldPosition) {
-        if (!newPosition || !oldPosition) return null
+        if (!newPosition || !oldPosition) return ''
         
         const rowNew = gridModel.getRow(newPosition)
         const colNew = gridModel.getCol(newPosition)

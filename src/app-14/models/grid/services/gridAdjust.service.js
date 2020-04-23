@@ -1,11 +1,10 @@
 
 import Vue from "vue"
-import { cellBlueprint } from '../grid.model'
-import { globalConfig } from '../../../config/global.config'
 import { gridSvgService } from '../../../components/grid/services/gridSvg.service'
-import { gridModel } from '../grid.model'
-import { gridLinksService } from './gridLinks.service'
+import { globalConfig as gc } from '../../../config/global.config'
+import { cellBlueprint, gridModel } from '../grid.model'
 import { GridPositionIterator } from '../iterators/GridPositionIterator'
+import { gridLinksService } from './gridLinks.service'
 
 export const gridAdjustService = {
     removeColAtEnd() {
@@ -14,7 +13,6 @@ export const gridAdjustService = {
         })
 
         gridModel.model.numCols--
-        gridSvgService.calculateSvg()
     },
     removeRowAtEnd() {
         GridPositionIterator.goOverLastRow(position => {
@@ -22,7 +20,6 @@ export const gridAdjustService = {
         })
 
         gridModel.model.numRows--
-        gridSvgService.calculateSvg()
     },
     addColAtEnd() {
         gridModel.model.numCols++
@@ -30,8 +27,6 @@ export const gridAdjustService = {
         GridPositionIterator.goOverLastCol(position => {
             Vue.set(gridModel.model.cells, position, {...cellBlueprint})
         })
-
-        gridSvgService.calculateSvg()
     },
     addRowAtEnd() {
         gridModel.model.numRows++
@@ -39,12 +34,12 @@ export const gridAdjustService = {
         GridPositionIterator.goOverLastRow(position => {
             Vue.set(gridModel.model.cells, position, {...cellBlueprint})
         })
-
-        gridSvgService.calculateSvg()
     },
     spliceCols(position) {
-        if (this.isElementNearColEnd(position))
+        if (this.isElementNearColEnd(position)) {
             this.addColAtEnd()
+            gridSvgService.calculateSvg()
+        }
 
         GridPositionIterator.goOverNextPrevFromLastCol(position, (nextPos, prevPos) => { 
             gridModel.model.cells[nextPos] = gridModel.model.cells[prevPos]
@@ -54,8 +49,10 @@ export const gridAdjustService = {
         gridModel.model.cells[position] = {...cellBlueprint}
     },
     spliceRows(position) {
-        if (this.isElementNearRowEnd(position))
+        if (this.isElementNearRowEnd(position)) {
             this.addRowAtEnd()
+            gridSvgService.calculateSvg()
+        }
 
         GridPositionIterator.goOverNextPrevFromLastRow(position, (nextPos, prevPos) => { 
             gridModel.model.cells[nextPos] = gridModel.model.cells[prevPos]
@@ -71,38 +68,29 @@ export const gridAdjustService = {
         if (this.nearRowEnd(position))
             this.addRowAtEnd()
     },
-
     nearColEnd(position) {
-        const gm = gridModel.model
-        const gc = globalConfig
-
-        return gridModel.getCol(position) > gm.numCols - gc.colsFromTheEnd
+        return gridModel.getCol(position) > gridModel.model.numCols - gc.colsFromTheEnd
     },
     nearRowEnd(position) {
-        const gm = gridModel.model
-        const gc = globalConfig
-
-        return gridModel.getRow(position) > gm.numRows - gc.rowsFromTheEnd
+        return gridModel.getRow(position) > gridModel.model.numRows - gc.rowsFromTheEnd
     },
     isNearColOrRowEnd(position) {
         return this.nearColEnd(position) || this.nearRowEnd(position)
     },
     isElementNearColEnd(position) {
-        const gm = gridModel.model
         let foundIt = false
 
         GridPositionIterator.goOverNearEndCol(position, position => {
-            if (gm.cells[position].is) foundIt = true
+            if (gridModel.model.cells[position].is) foundIt = true
         })
         
         return foundIt
     },
     isElementNearRowEnd(position) {
-        const gm = gridModel.model
         let foundIt = false
 
         GridPositionIterator.goOverNearEndRow(position, position => {
-            if (gm.cells[position].is) foundIt = true
+            if (gridModel.model.cells[position].is) foundIt = true
         })
         
         return foundIt

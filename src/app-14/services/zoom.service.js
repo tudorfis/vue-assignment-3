@@ -1,7 +1,8 @@
-import { globalConfig } from "../config/global.config"
-import { globalResetsService } from "./globalResets.service"
 import { gridSvgService } from "../components/grid/services/gridSvg.service"
+import { globalConfig } from "../config/global.config"
+import { gridLinksService } from "../models/grid/services/gridLinks.service"
 import { gridReduceService } from "../models/grid/services/gridReduce.service"
+import { globalResetsService } from "./globalResets.service"
 
 export const zoomService = {
     disableZoomIn() {
@@ -32,7 +33,9 @@ export const zoomService = {
         gc.arrowPointerHeight += 5
 
         this.recalculateGridSize()
-        gridSvgService.calculateSvg(true)
+
+        gridSvgService.calculateSvg()
+        gridLinksService.buildLinks()
     },
     zoomOut() {
         if (this.disableZoomOut()) return
@@ -54,7 +57,9 @@ export const zoomService = {
         gc.arrowPointerHeight -= 5
 
         this.recalculateGridSize()
-        gridSvgService.calculateSvg(true)
+
+        gridSvgService.calculateSvg()
+        gridLinksService.buildLinks()
     },
     recalculateGridSize() {
         const gc = globalConfig

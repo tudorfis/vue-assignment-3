@@ -1,5 +1,5 @@
 
-export class VueUtils {
+class VueUtils {
     static traversePath(mouseEvent, targetRef) {
         if (!mouseEvent.path) return
 
@@ -48,3 +48,6 @@ export class VueUtils {
         return null
     }
 }
+
+globalThis.VueUtils = VueUtils
+export { VueUtils }

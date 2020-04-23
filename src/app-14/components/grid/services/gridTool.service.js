@@ -1,10 +1,10 @@
-import { globalResetsService } from "../../../services/globalResets.service"
-import { gridCellService } from "./gridCell.service"
-import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
-import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
-import { toolboxElementsEnum } from '../../toolbox/enum/toolboxElements.enum'
 import { gridModel } from "../../../models/grid/grid.model"
+import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
+import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
 import { gridReduceService } from "../../../models/grid/services/gridReduce.service"
+import { globalResetsService } from "../../../services/globalResets.service"
+import { toolboxElementsEnum } from '../../toolbox/enum/toolboxElements.enum'
+import { gridCellService } from "./gridCell.service"
 
 export const gridToolService = {
     deleteGridcell(position) {
@@ -26,40 +26,40 @@ export const gridToolService = {
 
         switch (type) {
             case toolboxElementsEnum.SEND_EMAIL:
-            $('#sendEmailModal').modal();
-            break;
+                $('#sendEmailModal').modal();
+                break;
             
             case toolboxElementsEnum.SEND_SMS:
-            $('#sendSmsModal').modal();
-            break;
+                $('#sendSmsModal').modal();
+                break;
 
             case toolboxElementsEnum.ADD_REMOVE_TAG:
-            $('#addRemoveTagsModal').modal();
-            break;
+                $('#addRemoveTagsModal').modal();
+                break;
             
             case toolboxElementsEnum.SUBSCRIBE_LIST:
-            $('#subscribeListModal').modal();
-            break;
-            
+                $('#subscribeListModal').modal();
+                break;
+                
             case toolboxElementsEnum.SUBSCRIBE_SEQUENCE:
-            $('#subscribeSequenceModal').modal();
-            break;
+                $('#subscribeSequenceModal').modal();
+                break;
             
             case toolboxElementsEnum.AUTOMATION:
-            $('#automationModal').modal();
-            break;
+                $('#automationModal').modal();
+                break;
             
             case toolboxElementsEnum.SPLIT:
-            $('#splitModal').modal();
-            break;
+                $('#splitModal').modal();
+                break;
             
             case toolboxElementsEnum.GO_TO:
-            $('#goToModal').modal();
-            break;
+                $('#goToModal').modal();
+                break;
             
             case toolboxElementsEnum.WAIT:
-            $('#waitModal').modal();
-            break;
+                $('#waitModal').modal();
+                break;
             
         }
     }

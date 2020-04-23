@@ -1,15 +1,13 @@
-import { globalConfig } from "../../../config/global.config"
+import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../grid.model"
 import { gridAdjustService } from "./gridAdjust.service"
-import { gridSvgService } from "../../../components/grid/services/gridSvg.service"
 
 export const gridReduceService = {
     reduceGrid() {
-        this.reduceGridBottom()
-        this.reduceGridRight()
+        this.reduceGridVertically()
+        this.reduceGridHorizontally()
     },
-    reduceGridBottom() {
-        const gc = globalConfig
+    reduceGridVertically() {
         const gm = gridModel.model
 
         let numRows = -1
@@ -38,11 +36,8 @@ export const gridReduceService = {
 
         for (let i = 1; i <= gc.rowsFromTheEnd; i++)
             gridAdjustService.addRowAtEnd()
-
-        gridSvgService.calculateSvg()
     },
-    reduceGridRight() {
-        const gc = globalConfig
+    reduceGridHorizontally() {
         const gm = gridModel.model
 
         let numCols = -1
@@ -71,17 +66,17 @@ export const gridReduceService = {
 
         for (let i = 1; i <= gc.colsFromTheEnd; i++)
             gridAdjustService.addColAtEnd()
-
-        gridSvgService.calculateSvg()
     },
     increaseGrid() {
-        const gc = globalConfig
-        const gm = gridModel.model
-
-        for (let i = gm.numCols; i <= gc.minGridCols; i++)
+        this.increaseGridHorizontally()
+        this.increaseGridVertically()
+    },
+    increaseGridHorizontally() {
+        for (let i = gridModel.model.numCols; i <= gc.minGridCols; i++)
             gridAdjustService.addColAtEnd()
-        
-        for (let i = gm.numRows; i <= gc.minGridRows; i++)
+    },
+    increaseGridVertically() {
+        for (let i = gridModel.model.numRows; i <= gc.minGridRows; i++)
             gridAdjustService.addRowAtEnd()
-    }   
+    }
 }

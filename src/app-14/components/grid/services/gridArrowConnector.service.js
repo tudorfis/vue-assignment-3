@@ -1,13 +1,13 @@
-import { globalConfig } from "../../../config/global.config"
-import { VueUtils } from "../../../utils/vue.utils"
+import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
 import { LinkDrawHelper } from "../../../models/grid/helpers/linkDraw.helper"
-import { gridPanService } from "./gridPan.service"
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
 import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
+import { VueUtils } from "../../../utils/vue.utils"
+import { gridPanService } from "./gridPan.service"
 
 export const gridArrowConnectorService = {
-    arrowConnectorId: '#arrow-connector',
+    selectorId: '',
     startedDrag: false,
     startedPosition: '',
     currentPosition: '',
@@ -17,6 +17,8 @@ export const gridArrowConnectorService = {
     recentLink: false,
     
     get hasCell() {
+        if (!this.position) return false
+
         return gridModel.model.cells[this.position].is
     },
     get sameCell() {
@@ -24,10 +26,17 @@ export const gridArrowConnectorService = {
     },
     get position() {
         if (!this.gridcell) return ''
+
         return this.gridcell.__vue__.$options.propsData.position
     },
     get gridcellElement() {
         return this.gridcell.__vue__.$refs['gridcellelement'].$el
+    },
+    get arrowConnectorEl() {
+        if (!this.selectorId)
+            throw new Error('Please specificy a selectorId for gridArrowConnector service before initializing')
+
+        return document.querySelector(`#${this.selectorId}`)
     },
     startDrag() {
         this.linkKey = ''
@@ -36,27 +45,32 @@ export const gridArrowConnectorService = {
         this.startedPosition = this.currentPosition
     },
     init(event) {
+        
         if (event) {
             this.gridcell = VueUtils.traversePath(event, 'gridcell')
             this.highlightCell()
         }
 
         if (!this.hasCell || this.startedDrag || gridPanService.startedPan) return
-        const arrowConnector = document.querySelector(this.arrowConnectorId)
 
-        const adjust = Math.floor(globalConfig.gridCellElementWidth / 2)
+        this.setArrowConnectorStyles()    
+    },
+    setArrowConnectorStyles() {
+        const adjust = Math.floor(gc.gridCellElementWidth / 2)
         const rect = this.gridcell.getBoundingClientRect()
 
         const top = rect.top + rect.height - adjust - 3
         const left = rect.left + rect.width - adjust + 3
-        const fontSize = Math.floor(globalConfig.gridCellElementWidth / 4)
+        const fontSize = Math.floor(gc.gridCellElementWidth / 4)
 
-        arrowConnector.style.display = `block`
-        arrowConnector.style.top = `${top}px`
-        arrowConnector.style.left = `${left}px`
-        arrowConnector.style.fontSize = `${fontSize}px`
-
-        this.gridcellElement.append(arrowConnector)
+        Object.assign(this.arrowConnectorEl.style, {
+            display: `block`,
+            top: `${top}px`,
+            left: `${left}px`,
+            fontSize: `${fontSize}px`
+        })
+        
+        this.gridcellElement.append(this.arrowConnectorEl)
     },
     highlightCell() {
         if (this.startedDrag && this.hasCell && !this.sameCell) {
@@ -75,7 +89,7 @@ export const gridArrowConnectorService = {
     removeTempPaths() {
         if (this.linkKey && !this.recentLink) {
             
-            delete gridLinksService.paths[this.linkKey]
+            delete gridLinksService.svgPaths[this.linkKey]
             this.linkKey = ''
         }
     },
@@ -91,10 +105,8 @@ export const gridArrowConnectorService = {
         }
     },
     hideArrowConnector() {
-        const arrowConnector = document.querySelector('#arrow-connector')
-        arrowConnector.style.display = `none`
-        
-        document.querySelector('.gridcontent').append(arrowConnector)
+        this.arrowConnectorEl.style.display = `none`
+        document.querySelector('.gridcontent').append(this.arrowConnectorEl)
     },
     stopDrag() {
         if (this.isHighlight) {
@@ -132,12 +144,16 @@ export const gridArrowConnectorService = {
         if (this.linkKey === linkKey) return
         this.linkKey = linkKey
         
-        gridLinksService.genPathTwoCells(linkKey, true)
+        gridLinksService.generateSvgPath(linkKey, true)
     },
     doGridcellOperations(position) {
         this.currentPosition = position
         
         if (this.startedDrag)
             this.removeTempPaths()
+    },
+
+    get restoreEEMapState() {
+        return !this.recentLink && this.startedDrag
     }
 }
