@@ -2,7 +2,7 @@
 import { globalConfig as gc } from "../../config/global.config"
 import { VueUtils } from '../../utils/vue.utils'
 
-export const gridBlueprint = {
+export const gridModelBlueprint = {
     numRows: 0,
     numCols: 0,
     totalSteps: 0,
@@ -11,7 +11,7 @@ export const gridBlueprint = {
     links: []
 }
 
-export const cellBlueprint = {
+export const gridcellBlueprint = {
     is: 0,
     type: '',
     id: 0

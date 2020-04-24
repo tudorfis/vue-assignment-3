@@ -1,4 +1,5 @@
 import { gridIOservice } from "./gridIO.service"
+import { gridLinksService } from "./gridLinks.service"
 
 const gridHistoryService = {
     modelHistory: [],
@@ -9,21 +10,22 @@ const gridHistoryService = {
         this.modelVersion++
     },
     undoModelState() {
-        this.undoRedoHelper(true, false)
+        this.undoRedoState(true, false)
         
     },
     redoModelState() {
-        this.undoRedoHelper(false, true)
+        this.undoRedoState(false, true)
     },
-    undoRedoHelper(isUndo = false, isRedo = false) {
+    undoRedoState(isUndo = false, isRedo = false) {
         const diff = isUndo ? -1 : isRedo ? 1 : 0
         if (diff === 0) return 
 
         if (this.modelHistory[this.modelVersion + diff]) {
             this.modelVersion += diff
-            
             const model = JSON.parse(this.modelHistory[this.modelVersion])
+            
             gridIOservice.loadGridModel(model)
+            gridLinksService.buildLinks()
         }
     },
     log() {

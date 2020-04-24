@@ -3,6 +3,32 @@ import { gridModel } from "../grid.model"
 import { gridAdjustService } from "./gridAdjust.service"
 
 export const gridReduceService = {
+    calculateGridSize(numRows, numCols) {
+        if (numRows && numCols) {
+            gc.minGridRows = numRows
+            gc.minGridCols = numCols
+        }
+        else {
+            const gridcontentEl = document.querySelector('.gridcontent')
+            gc.minGridRows = Math.round(gridcontentEl.clientHeight / gc.gridCellHeight)
+            gc.minGridCols = Math.round(gridcontentEl.clientWidth / gc.gridCellWidth)
+        }
+
+        this.increaseGrid()
+        this.reduceGrid()
+    },
+    increaseGrid() {
+        this.increaseGridHorizontally()
+        this.increaseGridVertically()
+    },
+    increaseGridHorizontally() {
+        for (let i = gridModel.model.numCols; i <= gc.minGridCols; i++)
+            gridAdjustService.addColAtEnd()
+    },
+    increaseGridVertically() {
+        for (let i = gridModel.model.numRows; i <= gc.minGridRows; i++)
+            gridAdjustService.addRowAtEnd()
+    },
     reduceGrid() {
         this.reduceGridVertically()
         this.reduceGridHorizontally()
@@ -66,17 +92,5 @@ export const gridReduceService = {
 
         for (let i = 1; i <= gc.colsFromTheEnd; i++)
             gridAdjustService.addColAtEnd()
-    },
-    increaseGrid() {
-        this.increaseGridHorizontally()
-        this.increaseGridVertically()
-    },
-    increaseGridHorizontally() {
-        for (let i = gridModel.model.numCols; i <= gc.minGridCols; i++)
-            gridAdjustService.addColAtEnd()
-    },
-    increaseGridVertically() {
-        for (let i = gridModel.model.numRows; i <= gc.minGridRows; i++)
-            gridAdjustService.addRowAtEnd()
     }
 }

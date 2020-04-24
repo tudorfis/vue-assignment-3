@@ -3,11 +3,19 @@ import { LinkDrawHelper } from "../helpers/linkDraw.helper"
 import { linkPathMapHelper } from "../helpers/linkPathMap.helper"
 
 export const gridLinksDroppointService = {
-    hasDroppointMiddle(position) {
-        if (gridModel.model.cells[position].is) return false
-        const linkKeys = linkPathMapHelper.getLinkKeys(position)
+    hasDroppointMiddle(newPosition, oldPosition) {
+        if (gridModel.model.cells[newPosition].is) return false
 
-        return linkKeys.length > 0
+        const linkKeys = linkPathMapHelper.getLinkKeys(newPosition)
+        const hasDifferent = this.hasDifferentLinksForDroppoint(linkKeys, oldPosition) 
+
+        return hasDifferent && linkKeys.length > 0
+    },
+    hasDifferentLinksForDroppoint(linkKeys, position) {
+        if (!position) return true
+        
+        const filteredLinkKeys = linkKeys.filter(linkKey => linkKey.match(position))
+        return filteredLinkKeys.length !== linkKeys.length
     },
     setDroppointLinksByMiddle(position) {
         const linkKeys = linkPathMapHelper.getLinkKeys(position)

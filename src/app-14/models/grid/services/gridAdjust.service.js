@@ -2,7 +2,8 @@
 import Vue from "vue"
 import { gridSvgService } from '../../../components/grid/services/gridSvg.service'
 import { globalConfig as gc } from '../../../config/global.config'
-import { cellBlueprint, gridModel } from '../grid.model'
+import { Utils } from '../../../utils/utils'
+import { gridcellBlueprint, gridModel } from '../grid.model'
 import { GridPositionIterator } from '../iterators/GridPositionIterator'
 import { gridLinksService } from './gridLinks.service'
 
@@ -25,14 +26,14 @@ export const gridAdjustService = {
         gridModel.model.numCols++
 
         GridPositionIterator.goOverLastCol(position => {
-            Vue.set(gridModel.model.cells, position, {...cellBlueprint})
+            Vue.set(gridModel.model.cells, position, Utils.deepclone(gridcellBlueprint))
         })
     },
     addRowAtEnd() {
         gridModel.model.numRows++
 
         GridPositionIterator.goOverLastRow(position => {
-            Vue.set(gridModel.model.cells, position, {...cellBlueprint})
+            Vue.set(gridModel.model.cells, position, Utils.deepclone(gridcellBlueprint))
         })
     },
     spliceCols(position) {
@@ -46,7 +47,7 @@ export const gridAdjustService = {
             gridLinksService.rearangeLinks(prevPos, nextPos)
         })
 
-        gridModel.model.cells[position] = {...cellBlueprint}
+        gridModel.model.cells[position] = Utils.deepclone(gridcellBlueprint)
     },
     spliceRows(position) {
         if (this.isElementNearRowEnd(position)) {
@@ -59,23 +60,23 @@ export const gridAdjustService = {
             gridLinksService.rearangeLinks(prevPos, nextPos)
         })
 
-        gridModel.model.cells[position] = {...cellBlueprint}
+        gridModel.model.cells[position] = Utils.deepclone(gridcellBlueprint)
     },
     addRowOrColEnd(position) {
-        if (this.nearColEnd(position))
+        if (this.isNearColEnd(position))
             this.addColAtEnd()
 
-        if (this.nearRowEnd(position))
+        if (this.isNearRowEnd(position))
             this.addRowAtEnd()
     },
-    nearColEnd(position) {
+    isNearColEnd(position) {
         return gridModel.getCol(position) > gridModel.model.numCols - gc.colsFromTheEnd
     },
-    nearRowEnd(position) {
+    isNearRowEnd(position) {
         return gridModel.getRow(position) > gridModel.model.numRows - gc.rowsFromTheEnd
     },
     isNearColOrRowEnd(position) {
-        return this.nearColEnd(position) || this.nearRowEnd(position)
+        return this.isNearColEnd(position) || this.isNearRowEnd(position)
     },
     isElementNearColEnd(position) {
         let foundIt = false

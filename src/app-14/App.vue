@@ -15,10 +15,10 @@ import { globalConfig as gc } from './config/global.config';
 import TopmenuVue from './components/topmenu/Topmenu.vue';
 import ToolboxVue from './components/toolbox/Toolbox.vue';
 import GridContentVue from './components/grid/Gridcontent.vue';
-import { zoomService } from './services/zoom.service';
-import { globalResetsService } from './services/globalResets.service';
 import { gridHistoryService } from './models/grid/services/gridHistory.service'
 import { gridIOservice } from './models/grid/services/gridIO.service'
+import { gridLinksService } from './models/grid/services/gridLinks.service';
+import { resizeService } from './services/resize.service'
 
 export default {
   components: {
@@ -32,7 +32,14 @@ export default {
       topmenuHeight: gc.topmenuHeight
     };
   },
-  beforeCreate() {
+  methods: {
+    hideLoadingIcon() {
+      document.querySelector('.loading-icon').style.visibility = 'hidden'
+    }
+  },
+  mounted() {
+    document.body.onresize = resizeService.resize
+    
     /** @TODO - match an id of a sequence to get the output  */
     let modelType = null
     const matchRef = globalThis.location.search.match(/model\=([\w\-]+)/)
@@ -40,22 +47,21 @@ export default {
 
     if (!modelType) {
       gridIOservice.newGridModel()
-      gridIOservice.afterGridLoaded()
-      gridHistoryService.saveState()
+      this.hideLoadingIcon()
       return
     }
 
     fetch(`/src/app-14/assets/data/model-${modelType}.json`)
       .then(data => data.json())
       .then(model => { 
-        gridIOservice.loadGridModel(model) 
+        gridIOservice.loadGridModel(model)
+        this.hideLoadingIcon()
+
+        gridLinksService.buildLinks()
         gridHistoryService.saveState()
       })
       .catch(error => {
         console.error(error)
-        gridIOservice.newGridModel()
-        gridIOservice.afterGridLoaded()
-        gridHistoryService.saveState()
       })
   }
 };

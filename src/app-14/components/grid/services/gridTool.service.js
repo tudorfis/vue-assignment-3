@@ -5,14 +5,16 @@ import { gridReduceService } from "../../../models/grid/services/gridReduce.serv
 import { globalResetsService } from "../../../services/globalResets.service"
 import { toolboxElementsEnum } from '../../toolbox/enum/toolboxElements.enum'
 import { gridCellService } from "./gridCell.service"
+import { gridSvgService } from "../services/gridSvg.service"
 
 export const gridToolService = {
     deleteGridcell(position) {
         globalResetsService.reset()
-
+        
         gridCellService.resetCell(position)
         gridReduceService.reduceGrid()
         
+        gridSvgService.calculateSvg()
         gridLinksService.deleteAllLinks(position)
         gridLinksService.buildLinks()
         

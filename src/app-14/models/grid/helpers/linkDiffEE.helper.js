@@ -1,5 +1,6 @@
 import { globalConfig as gc } from '../../../config/global.config'
 import linkEEMapHelper from './linkEEMap.helper'
+import { globalService } from '../../../services/global.service'
 
 const linkDifferenceEntryExitPointsHelper = {
     get eeMap() {

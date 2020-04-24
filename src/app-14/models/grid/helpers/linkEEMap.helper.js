@@ -77,7 +77,6 @@ class LinkEntryExitPointsMapHelper {
         this.setEEMapEmptyItems(ldh)
         this.setEEMapItemsTotals(ldh)
     }
-    
 }
 
 const linkEEMapHelper = new LinkEntryExitPointsMapHelper()

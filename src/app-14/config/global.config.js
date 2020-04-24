@@ -1,7 +1,7 @@
 
-export const globalConfig = {
-    minGridCols: 9,
-    minGridRows: 5,
+const globalConfig = {
+    minGridCols: 0,
+    minGridRows: 0,
 
     zoomLevel: 100,
     zoomDiff: 25,
@@ -22,8 +22,8 @@ export const globalConfig = {
     toolboxWidth: 200,
     topmenuHeight: 60,
 
-    rowsFromTheEnd: 2,
-    colsFromTheEnd: 2,
+    rowsFromTheEnd: 1,
+    colsFromTheEnd: 1,
     
     positionSplitSymbol: '-',
     linkSeparatorSymbol: '__',
@@ -45,3 +45,5 @@ export const globalConfig = {
     ]
 }
 
+globalThis.globalConfig = globalConfig
+export { globalConfig }

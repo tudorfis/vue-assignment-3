@@ -9,17 +9,17 @@ describe('gridAdjustService', function () {
         gc.colsFromTheEnd = 2
     });
 
-    test(`nearColEnd()`, () => {
-        expect(gridAdjustService.nearColEnd('2-1')).toBe(false)
-        expect(gridAdjustService.nearColEnd('2-7')).toBe(false)
-        expect(gridAdjustService.nearColEnd('2-8')).toBe(true)
-        expect(gridAdjustService.nearColEnd('2-9')).toBe(true)
+    test(`isNearColEnd()`, () => {
+        expect(gridAdjustService.isNearColEnd('2-1')).toBe(false)
+        expect(gridAdjustService.isNearColEnd('2-7')).toBe(false)
+        expect(gridAdjustService.isNearColEnd('2-8')).toBe(true)
+        expect(gridAdjustService.isNearColEnd('2-9')).toBe(true)
     })
-    test(`nearRowEnd()`, () => {
-        expect(gridAdjustService.nearRowEnd('2-1')).toBe(false)
-        expect(gridAdjustService.nearRowEnd('3-1')).toBe(false)
-        expect(gridAdjustService.nearRowEnd('4-1')).toBe(true)
-        expect(gridAdjustService.nearRowEnd('5-1')).toBe(true)
+    test(`isNearRowEnd()`, () => {
+        expect(gridAdjustService.isNearRowEnd('2-1')).toBe(false)
+        expect(gridAdjustService.isNearRowEnd('3-1')).toBe(false)
+        expect(gridAdjustService.isNearRowEnd('4-1')).toBe(true)
+        expect(gridAdjustService.isNearRowEnd('5-1')).toBe(true)
     })
     test(`addColAtEnd()`, () => {
         gridAdjustService.addColAtEnd()

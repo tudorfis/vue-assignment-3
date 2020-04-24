@@ -6,6 +6,7 @@ import linkEEMapHelper from '../helpers/linkEEMap.helper'
 import { linkPathMapHelper } from '../helpers/linkPathMap.helper'
 import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
 import { gridLinksDrawService } from './gridLinksDraw.service'
+import { globalService } from "../../../services/global.service"
 
 export const gridLinksService = {
     svgPaths: {},
@@ -31,6 +32,8 @@ export const gridLinksService = {
         Vue.set(this.svgPaths, linkKey, [])
         const ldh = new LinkDrawHelper(linkKey)
 
+        globalService.linkKey = ldh.linkKey
+        
         linkEEMapHelper.restoreEEMapState()
         if (isDrag) linkEEMapHelper.saveEEMapState(ldh)
         

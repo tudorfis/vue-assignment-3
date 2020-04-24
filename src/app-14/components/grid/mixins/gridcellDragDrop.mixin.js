@@ -63,6 +63,7 @@ export default {
         onDropDoAllowDrop() {
             const newPosition = this.position
             const oldPosition = gridCellService.removePreviousCell()
+
             const isNearColOrRowEnd = gridAdjustService.isNearColOrRowEnd(newPosition)
             
             if (isNearColOrRowEnd) {
@@ -73,11 +74,15 @@ export default {
             gridCellService.setCellActive(newPosition, oldPosition)
             gridLinksService.rearangeLinks(oldPosition, newPosition)
             
-            if (gridLinksService.hasNoLinks(newPosition))
-                gridLinksDroppointService.setDroppointLinksByMiddle(newPosition)
+            gridLinksDroppointService.setDroppointLinksByMiddle(newPosition)
             
-            if (!isNearColOrRowEnd)
+            if (!gridLinksService.hasNoLinks(newPosition))
+                gridLinksService.deleteAllLinks(oldPosition)
+            
+            if (!isNearColOrRowEnd) {
                 gridReduceService.reduceGrid()
+                gridSvgService.calculateSvg()
+            }
         },
         onDropAfter() {
             /** @TODO: remove temporary auto id, to simulate saved step */
@@ -98,17 +103,21 @@ export default {
             this.onDragoverResetPreviousGridcell(this.$refs.gridcell)
         },
         onDragoverSetDroppoints(event, gridcell) {
-            const hasDroppointMiddle = gridLinksDroppointService.hasDroppointMiddle(this.position)
-            const hasNoLinks = gridLinksService.hasNoLinks(toolboxDragService.dragPosition)
-            
-            this.isDroppointMiddle =  hasDroppointMiddle && hasNoLinks
+            const newPosition = this.position
+            const oldPosition = toolboxDragService.dragPosition
+
+            this.isDroppointMiddle = gridLinksDroppointService.hasDroppointMiddle(newPosition, oldPosition)
 
             if (this.isDroppointMiddle) {
-                gridCellService.setMiddleDroppointActive(gridcell)
+                gridCellService.showMiddleDroppoint(gridcell)
                 return
             }
 
-            this.dropppointDirection = gridCellService.getDroppointDirection(event, gridcell, this.position)
+            const droppointResult = gridCellService.getDroppointDirectionAndDisplay(event, gridcell, newPosition)
+            this.dropppointDirection = droppointResult.droppointDirection
+
+            if (this.dropppointDirection)
+                gridcell.__vue__.$data.droppointsDisplay = droppointResult.droppointsDisplay
         },
         onDragoverSetActiveInactive(gridcell) {
             if (!this.dropppointDirection && !this.isDroppointMiddle) {

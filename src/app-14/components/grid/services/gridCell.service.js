@@ -31,7 +31,7 @@ export const gridCellService = {
         gridcell = gridcell || this.activeGridcell
         
         if (gridcell && gridcell.__vue__)
-            gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint}
+            gridcell.__vue__.$data.droppointsDisplay = Utils.deepclone(droppointsDisplayBlueprint)
     },
     savePreviousCell(gridcell) {
         this.activeGridcell = gridcell
@@ -58,10 +58,11 @@ export const gridCellService = {
 
         gridIOservice.setCell(newPosition, cellObj)
     },
-    setMiddleDroppointActive(gridcell) {
-        gridcell.__vue__.$data.droppointsDisplay = {...droppointsDisplayBlueprint, showMiddle: true}
+    showMiddleDroppoint(gridcell) {
+        gridcell.__vue__.$data.droppointsDisplay = Object.assign(
+            Utils.deepclone(droppointsDisplayBlueprint), {showMiddle: true})
     },
-    getDroppointDirection(event, gridcell, position) {
+    getDroppointDirectionAndDisplay(event, gridcell, position) {
         const droppointsDisplay = Utils.deepclone(droppointsDisplayBlueprint)
         let droppointDirection = ''
 
@@ -81,35 +82,32 @@ export const gridCellService = {
             droppointsDisplay.showLeft = true
             droppointDirection = 'left'
         }
-      
-        if (droppointDirection)
-            gridcell.__vue__.$data.droppointsDisplay = droppointsDisplay
 
-        return droppointDirection
+        return { droppointDirection, droppointsDisplay }
     },
     isDroppointDirectionDown(event, gridcell, position) {
-        const isMouseOnBottom = gridMouseDroppointsService.isMouseOnBottomOutside(event, gridcell)
-        const isCellBellow = gridMouseDroppointsService.hasElementBellow(position)
+        const isMouseOnBottomOutside = gridMouseDroppointsService.isMouseOnBottomOutside(event, gridcell)
+        const hasElementBellow = gridMouseDroppointsService.hasElementBellow(position)
 
-        return isMouseOnBottom && isCellBellow
+        return isMouseOnBottomOutside && hasElementBellow
     },
     isDroppointDirectionUp(event, gridcell, position) {
-        const isCellAbove = gridMouseDroppointsService.hasElementAbove(position)
-        const isMouseOnTop = gridMouseDroppointsService.isMouseOnTopOutside(event, gridcell)
+        const isMouseOnTopOutside = gridMouseDroppointsService.isMouseOnTopOutside(event, gridcell)
+        const hasElementAbove = gridMouseDroppointsService.hasElementAbove(position)
 
-        return isCellAbove && isMouseOnTop
+        return isMouseOnTopOutside && hasElementAbove
     },
     isDroppointDirectionRight(event, gridcell, position) {
-        const isCellRight = gridMouseDroppointsService.hasElementRight(position)
-        const isMouseOnRight = gridMouseDroppointsService.isMouseOnRightOutside(event, gridcell)
+        const isMouseOnRightOutside = gridMouseDroppointsService.isMouseOnRightOutside(event, gridcell)
+        const hasElementRight = gridMouseDroppointsService.hasElementRight(position)
         
-        return isCellRight && isMouseOnRight
+        return isMouseOnRightOutside && hasElementRight
     },
     isDroppointDirectionLeft(event, gridcell, position) {
-        const isCellLeft = gridMouseDroppointsService.hasElementLeft(position)
-        const isMouseOnLeft = gridMouseDroppointsService.isMouseOnLeftOutside(event, gridcell)
+        const isMouseOnLeftOutside = gridMouseDroppointsService.isMouseOnLeftOutside(event, gridcell)
+        const hasElementLeft = gridMouseDroppointsService.hasElementLeft(position)
 
-        return isCellLeft && isMouseOnLeft
+        return isMouseOnLeftOutside && hasElementLeft
     },
     moveCellsByDroppointDirection(direction, position) {
         let droppointPosition

@@ -2,6 +2,7 @@ import { gridModel } from "../grid.model"
 import { LinkDrawHelper } from "../helpers/linkDraw.helper"
 import { linkPathMapHelper } from '../helpers/linkPathMap.helper'
 import { GridLinksIterator } from "../iterators/GridLinksIterator"
+import { globalService } from '../../../services/global.service'
 
 const gridLinksDrawService = {
     createPathAndArrow(ldh) {
@@ -13,6 +14,17 @@ const gridLinksDrawService = {
             hasCellsOut:        GridLinksIterator.hasCellsOut(ldh, ldh.directionOut),
             hasCellsIn:         GridLinksIterator.hasCellsIn(ldh, potentialDirection),
             hasCellsCorner:     GridLinksIterator.hasCellsCorner(ldh, ldh.directionOut)
+        }
+
+        
+        if (globalService.linkKey === '3-1__4-6') {
+            console.log('ldh.sameRowCol:', ldh.sameRowCol)
+
+            console.log('cellsOverlapHelper.hasCellsOut:', cellsOverlapHelper.hasCellsOut)
+            console.log('cellsOverlapHelper.hasCellsCorner:', cellsOverlapHelper.hasCellsCorner)
+
+            console.log('ldh.sameDirection:', ldh.sameDirection)
+            console.log('cellsOverlapHelper.hasCellsIn:', cellsOverlapHelper.hasCellsIn)
         }
 
         let output

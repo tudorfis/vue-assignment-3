@@ -2,7 +2,7 @@
 import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
 
-export const gridSvgService = {
+const gridSvgService = {
     svgStyle: null,
     svgViewBox: '0 0 0 0',
     calculateSvg() {
@@ -13,3 +13,6 @@ export const gridSvgService = {
         this.svgViewBox = `0 0 ${width} ${height}`
     }
 }
+
+globalThis.gridSvgService = gridSvgService
+export { gridSvgService }

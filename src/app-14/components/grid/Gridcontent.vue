@@ -51,6 +51,7 @@ import { gridPanService } from './services/gridPan.service';
 import { gridLinksService } from '../../models/grid/services/gridLinks.service';
 import { globalResetsService } from '../../services/globalResets.service';
 import { GridPositionIterator } from '../../models/grid/iterators/GridPositionIterator';
+import { gridReduceService } from '../../models/grid/services/gridReduce.service';
 
 export default {
   props: ['toolboxWidth', 'topmenuHeight'],
@@ -80,6 +81,9 @@ export default {
       gridDeleteArrowService.svgEl = document.querySelector('#svgGrid')
       gridDeleteArrowService.gridlayoutEl = document.querySelector('.gridlayout')
       gridPanService.init(this.$refs.gridcontent)
+
+      
+      
   },
   computed: {
     gridPositions() {
