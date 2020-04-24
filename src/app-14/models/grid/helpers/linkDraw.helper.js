@@ -82,7 +82,7 @@ export class LinkDrawHelper {
         return this.right ? 'right' : (this.left ? 'left' : '')
     }
     get upDown() {
-        return this.up ? 'up' : (this.down ? 'down' : '')
+        return this.down ? 'down' : (this.up ? 'up' : '')
     }
     get sameDirection() {
         return (LinkDrawHelper.upOrDown(this.directionOut) && LinkDrawHelper.upOrDown(this.directionIn) ||
@@ -107,11 +107,17 @@ export class LinkDrawHelper {
         return LinkDrawHelper.oppositeDirection(directionIn)
     }
     get potentialDirections() {
-        if (this.up || this.down)
-            return [ this['upDown'], this['rightLeft'] ]
+        if (this.down)
+            return [ 'down',  this['rightLeft'] ]
+        
+        else if (this.right)
+            return [ 'right', this['upDown'] ]
 
-        else if (this.right || this.left)
-            return [ this['rightLeft'], this['upDown'] ]
+        else if (this.left)
+            return [ 'left', this['upDown'] ]
+        
+        else if (this.up)
+            return [ 'up', this['rightLeft'] ]
     }
 
     drawPath(direction) {

@@ -75,7 +75,7 @@ export default {
 <style lang="scss" scoped>
 .gridcell {
   position: relative;
-  color: #eee;
+  color: #999;
   z-index: 0;
   border: 1px dashed #e0e0e0;
 

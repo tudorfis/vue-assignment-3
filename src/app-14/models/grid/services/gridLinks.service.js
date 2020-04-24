@@ -18,6 +18,8 @@ export const gridLinksService = {
         this.colors = []
         this.colorIds = []
 
+        this.sortLinkKeys()
+
         linkEEMapHelper.generateEEmap()
         linkPathMapHelper.resetPathMap()
 
@@ -27,12 +29,27 @@ export const gridLinksService = {
         while(lki.continue)
             this.generateSvgPath(lki.linkKey)
     },
+    sortLinkKeys() {
+        const sortedLinks = []
+        gridModel.model.links.forEach(linkKey => {
+            if (linkKey !== null) {
+                const ldh = new LinkDrawHelper(linkKey)
+    
+                if (ldh.sameRowCol) {
+                    sortedLinks.unshift(linkKey)
+                } else {
+                    sortedLinks.push(linkKey)
+                }
+            }
+        })
 
+        gridModel.model.links = sortedLinks
+    },
     generateSvgPath(linkKey = '', isDrag = false) {
         Vue.set(this.svgPaths, linkKey, [])
         const ldh = new LinkDrawHelper(linkKey)
 
-        globalService.linkKey = ldh.linkKey
+        globalService.linkKey = linkKey
         
         linkEEMapHelper.restoreEEMapState()
         if (isDrag) linkEEMapHelper.saveEEMapState(ldh)

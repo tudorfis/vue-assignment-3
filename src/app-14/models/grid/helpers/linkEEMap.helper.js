@@ -51,8 +51,9 @@ class LinkEntryExitPointsMapHelper {
             this.eeMap[ldh.link2] = Utils.deepclone(this.eeMapItemBlueprint)
     }
     setEEMapItemsTotals(ldh) {
+        const linkDirections = linkDirectionsHelper.generateLinkDirections(ldh)
         const ldh2 = new LinkDrawHelper(ldh.linkKey, true)
-        const linkDirections = linkDirectionsHelper.getLinkDirections(ldh, ldh2)
+
 
         const eeMapItem1 = this.eeMap[ldh.link1][linkDirections[0]]
         const eeMapItem2 =  this.eeMap[ldh2.link1][linkDirections[1]]

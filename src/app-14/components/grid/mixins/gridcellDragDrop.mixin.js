@@ -74,10 +74,10 @@ export default {
             gridCellService.setCellActive(newPosition, oldPosition)
             gridLinksService.rearangeLinks(oldPosition, newPosition)
             
-            gridLinksDroppointService.setDroppointLinksByMiddle(newPosition)
+            // gridLinksDroppointService.setDroppointLinksByMiddle(newPosition)
             
-            if (!gridLinksService.hasNoLinks(newPosition))
-                gridLinksService.deleteAllLinks(oldPosition)
+            // if (!gridLinksService.hasNoLinks(newPosition))
+            //     gridLinksService.deleteAllLinks(oldPosition)
             
             if (!isNearColOrRowEnd) {
                 gridReduceService.reduceGrid()

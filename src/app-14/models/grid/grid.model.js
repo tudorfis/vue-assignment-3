@@ -17,7 +17,7 @@ export const gridcellBlueprint = {
     id: 0
 }
 
-export const gridModel = {
+const gridModel = {
     model: null,
     getId(position) {
         if (!position || !this.model.cells[position] || !this.model.cells[position].id) 
@@ -70,3 +70,6 @@ export const gridModel = {
         return ''
     }
 }
+
+globalThis.gridModel = gridModel
+export { gridModel }
