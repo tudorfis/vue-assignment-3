@@ -19,7 +19,7 @@ const gridLinksDrawService = {
             }
         }
         else {
-            return this.drawLinkPaths(ldh)
+            return this.drawLinkPathOverlaps(ldh)
         }
     },
     drawSameRowButUpOrDown(ldh) {
@@ -136,62 +136,54 @@ const gridLinksDrawService = {
 
         return [ path, arrow ]
     },
-    drawLinkPaths(ldh) {
-        let path, arrow
-            
+    drawLinkPathOverlaps(ldh) {
         const helper = linkDirectionsHelper.generateLinkDirections(ldh)
-        
-        const link1Direction = helper[0]
-        const link2Direction = helper[1]
-        
         const coh = helper[2]
-        const pdir1 = helper[3]
 
-        path = ldh.drawPath(link1Direction)
+        let path, arrow
+        path = ldh.drawPath(ldh.directionOut)
 
-        if (link1Direction === pdir1[0]) {
-            generateLinkPaths(coh.isOut1, coh.isIn2, coh.isCorner1, coh.isIn1)
-            return [ path, arrow ]
+        const pdir1 = ldh.potentialDirections
+        const helperDirection = (ldh.directionOut === pdir1[0]) ? pdir1[1] : pdir1[0]
+
+        if (coh.D1 || coh.D2) {
+            console.log(` D1=${coh.D1}  C2=${coh.D2} `)
+
+            path.svgD += ldh.drawHalfOut(ldh.directionIn, ldh.directionOut)
+            path.svgD += ldh.drawLine(ldh.directionIn, 'full')
+            path.svgD += ldh.drawLine(ldh.directionOut, 'full')
+            path.svgD += ldh.drawHalfIn(ldh.directionOut, ldh.directionIn)
         }
-        else if (link1Direction === pdir1[1]) {
-            generateLinkPaths(coh.isOut2, coh.isIn1, coh.isCorner2, coh.isIn2)
-            return [ path, arrow ]
+        else if (coh.C1 || coh.C2) {
+            console.log(` C1=${coh.C1}  C2=${coh.C2} `)
+
+            path.svgD += ldh.drawLine(ldh.directionOut, 'full')
+            path.svgD += ldh.drawHalfOut(helperDirection, ldh.directionIn)
+            path.svgD += ldh.drawLine(helperDirection, 'full')
+            path.svgD += ldh.drawHalfIn(helperDirection, ldh.directionOut)
+        }
+        else if (coh.B1 || coh.B2) {
+            console.log(` B1=${coh.B1}  B2=${coh.B2} `)
+
+            path.svgD += ldh.drawHalfOut(helperDirection, ldh.directionOut)
+            path.svgD += ldh.drawLine(helperDirection, 'full')
+            path.svgD += ldh.drawHalfIn(helperDirection, ldh.directionIn)
+            path.svgD += ldh.drawLine(ldh.directionIn, 'full')
+        }
+        
+        else if (coh.A0 || coh.A1 || coh.A2) {
+            console.log(` A0=${coh.A0}  A1=${coh.A1}  A2=${coh.A2} `)
+
+            path.svgD += ldh.drawLine(ldh.directionOut, 'full')
+            path.svgD += ldh.drawHalfOut(ldh.directionOut, ldh.directionIn)
+            path.svgD += ldh.drawHalfIn(ldh.directionIn, ldh.directionOut)
+            path.svgD += ldh.drawLine(ldh.directionIn, 'full')
         }
 
-        function generateLinkPaths(cond1, cond2, cond3, cond4) {
-            const otherDirection = (link1Direction === pdir1[0]) ? pdir1[1] : pdir1[0]
+        path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
+        arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
 
-            if (cond1) {
-                path.svgD += ldh.drawHalfIn(otherDirection, link1Direction)
-                path.svgD += ldh.drawLine(otherDirection, 'full')
-
-                if (cond2) {
-                    path.svgD += ldh.drawLine(link1Direction, 'full')
-                    path.svgD += ldh.drawHalfIn(link1Direction, link2Direction)
-                }
-                else {
-                    path.svgD += ldh.drawHalfIn(otherDirection, link2Direction)
-                    path.svgD += ldh.drawLine(link1Direction, 'full')
-                }
-            }
-            else {
-                path.svgD += ldh.drawLine(link1Direction, 'full')
-
-                if (cond3 || cond4) {
-                    path.svgD += ldh.drawHalfIn(otherDirection, link1Direction)
-                    path.svgD += ldh.drawLine(otherDirection, 'full')
-                    path.svgD += ldh.drawHalfOut(otherDirection, link1Direction)
-                }
-                else {
-                    path.svgD += ldh.drawHalfOut(link1Direction, ldh.directionIn)
-                    path.svgD += ldh.drawHalfIn(otherDirection, link1Direction)
-                    path.svgD += ldh.drawLine(otherDirection, 'full')
-                }
-            }
-
-            path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
-            arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
-        }
+        return [ path, arrow ]
     }
 }
 

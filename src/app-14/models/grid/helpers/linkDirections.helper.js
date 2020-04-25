@@ -5,145 +5,37 @@ import linkEEMapHelper from './linkEEMap.helper'
 const linkDirectionsHelper = {
     linkMap: {},
     resetLinkMap() {
-        this.linkMap = {}
+        this.linkDirectionsMap = {}
     },
     generateLinkDirections(ldh) {
-        if (this.linkMap[ldh.linkKey])
-            return this.linkMap[ldh.linkKey]
-
-        let link1Direction, link2Direction
-
-        const ldh2  = new LinkDrawHelper(ldh.linkKey, true)
-        
+        if (this.linkDirectionsMap[ldh.linkKey])
+            return this.linkDirectionsMap[ldh.linkKey]
+            
         const pdir1 = ldh.potentialDirections
-        const pdir2 = ldh2.potentialDirections
 
         if (!pdir1[1]) {
-            this.linkMap[ldh.linkKey] = this.generateForSameRowCol(ldh)
-            return this.linkMap[ldh.linkKey]
+            this.linkDirectionsMap[ldh.linkKey] = this.generateForSameRowCol(ldh)
+            return this.linkDirectionsMap[ldh.linkKey]
         }
 
-        const coh = this.generateCellsOverlapHelper(ldh)
-        
-        /** link1Direction, link2Direction */
-        if (!coh.isOut2 && !coh.isCorner2 && !coh.isIn2) {
-            link1Direction = pdir1[1]
-            link2Direction = (coh.isIn2) ? pdir2[0] : pdir2[1]
-        }
-        else if (coh.isOut2) {
-            link1Direction = pdir1[0]
-            link2Direction = (coh.isIn2) ? pdir2[0] : pdir2[1]
-        }
-        else if (!coh.isOut1 && !coh.isCorner1) {
-            link1Direction = pdir1[0]
-            link2Direction = (coh.isIn1) ? pdir2[0] : pdir2[1]
-        }
-        else if (coh.isOut1) {
-            link1Direction = pdir1[1]
-            link2Direction = (coh.isIn1) ? pdir2[1] : pdir2[0]
-        }
-        else {
-            link1Direction = pdir1[0]
-            link2Direction = pdir2[0]
-        }
+        const coh = this.generateLinkDirectionsOverlapHelper(ldh)
 
-        if (coh.isCorner1 && coh.isCorner2 && !coh.isIn1 && !coh.isIn2 && !coh.isOut1 && !coh.isOut2) {
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-            switchLink2Direction() 
-        }
-        else if (coh.isCorner1 && coh.isCorner2 && coh.isOut1 && !coh.isOut2 && coh.isIn1 && !coh.isIn2) {
-            console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
-            switchLink2Direction() 
-        }
-        else if (coh.isCorner1 && coh.isCorner2 && coh.isOut1 && !coh.isOut2 && coh.isIn1 && coh.isIn2) {
-            console.log('cccccccccccccccccccccccccccccccccc')
-            switchLink2Direction() 
-        }
-        else if (coh.isCorner1 && !coh.isCorner2 && coh.isOut1 && !coh.isOut2 && coh.isIn1 && coh.isIn2) {
-            console.log('ddddddddddddddddddddddd')
-            switchLink2Direction() 
-        }
-        else if (!coh.isCorner1 && !coh.isCorner2 && coh.isOut1 && !coh.isOut2 && coh.isIn1 && coh.isIn2) {
-            console.log('eeeeeeeeeeeeeeeeeeeee')
-            switchLink2Direction() 
-        }
-        else {
-            const isFreeWay = !coh.isOut1 && !coh.isCorner1 && !coh.isIn1
+        const ldh2  = new LinkDrawHelper(ldh.linkKey, true)
+        const pdir2 = ldh2.potentialDirections
 
-            if (coh.isEE2) {
-                if (coh.isCorner2 && !coh.isOut2 && isFreeWay) {
-                    console.log('111111111111111111')
-                    switchLink2Direction() 
-                }
-                else if (coh.isOut2 && !coh.isIn2 && isFreeWay) {
-                    console.log('222222222222')
-                    switchLink2Direction() 
-                }
-                else if (!coh.isOut2 && !coh.isCorner2 && coh.isIn2 && isFreeWay) {
-                    console.log('333333333333333333333')
-                    switchLink2Direction() 
-                }
-                else if (coh.isIn2 && !coh.isOut1 && coh.isIn1) {
-                    console.log('4444444444444444')
-                    switchLink2Direction() 
-                }
-                
-            }
-            else {
-                if (coh.isIn2 && !coh.isOut1 && coh.isCorner1) {
-                    console.log('5555555555555555555')
-                    switchLink2Direction() 
-                }
-                else if (coh.isOut2 && coh.isIn2 && !coh.isOut1 && (coh.isCorner1 || coh.isIn1)) {
-                    console.log('666666666666666')
-                    switchLink2Direction() 
-                }
-                else if (!coh.isOut1 && !coh.isOut2 && coh.isIn1 && (coh.isCorner2 || coh.isIn2)) {
-                    console.log('77777777777777777777')
-                    switchLink2Direction() 
-                }
-                else if (coh.isOut2 && coh.isCorner2 && coh.isIn2 && isFreeWay) {
-                    console.log('888888888888888888888')
-                    // switchLink2Direction()
-                }
-                else if ((coh.isOut2 || coh.isCorner2 || coh.isIn2) && isFreeWay) {
-                    if (!(coh.isOut2 && !coh.isCorner2 && coh.isIn2)) {
-                        console.log('999999999999999999999999')
-                        switchLink2Direction() 
-                    }
-                }
-            }
-        }
+        const linkDirections = coh.generateLinkDirections(pdir1, pdir2)
+        this.linkDirectionsMap[ldh.linkKey] = [ linkDirections[0], linkDirections[1], coh]
 
-        function switchLink2Direction() {
-            if (link2Direction === pdir2[0])
-                link2Direction = pdir2[1]
-
-            else if (link2Direction === pdir2[1])
-                link2Direction = pdir2[0]
-        }
-
-        // if (ldh.linkKey === '1-3__4-5') {
-            // console.table(coh)
-            // console.log(pdir1)
-            // console.log(pdir2)
-        // }
-
-        this.linkMap[ldh.linkKey] = [ link1Direction, link2Direction, coh, pdir1, pdir2 ]
-        return this.linkMap[ldh.linkKey]
+        return this.linkDirectionsMap[ldh.linkKey]
     },
     /**
      *  these directions are used
      *  when an element is on the paths way
      * */
     generateForSameRowCol(ldh) {
-        const ldh2 = new LinkDrawHelper(ldh.linkKey, true)
-        
         const eeMap1 = linkEEMapHelper.eeMap[ldh.link1]
-        const eeMap2 = linkEEMapHelper.eeMap[ldh2.link1]
-
+        const eeMap2 = linkEEMapHelper.eeMap[ldh.link2]
         const pdir1 = ldh.potentialDirections
-        const pdir2 = ldh2.potentialDirections
 
         if (!GridLinksIterator.hasCellsOut(ldh, pdir1[0]))
             return [ pdir1[0], LinkDrawHelper.oppositeDirection(pdir1[0]) ]
@@ -177,7 +69,7 @@ const linkDirectionsHelper = {
      *  this helper is used to generate 
      *  the most optimum path for a link
      * */
-    generateCellsOverlapHelper(ldh) {
+    generateLinkDirectionsOverlapHelper(ldh) {
         const ldh2 = new LinkDrawHelper(ldh.linkKey, true)
         
         const eeMap1 = linkEEMapHelper.eeMap[ldh.link1]
@@ -188,7 +80,7 @@ const linkDirectionsHelper = {
         let isEE2 = (eeMap1[pdir1[1]].total > 0 && eeMap1[pdir1[0]].total === eeMap1[pdir1[1]].total)
         isEE2 |= eeMap1[pdir1[0]].total > eeMap1[pdir1[1]].total
 
-        return {
+        return  new LinkDirectionsOverlapHelper({
             isCorner1: GridLinksIterator.hasCellsCorner(ldh, pdir1[0]),
             isCorner2: GridLinksIterator.hasCellsCorner(ldh, pdir1[1]),
             isOut1: GridLinksIterator.hasCellsOut(ldh, pdir1[0]),
@@ -196,14 +88,127 @@ const linkDirectionsHelper = {
             isIn1: GridLinksIterator.hasCellsIn(ldh, LinkDrawHelper.oppositeDirection(pdir2[0])),
             isIn2: GridLinksIterator.hasCellsIn(ldh, LinkDrawHelper.oppositeDirection(pdir2[1])),
             isEE2
-        }
-        /*  
-            link1       isOut2      isCorner2
+        })
+        
+    }
+}
 
-            isOut1                  isIn2
+class LinkDirectionsOverlapHelper {
+    constructor(query) {
+        this.isCorner1 = query.isCorner1
+        this.isCorner2 = query.isCorner2
+        this.isOut1 = query.isOut1
+        this.isOut2 = query.isOut2
+        this.isIn1 = query.isIn1
+        this.isIn2 = query.isIn2
+        this.isEE2 = query.isEE2
+    }
+    /*  
+        [ link1 ]       [ isOut2 ]     [ isCorner2 ]
 
-            isCorner1   isIn1       link2
-         */
+        [ isOut1 ]                     [ isIn2 ]
+
+        [ isCorner1 ]   [ isIn1 ]      [ link2 ]
+    */
+
+    generateLinkDirections(pdir1, pdir2) {
+             if (this.D1) return [ pdir1[0], pdir2[0] ]
+        else if (this.D2) return [ pdir1[1], pdir2[1] ]
+        else if (this.C1) return [ pdir1[1], pdir2[0] ]
+        else if (this.C2) return [ pdir1[0], pdir2[1] ]
+        else if (this.B1) return [ pdir1[0], pdir2[1] ]
+        else if (this.B2) return [ pdir1[1], pdir2[0] ]
+
+        else if (this.A2) return [ pdir1[1], pdir2[1] ]
+        else if (this.A1) return [ pdir1[0], pdir2[0] ]
+        else if (this.A0) return [ pdir1[1], pdir2[1] ]
+    }
+    get A0() {
+        return (!this.o2 && !this.c2 && !this.i2)
+        /* [ ]___
+                 |
+                [ ] */
+    }
+    get A1() {
+        return !this.o1 && !this.c1 && !this.i1
+        /* [ ]
+            |___[ ] */
+    }
+    get A2() {
+        return this.ee2 && (!this.o2 && !this.c2 && !this.i2)
+        /* [ ]___
+                 |
+                [ ] */
+    }
+
+    get B1() {
+        return ((this.o1 || this.c1 || this.i1) && !this.i2) &&
+            ((this.o2 || this.c2))
+        /* [ ]_
+               |____[ ] */
+    }
+    get B2() {
+        return ((this.o2 || this.c2 || this.i2) && !this.i1) &&
+            ((this.o1 || this.c1))
+        /* [ ]
+            |______
+                   |
+                  [ ] */
+    }
+    get C1() {
+        return (this.i1 && this.i2) && this.ee2
+        /* [ ]____
+                  |
+                  |_[ ] */
+    }
+    get C2() {
+        return (this.i1 && this.i2) && !this.ee2
+        /* [ ]
+            |
+            |________
+                     |
+                    [ ] */
+    }
+    get D1() {
+        return ( 
+            ((this.o1 || this.c1) || (this.o2 || this.c2))
+            && (this.i1 && this.i2)
+        ) && !this.ee2
+        /* [ ]_
+               |____
+                    |
+                   [ ] */
+    }
+    get D2() {
+        return (
+            ((this.o1 || this.c1) || (this.o2 || this.c2))
+            && (this.i1 && this.i2)
+        ) && this.ee2
+        /* [ ]
+            |____    
+                 |__[ ] */
+    }
+
+    get c1() {
+        return this.isCorner1
+    }
+    get c2() {
+        return this.isCorner2
+    }
+    get o1() {
+        return this.isOut1
+    }
+    get o2() {
+        return this.isOut2
+    }
+    get i1() {
+        return this.isIn1
+    }
+    get i2() {
+        return this.isIn2
+    }
+    get ee2() {
+        return this.isEE2
     }
 }
 
