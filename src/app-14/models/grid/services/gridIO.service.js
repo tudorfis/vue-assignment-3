@@ -11,11 +11,17 @@ export const gridIOservice = {
     newGridModel(numRows, numCols) {
         gridModel.model = Utils.deepclone(gridModelBlueprint)
 
-        gridReduceService.calculateGridSize(numRows, numCols)
-        gridSvgService.calculateSvg()
+        gridReduceService.calculateGridSize()
+
+        if (!numRows && !numCols) {
+            gridReduceService.increaseGrid()
+            gridReduceService.reduceGrid()
+        }
 
         gridModel.model.numRows = numRows || gc.minGridRows
         gridModel.model.numCols = numCols || gc.minGridCols
+
+        gridSvgService.calculateSvg()
 
         gridModel.model.cells = this.buildGridCells()  
     },
@@ -53,6 +59,9 @@ export const gridIOservice = {
         
         gridModel.model.steps = model.steps
         gridModel.model.links = model.links
+
+        gridReduceService.increaseGrid()
+        gridReduceService.reduceGrid()
     },
     setCell(position, properties) {
         const cell = gridModel.model.cells[position] = gridModel.model.cells[position] || Utils.deepclone(gridcellBlueprint)

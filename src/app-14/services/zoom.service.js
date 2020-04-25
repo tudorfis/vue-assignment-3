@@ -33,6 +33,9 @@ export const zoomService = {
         gc.arrowPointerHeight += 5
 
         gridReduceService.calculateGridSize()
+        gridReduceService.increaseGrid()
+        gridReduceService.reduceGrid()
+
         gridSvgService.calculateSvg()
         gridLinksService.buildLinks()
     },
@@ -56,6 +59,9 @@ export const zoomService = {
         gc.arrowPointerHeight -= 5
 
         gridReduceService.calculateGridSize()
+        gridReduceService.increaseGrid()
+        gridReduceService.reduceGrid()
+        
         gridSvgService.calculateSvg()
         gridLinksService.buildLinks()
     }

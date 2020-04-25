@@ -3,19 +3,10 @@ import { gridModel } from "../grid.model"
 import { gridAdjustService } from "./gridAdjust.service"
 
 export const gridReduceService = {
-    calculateGridSize(numRows, numCols) {
-        if (numRows && numCols) {
-            gc.minGridRows = numRows
-            gc.minGridCols = numCols
-        }
-        else {
-            const gridcontentEl = document.querySelector('.gridcontent')
-            gc.minGridRows = Math.round(gridcontentEl.clientHeight / gc.gridCellHeight)
-            gc.minGridCols = Math.round(gridcontentEl.clientWidth / gc.gridCellWidth)
-        }
-
-        this.increaseGrid()
-        this.reduceGrid()
+    calculateGridSize() {
+        const gridcontentEl = document.querySelector('.gridcontent')
+        gc.minGridRows = Math.round(gridcontentEl.clientHeight / gc.gridCellHeight)
+        gc.minGridCols = Math.round(gridcontentEl.clientWidth / gc.gridCellWidth)
     },
     increaseGrid() {
         this.increaseGridHorizontally()

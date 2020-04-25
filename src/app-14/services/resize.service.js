@@ -4,6 +4,8 @@ import { gridSvgService } from "../components/grid/services/gridSvg.service"
 const resizeService = {
     resize() {
         gridReduceService.calculateGridSize()
+        gridReduceService.increaseGrid()
+        gridReduceService.reduceGrid()
         gridSvgService.calculateSvg()
     }
 }

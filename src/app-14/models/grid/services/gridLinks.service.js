@@ -20,6 +20,7 @@ export const gridLinksService = {
 
         this.sortLinkKeys()
 
+        linkDirectionsHelper.resetLinkMap()
         linkEEMapHelper.generateEEmap()
         linkPathMapHelper.resetPathMap()
 

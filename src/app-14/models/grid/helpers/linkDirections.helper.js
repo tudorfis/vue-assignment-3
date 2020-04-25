@@ -3,7 +3,14 @@ import { LinkDrawHelper } from './linkDraw.helper'
 import linkEEMapHelper from './linkEEMap.helper'
 
 const linkDirectionsHelper = {
+    linkMap: {},
+    resetLinkMap() {
+        this.linkMap = {}
+    },
     generateLinkDirections(ldh) {
+        if (this.linkMap[ldh.linkKey])
+            return this.linkMap[ldh.linkKey]
+
         let link1Direction, link2Direction
 
         const ldh2  = new LinkDrawHelper(ldh.linkKey, true)
@@ -11,8 +18,10 @@ const linkDirectionsHelper = {
         const pdir1 = ldh.potentialDirections
         const pdir2 = ldh2.potentialDirections
 
-        if (!pdir1[1]) 
-            return this.generateForSameRowCol(ldh)
+        if (!pdir1[1]) {
+            this.linkMap[ldh.linkKey] = this.generateForSameRowCol(ldh)
+            return this.linkMap[ldh.linkKey]
+        }
 
         const coh = this.generateCellsOverlapHelper(ldh)
         
@@ -52,6 +61,10 @@ const linkDirectionsHelper = {
         }
         else if (coh.isCorner1 && !coh.isCorner2 && coh.isOut1 && !coh.isOut2 && coh.isIn1 && coh.isIn2) {
             console.log('ddddddddddddddddddddddd')
+            switchLink2Direction() 
+        }
+        else if (!coh.isCorner1 && !coh.isCorner2 && coh.isOut1 && !coh.isOut2 && coh.isIn1 && coh.isIn2) {
+            console.log('eeeeeeeeeeeeeeeeeeeee')
             switchLink2Direction() 
         }
         else {
@@ -101,7 +114,6 @@ const linkDirectionsHelper = {
                 }
             }
         }
-        
 
         function switchLink2Direction() {
             if (link2Direction === pdir2[0])
@@ -111,15 +123,14 @@ const linkDirectionsHelper = {
                 link2Direction = pdir2[0]
         }
 
-
-        // if (ldh.linkKey === '2-1__4-3') {
+        // if (ldh.linkKey === '1-3__4-5') {
             // console.table(coh)
-            // console.table('isEE2', coh.isEE2)
             // console.log(pdir1)
             // console.log(pdir2)
         // }
 
-        return [ link1Direction, link2Direction, coh, pdir1, pdir2 ]
+        this.linkMap[ldh.linkKey] = [ link1Direction, link2Direction, coh, pdir1, pdir2 ]
+        return this.linkMap[ldh.linkKey]
     },
     /**
      *  these directions are used
