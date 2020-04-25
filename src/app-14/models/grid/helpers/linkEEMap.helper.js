@@ -5,7 +5,7 @@ import { gridModel } from '../grid.model'
 import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
 import { linkDirectionsHelper } from './linkDirections.helper'
 import { LinkDrawHelper } from './linkDraw.helper'
-import { linkEEOverlappingHelper } from './linkEEOverlapping.helper'
+import { linkEECrossOverlapHelper } from "./linkEECrossOverlap.helper"
 
 class LinkEntryExitPointsMapHelper {
     get eeMap() {
@@ -51,12 +51,12 @@ class LinkEntryExitPointsMapHelper {
             this.eeMap[ldh.link2] = Utils.deepclone(this.eeMapItemBlueprint)
     }
     setEEMapItemsTotals(ldh) {
-        const linkDirections = linkDirectionsHelper.generateLinkDirections(ldh)
-        const ldh2 = new LinkDrawHelper(ldh.linkKey, true)
-
+        linkDirectionsHelper.generateLinkDirectionsMap(ldh)
+        
+        const linkDirections = linkDirectionsHelper.getLinkDirections(ldh)
 
         const eeMapItem1 = this.eeMap[ldh.link1][linkDirections[0]]
-        const eeMapItem2 =  this.eeMap[ldh2.link1][linkDirections[1]]
+        const eeMapItem2 =  this.eeMap[ldh.link2][linkDirections[1]]
 
         eeMapItem1.total++
         eeMapItem2.total++
@@ -64,7 +64,8 @@ class LinkEntryExitPointsMapHelper {
         eeMapItem1.out[ldh.link2] = eeMapItem1.total
         eeMapItem2.in[ldh.link1] = eeMapItem2.total
 
-        linkEEOverlappingHelper.adjust(eeMapItem1, linkDirections[0])
+        linkEECrossOverlapHelper.adjust(eeMapItem1, linkDirections[0])
+        linkEECrossOverlapHelper.adjust(eeMapItem2, linkDirections[1])
     }
     restoreEEMapState() {
         if (!this.eeMapState) return
