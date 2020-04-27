@@ -52,17 +52,18 @@ const linkEntryExitPointsDifferenceHelper = {
         return (pointNr % 2) ? -diff : diff
     },
     getDiff(query) {
-        const eeMap1 = this.eeMap[query.link1]
-        const eeMap2 = this.eeMap[query.link2]
+        const { link1, link2, direction, type } = query
+        const eeMap1 = this.eeMap[link1]
+        const eeMap2 = this.eeMap[link2]
         
-        if (!eeMap1 || !eeMap1[query.direction]) return 0
-        if (!eeMap2 || !eeMap2[query.direction]) return 0
+        if (!eeMap1 || !eeMap1[direction]) return 0
+        if (!eeMap2 || !eeMap2[direction]) return 0
         
-        if (query.type === 'out')
-            return this.getDiffByPoint(eeMap1[query.direction].out[query.link2]) || 0
+        if (type === 'out')
+            return this.getDiffByPoint(eeMap1[direction].out[link2]) || 0
 
-        else if (query.type === 'in') 
-            return this.getDiffByPoint(eeMap2[query.direction].in[query.link1]) || 0
+        else if (type === 'in') 
+            return this.getDiffByPoint(eeMap2[direction].in[link1]) || 0
 
         return 0
     }

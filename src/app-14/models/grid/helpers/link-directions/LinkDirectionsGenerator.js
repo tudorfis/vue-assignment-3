@@ -47,8 +47,8 @@ class LinkDirectionsGenerator {
             else if (left1 > right1) direction = 'right'
             else if (left1 < right1) direction = 'left'
 
-            const lhObj = LinkDirectionsGenerator.generateLhObjWhenSameCol(this.lh, direction)
-            if (lhObj.hasCellsOutSameCol) direction = (direction === 'right') ? 'left' : 'right'
+            const { hasCellsOutSameCol } = LinkDirectionsGenerator.generateLhObjWhenSameCol(this.lh, direction)
+            if (hasCellsOutSameCol) direction = (direction === 'right') ? 'left' : 'right'
         }
         else if (LinkHelper.isLeftOrRight(controlDirection)) {
             if (up1 === down1) {
@@ -60,8 +60,8 @@ class LinkDirectionsGenerator {
             else if (up1 > down1) direction = 'down'
             else if (up1 < down1) direction = 'up'
 
-            const lhObj = LinkDirectionsGenerator.generateLhObjWhenSameRow(this.lh, direction)
-            if (lhObj.hasCellsOutSameRow) direction = (direction === 'down') ? 'up' : 'down'
+            const { hasCellsOutSameRow } = LinkDirectionsGenerator.generateLhObjWhenSameRow(this.lh, direction)
+            if (hasCellsOutSameRow) direction = (direction === 'down') ? 'up' : 'down'
         }
 
         return direction

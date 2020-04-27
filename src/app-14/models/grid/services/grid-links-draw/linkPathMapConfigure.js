@@ -7,37 +7,43 @@ class LinkPathMapConfigure {
             this[key] = query[key]
     }
     handleSameRowButUpOrDown() {
-        const hasCellsOut = this.lhObj.hasCellsOutSameRow
-        const hasCellsLh = this.lhObj.hasCellsLh
+        const { hasCellsOutSameRow, hasCellsLh } = this.lhObj
         
-        if (!hasCellsOut && hasCellsLh) {
-            linkPathMapHelper.setCorner(hasCellsLh.link1, this.lh.linkKey)
-            linkPathMapHelper.setDirectionOut(hasCellsLh, this.lh.getRightLeft, this.lh.linkKey)
-            linkPathMapHelper.setCorner(hasCellsLh.link2, this.lh.linkKey)
+        if (!hasCellsOutSameRow && hasCellsLh) {
+            const { linkKey, getRightLeft } = this.lh
+            
+            linkPathMapHelper.setCorner(hasCellsLh.link1, linkKey)
+            linkPathMapHelper.setDirectionOut(hasCellsLh, getRightLeft, linkKey)
+            linkPathMapHelper.setCorner(hasCellsLh.link2, linkKey)
         }
     }
     handleSameColButLeftOrRight() {
-        const hasCellsOut = this.lhObj.hasCellsOutSameCol
-        const hasCellsLh = this.lhObj.hasCellsLh
+        const { hasCellsOutSameCol, hasCellsLh } = this.lhObj
 
-        if (!hasCellsOut && hasCellsLh) {
-            linkPathMapHelper.setCorner(hasCellsLh.link1, this.lh.linkKey)
-            linkPathMapHelper.setDirectionOut(hasCellsLh, this.lh.getDownUp, this.lh.linkKey)
-            linkPathMapHelper.setCorner(hasCellsLh.link2, this.lh.linkKey)
+        if (!hasCellsOutSameCol && hasCellsLh) {
+            const { linkKey, getDownUp } = this.lh
+
+            linkPathMapHelper.setCorner(hasCellsLh.link1, linkKey)
+            linkPathMapHelper.setDirectionOut(hasCellsLh, getDownUp, linkKey)
+            linkPathMapHelper.setCorner(hasCellsLh.link2, linkKey)
         }
     }
     handleSameRowOrColStraightLine() {
-        linkPathMapHelper.setDirectionOut(this.lh, this.lh.directionIn, this.lh.linkKey)
+        const { directionIn, linkKey } = this.lh
+        linkPathMapHelper.setDirectionOut(this.lh, directionIn, linkKey)
     }
     handleOverlapPatternC() {
-        linkPathMapHelper.setDirectionOut(this.lh, this.lh.directionOut, lh.linkKey)
+        const { directionOut, linkKey } = this.lh
+        linkPathMapHelper.setDirectionOut(this.lh, directionOut, linkKey)
     }
     handleOverlapPatternB() {
-        linkPathMapHelper.setDirectionIn(this.lh, this.lh.directionIn, this.lh.linkKey)
+        const { directionIn, linkKey } = this.lh
+        linkPathMapHelper.setDirectionIn(this.lh, directionIn, linkKey)
     }
     handleOverlapPatternA() {
-        linkPathMapHelper.setDirectionOut(this.lh, this.lh.directionOut, this.lh.linkKey)
-        linkPathMapHelper.setDirectionIn(this.lh, this.lh.directionIn, this.lh.linkKey)
+        const { directionOut, directionIn, linkKey } = this.lh
+        linkPathMapHelper.setDirectionOut(this.lh, directionOut, linkKey)
+        linkPathMapHelper.setDirectionIn(this.lh, directionIn, linkKey)
         
         console.log(`
             linkKey=${this.lh.linkKey}
@@ -47,13 +53,14 @@ class LinkPathMapConfigure {
         `)
 
         /** @TODO: figure out a way to check if a path goes one way or the other */
+        const { row1, row2, col1, col2 } = this.lh
         const potentialLinks = [
-            gridModel.getPosition(this.lh.row2, this.lh.col1),
-            gridModel.getPosition(this.lh.row1, this.lh.col2)
+            gridModel.getPosition(row2, col1),
+            gridModel.getPosition(row1, col2)
         ]
         for (const link of potentialLinks) {
             if (!gridModel.model.cells[link].is) {
-                return linkPathMapHelper.setCorner(link, this.lh.linkKey)
+                return linkPathMapHelper.setCorner(link, linkKey)
             }
         }
     }

@@ -1,4 +1,4 @@
-import { globalConfig as gc } from '../../../../config/global.config'
+import { globalConfig } from '../../../../config/global.config'
 import { SvgPathUtils } from '../../../../utils/svgPath.utils'
 
 class SvgDrawArrow {
@@ -13,16 +13,20 @@ class SvgDrawArrow {
     }
 
     get downArrowDraw() { 
-        return `h${gc.arrowPointerHeight} l-${gc.arrowPointerHeight} ${gc.arrowPointerWidth} l-${gc.arrowPointerHeight} -${gc.arrowPointerWidth} Z`
+        const { arrowPointerHeight, arrowPointerWidth } = globalConfig
+        return `h${arrowPointerHeight} l-${arrowPointerHeight} ${arrowPointerWidth} l-${arrowPointerHeight} -${arrowPointerWidth} Z`
     }
     get upArrowDraw() { 
-        return `h${gc.arrowPointerHeight} l-${gc.arrowPointerHeight} -${gc.arrowPointerWidth} l-${gc.arrowPointerHeight} ${gc.arrowPointerWidth} Z`
+        const { arrowPointerHeight, arrowPointerWidth } = globalConfig
+        return `h${arrowPointerHeight} l-${arrowPointerHeight} -${arrowPointerWidth} l-${arrowPointerHeight} ${arrowPointerWidth} Z`
     }
     get rightArrowDraw() { 
-        return `v-${gc.arrowPointerHeight} l${gc.arrowPointerWidth} ${gc.arrowPointerHeight} l-${gc.arrowPointerWidth} ${gc.arrowPointerHeight} Z`
+        const { arrowPointerHeight, arrowPointerWidth } = globalConfig
+        return `v-${arrowPointerHeight} l${arrowPointerWidth} ${arrowPointerHeight} l-${arrowPointerWidth} ${arrowPointerHeight} Z`
     }
     get leftArrowDraw() { 
-        return `v-${gc.arrowPointerHeight} l-${gc.arrowPointerWidth} ${gc.arrowPointerHeight} l${gc.arrowPointerWidth} ${gc.arrowPointerHeight} Z`
+        const { arrowPointerHeight, arrowPointerWidth } = globalConfig
+        return `v-${arrowPointerHeight} l-${arrowPointerWidth} ${arrowPointerHeight} l${arrowPointerWidth} ${arrowPointerHeight} Z`
     }
 }
 

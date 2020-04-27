@@ -7,45 +7,62 @@ class LinkDrawPathsStraights extends LinkDrawPathsBase {
     }
     drawSameRowButUpOrDown() {
         let path, arrow
-        const hasCellsOut = this.lhObj.hasCellsOutSameRow
 
-        path = this.svgDrawPath.drawPath(this.lh.directionOut)
+        const { hasCellsOutSameRow } = this.lhObj
+        const { svgDrawPath, svgDrawArrow } = this
+        const { directionOut, directionIn, getRightLeft } = this.lh
+
+        path = svgDrawPath.drawPath(this.lh.directionOut)
         
-        if (!hasCellsOut) path.svgD += this.svgDrawPath.drawHalfOut(this.lh.directionOut, this.lh.getRightLeft)
-        path.svgD += this.svgDrawPath.drawHalfIn(this.lh.getRightLeft, this.lh.directionOut)
-        path.svgD += this.svgDrawPath.drawLine(this.lh.getRightLeft, 'full')
-        path.svgD += this.svgDrawPath.drawHalfIn(this.lh.getRightLeft, this.lh.directionIn)
-        if (!hasCellsOut) path.svgD += this.svgDrawPath.drawHalfOut(this.lh.directionIn, this.lh.getRightLeft)
+        if (!hasCellsOutSameRow) 
+            path.svgD += svgDrawPath.drawHalfOut(directionOut, getRightLeft)
 
-        path.svgD += this.svgDrawPath.drawLine(this.lh.directionIn, 'arrow')
-        arrow = this.svgDrawArrow.drawArrow(path.svgD, this.lh.directionIn)
+        path.svgD += svgDrawPath.drawHalfIn(getRightLeft, directionOut)
+        path.svgD += svgDrawPath.drawLine(getRightLeft, 'full')
+        path.svgD += svgDrawPath.drawHalfIn(getRightLeft, directionIn)
+        
+        if (!hasCellsOutSameRow)
+            path.svgD += svgDrawPath.drawHalfOut(directionIn, getRightLeft)
+
+        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
+        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
 
         return [ path, arrow ]
     }
     drawSameColButLeftOrRight() {
         let path, arrow
-        const hasCellsOut = this.lhObj.hasCellsOutSameCol
 
-        path = this.svgDrawPath.drawPath(this.lh.directionOut)
+        const { hasCellsOutSameCol } = this.lhObj
+        const { svgDrawPath, svgDrawArrow } = this
+        const { directionOut, directionIn, getDownUp } = this.lh
 
-        if (!hasCellsOut) path.svgD += this.svgDrawPath.drawHalfOut(this.lh.directionOut, this.lh.getDownUp)
-        path.svgD += this.svgDrawPath.drawHalfIn(this.lh.getDownUp, this.lh.directionOut)
-        path.svgD += this.svgDrawPath.drawLine(this.lh.getDownUp, 'full')
-        path.svgD += this.svgDrawPath.drawHalfIn(this.lh.getDownUp, this.lh.directionIn)
-        if (!hasCellsOut) path.svgD += this.svgDrawPath.drawHalfOut(this.lh.directionIn, this.lh.getDownUp)
+        path = svgDrawPath.drawPath(this.lh.directionOut)
+
+        if (!hasCellsOutSameCol) 
+            path.svgD += svgDrawPath.drawHalfOut(directionOut, getDownUp)
+
+        path.svgD += svgDrawPath.drawHalfIn(getDownUp, directionOut)
+        path.svgD += svgDrawPath.drawLine(getDownUp, 'full')
+        path.svgD += svgDrawPath.drawHalfIn(getDownUp, directionIn)
+
+        if (!hasCellsOutSameCol)
+            path.svgD += svgDrawPath.drawHalfOut(directionIn, getDownUp)
         
-        path.svgD += this.svgDrawPath.drawLine(this.lh.directionIn, 'arrow')
-        arrow = this.svgDrawArrow.drawArrow(path.svgD, this.lh.directionIn)
+        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
+        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
 
         return [ path, arrow ]
     }
     drawSameRowOrColButStraightLine() {
         let path, arrow
 
-        path = this.svgDrawPath.drawPath(this.lh.directionIn)
-        path.svgD += this.svgDrawPath.drawLine(this.lh.directionIn, 'full')
-        path.svgD += this.svgDrawPath.drawLine(this.lh.directionIn, 'arrow')
-        arrow = this.svgDrawArrow.drawArrow(path.svgD, this.lh.directionIn)
+        const { svgDrawPath, svgDrawArrow } = this
+        const { directionIn } = this.lh
+
+        path = svgDrawPath.drawPath(directionIn)
+        path.svgD += svgDrawPath.drawLine(directionIn, 'full')
+        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
+        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
 
         return [ path, arrow ]
     }

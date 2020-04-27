@@ -27,17 +27,19 @@ const linkPathMapHelper = {
     },
 
     iterateDirection(row, col, query) {
-        if (query.direction === 'left') 
-            this.iterateLeft(query.lh, row, query.linkKey)
+        const { lh, direction, linkKey } = query
+        
+        if (direction === 'left') 
+            this.iterateLeft(lh, row, linkKey)
 
-        else if (query.direction === 'right')
-            this.iterateRight(query.lh, row, query.linkKey)
+        else if (direction === 'right')
+            this.iterateRight(lh, row, linkKey)
 
-        else if (query.direction === 'up')
-            this.iterateUp(query.lh, col, query.linkKey)
+        else if (direction === 'up')
+            this.iterateUp(lh, col, linkKey)
 
-        else if (query.direction === 'down')
-            this.iterateDown(query.lh, col, query.linkKey)
+        else if (direction === 'down')
+            this.iterateDown(lh, col, linkKey)
     },
 
     iterateDown(lh, col, linkKey) {

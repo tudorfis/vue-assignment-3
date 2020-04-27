@@ -37,11 +37,8 @@ const linkDirectionsHelper = {
         })
     },
     setLinkDirectionsMap(lh, query) {
-        linkDirectionsMap[lh.linkKey] = {
-            link1Direction: query.link1Direction,
-            link2Direction: query.link2Direction,
-            linkOverlapHelper: query.linkOverlapHelper
-        }
+        const { link1Direction, link2Direction, linkOverlapHelper } = query
+        linkDirectionsMap[lh.linkKey] = { link1Direction, link2Direction, linkOverlapHelper }
     },
     getLinkDirections(lh) {
         const ldm = linkDirectionsMap[lh.linkKey]

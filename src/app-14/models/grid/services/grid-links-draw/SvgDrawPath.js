@@ -1,4 +1,4 @@
-import { globalConfig as gc } from '../../../../config/global.config'
+import { globalConfig } from '../../../../config/global.config'
 import { linkEEDiffHelper } from '../../helpers/link-ee/linkEEDiff.helper' 
 import { LinkHelper } from '../../helpers/link.helper'
 
@@ -43,23 +43,25 @@ class SvgDrawPath {
     }
     drawLine(direction = '', lineType = '') {
         let distance, cell1, cell2, adjust = 0
+        const { row1, row2, col1, col2 } = this.lh
+
         if (direction === 'up') {
-            cell1 = this.lh.row1
-            cell2 = this.lh.row2
+            cell1 = row1
+            cell2 = row2
         }
         else if (direction === 'down') {
-            cell1 = this.lh.row2
-            cell2 = this.lh.row1
-            adjust = (this.lh.row1 === 1 ? -5 : 0)
+            cell1 = row2
+            cell2 = row1
+            adjust = (row1 === 1 ? -5 : 0)
         }
         else if (direction === 'right') {
-            cell1 = this.lh.col2
-            cell2 = this.lh.col1
-            adjust = (this.lh.col1 === 1 ? -5 : 0)
+            cell1 = col2
+            cell2 = col1
+            adjust = (col1 === 1 ? -5 : 0)
         }
         else if (direction === 'left') {
-            cell1 = this.lh.col1
-            cell2 = this.lh.col2
+            cell1 = col1
+            cell2 = col2
         }
  
         if (lineType === 'arrow')
@@ -101,16 +103,17 @@ class SvgDrawPath {
         return (this.lh.row1 - 1) * this.cell_size
     }
     get cell_size() { 
-        return gc.gridCellWidth
+        return globalConfig.gridCellWidth
     }
     get cell_center_size() {
-        return gc.gridCellWidth / 2
+        return globalConfig.gridCellWidth / 2
     }
     get cellelement_center_size() {
-        return (gc.gridCellWidth - gc.gridCellElementWidth) / 2
+        const { gridCellWidth, gridCellElementWidth } = globalConfig
+        return (gridCellWidth - gridCellElementWidth) / 2
     }
     get arrow_width() { 
-        return gc.arrowPointerWidth + 3
+        return globalConfig.arrowPointerWidth + 3
     }
 }
 

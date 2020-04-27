@@ -57,14 +57,18 @@ const switchHelper = {
 
 const switchHelperService = {
     buildSwitchHelperEEOut(query) {
-        this.buildSwitchHelperDirections(query.linkDirection)
-        this.buildSwitchHelperEqualColRow(query.position1, query.position2)
-        this.buildSwitchHelperSmallerEEOut(query.eeMapItem, query.position1, query.position2)
+        const { linkDirection, position1, position2, eeMapItem } = query
+
+        this.buildSwitchHelperDirections(linkDirection)
+        this.buildSwitchHelperEqualColRow(position1, position2)
+        this.buildSwitchHelperSmallerEEOut(eeMapItem, position1, position2)
     },
     buildSwitchHelperEEIn(query) {
-        this.buildSwitchHelperDirections(query.linkDirection)
-        this.buildSwitchHelperEqualColRow(query.position1, query.position2)
-        this.buildSwitchHelperSmallerEEIn(query.eeMapItem, query.position1, query.position2)
+        const { linkDirection, position1, position2, eeMapItem } = query
+
+        this.buildSwitchHelperDirections(linkDirection)
+        this.buildSwitchHelperEqualColRow(position1, position2)
+        this.buildSwitchHelperSmallerEEIn(eeMapItem, position1, position2)
     },
     buildSwitchHelperDirections(linkDirection) {
         switchHelper.isLeftOrRight = LinkHelper.isLeftOrRight(linkDirection)
