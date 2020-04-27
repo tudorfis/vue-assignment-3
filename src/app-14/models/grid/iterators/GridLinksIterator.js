@@ -2,6 +2,37 @@ import { Utils } from "../../../utils/utils";
 import { gridModel } from "../grid.model";
 
 export class GridLinksIterator {
+    static hasCellsOut(ldh, directionOut) {
+        if (directionOut === 'up') return GridLinksIterator.hasUpCellsOut(ldh)
+        else if (directionOut === 'right') return GridLinksIterator.hasRightCellsOut(ldh)
+        else if (directionOut === 'down') return GridLinksIterator.hasDownCellsOut(ldh)
+        else if (directionOut === 'left') return GridLinksIterator.hasLeftCellsOut(ldh)
+
+        return false
+    }
+    static hasCellsIn(ldh, directionIn) {
+        if (directionIn === 'up') return GridLinksIterator.hasUpCellsIn(ldh)
+        else if (directionIn === 'right') return GridLinksIterator.hasRightCellsIn(ldh)
+        else if (directionIn === 'down') return GridLinksIterator.hasDownCellsIn(ldh)
+        else if (directionIn === 'left') return GridLinksIterator.hasLeftCellsIn(ldh)
+
+        return false
+    }
+    static hasCellsCorner(ldh, direction) {
+        if (ldh.sameRowCol) return false
+
+        let position
+        if (['down','up'].includes(direction))
+            position = gridModel.getPosition(ldh.row2, ldh.col1)
+
+        else if (['left','right'].includes(direction))
+            position = gridModel.getPosition(ldh.row1, ldh.col2)
+
+        if (!position) return false
+        
+        return !!gridModel.model.cells[position].is
+    }
+
     static hasDownCellsOut(ldh) {
         const rowControl1 = ldh.row1 + 1
         const rowControl2 = ldh.row2 - 1
@@ -178,37 +209,5 @@ export class GridLinksIterator {
              .filter(is => !!is)
 
         return cells.length > 0
-    }
-
-
-    static hasCellsOut(ldh, directionOut) {
-        if (directionOut === 'up') return GridLinksIterator.hasUpCellsOut(ldh)
-        else if (directionOut === 'right') return GridLinksIterator.hasRightCellsOut(ldh)
-        else if (directionOut === 'down') return GridLinksIterator.hasDownCellsOut(ldh)
-        else if (directionOut === 'left') return GridLinksIterator.hasLeftCellsOut(ldh)
-
-        return false
-    }
-    static hasCellsIn(ldh, directionIn) {
-        if (directionIn === 'up') return GridLinksIterator.hasUpCellsIn(ldh)
-        else if (directionIn === 'right') return GridLinksIterator.hasRightCellsIn(ldh)
-        else if (directionIn === 'down') return GridLinksIterator.hasDownCellsIn(ldh)
-        else if (directionIn === 'left') return GridLinksIterator.hasLeftCellsIn(ldh)
-
-        return false
-    }
-    static hasCellsCorner(ldh, direction) {
-        if (ldh.sameRowCol) return false
-
-        let position
-        if (['down','up'].includes(direction))
-            position = gridModel.getPosition(ldh.row2, ldh.col1)
-
-        else if (['left','right'].includes(direction))
-            position = gridModel.getPosition(ldh.row1, ldh.col2)
-
-        if (!position) return false
-        
-        return !!gridModel.model.cells[position].is
     }
 }

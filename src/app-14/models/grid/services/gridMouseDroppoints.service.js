@@ -1,5 +1,5 @@
 import { toolboxDragService } from "../../../components/toolbox/services/toolboxDrag.service"
-import { globalConfig } from "../../../config/global.config"
+import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../grid.model"
 
 export const gridMouseDroppointsService = {
@@ -20,7 +20,7 @@ export const gridMouseDroppointsService = {
     isMouseOnTopOutside(event, gridcell) {
         const mouseY = event.pageY
         const rect = gridcell.getBoundingClientRect()
-        const control = rect.top + (rect.height / 2) - globalConfig.droppointDimension
+        const control = rect.top + (rect.height / 2) - gc.droppointDimension
 
         return mouseY <= control
     },
@@ -41,7 +41,7 @@ export const gridMouseDroppointsService = {
     isMouseOnBottomOutside(event, gridcell) {
         const mouseY = event.pageY
         const rect = gridcell.getBoundingClientRect()
-        const control = rect.top + rect.height - globalConfig.droppointDimension
+        const control = rect.top + rect.height - gc.droppointDimension
 
         return mouseY >= control
     },
@@ -62,7 +62,7 @@ export const gridMouseDroppointsService = {
     isMouseOnRightOutside(event, gridcell) {
         const mouseX = event.pageX
         const rect = gridcell.getBoundingClientRect()
-        const control = rect.left + rect.width - globalConfig.droppointDimension
+        const control = rect.left + rect.width - gc.droppointDimension
 
         return mouseX >= control
     },
@@ -83,7 +83,7 @@ export const gridMouseDroppointsService = {
     isMouseOnLeftOutside(event, gridcell) {
         const mouseX = event.pageX
         const rect = gridcell.getBoundingClientRect()
-        const control = rect.left + (rect.width / 2) - globalConfig.droppointDimension
+        const control = rect.left + (rect.width / 2) - gc.droppointDimension
 
         return mouseX <= control
     },

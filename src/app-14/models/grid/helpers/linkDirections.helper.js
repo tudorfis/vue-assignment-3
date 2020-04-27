@@ -2,6 +2,7 @@ import { GridLinksIterator } from '../iterators/GridLinksIterator'
 import { LinkDrawHelper } from './linkDraw.helper'
 import linkEEMapHelper from './linkEEMap.helper'
 import { LinkDirectionsOverlapHelper } from './linkDirectionsOverlap.helper'
+import { gridModel } from '../grid.model'
 
 const linkDirectionsHelper = {
     resetLinkMap() {
@@ -50,37 +51,103 @@ const linkDirectionsHelper = {
      *  when an element is on the paths way
      * */
     generateForSameRowCol(ldh) {
-        const eeMap1 = linkEEMapHelper.eeMap[ldh.link1]
-        const eeMap2 = linkEEMapHelper.eeMap[ldh.link2]
         const pdir1 = ldh.potentialDirections
+        const firstChoiceDirection = pdir1[0]
 
-        if (!GridLinksIterator.hasCellsOut(ldh, pdir1[0]))
-            return [ pdir1[0], LinkDrawHelper.oppositeDirection(pdir1[0]) ]
+        if (!GridLinksIterator.hasCellsOut(ldh, firstChoiceDirection))
+            return [ firstChoiceDirection, LinkDrawHelper.oppositeDirection(firstChoiceDirection) ]
 
+        const direction = this.generateSameRowColDirection(ldh, firstChoiceDirection)
+        return [ direction, direction ]
+    },
+    generateSameRowColDirection(ldh, controlDirection) {
         let direction = ''
 
-        if (LinkDrawHelper.upOrDown(pdir1[0])) {
-            if (eeMap1.left.total === eeMap1.right.total) {
+        const eeMap1 = linkEEMapHelper.eeMap[ldh.link1]
+        const eeMap2 = linkEEMapHelper.eeMap[ldh.link2]
 
-                if (eeMap2.left.total === eeMap2.right.total) direction = 'right'
-                else if (eeMap2.left.total > eeMap2.right.total) direction = 'right'
-                else if (eeMap2.left.total < eeMap2.right.total) direction = 'left'
+        const left1 = eeMap1.left.total
+        const right1 = eeMap1.right.total
+        const up1 = eeMap1.up.total
+        const down1 = eeMap1.down.total
+
+        const left2 = eeMap2.left.total
+        const right2 = eeMap2.right.total
+        const up2 = eeMap2.up.total
+        const down2 = eeMap2.down.total
+
+        if (LinkDrawHelper.upOrDown(controlDirection)) {
+            if (left1 === right1) {
+
+                if (left2 === right2) direction = 'right'
+                else if (left2 > right2) direction = 'right'
+                else if (left2 < right2) direction = 'left'
             }
-            else if (eeMap1.left.total > eeMap1.right.total) direction = 'right'
-            else if (eeMap1.left.total < eeMap1.right.total) direction = 'left'
-        }
-        else if (LinkDrawHelper.leftOrRight(pdir1[0])) {
-            if (eeMap1.up.total === eeMap1.down.total) {
+            else if (left1 > right1) direction = 'right'
+            else if (left1 < right1) direction = 'left'
 
-                if (eeMap2.up.total === eeMap2.down.total) direction = 'down'
-                else if (eeMap2.up.total > eeMap2.down.total) direction = 'down'
-                else if (eeMap2.up.total < eeMap2.down.total) direction = 'up'
+            if (this.generateLdhSameColButLeftOrRight(ldh, direction).hasCellsOutSameCol) 
+                direction = direction === 'right' ? 'left' : 'right'
+        }
+        else if (LinkDrawHelper.leftOrRight(controlDirection)) {
+            if (up1 === down1) {
+
+                if (up2 === down2) direction = 'down'
+                else if (up2 > down2) direction = 'down'
+                else if (up2 < down2) direction = 'up'
             }
-            else if (eeMap1.up.total > eeMap1.down.total) direction = 'down'
-            else if (eeMap1.up.total < eeMap1.down.total) direction = 'up'
+            else if (up1 > down1) direction = 'down'
+            else if (up1 < down1) direction = 'up'
+
+            if (this.generateLdhSameRowButUpOrDown(ldh, direction).hasCellsOutSameRow) 
+                direction = direction === 'down' ? 'up' : 'down'
         }
 
-        return [ direction, direction ]
+        return direction
+    },
+    generateLdhSameColButLeftOrRight(ldh, controlDirection) {
+        const col1 =  ldh.col1 + (controlDirection === 'right' ? 1 : -1)
+        const col2 =  ldh.col2 + (controlDirection === 'right' ? 1 : -1)
+        
+        let hasCellsOutSameCol, hasCellsLdh
+        if (col1 === 0 || col2 === 0)
+            hasCellsOutSameCol = true
+        
+        else {
+            const hasCellsLinkKey = LinkDrawHelper.genLinkKey(
+                gridModel.getPosition(ldh.row1, col1), 
+                gridModel.getPosition(ldh.row2, col2))
+                
+            hasCellsLdh = new LinkDrawHelper(hasCellsLinkKey)
+
+            hasCellsOutSameCol = GridLinksIterator.hasCellsOut(hasCellsLdh, ldh.upDown)
+            hasCellsOutSameCol |= gridModel.model.cells[gridModel.getPosition(ldh.row1, col1)].is
+            hasCellsOutSameCol |= gridModel.model.cells[gridModel.getPosition(ldh.row2, col2)].is
+        }
+
+        return { hasCellsOutSameCol, hasCellsLdh }
+    },
+    generateLdhSameRowButUpOrDown(ldh, controlDirection) {
+        const row1 =  ldh.row1 + (controlDirection === 'down' ? 1 : -1)
+        const row2 =  ldh.row2 + (controlDirection === 'down' ? 1 : -1)
+        
+        let hasCellsOutSameRow, hasCellsLdh
+        if (row1 === 0 || row2 === 0)
+            hasCellsOutSameRow = true
+        
+        else {
+            const hasCellsLinkKey = LinkDrawHelper.genLinkKey(
+                gridModel.getPosition(row1, ldh.col1), 
+                gridModel.getPosition(row2, ldh.col2))
+                
+            hasCellsLdh = new LinkDrawHelper(hasCellsLinkKey)
+
+            hasCellsOutSameRow = GridLinksIterator.hasCellsOut(hasCellsLdh, ldh.rightLeft)
+            hasCellsOutSameRow |= gridModel.model.cells[gridModel.getPosition(row1, ldh.col1)].is
+            hasCellsOutSameRow |= gridModel.model.cells[gridModel.getPosition(row2, ldh.col2)].is
+        }
+
+        return { hasCellsOutSameRow, hasCellsLdh }
     },
     /**
      *  this helper is used to generate 
