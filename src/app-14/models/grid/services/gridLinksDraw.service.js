@@ -1,54 +1,67 @@
-import { LinkDrawHelper } from "../helpers/linkDraw.helper"
-import { linkDirectionsHelper } from '../helpers/linkDirections.helper'
-import { linkPathMapConfigure } from './grid-links-draw/linkPathMapConfigure'
-import { linkDrawPathsOverlaps } from './grid-links-draw/linkDrawPathsOverlaps'
-import { linkDrawPathsStraights } from './grid-links-draw/linkDrawPathsStraights'
+import { LinkHelper } from "../helpers/link.helper"
+import { linkDirectionsHelper } from '../helpers/link-directions/linkDirections.helper'
+import { LinkPathMapConfigure } from './grid-links-draw/LinkPathMapConfigure'
+import { LinkDrawPathsOverlaps } from './grid-links-draw/LinkDrawPathsOverlaps'
+import { LinkDrawPathsStraights } from './grid-links-draw/LinkDrawPathsStraights'
+import { LinkDirectionsGenerator } from "../helpers/link-directions/LinkDirectionsGenerator"
 
 const gridLinksDrawService = {
-    createPathAndArrow(ldh) {
-        if (ldh.sameRowCol)
-            return this.drawLinkPathSameRowOrCol(ldh)
+    createPathAndArrow(lh) {
+        if (lh.isSameRowCol)
+            return this.drawLinkPathSameRowOrCol(lh)
            
-        return this.drawLinkPathOverlaps(ldh)
+        return this.drawLinkPathOverlaps(lh)
     },
     
-    drawLinkPathSameRowOrCol(ldh) {
-        if (ldh.sameRow && LinkDrawHelper.upOrDown(ldh.directionOut)) {
-            const ldhSameRowObj = linkDirectionsHelper.generateLdhSameRowButUpOrDown(ldh, ldh.directionOut)
+    drawLinkPathSameRowOrCol(lh) {
+        if (lh.isSameRow && LinkHelper.isUpOrDown(lh.directionOut)) {
+            
+            const lhObj = LinkDirectionsGenerator.generateLhObjWhenSameRow(lh, lh.directionOut)
+            const linkDrawPathsStraights = new LinkDrawPathsStraights({ lh, lhObj })
+            const linkPathMapConfigure = new LinkPathMapConfigure({ lh, lhObj })
 
-            linkPathMapConfigure.sameRowButUpOrDown(ldh, ldhSameRowObj)
-            return linkDrawPathsStraights.drawSameRowButUpOrDown(ldh, ldhSameRowObj)
+            linkPathMapConfigure.handleSameRowButUpOrDown()
+            return linkDrawPathsStraights.drawSameRowButUpOrDown()
         }
 
-        else if (ldh.sameCol && LinkDrawHelper.leftOrRight(ldh.directionOut)) {
-            const ldhSameRowObj = linkDirectionsHelper.generateLdhSameColButLeftOrRight(ldh, ldh.directionOut)
+        else if (lh.isSameCol && LinkHelper.isLeftOrRight(lh.directionOut)) {
 
-            linkPathMapConfigure.sameColButLeftOrRight(ldh, ldhSameRowObj)
-            return linkDrawPathsStraights.drawSameColButLeftOrRight(ldh, ldhSameRowObj)
+            const lhObj = LinkDirectionsGenerator.generateLhObjWhenSameCol(lh, lh.directionOut)
+            const linkDrawPathsStraights = new LinkDrawPathsStraights({ lh, lhObj })
+            const linkPathMapConfigure = new LinkPathMapConfigure({ lh, lhObj })
+
+            linkPathMapConfigure.handleSameColButLeftOrRight()
+            return linkDrawPathsStraights.drawSameColButLeftOrRight()
         }
 
-        linkPathMapConfigure.sameRowOrColStraightLine(ldh)
-        return linkDrawPathsStraights.drawSameRowOrColButStraightLine(ldh)
+        const linkDrawPathsStraights = new LinkDrawPathsStraights({ lh })
+        const linkPathMapConfigure = new LinkPathMapConfigure({ lh })
+
+        linkPathMapConfigure.handleSameRowOrColStraightLine()
+        return linkDrawPathsStraights.drawSameRowOrColButStraightLine()
     },
-    drawLinkPathOverlaps(ldh) {
-        const loh = linkDirectionsHelper.getLinkDirectionsOverlapHelper(ldh)
+    drawLinkPathOverlaps(lh) {
+        const loh = linkDirectionsHelper.getLinkDirectionsOverlapHelper(lh)
+
+        const linkDrawPathsOverlaps = new LinkDrawPathsOverlaps({ lh, loh })
+        const linkPathMapConfigure = new LinkPathMapConfigure({ lh, loh })
 
         if (loh.D1 || loh.D2)
-            return linkDrawPathsOverlaps.drawLinkPathOverlapsPatternD(ldh)
+            return linkDrawPathsOverlaps.drawLinkPathOverlapsPatternD()
 
         else if (loh.C1 || loh.C2) {
-            linkPathMapConfigure.overlapPatternC(ldh)
-            return linkDrawPathsOverlaps.drawLinkPathOverlapsPatternC(ldh)
+            linkPathMapConfigure.handleOverlapPatternC()
+            return linkDrawPathsOverlaps.drawLinkPathOverlapsPatternC()
         }
         
         else if (loh.B1 || loh.B2) {
-            linkPathMapConfigure.overlapPatternB(ldh)
-            return linkDrawPathsOverlaps.drawLinkPathOverlapsPatternB(ldh)
+            linkPathMapConfigure.handleOverlapPatternB()
+            return linkDrawPathsOverlaps.drawLinkPathOverlapsPatternB()
         }
         
         else if (loh.A0 || loh.A1 || loh.A2) {
-            linkPathMapConfigure.overlapPatternA(ldh, loh)
-            return linkDrawPathsOverlaps.drawLinkPathOverlapsPatternA(ldh, loh)
+            linkPathMapConfigure.handleOverlapPatternA()
+            return linkDrawPathsOverlaps.drawLinkPathOverlapsPatternA()
         }
 
         throw new Error('Unique Exception: not found a linkDirectionsOverlapHelper pattern to resolve')

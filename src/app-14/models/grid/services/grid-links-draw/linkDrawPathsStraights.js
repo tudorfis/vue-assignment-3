@@ -1,50 +1,55 @@
 
-const linkDrawPathsStraights = {
-    drawSameRowButUpOrDown(ldh, ldhSameRowObj) {
-        let path, arrow
-        const hasCellsOut = ldhSameRowObj.hasCellsOutSameRow
+import { LinkDrawPathsBase } from './LinkDrawPathsBase'
 
-        path = ldh.drawPath(ldh.directionOut)
+class LinkDrawPathsStraights extends LinkDrawPathsBase {
+    constructor(query) {
+        super(query)
+    }
+    drawSameRowButUpOrDown() {
+        let path, arrow
+        const hasCellsOut = this.lhObj.hasCellsOutSameRow
+
+        path = this.svgDrawPath.drawPath(this.lh.directionOut)
         
-        if (!hasCellsOut) path.svgD += ldh.drawHalfOut(ldh.directionOut, ldh.leftRight)
-        path.svgD += ldh.drawHalfIn(ldh.rightLeft, ldh.directionOut)
-        path.svgD += ldh.drawLine(ldh.rightLeft, 'full')
-        path.svgD += ldh.drawHalfIn(ldh.rightLeft, ldh.directionIn)
-        if (!hasCellsOut) path.svgD += ldh.drawHalfOut(ldh.directionIn, ldh.rightLeft)
+        if (!hasCellsOut) path.svgD += this.svgDrawPath.drawHalfOut(this.lh.directionOut, this.lh.getRightLeft)
+        path.svgD += this.svgDrawPath.drawHalfIn(this.lh.getRightLeft, this.lh.directionOut)
+        path.svgD += this.svgDrawPath.drawLine(this.lh.getRightLeft, 'full')
+        path.svgD += this.svgDrawPath.drawHalfIn(this.lh.getRightLeft, this.lh.directionIn)
+        if (!hasCellsOut) path.svgD += this.svgDrawPath.drawHalfOut(this.lh.directionIn, this.lh.getRightLeft)
 
-        path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
-        arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
+        path.svgD += this.svgDrawPath.drawLine(this.lh.directionIn, 'arrow')
+        arrow = this.svgDrawArrow.drawArrow(path.svgD, this.lh.directionIn)
 
         return [ path, arrow ]
-    },
-    drawSameColButLeftOrRight(ldh, ldhSameRowObj) {
+    }
+    drawSameColButLeftOrRight() {
         let path, arrow
-        const hasCellsOut = ldhSameRowObj.hasCellsOutSameCol
+        const hasCellsOut = this.lhObj.hasCellsOutSameCol
 
-        path = ldh.drawPath(ldh.directionOut)
+        path = this.svgDrawPath.drawPath(this.lh.directionOut)
 
-        if (!hasCellsOut) path.svgD += ldh.drawHalfOut(ldh.directionOut, ldh.upDown)
-        path.svgD += ldh.drawHalfIn(ldh.upDown, ldh.directionOut)
-        path.svgD += ldh.drawLine(ldh.upDown, 'full')
-        path.svgD += ldh.drawHalfIn(ldh.upDown, ldh.directionIn)
-        if (!hasCellsOut) path.svgD += ldh.drawHalfOut(ldh.directionIn, ldh.upDown)
+        if (!hasCellsOut) path.svgD += this.svgDrawPath.drawHalfOut(this.lh.directionOut, this.lh.getDownUp)
+        path.svgD += this.svgDrawPath.drawHalfIn(this.lh.getDownUp, this.lh.directionOut)
+        path.svgD += this.svgDrawPath.drawLine(this.lh.getDownUp, 'full')
+        path.svgD += this.svgDrawPath.drawHalfIn(this.lh.getDownUp, this.lh.directionIn)
+        if (!hasCellsOut) path.svgD += this.svgDrawPath.drawHalfOut(this.lh.directionIn, this.lh.getDownUp)
         
-        path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
-        arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
+        path.svgD += this.svgDrawPath.drawLine(this.lh.directionIn, 'arrow')
+        arrow = this.svgDrawArrow.drawArrow(path.svgD, this.lh.directionIn)
 
         return [ path, arrow ]
-    },
-    drawSameRowOrColButStraightLine(ldh) {
+    }
+    drawSameRowOrColButStraightLine() {
         let path, arrow
 
-        path = ldh.drawPath(ldh.directionIn)
-        path.svgD += ldh.drawLine(ldh.directionIn, 'full')
-        path.svgD += ldh.drawLine(ldh.directionIn, 'arrow')
-        arrow = ldh.drawArrow(path.svgD, ldh.directionIn)
+        path = this.svgDrawPath.drawPath(this.lh.directionIn)
+        path.svgD += this.svgDrawPath.drawLine(this.lh.directionIn, 'full')
+        path.svgD += this.svgDrawPath.drawLine(this.lh.directionIn, 'arrow')
+        arrow = this.svgDrawArrow.drawArrow(path.svgD, this.lh.directionIn)
 
         return [ path, arrow ]
-    },
+    }
 }
 
-globalThis.linkDrawPathsStraights = linkDrawPathsStraights
-export { linkDrawPathsStraights }
+globalThis.LinkDrawPathsStraights = LinkDrawPathsStraights
+export { LinkDrawPathsStraights }

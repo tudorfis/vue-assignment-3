@@ -1,46 +1,62 @@
 import { linkPathMapHelper } from '../../helpers/linkPathMap.helper'
 import { gridModel } from '../../grid.model' 
 
-const linkPathMapConfigure = {
-    sameRowButUpOrDown(ldh, ldhSameRowObj) {
-        const hasCellsOut = ldhSameRowObj.hasCellsOutSameRow
-        const hasCellsLdh = ldhSameRowObj.hasCellsLdh
+class LinkPathMapConfigure {
+    constructor(query) {
+        for (const key in query)
+            this[key] = query[key]
+    }
+    handleSameRowButUpOrDown() {
+        const hasCellsOut = this.lhObj.hasCellsOutSameRow
+        const hasCellsLh = this.lhObj.hasCellsLh
         
-        if (!hasCellsOut && hasCellsLdh) {
-            linkPathMapHelper.setCorner(hasCellsLdh.link1, ldh.linkKey)
-            linkPathMapHelper.setDirectionOut(hasCellsLdh, ldh.rightLeft, ldh.linkKey)
-            linkPathMapHelper.setCorner(hasCellsLdh.link2, ldh.linkKey)
+        if (!hasCellsOut && hasCellsLh) {
+            linkPathMapHelper.setCorner(hasCellsLh.link1, this.lh.linkKey)
+            linkPathMapHelper.setDirectionOut(hasCellsLh, this.lh.getRightLeft, this.lh.linkKey)
+            linkPathMapHelper.setCorner(hasCellsLh.link2, this.lh.linkKey)
         }
-    },
-    sameColButLeftOrRight(ldh, ldhSameRowObj) {
-        const hasCellsOut = ldhSameRowObj.hasCellsOutSameCol
-        const hasCellsLdh = ldhSameRowObj.hasCellsLdh
+    }
+    handleSameColButLeftOrRight() {
+        const hasCellsOut = this.lhObj.hasCellsOutSameCol
+        const hasCellsLh = this.lhObj.hasCellsLh
 
-        if (!hasCellsOut && hasCellsLdh) {
-            linkPathMapHelper.setCorner(hasCellsLdh.link1, ldh.linkKey)
-            linkPathMapHelper.setDirectionOut(hasCellsLdh, ldh.upDown, ldh.linkKey)
-            linkPathMapHelper.setCorner(hasCellsLdh.link2, ldh.linkKey)
+        if (!hasCellsOut && hasCellsLh) {
+            linkPathMapHelper.setCorner(hasCellsLh.link1, this.lh.linkKey)
+            linkPathMapHelper.setDirectionOut(hasCellsLh, this.lh.getDownUp, this.lh.linkKey)
+            linkPathMapHelper.setCorner(hasCellsLh.link2, this.lh.linkKey)
         }
-    },
-    sameRowOrColStraightLine(ldh) {
-        linkPathMapHelper.setDirectionOut(ldh, ldh.directionIn, ldh.linkKey)
-    },
-    overlapPatternC(ldh) {
-        linkPathMapHelper.setDirectionOut(ldh, ldh.directionOut, ldh.linkKey)
-    },
-    overlapPatternB(ldh) {
-        linkPathMapHelper.setDirectionIn(ldh, ldh.directionIn, ldh.linkKey)
-    },
-    overlapPatternA(ldh, loh) {
-        linkPathMapHelper.setDirectionOut(ldh, ldh.directionOut, ldh.linkKey)
-        linkPathMapHelper.setDirectionIn(ldh, ldh.directionIn, ldh.linkKey)
+    }
+    handleSameRowOrColStraightLine() {
+        linkPathMapHelper.setDirectionOut(this.lh, this.lh.directionIn, this.lh.linkKey)
+    }
+    handleOverlapPatternC() {
+        linkPathMapHelper.setDirectionOut(this.lh, this.lh.directionOut, lh.linkKey)
+    }
+    handleOverlapPatternB() {
+        linkPathMapHelper.setDirectionIn(this.lh, this.lh.directionIn, this.lh.linkKey)
+    }
+    handleOverlapPatternA() {
+        linkPathMapHelper.setDirectionOut(this.lh, this.lh.directionOut, this.lh.linkKey)
+        linkPathMapHelper.setDirectionIn(this.lh, this.lh.directionIn, this.lh.linkKey)
         
-        let link
-        if (loh.A1) link = gridModel.getPosition(ldh.row2, ldh.col1)
-        else if (loh.A0 || loh.A2) link = gridModel.getPosition(ldh.row1, ldh.col2)
-        linkPathMapHelper.setCorner(link, ldh.linkKey)
+        console.log(`
+            linkKey=${this.lh.linkKey}
+            A0=${this.loh.A0}
+            A1=${this.loh.A1}
+            A2=${this.loh.A2}
+        `)
+
+        /** @TODO: figure out a way to check if a path goes one way or the other */
+        const potentialLinks = [
+            gridModel.getPosition(this.lh.row2, this.lh.col1),
+            gridModel.getPosition(this.lh.row1, this.lh.col2)
+        ]
+        for (const link of potentialLinks) {
+            if (!gridModel.model.cells[link].is) {
+                return linkPathMapHelper.setCorner(link, this.lh.linkKey)
+            }
+        }
     }
 }
 
-globalThis.linkPathMapConfigure = linkPathMapConfigure
-export { linkPathMapConfigure }
+export { LinkPathMapConfigure }

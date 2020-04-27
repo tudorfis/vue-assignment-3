@@ -1,6 +1,6 @@
 import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
-import { LinkDrawHelper } from "../../../models/grid/helpers/linkDraw.helper"
+import { LinkHelper } from "../../../models/grid/helpers/link.helper"
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
 import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
 import { VueUtils } from "../../../utils/vue.utils"
@@ -139,7 +139,7 @@ export const gridArrowConnectorService = {
         
         if (start === end) return
         
-        const linkKey = LinkDrawHelper.genLinkKey(start,end)
+        const linkKey = LinkHelper.getLinkKey(start,end)
         
         if (this.linkKey === linkKey) return
         this.linkKey = linkKey

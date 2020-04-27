@@ -1,42 +1,43 @@
-import { Utils } from "../../../utils/utils";
-import { gridModel } from "../grid.model";
 
-export class GridLinksIterator {
-    static hasCellsOut(ldh, directionOut) {
-        if (directionOut === 'up') return GridLinksIterator.hasUpCellsOut(ldh)
-        else if (directionOut === 'right') return GridLinksIterator.hasRightCellsOut(ldh)
-        else if (directionOut === 'down') return GridLinksIterator.hasDownCellsOut(ldh)
-        else if (directionOut === 'left') return GridLinksIterator.hasLeftCellsOut(ldh)
+import { Utils } from "../../../../utils/utils";
+import { gridModel } from "../../grid.model";
 
-        return false
-    }
-    static hasCellsIn(ldh, directionIn) {
-        if (directionIn === 'up') return GridLinksIterator.hasUpCellsIn(ldh)
-        else if (directionIn === 'right') return GridLinksIterator.hasRightCellsIn(ldh)
-        else if (directionIn === 'down') return GridLinksIterator.hasDownCellsIn(ldh)
-        else if (directionIn === 'left') return GridLinksIterator.hasLeftCellsIn(ldh)
+class LinkDirectionsCellVerifier {
+    static hasCellsOut(lh, directionOut) {
+        if (directionOut === 'up') return LinkDirectionsCellVerifier.hasUpCellsOut(lh)
+        else if (directionOut === 'right') return LinkDirectionsCellVerifier.hasRightCellsOut(lh)
+        else if (directionOut === 'down') return LinkDirectionsCellVerifier.hasDownCellsOut(lh)
+        else if (directionOut === 'left') return LinkDirectionsCellVerifier.hasLeftCellsOut(lh)
 
         return false
     }
-    static hasCellsCorner(ldh, direction) {
-        if (ldh.sameRowCol) return false
+    static hasCellsIn(lh, directionIn) {
+        if (directionIn === 'up') return LinkDirectionsCellVerifier.hasUpCellsIn(lh)
+        else if (directionIn === 'right') return LinkDirectionsCellVerifier.hasRightCellsIn(lh)
+        else if (directionIn === 'down') return LinkDirectionsCellVerifier.hasDownCellsIn(lh)
+        else if (directionIn === 'left') return LinkDirectionsCellVerifier.hasLeftCellsIn(lh)
+
+        return false
+    }
+    static hasCellsCorner(lh, direction) {
+        if (lh.isSameRowCol) return false
 
         let position
         if (['down','up'].includes(direction))
-            position = gridModel.getPosition(ldh.row2, ldh.col1)
+            position = gridModel.getPosition(lh.row2, lh.col1)
 
         else if (['left','right'].includes(direction))
-            position = gridModel.getPosition(ldh.row1, ldh.col2)
+            position = gridModel.getPosition(lh.row1, lh.col2)
 
         if (!position) return false
         
         return !!gridModel.model.cells[position].is
     }
 
-    static hasDownCellsOut(ldh) {
-        const rowControl1 = ldh.row1 + 1
-        const rowControl2 = ldh.row2 - 1
-        const colControl = ldh.col1
+    static hasDownCellsOut(lh) {
+        const rowControl1 = lh.row1 + 1
+        const rowControl2 = lh.row2 - 1
+        const colControl = lh.col1
 
         if (rowControl2 === 0) return false
         if (rowControl1 === rowControl2 + 1) return false
@@ -55,10 +56,10 @@ export class GridLinksIterator {
 
         return cells.length > 0
     }
-    static hasUpCellsOut(ldh) {
-        const rowControl1 = ldh.row1 - 1
-        const rowControl2 = ldh.row2 + 1
-        const colControl = ldh.col1
+    static hasUpCellsOut(lh) {
+        const rowControl1 = lh.row1 - 1
+        const rowControl2 = lh.row2 + 1
+        const colControl = lh.col1
 
         if (rowControl1 === 0) return false
         if (rowControl1 === rowControl2 - 1) return false
@@ -77,10 +78,10 @@ export class GridLinksIterator {
 
         return cells.length > 0
     }
-    static hasRightCellsOut(ldh) {
-        const colControl1 = ldh.col1 + 1
-        const colControl2 = ldh.col2 - 1
-        const rowControl = ldh.row1
+    static hasRightCellsOut(lh) {
+        const colControl1 = lh.col1 + 1
+        const colControl2 = lh.col2 - 1
+        const rowControl = lh.row1
 
         if (colControl2 === 0) return false
         if (colControl1 === colControl2 + 1) return false
@@ -99,10 +100,10 @@ export class GridLinksIterator {
 
         return cells.length > 0
     }
-    static hasLeftCellsOut(ldh) {
-        const colControl1 = ldh.col1 - 1
-        const colControl2 = ldh.col2 + 1
-        const rowControl = ldh.row1
+    static hasLeftCellsOut(lh) {
+        const colControl1 = lh.col1 - 1
+        const colControl2 = lh.col2 + 1
+        const rowControl = lh.row1
         
         if (colControl1 === 0) return false
         if (colControl1 === colControl2 - 1) return false
@@ -122,10 +123,10 @@ export class GridLinksIterator {
         return cells.length > 0
     }
 
-    static hasDownCellsIn(ldh) {
-        const rowControl1 = ldh.row2 - 1
-        const rowControl2 = ldh.row1 + 1
-        const colControl = ldh.col2
+    static hasDownCellsIn(lh) {
+        const rowControl1 = lh.row2 - 1
+        const rowControl2 = lh.row1 + 1
+        const colControl = lh.col2
 
         if (rowControl1 === 0) return false
         if (rowControl1 === rowControl2 - 1) return false
@@ -144,10 +145,10 @@ export class GridLinksIterator {
 
         return cells.length > 0
     }
-    static hasUpCellsIn(ldh) {
-        const rowControl1 = ldh.row2 + 1
-        const rowControl2 = ldh.row1 - 1
-        const colControl = ldh.col2
+    static hasUpCellsIn(lh) {
+        const rowControl1 = lh.row2 + 1
+        const rowControl2 = lh.row1 - 1
+        const colControl = lh.col2
 
         if (rowControl2 === 0) return false
         if (rowControl1 === rowControl2 + 1) return false
@@ -166,10 +167,10 @@ export class GridLinksIterator {
 
         return cells.length > 0
     }
-    static hasRightCellsIn(ldh) {
-        const colControl1 = ldh.col2 - 1
-        const colControl2 = ldh.col1 + 1
-        const rowControl = ldh.row2
+    static hasRightCellsIn(lh) {
+        const colControl1 = lh.col2 - 1
+        const colControl2 = lh.col1 + 1
+        const rowControl = lh.row2
 
         if (colControl1 === 0) return false
         if (colControl1 === colControl2 - 1) return false
@@ -188,10 +189,10 @@ export class GridLinksIterator {
 
         return cells.length > 0
     }
-    static hasLeftCellsIn(ldh) {
-        const colControl1 = ldh.col2 + 1
-        const colControl2 = ldh.col1 - 1
-        const rowControl = ldh.row2
+    static hasLeftCellsIn(lh) {
+        const colControl1 = lh.col2 + 1
+        const colControl2 = lh.col1 - 1
+        const rowControl = lh.row2
 
         if (colControl2 === 0) return false
         if (colControl1 === colControl2 + 1) return false
@@ -211,3 +212,5 @@ export class GridLinksIterator {
         return cells.length > 0
     }
 }
+
+export { LinkDirectionsCellVerifier }

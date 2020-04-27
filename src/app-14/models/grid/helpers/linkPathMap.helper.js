@@ -11,16 +11,16 @@ const linkPathMapHelper = {
         this.setEmptyPathMap(link)
         this.pathMap[link]['corner'].push(linkKey)
     },
-    setDirectionOut(ldh, direction, linkKey) {
-        this.iterateDirection(ldh.row1, ldh.col1, { 
-            ldh,
+    setDirectionOut(lh, direction, linkKey) {
+        this.iterateDirection(lh.row1, lh.col1, { 
+            lh,
             direction,
             linkKey
         })
     },
-    setDirectionIn(ldh, direction, linkKey) {
-        this.iterateDirection(ldh.row2, ldh.col2, {
-            ldh,
+    setDirectionIn(lh, direction, linkKey) {
+        this.iterateDirection(lh.row2, lh.col2, {
+            lh,
             direction,
             linkKey
         })
@@ -28,32 +28,32 @@ const linkPathMapHelper = {
 
     iterateDirection(row, col, query) {
         if (query.direction === 'left') 
-            this.iterateLeft(query.ldh, row, query.linkKey)
+            this.iterateLeft(query.lh, row, query.linkKey)
 
         else if (query.direction === 'right')
-            this.iterateRight(query.ldh, row, query.linkKey)
+            this.iterateRight(query.lh, row, query.linkKey)
 
         else if (query.direction === 'up')
-            this.iterateUp(query.ldh, col, query.linkKey)
+            this.iterateUp(query.lh, col, query.linkKey)
 
         else if (query.direction === 'down')
-            this.iterateDown(query.ldh, col, query.linkKey)
+            this.iterateDown(query.lh, col, query.linkKey)
     },
 
-    iterateDown(ldh, col, linkKey) {
-        for (let row = ldh.row1 + 1; row < ldh.row2; row++)
+    iterateDown(lh, col, linkKey) {
+        for (let row = lh.row1 + 1; row < lh.row2; row++)
             this.setPathMap(row, col, 'vertical', linkKey)
     },
-    iterateUp(ldh, col, linkKey) {
-        for (let row = ldh.row1 - 1; row > ldh.row2; row--)
+    iterateUp(lh, col, linkKey) {
+        for (let row = lh.row1 - 1; row > lh.row2; row--)
             this.setPathMap(row, col, 'vertical', linkKey)
     },
-    iterateLeft(ldh, row, linkKey) {
-        for (let col = ldh.col1 - 1; col > ldh.col2; col--)
+    iterateLeft(lh, row, linkKey) {
+        for (let col = lh.col1 - 1; col > lh.col2; col--)
             this.setPathMap(row, col, 'horizontal', linkKey)
     },
-    iterateRight(ldh, row, linkKey) {
-        for (let col = ldh.col1 + 1; col < ldh.col2; col++)
+    iterateRight(lh, row, linkKey) {
+        for (let col = lh.col1 + 1; col < lh.col2; col++)
             this.setPathMap(row, col, 'horizontal', linkKey)
     },
 

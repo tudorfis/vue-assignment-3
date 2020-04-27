@@ -1,5 +1,5 @@
-import { gridModel } from "../grid.model"
-import { LinkDrawHelper } from "./linkDraw.helper"
+import { gridModel } from "../../grid.model"
+import { LinkHelper } from "../link.helper"
 
 const linkEECrossOverlapHelper = {
     adjust(eeMapItem, linkDirection) {
@@ -35,10 +35,10 @@ const linkEECrossOverlapHelper = {
             this.switchEEMapItemPositions(eeMapItem, 'in', inPositions[0], inPositions[1])
     },
     get needsSwitch() {
-        const leftRightEqualCol = switchHelper.isLeftOrRight && switchHelper.isEqualCol
-        const upDownEqualRow = switchHelper.isUpOrDown && switchHelper.isEqualRow
+        const isRightLeftEqualCol = switchHelper.isLeftOrRight && switchHelper.isEqualCol
+        const isDownUpEqualRow = switchHelper.isUpOrDown && switchHelper.isEqualRow
         
-        return switchHelper.isSmallerEE && (leftRightEqualCol || upDownEqualRow)
+        return switchHelper.isSmallerEE && (isRightLeftEqualCol || isDownUpEqualRow)
     },
     switchEEMapItemPositions(eeMapItem, inOut, position1, position2) {
         const item = eeMapItem[inOut]
@@ -52,8 +52,6 @@ const linkEECrossOverlapHelper = {
 const switchHelper = {
     isLeftOrRight: false,
     isUpOrDown: false,
-    isSameCol: false,
-    isSameRow: false,
     isSmallerEE: false,
 }
 
@@ -69,8 +67,8 @@ const switchHelperService = {
         this.buildSwitchHelperSmallerEEIn(query.eeMapItem, query.position1, query.position2)
     },
     buildSwitchHelperDirections(linkDirection) {
-        switchHelper.isLeftOrRight = LinkDrawHelper.leftOrRight(linkDirection)
-        switchHelper.isUpOrDown = LinkDrawHelper.upOrDown(linkDirection)
+        switchHelper.isLeftOrRight = LinkHelper.isLeftOrRight(linkDirection)
+        switchHelper.isUpOrDown = LinkHelper.isUpOrDown(linkDirection)
     },
     buildSwitchHelperEqualColRow(position1, position2) {
         switchHelper.isEqualCol = gridModel.getCol(position1) === gridModel.getCol(position2)

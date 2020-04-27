@@ -1,5 +1,5 @@
 import { gridModel } from "../grid.model"
-import { LinkDrawHelper } from "../helpers/linkDraw.helper"
+import { LinkHelper } from "../helpers/link.helper"
 import { linkPathMapHelper } from "../helpers/linkPathMap.helper"
 
 export const gridLinksDroppointService = {
@@ -24,11 +24,11 @@ export const gridLinksDroppointService = {
             this.connectDroppointLinksByMiddle(linkKey, position)
     },
     connectDroppointLinksByMiddle(linkKey, position) {
-        const ldh = new LinkDrawHelper(linkKey)
+        const lh = new LinkHelper(linkKey)
         const gm = gridModel.model
 
-        const newLinkKey1 = LinkDrawHelper.genLinkKey(ldh.link1, position)
-        const newLinkKey2 = LinkDrawHelper.genLinkKey(position, ldh.link2)
+        const newLinkKey1 = LinkHelper.getLinkKey(lh.link1, position)
+        const newLinkKey2 = LinkHelper.getLinkKey(position, lh.link2)
 
         if (gm.links.indexOf(newLinkKey1) === -1)
             gm.links.push(newLinkKey1)
@@ -72,13 +72,13 @@ export const gridLinksDroppointService = {
         const prevPosition = gridModel.getPositionDiff(position, ...coordinates[0])
         const nextPosition = gridModel.getPositionDiff(position, ...coordinates[1])
         
-        const linkKeyDirection1 = LinkDrawHelper.genLinkKey(prevPosition, nextPosition)
-        const linkKeyDirection2 = LinkDrawHelper.genLinkKey(nextPosition, prevPosition)
+        const linkKeyDirection1 = LinkHelper.getLinkKey(prevPosition, nextPosition)
+        const linkKeyDirection2 = LinkHelper.getLinkKey(nextPosition, prevPosition)
 
         const index1 = gm.links.indexOf(linkKeyDirection1)
         if (index1 !== -1) {
-            const newLinkKey1 = LinkDrawHelper.genLinkKey(prevPosition, position)
-            const newLinkKey2 = LinkDrawHelper.genLinkKey(position, nextPosition)
+            const newLinkKey1 = LinkHelper.getLinkKey(prevPosition, position)
+            const newLinkKey2 = LinkHelper.getLinkKey(position, nextPosition)
 
             gm.links.push(newLinkKey1)
             gm.links.push(newLinkKey2)
@@ -87,8 +87,8 @@ export const gridLinksDroppointService = {
 
         const index2 = gm.links.indexOf(linkKeyDirection2)
         if (index2 !== -1) {
-            const newLinkKey1 = LinkDrawHelper.genLinkKey(nextPosition, position)
-            const newLinkKey2 = LinkDrawHelper.genLinkKey(position, prevPosition)
+            const newLinkKey1 = LinkHelper.getLinkKey(nextPosition, position)
+            const newLinkKey2 = LinkHelper.getLinkKey(position, prevPosition)
 
             gm.links.push(newLinkKey1)
             gm.links.push(newLinkKey2)
