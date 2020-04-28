@@ -8,13 +8,23 @@ export const gridModelBlueprint = {
     totalSteps: 0,
     steps: {},
     cells: {},
-    links: []
+    links: [],
+    linkAttributes: {}
 }
 
 export const gridcellBlueprint = {
     is: 0,
-    type: '',
+    type: '', /** toolboxElements.enum */
     id: 0
+}
+
+export const linkAttributeBlueprint = {
+    outDirection: "down", /** down, right, up, left */
+    inDirection: "",
+    name: "",
+    color: "", /** from kartra color picker */
+    style: "", /** dotted, dashed, straight */
+    thickness: "" /** slim, medium, heavy */
 }
 
 const gridModel = {

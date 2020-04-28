@@ -6,6 +6,7 @@ import linkEEMapHelper from '../helpers/link-ee/linkEEMap.helper'
 import { linkPathMapHelper } from '../helpers/linkPathMap.helper'
 import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
 import { gridLinksDrawService } from './gridLinksDraw.service'
+import { Utils } from '../../../utils/utils'
 
 export const gridLinksService = {
     svgPaths: {},
@@ -84,11 +85,22 @@ export const gridLinksService = {
             const link1 = LinkHelper.getLink1(lki.linkKey)
             const link2 = LinkHelper.getLink2(lki.linkKey)
 
-            if (link1 === oldPosition)
-                gridModel.model.links[lki.i - 1] = LinkHelper.getLinkKey(newPosition, link2)
+            if (link1 === oldPosition) {
+                const newLinkKey = LinkHelper.getLinkKey(newPosition, link2)
+                gridModel.model.links[lki.i - 1] = newLinkKey
 
-            else if (link2 === oldPosition)
-                gridModel.model.links[lki.i - 1] = LinkHelper.getLinkKey(link1, newPosition)
+                if (gridModel.model.linkAttributes[lki.linkKey])
+                    Utils.renameObjKey(gridModel.model.linkAttributes, lki.linkKey, newLinkKey)
+            }
+
+            else if (link2 === oldPosition) {
+                const newLinkKey = LinkHelper.getLinkKey(link1, newPosition)
+
+                gridModel.model.links[lki.i - 1] = newLinkKey
+
+                if (gridModel.model.linkAttributes[lki.linkKey])
+                    Utils.renameObjKey(gridModel.model.linkAttributes, lki.linkKey, newLinkKey)
+            }
         }
     },
     hasNoLinks(position) {

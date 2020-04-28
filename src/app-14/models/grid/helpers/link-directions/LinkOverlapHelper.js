@@ -1,5 +1,5 @@
 
-class LinkDirectionsOverlapHelper {
+class LinkOverlapHelper {
     constructor(query) {
         this.isCorner1 = query.isCorner1
         this.isCorner2 = query.isCorner2
@@ -17,17 +17,28 @@ class LinkDirectionsOverlapHelper {
         [ isCorner1 ]   [ isIn1 ]      [ link2 ]
     */
 
-   produceLinkDirections(pdir1, pdir2) {
-             if (this.D1) return [ pdir1[0], pdir2[0] ]
-        else if (this.D2) return [ pdir1[1], pdir2[1] ]
-        else if (this.C1) return [ pdir1[1], pdir2[0] ]
-        else if (this.C2) return [ pdir1[0], pdir2[1] ]
-        else if (this.B1) return [ pdir1[0], pdir2[1] ]
-        else if (this.B2) return [ pdir1[1], pdir2[0] ]
+   produceLinkDirections(lh) {
+        let linkDirectionsArr
+        const lh2  = new LinkHelper(lh.linkKey, true)
+        
+        const pdir2 = lh2.potentialDirections
+        const pdir1 = lh.potentialDirections
 
-        else if (this.A2) return [ pdir1[1], pdir2[1] ]
-        else if (this.A1) return [ pdir1[0], pdir2[0] ]
-        else if (this.A0) return [ pdir1[1], pdir2[1] ]
+             if (this.D1) linkDirectionsArr = [ pdir1[0], pdir2[0] ]
+        else if (this.D2) linkDirectionsArr = [ pdir1[1], pdir2[1] ]
+        else if (this.C1) linkDirectionsArr = [ pdir1[1], pdir2[0] ]
+        else if (this.C2) linkDirectionsArr = [ pdir1[0], pdir2[1] ]
+        else if (this.B1) linkDirectionsArr = [ pdir1[0], pdir2[1] ]
+        else if (this.B2) linkDirectionsArr = [ pdir1[1], pdir2[0] ]
+
+        else if (this.A2) linkDirectionsArr = [ pdir1[1], pdir2[1] ]
+        else if (this.A1) linkDirectionsArr = [ pdir1[0], pdir2[0] ]
+        else if (this.A0) linkDirectionsArr = [ pdir1[1], pdir2[1] ]
+
+        return {
+            link1Direction: linkDirectionsArr[0],
+            link2Direction: linkDirectionsArr[1]
+        }
     }
     get A0() {
         return (!this.o2 && !this.c2 && !this.i2)
@@ -118,5 +129,5 @@ class LinkDirectionsOverlapHelper {
     }
 }
 
-globalThis.LinkDirectionsOverlapHelper = LinkDirectionsOverlapHelper
-export { LinkDirectionsOverlapHelper }
+globalThis.LinkOverlapHelper = LinkOverlapHelper
+export { LinkOverlapHelper }

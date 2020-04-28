@@ -70,6 +70,9 @@ class SvgDrawPath {
         else if (lineType === 'full') 
             distance = this.cell_size * (cell1 - cell2 - 1)
 
+        else if (lineType === 'cell')
+            distance = this.cell_size
+
         const svgD = this.getSvgD(direction)
         return ` ${svgD}${distance}`
     }

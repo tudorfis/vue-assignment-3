@@ -35,7 +35,11 @@ class Utils {
     }
     static rangeArray(start, end) {
         const output = []
-        if (start > end)
+        
+        if (start === end)
+            output.push(start)
+
+        else if (start > end)
             for (let i = start; i >= end; i--)
                 output.push(i)
 
@@ -48,6 +52,14 @@ class Utils {
     static arrayHasDuplicates(array) {
         array = array.filter(item => !!item)
         return (new Set(array)).size !== array.length;
+    }
+    static renameObjKey(obj, oldKey, newKey) {
+        if (oldKey !== newKey) {
+            Object.defineProperty(obj, newKey,
+                Object.getOwnPropertyDescriptor(obj, oldKey));
+                
+            delete obj[oldKey];
+        }
     }
 }
 

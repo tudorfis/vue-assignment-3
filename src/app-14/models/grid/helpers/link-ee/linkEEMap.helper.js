@@ -53,9 +53,13 @@ class LinkEntryExitPointsMapHelper {
     }
     setEEMapItemsTotals(lh) {
         const linkDirections = linkDirectionsHelper.getLinkDirections(lh)
+        const forcedDirections = linkDirectionsHelper.getForcedLinkDirections(lh)
 
-        const eeMapItem1 = this.eeMap[lh.link1][linkDirections[0]]
-        const eeMapItem2 =  this.eeMap[lh.link2][linkDirections[1]]
+        const link1Direction = forcedDirections[0] || linkDirections[0]
+        const link2Direction = forcedDirections[1] || linkDirections[1]
+
+        const eeMapItem1 = this.eeMap[lh.link1][link1Direction]
+        const eeMapItem2 =  this.eeMap[lh.link2][link2Direction]
 
         eeMapItem1.total++
         eeMapItem2.total++
@@ -63,8 +67,8 @@ class LinkEntryExitPointsMapHelper {
         eeMapItem1.out[lh.link2] = eeMapItem1.total
         eeMapItem2.in[lh.link1] = eeMapItem2.total
 
-        linkEECrossOverlapHelper.adjust(eeMapItem1, linkDirections[0])
-        linkEECrossOverlapHelper.adjust(eeMapItem2, linkDirections[1])
+        linkEECrossOverlapHelper.adjust(eeMapItem1, link1Direction)
+        linkEECrossOverlapHelper.adjust(eeMapItem2, link2Direction)
     }
     restoreEEMapState() {
         if (!this.eeMapState) return
@@ -78,6 +82,18 @@ class LinkEntryExitPointsMapHelper {
         this.setEEMapEmptyItems(lh)
         linkDirectionsHelper.generateLinkDirectionsMap(lh)
         this.setEEMapItemsTotals(lh)
+    }
+    patchEEDirection(query) {
+        const { lh, link1, link2, type, oldDirection, newDirection } = query
+
+        const eeMap = this.eeMap[link1]
+        if (!eeMap || !eeMap[oldDirection] || !eeMap[oldDirection][type] || !eeMap[oldDirection][type][oldDirection]) return
+
+        delete eeMap[oldDirection][type][link2]
+        eeMap[oldDirection].total--
+
+        eeMap[newDirection].total++
+        eeMap[newDirection][type][link2] = eeMap[newDirection].total
     }
 }
 

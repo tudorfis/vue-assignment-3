@@ -42,7 +42,8 @@ export const gridIOservice = {
             numRows: gm.numRows,
             totalSteps: gm.totalSteps,
             steps: Utils.objfilter(gm.cells, cell => cell.is),
-            links: gm.links
+            links: gm.links,
+            linkAttributes: gm.linkAttributes
         }
         
         return JSON.stringify(output)
@@ -59,6 +60,7 @@ export const gridIOservice = {
         
         gridModel.model.steps = model.steps
         gridModel.model.links = model.links
+        gridModel.model.linkAttributes = model.linkAttributes
 
         gridReduceService.increaseGrid()
         gridReduceService.reduceGrid()

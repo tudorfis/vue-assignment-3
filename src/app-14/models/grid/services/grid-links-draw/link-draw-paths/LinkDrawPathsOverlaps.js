@@ -5,7 +5,7 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
     constructor(query) {
         super(query)
     }
-    drawLinkPathOverlapsPatternD() {
+    drawOverlapsPatternD() {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow } = this
@@ -22,7 +22,7 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
 
         return [ path, arrow ]
     }
-    drawLinkPathOverlapsPatternC() {
+    drawOverlapsPatternC() {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow } = this
@@ -42,7 +42,7 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
 
         return [ path, arrow ]
     }
-    drawLinkPathOverlapsPatternB() {
+    drawOverlapsPatternB() {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow } = this
@@ -62,7 +62,7 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
 
         return [ path, arrow ]
     }
-    drawLinkPathOverlapsPatternA() {
+    drawOverlapsPatternA() {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow } = this

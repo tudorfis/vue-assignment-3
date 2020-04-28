@@ -1,4 +1,4 @@
-import { LinkDirectionsCellVerifier } from './LinkDirectionsCellVerifier'
+import { LinkCellOutVerifier } from './cell-verifiers/LinkCellOutVerifier'
 import { LinkHelper } from '../link.helper'
 
 class LinkDirectionsGenerator {
@@ -11,11 +11,18 @@ class LinkDirectionsGenerator {
         const firstChoiceDirection = pdir1[0]
 
         /** this is used when it's a straight line */
-        if (!LinkDirectionsCellVerifier.hasCellsOut(this.lh, firstChoiceDirection))
-            return [ firstChoiceDirection, LinkHelper.getOpositeDirection(firstChoiceDirection) ]
+        if (!LinkCellOutVerifier.hasCellsOut(this.lh, firstChoiceDirection))
+            return {
+                link1Direction: firstChoiceDirection,
+                link2Direction: LinkHelper.getOpositeDirection(firstChoiceDirection) 
+            }
 
         const direction = this.generateDirectionWhenSameRowOrCol(firstChoiceDirection)
-        return [ direction, direction ]
+        
+        return {
+            link1Direction: direction,
+            link2Direction: direction
+        }
     }
     /**
      *  these directions are used
@@ -81,7 +88,7 @@ class LinkDirectionsGenerator {
                 
             hasCellsLh = new LinkHelper(hasCellsLinkKey)
 
-            hasCellsOutSameCol = LinkDirectionsCellVerifier.hasCellsOut(hasCellsLh, lh.getDownUp)
+            hasCellsOutSameCol = LinkCellOutVerifier.hasCellsOut(hasCellsLh, lh.getDownUp)
             hasCellsOutSameCol |= gridModel.model.cells[gridModel.getPosition(lh.row1, col1)].is
             hasCellsOutSameCol |= gridModel.model.cells[gridModel.getPosition(lh.row2, col2)].is
         }
@@ -103,7 +110,7 @@ class LinkDirectionsGenerator {
                 
             hasCellsLh = new LinkHelper(hasCellsLinkKey)
 
-            hasCellsOutSameRow = LinkDirectionsCellVerifier.hasCellsOut(hasCellsLh, lh.getRightLeft)
+            hasCellsOutSameRow = LinkCellOutVerifier.hasCellsOut(hasCellsLh, lh.getRightLeft)
             hasCellsOutSameRow |= gridModel.model.cells[gridModel.getPosition(row1, lh.col1)].is
             hasCellsOutSameRow |= gridModel.model.cells[gridModel.getPosition(row2, lh.col2)].is
         }

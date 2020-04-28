@@ -1,8 +1,14 @@
-import { LinkDirectionsCellVerifier } from './LinkDirectionsCellVerifier'
-import { LinkHelper } from '../link.helper'
+import { gridModel } from '../../grid.model'
 import linkEEMapHelper from '../link-ee/linkEEMap.helper'
-import { LinkDirectionsOverlapHelper } from './linkDirectionsOverlap.helper'
+import { LinkHelper } from '../link.helper'
+import { LinkCellCornerVerifier } from './cell-verifiers/LinkCellCornerVerifier'
+import { LinkCellInVerifier } from './cell-verifiers/LinkCellInVerifier'
+import { LinkCellOrientationVerifier } from './cell-verifiers/LinkCellOrientationVerifier'
+import { LinkCellOutVerifier } from './cell-verifiers/LinkCellOutVerifier'
 import { LinkDirectionsGenerator } from './LinkDirectionsGenerator'
+import { LinkDirectionsMap } from './LinkDirectionsMap'
+import { LinkOverlapHelper } from './LinkOverlapHelper'
+import { LinkOverlapOutsideHelper } from './LinkOverlapOutsideHelper'
 
 let linkDirectionsMap = {}
 
@@ -15,44 +21,55 @@ const linkDirectionsHelper = {
 
         if (!pdir1[1]) {
             const generator = new LinkDirectionsGenerator(lh)
-            const linkDirections = generator.generateDirectionsWhenSameRowCol(lh)
-            
-            this.setLinkDirectionsMap(lh, {
-                link1Direction: linkDirections[0],
-                link2Direction: linkDirections[1]
-            })
+            this.setLinkDirectionsMap(lh, {...generator.generateDirectionsWhenSameRowCol(lh)})
             return
         }
         
-        const linkOverlapHelper = this.createLinkDirectionsOverlapHelper(lh)
-        const lh2  = new LinkHelper(lh.linkKey, true)
-        const pdir2 = lh2.potentialDirections
-        
-        const linkDirections = linkOverlapHelper.produceLinkDirections(pdir1, pdir2)
-        
-        this.setLinkDirectionsMap(lh, {
-            link1Direction: linkDirections[0],
-            link2Direction: linkDirections[1],
-            linkOverlapHelper
+        const linkOverlapHelper = this.createLinkOverlapHelper(lh)
+        const linkOverlapOutsideHelper = this.createLinkOverlapOutsideHelper(lh)
+
+        this.setLinkDirectionsMap(lh, { 
+            linkOverlapHelper,
+            linkOverlapOutsideHelper,
+            ...linkOverlapHelper.produceLinkDirections(lh),
+            ...this.createForcedDirections(lh)
         })
     },
     setLinkDirectionsMap(lh, query) {
-        const { link1Direction, link2Direction, linkOverlapHelper } = query
-        linkDirectionsMap[lh.linkKey] = { link1Direction, link2Direction, linkOverlapHelper }
+        linkDirectionsMap[lh.linkKey] = new LinkDirectionsMap(query) 
+    },
+    getLinkDirectionsMap(lh) {
+        return linkDirectionsMap[lh.linkKey]
     },
     getLinkDirections(lh) {
-        const ldm = linkDirectionsMap[lh.linkKey]
-        return [ ldm.link1Direction, ldm.link2Direction ]
+        const { link1Direction, link2Direction } = linkDirectionsMap[lh.linkKey]
+        return [ link1Direction, link2Direction ]
+    },
+    getForcedLinkDirections(lh) {
+        const { forcedOutDirection, forcedInDirection } = linkDirectionsMap[lh.linkKey]
+        return [ forcedOutDirection, forcedInDirection ]
     },
     getLinkDirectionsOverlapHelper(lh) {
         return linkDirectionsMap[lh.linkKey].linkOverlapHelper
+    },
+    createForcedDirections(lh) {
+        const forcedDirectionsObj = {}
+        const linkAttributes = gridModel.model.linkAttributes[lh.linkKey]
+
+        if (linkAttributes && linkAttributes.outDirection)
+            forcedDirectionsObj.forcedOutDirection = linkAttributes.outDirection
+            
+        if (linkAttributes && linkAttributes.inDirection)
+            forcedDirectionsObj.forcedInDirection = linkAttributes.inDirection
+
+        return forcedDirectionsObj
     },
     /**
      *  this helper is used to generate 
      *  the most optimum path for a link
      *  with least amount of corners, used when not straight lines
      * */
-    createLinkDirectionsOverlapHelper(lh) {
+    createLinkOverlapHelper(lh) {
         const lh2 = new LinkHelper(lh.linkKey, true)
         
         const eeMap1 = linkEEMapHelper.eeMap[lh.link1]
@@ -63,22 +80,34 @@ const linkDirectionsHelper = {
         let isEE2 = (eeMap1[pdir1[1]].total > 0 && eeMap1[pdir1[0]].total === eeMap1[pdir1[1]].total)
         isEE2 |= eeMap1[pdir1[0]].total > eeMap1[pdir1[1]].total
 
-        return  new LinkDirectionsOverlapHelper({
-            isCorner1: LinkDirectionsCellVerifier.hasCellsCorner(lh, pdir1[0]),
-            isCorner2: LinkDirectionsCellVerifier.hasCellsCorner(lh, pdir1[1]),
-            isOut1: LinkDirectionsCellVerifier.hasCellsOut(lh, pdir1[0]),
-            isOut2: LinkDirectionsCellVerifier.hasCellsOut(lh, pdir1[1]),
-            isIn1: LinkDirectionsCellVerifier.hasCellsIn(lh, LinkHelper.getOpositeDirection(pdir2[0])),
-            isIn2: LinkDirectionsCellVerifier.hasCellsIn(lh, LinkHelper.getOpositeDirection(pdir2[1])),
+        return new LinkOverlapHelper({
+            isCorner1: LinkCellCornerVerifier.hasCellsCorner(lh, pdir1[0]),
+            isCorner2: LinkCellCornerVerifier.hasCellsCorner(lh, pdir1[1]),
+            isOut1: LinkCellOutVerifier.hasCellsOut(lh, pdir1[0]),
+            isOut2: LinkCellOutVerifier.hasCellsOut(lh, pdir1[1]),
+            isIn1: LinkCellInVerifier.hasCellsIn(lh, LinkHelper.getOpositeDirection(pdir2[0])),
+            isIn2: LinkCellInVerifier.hasCellsIn(lh, LinkHelper.getOpositeDirection(pdir2[1])),
             isEE2
         })
-        
+    },
+    createLinkOverlapOutsideHelper(lh) {
+
+        return new LinkOverlapOutsideHelper({
+            isUpLeftCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'upLeft'),
+            isUpRightCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'upRight'),
+            isDownLeftCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'downLeft'),
+            isDownRightCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'downRight'),
+
+            isUpCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'up'),
+            isRightCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'right'),
+            isLeftCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'left'),
+            isDownCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'down'),
+        })
     }
+
 }
 
 globalThis.linkDirectionsHelper = linkDirectionsHelper
 
-export { 
-    linkDirectionsHelper,
-    linkDirectionsMap
-}
+export { linkDirectionsHelper, linkDirectionsMap }
+

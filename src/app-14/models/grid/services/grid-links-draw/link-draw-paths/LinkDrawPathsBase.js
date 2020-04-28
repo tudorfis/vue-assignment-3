@@ -1,6 +1,6 @@
 
-import { SvgDrawPath } from './SvgDrawPath'
-import { SvgDrawArrow } from './SvgDrawArrow'
+import { SvgDrawPath } from '../SvgDrawPath'
+import { SvgDrawArrow } from '../SvgDrawArrow'
 
 class LinkDrawPathsBase {
     constructor(query) {

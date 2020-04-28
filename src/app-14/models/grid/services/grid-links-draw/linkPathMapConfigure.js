@@ -1,5 +1,6 @@
 import { linkPathMapHelper } from '../../helpers/linkPathMap.helper'
 import { gridModel } from '../../grid.model' 
+import { LinkHelper } from '../../helpers/link.helper'
 
 class LinkPathMapConfigure {
     constructor(query) {
@@ -44,25 +45,17 @@ class LinkPathMapConfigure {
         const { directionOut, directionIn, linkKey } = this.lh
         linkPathMapHelper.setDirectionOut(this.lh, directionOut, linkKey)
         linkPathMapHelper.setDirectionIn(this.lh, directionIn, linkKey)
-        
-        console.log(`
-            linkKey=${this.lh.linkKey}
-            A0=${this.loh.A0}
-            A1=${this.loh.A1}
-            A2=${this.loh.A2}
-        `)
 
-        /** @TODO: figure out a way to check if a path goes one way or the other */
+        let link
         const { row1, row2, col1, col2 } = this.lh
-        const potentialLinks = [
-            gridModel.getPosition(row2, col1),
-            gridModel.getPosition(row1, col2)
-        ]
-        for (const link of potentialLinks) {
-            if (!gridModel.model.cells[link].is) {
-                return linkPathMapHelper.setCorner(link, linkKey)
-            }
-        }
+
+        if (LinkHelper.isUpOrDown(directionOut))
+            link = gridModel.getPosition(row2, col1)
+
+        else if (LinkHelper.isLeftOrRight(directionOut))
+            link = gridModel.getPosition(row1, col2)
+
+        linkPathMapHelper.setCorner(link, linkKey)
     }
 }
 
