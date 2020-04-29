@@ -22,23 +22,23 @@ class LinkCellCornerVerifier {
         let row, col
 
         if (orientation === 'upLeft') {
-            row = row1 - 1
-            col = col1 - 1
+            row = (lh.isUp) ? row1 - 1 : row2 - 1
+            col = (lh.isLeft) ? col1 - 1 : col2 - 1
         }
 
         else if (orientation === 'upRight') {
-            row = row1 - 1
-            col = col2 + 1
+            row = (lh.isUp) ? row1 - 1 : row2 - 1
+            col = (lh.isRight) ? col2 + 1 : col1 + 1
         }
 
         else if (orientation === 'downLeft') {
-            row = row2 + 1
-            col = col1 - 1
+            row = (lh.isDown) ? row2 + 1 : row1 + 1
+            col = (lh.isLeft) ? col1 - 1 : col2 - 1
         }
 
         else if (orientation === 'downRight') {
-            row = row2 + 1
-            col = col2 + 1
+            row = (lh.isDown) ? row2 + 1 : row1 + 1
+            col = (lh.isRight) ? col2 + 1 : col1 + 1
         }
 
         if (row === 0 || row === gridModel.model.numRows)

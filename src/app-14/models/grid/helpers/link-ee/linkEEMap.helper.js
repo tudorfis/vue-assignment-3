@@ -84,10 +84,10 @@ class LinkEntryExitPointsMapHelper {
         this.setEEMapItemsTotals(lh)
     }
     patchEEDirection(query) {
-        const { lh, link1, link2, type, oldDirection, newDirection } = query
-
+        const { link1, link2, type, oldDirection, newDirection } = query
+        
         const eeMap = this.eeMap[link1]
-        if (!eeMap || !eeMap[oldDirection] || !eeMap[oldDirection][type] || !eeMap[oldDirection][type][oldDirection]) return
+        if (!eeMap || !eeMap[oldDirection] || !eeMap[oldDirection][type] || !eeMap[oldDirection][type][link2]) return
 
         delete eeMap[oldDirection][type][link2]
         eeMap[oldDirection].total--

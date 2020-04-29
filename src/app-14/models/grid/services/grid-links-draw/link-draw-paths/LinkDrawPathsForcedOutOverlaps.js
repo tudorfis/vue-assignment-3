@@ -1,10 +1,8 @@
 
 import { LinkDrawPathsBase } from './LinkDrawPathsBase'
-import linkEEMapHelper from '../../../helpers/link-ee/linkEEMap.helper'
 import { LinkHelper } from '../../../helpers/link.helper' 
-import { UtilsStrings } from '../../../../../utils/utilsStrings'
 
-class LinkDrawPathsForcedOut extends LinkDrawPathsBase {
+class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
     constructor(query) {
         super(query)
     }
@@ -83,4 +81,4 @@ class LinkDrawPathsForcedOut extends LinkDrawPathsBase {
     }
 }
 
-export { LinkDrawPathsForcedOut }
+export { LinkDrawPathsForcedOutOverlaps }

@@ -19,21 +19,29 @@ const linkDirectionsHelper = {
     generateLinkDirectionsMap(lh) {
         const pdir1 = lh.potentialDirections
 
+        const linkOverlapOutsideHelper = this.createLinkOverlapOutsideHelper(lh)
+        const forcedDirectionsObj = this.createForcedDirections(lh)
+        const linkOverlapHelper = this.createLinkOverlapHelper(lh)
+        const linkDirectionsObj = linkOverlapHelper.produceLinkDirections(lh)
+
         if (!pdir1[1]) {
             const generator = new LinkDirectionsGenerator(lh)
-            this.setLinkDirectionsMap(lh, {...generator.generateDirectionsWhenSameRowCol(lh)})
-            return
+            
+            this.setLinkDirectionsMap(lh, {
+                linkOverlapHelper,
+                linkOverlapOutsideHelper,
+                ...generator.generateDirectionsWhenSameRowCol(lh),
+                ...forcedDirectionsObj
+            })
         }
-        
-        const linkOverlapHelper = this.createLinkOverlapHelper(lh)
-        const linkOverlapOutsideHelper = this.createLinkOverlapOutsideHelper(lh)
-
-        this.setLinkDirectionsMap(lh, { 
-            linkOverlapHelper,
-            linkOverlapOutsideHelper,
-            ...linkOverlapHelper.produceLinkDirections(lh),
-            ...this.createForcedDirections(lh)
-        })
+        else {
+            this.setLinkDirectionsMap(lh, { 
+                linkOverlapHelper,
+                linkOverlapOutsideHelper,
+                ...linkDirectionsObj,
+                ...forcedDirectionsObj
+            })
+        }
     },
     setLinkDirectionsMap(lh, query) {
         linkDirectionsMap[lh.linkKey] = new LinkDirectionsMap(query) 
@@ -77,8 +85,13 @@ const linkDirectionsHelper = {
         const pdir1 = lh.potentialDirections
         const pdir2 = lh2.potentialDirections
 
-        let isEE2 = (eeMap1[pdir1[1]].total > 0 && eeMap1[pdir1[0]].total === eeMap1[pdir1[1]].total)
-        isEE2 |= eeMap1[pdir1[0]].total > eeMap1[pdir1[1]].total
+
+        let isEE2 = false
+
+        if (!lh.isSameRowCol) {
+            isEE2 = (eeMap1[pdir1[1]].total > 0 && eeMap1[pdir1[0]].total === eeMap1[pdir1[1]].total)
+            isEE2 |= eeMap1[pdir1[0]].total > eeMap1[pdir1[1]].total
+        }
 
         return new LinkOverlapHelper({
             isCorner1: LinkCellCornerVerifier.hasCellsCorner(lh, pdir1[0]),
@@ -102,12 +115,17 @@ const linkDirectionsHelper = {
             isRightCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'right'),
             isLeftCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'left'),
             isDownCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'down'),
+
+            isUpCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'upAfter'),
+            isRightCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'rightAfter'),
+            isLeftCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'leftAfter'),
+            isDownCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'downAfter'),
         })
     }
 
 }
 
+globalThis.linkDirectionsMap = linkDirectionsMap
 globalThis.linkDirectionsHelper = linkDirectionsHelper
 
 export { linkDirectionsHelper, linkDirectionsMap }
-

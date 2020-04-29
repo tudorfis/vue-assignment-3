@@ -8,17 +8,34 @@ class LinkCellOrientationVerifier {
         else if (orientation === 'right') return LinkCellOrientationVerifier.hasCellsOrientationRight(lh)
         else if (orientation === 'left') return LinkCellOrientationVerifier.hasCellsOrientationLeft(lh)
 
-        return false
+        if (orientation === 'upAfter') return LinkCellOrientationVerifier.hasCellsOrientationUpAfter(lh)
+        else if (orientation === 'downAfter') return LinkCellOrientationVerifier.hasCellsOrientationDownAfter(lh)
+        else if (orientation === 'rightAfter') return LinkCellOrientationVerifier.hasCellsOrientationRightAfter(lh)
+        else if (orientation === 'leftAfter') return LinkCellOrientationVerifier.hasCellsOrientationLeftAfter(lh)
+
+        return true
     }
 
     static hasCellsOrientationUp(lh) {
-        if (lh.row1 - 1 === 0) return false
-        return LinkCellOrientationVerifier.hasCellsOrientationUpDown(lh, lh.row1 - 1)
+        if (lh.isUp) {
+            if (lh.row1 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationUpDown(lh, lh.row1 - 1)
+        }
+        else {
+            if (lh.row2 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationUpDown(lh, lh.row2 - 1)
+        }
     }
 
     static hasCellsOrientationDown(lh) {
-        if (lh.row2 + 1 === gridModel.model.numRows) return false
-        return LinkCellOrientationVerifier.hasCellsOrientationUpDown(lh, lh.row2 + 1)
+        if (lh.isDown) {
+            if (lh.row2 + 1 === gridModel.model.numRows) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationUpDown(lh, lh.row2 + 1)
+        }
+        else {
+            if (lh.row1 + 1 === gridModel.model.numRows) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationUpDown(lh, lh.row1 + 1)
+        }
     }
 
     static hasCellsOrientationUpDown(lh, rowControl) {
@@ -34,13 +51,23 @@ class LinkCellOrientationVerifier {
     }
 
     static hasCellsOrientationRight(lh) {
-        if (lh.col2 + 1 === gridModel.model.numCols) return false
-        return LinkCellOrientationVerifier.hasCellsOrientationLeftRight(lh, lh.col2 + 1)
+        if (lh.isRight) {
+            if (lh.col2 + 1 === gridModel.model.numCols) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRight(lh, lh.col2 + 1)
+        } else {
+            if (lh.col1 + 1 === gridModel.model.numCols) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRight(lh, lh.col1 + 1)
+        }
     }
     
     static hasCellsOrientationLeft(lh) {
-        if (lh.col1 - 1 === 0) return false
-        return LinkCellOrientationVerifier.hasCellsOrientationLeftRight(lh, lh.col1 - 1)
+        if (lh.isLeft) {
+            if (lh.col1 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRight(lh, lh.col1 - 1)
+        } else {
+            if (lh.col2 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRight(lh, lh.col2 - 1)
+        }
     }
 
     static hasCellsOrientationLeftRight(lh, colControl) {
@@ -48,6 +75,76 @@ class LinkCellOrientationVerifier {
 
         const cells = 
             Utils.rangeArray(row1, row2)
+             .map(row => gridModel.getPosition(row, colControl))
+             .map(position => gridModel.model.cells[position].is)
+             .filter(is => !!is)
+
+        return cells.length > 0
+    }
+
+    static hasCellsOrientationUpAfter(lh) {
+        if (lh.isUp) {
+            if (lh.row1 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationUpDownAfter(lh, lh.row1 - 1)
+        }
+        else {
+            if (lh.row2 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationUpDownAfter(lh, lh.row2 - 1)
+        }
+    }
+
+    static hasCellsOrientationDownAfter(lh) {
+        if (lh.isDown) {
+            if (lh.row2 + 1 === gridModel.model.numRows) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationUpDownAfter(lh, lh.row2 + 1)
+        }
+        else {
+            if (lh.row1 + 1 === gridModel.model.numRows) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationUpDownAfter(lh, lh.row1 + 1)
+        }
+    }
+
+    static hasCellsOrientationUpDownAfter(lh, rowControl) {
+        const { col1, col2 } = lh
+
+        const colControl = lh.isRight ? col1 + 1 : col1 - 1
+        const cells = 
+            Utils.rangeArray(colControl, col2)
+             .map(col => gridModel.getPosition(rowControl, col))
+             .map(position => gridModel.model.cells[position].is)
+             .filter(is => !!is)
+
+        return cells.length > 0
+    }
+
+    static hasCellsOrientationRightAfter(lh) {
+        if (lh.isRight) {
+            if (lh.col2 + 1 === gridModel.model.numCols) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRightAfter(lh, lh.col2 + 1)
+        } 
+        else {
+            if (lh.col1 + 1 === gridModel.model.numCols) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRightAfter(lh, lh.col1 + 1)
+        }
+    }
+    
+    static hasCellsOrientationLeftAfter(lh) {
+        if (lh.isLeft) {
+            if (lh.col1 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRightAfter(lh, lh.col1 - 1)
+        }
+        else {
+            if (lh.col2 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRightAfter(lh, lh.col2 - 1)
+        }
+    }
+
+    static hasCellsOrientationLeftRightAfter(lh, colControl) {
+        const { row1, row2 } = lh
+
+        const rowControl = lh.isDown ? row1 + 1 : row1 - 1
+        const cells = 
+            Utils.rangeArray(rowControl, row2)
              .map(row => gridModel.getPosition(row, colControl))
              .map(position => gridModel.model.cells[position].is)
              .filter(is => !!is)

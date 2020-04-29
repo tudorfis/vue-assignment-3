@@ -1,4 +1,5 @@
 import { LinkHelper } from "../link.helper"
+import { UtilsStrings } from "../../../../utils/utilsStrings"
 
 class LinkDirectionsMap {
     constructor(query) {
@@ -11,6 +12,13 @@ class LinkDirectionsMap {
         this.forcedOutDirection = query.forcedOutDirection
         this.forcedInDirection = query.forcedInDirection
     }
+    get loh() {
+        return this.linkOverlapHelper
+    }
+    get looh() {
+        return this.linkOverlapOutsideHelper
+    }
+    
     get isDifferentForcedLinkOut() {
         if (!this.forcedOutDirection) return false
         return this.forcedOutDirection !== this.link1Direction
@@ -33,6 +41,14 @@ class LinkDirectionsMap {
         return !!this.forcedOutDirection && !!this.forcedInDirection
     }
 
+    get hasCellsForcedOut() {
+        const cellVerifierKey = `is${UtilsStrings.ucase(this.forcedOutDirection)}Cells`
+        return this.linkOverlapOutsideHelper[cellVerifierKey]
+    }
+
+    isForcedOutSameRowCol(lh) {
+        return lh.isSameRowCol
+    }
     isForcedOutOppositeOfPdir0(lh) {
         return (LinkHelper.getOpositeDirection(this.forcedOutDirection) === lh.potentialDirections[0])
     }

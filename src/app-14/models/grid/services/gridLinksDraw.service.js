@@ -3,21 +3,22 @@ import { linkDirectionsHelper } from '../helpers/link-directions/linkDirections.
 import { LinkPathMapConfigure } from './grid-links-draw/LinkPathMapConfigure'
 import { LinkDrawPathsOverlaps } from './grid-links-draw/link-draw-paths/LinkDrawPathsOverlaps'
 import { LinkDrawPathsStraights } from './grid-links-draw/link-draw-paths/LinkDrawPathsStraights'
-import { LinkDrawPathsForcedOut } from './grid-links-draw/link-draw-paths/LinkDrawPathsForcedOut'
 import { LinkDirectionsGenerator } from "../helpers/link-directions/LinkDirectionsGenerator"
+import { LinkDrawPathsForcedOutSameLine } from "./grid-links-draw/link-draw-paths/LinkDrawPathsForcedOutSameLine"
+import { LinkDrawPathsForcedOutOverlaps } from "./grid-links-draw/link-draw-paths/LinkDrawPathsForcedOutOverlaps"
 
 const gridLinksDrawService = {
     createPathAndArrow(lh) {
-        const linkDirectionsMap = linkDirectionsHelper.getLinkDirectionsMap(lh)
-        
-        if (linkDirectionsMap.hasNoForcedDirections || !linkDirectionsMap.isDifferentForcedLinkOut) {
+        const ldm = linkDirectionsHelper.getLinkDirectionsMap(lh)
+
+        if (ldm.hasNoForcedDirections || !ldm.isDifferentForcedLinkOut) {
             if (lh.isSameRowCol)
                 return this.drawLinkPathSameRowOrCol(lh)
            
             return this.drawLinkPathOverlaps(lh)
 
-        } else if (linkDirectionsMap.hasForcedOutDirection) {
-            return this.drawLinkPathForcedOut(lh, linkDirectionsMap)
+        } else if (ldm.hasForcedOutDirection) {
+            return this.drawLinkPathForcedOut(lh, ldm)
         }
     },
     
@@ -74,27 +75,34 @@ const gridLinksDrawService = {
 
         throw new Error('Unique Exception: not found a linkDirectionsOverlapHelper pattern to resolve')
     },
-    drawLinkPathForcedOut(lh, linkDirectionsMap) {
-        const isForcedOutOppositeOfPdir0 = linkDirectionsMap.isForcedOutOppositeOfPdir0(lh)
-        const isForcedOutOppositeOfPdir1 = linkDirectionsMap.isForcedOutOppositeOfPdir1(lh)
+    drawLinkPathForcedOut(lh, ldm) {
+        const isForcedOutSameRowCol = ldm.isForcedOutSameRowCol(lh)
+        const isForcedOutOppositeOfPdir0 = ldm.isForcedOutOppositeOfPdir0(lh)
+        const isForcedOutOppositeOfPdir1 = ldm.isForcedOutOppositeOfPdir1(lh)
         
-        const linkDrawPathsForcedOut = new LinkDrawPathsForcedOut({ lh, linkDirectionsMap })
+        const linkDrawPathsForcedOutSameLine = new LinkDrawPathsForcedOutSameLine({ lh, linkDirectionsMap: ldm })
+        const linkDrawPathsForcedOutOverlaps = new LinkDrawPathsForcedOutOverlaps({ lh, linkDirectionsMap: ldm })
 
-        if (isForcedOutOppositeOfPdir0) {
-            // linkPathMapConfigure.handleForcedOutOppositePdir0()
-            return linkDrawPathsForcedOut.drawOppositeOfPdir0()
-        }
-        else if (isForcedOutOppositeOfPdir1) {
-            // linkPathMapConfigure.handleForcedOutOppositePdir1()
-            return linkDrawPathsForcedOut.drawOppositeOfPdir1()
+        if (isForcedOutSameRowCol) {
+            // linkPathMapConfigure.handleForcedOutSameRowCol()
+            return linkDrawPathsForcedOutSameLine.drawSameRowCol()
         }
         else {
-            // linkPathMapConfigure.handleForcedOut()
-            return linkDrawPathsForcedOut.drawLastRemaining()
+            if (isForcedOutOppositeOfPdir0) {
+                // linkPathMapConfigure.handleForcedOutOppositePdir0()
+                return linkDrawPathsForcedOutOverlaps.drawOppositeOfPdir0()
+            }
+            else if (isForcedOutOppositeOfPdir1) {
+                // linkPathMapConfigure.handleForcedOutOppositePdir1()
+                return linkDrawPathsForcedOutOverlaps.drawOppositeOfPdir1()
+            }
+            else {
+                console.log('%c drawLastRemainingOfPdir               ', 'background: green; color: white')
+                // linkPathMapConfigure.handleForcedOut()
+                linkDrawPathsForcedOutOverlaps.prototype = this
+                return linkDrawPathsForcedOutOverlaps.drawLastRemainingOfPdir(ldm)
+            }
         }
-
-        throw new Error('Unique Exception: not found a linkDirectionsOverlapHelper pattern to resolve')
-
     }
 }
 

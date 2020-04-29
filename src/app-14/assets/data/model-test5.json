@@ -1,29 +1,9 @@
 {
-    "numCols": 7,
+    "numCols": 8,
     "numRows": 6,
-    "totalSteps": 6,
+    "totalSteps": 7,
     "steps": {
-        "2-2": {
-            "is": 1,
-            "type": "SEND_EMAIL",
-            "id": 22
-        },
-        "4-4": {
-            "is": 1,
-            "type": "WAIT",
-            "id": 17
-        },
-        "5-1": {
-            "is": 1,
-            "type": "WAIT",
-            "id": 15
-        },
-        "1-2": {
-            "is": 1,
-            "type": "SEND_SMS",
-            "id": 12
-        },
-        "1-3": {
+        "3-2": {
             "is": 1,
             "type": "SEND_SMS",
             "id": 12
@@ -38,23 +18,33 @@
             "type": "SEND_SMS",
             "id": 12
         },
+        "4-2": {
+            "is": 1,
+            "type": "WAIT",
+            "id": 17
+        },
+        "4-4": {
+            "is": 1,
+            "type": "SEND_EMAIL",
+            "id": 22
+        },
         "4-7": {
             "is": 1,
             "type": "SEND_SMS",
             "id": 12
         },
-        "5-2": {
+        "5-1": {
             "is": 1,
-            "type": "SEND_SMS",
-            "id": 12
+            "type": "WAIT",
+            "id": 15
         }
     },
     "links": [
-        "2-2__4-4"
+        "4-4__4-2"
     ],
     "linkAttributes": {
-        "2-2__4-4": {
-            "outDirection": "left",
+        "4-4__4-2": {
+            "outDirection": "right",
             "inDirection": "",
             "name": "",
             "color": "",
