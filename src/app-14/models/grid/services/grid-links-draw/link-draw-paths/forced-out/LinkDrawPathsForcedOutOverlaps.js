@@ -62,37 +62,76 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
      
         const lh2 = new LinkHelper(lh.linkKey, true)
         const index = lh.potentialDirections.indexOf(forcedOutDirection)
-        
         const helperDirection1 = LinkHelper.getOpositeDirection(lh2.potentialDirections[index])
-        const isOut = index === 0 ? loh.isOut1 : loh.isOut2
+
+        const isOutOrCorner = index === 0 ? (loh.isOut1 || loh.isCorner1) : (loh.isOut2 || loh.isCorner2)
+        const isIn1 = index === 0 ? loh.isIn1 : loh.isIn2
+        const isIn2 = index === 0 ? loh.isIn2 : loh.isIn1
         
-        if (isOut) {
-            linkEEMapHelper.patchEEDirection({
-                link1: this.lh.link2,
-                link2: this.lh.link1,
-                type: 'in',
-                oldDirection: link2Direction,
-                newDirection: LinkHelper.getOpositeDirection(helperDirection1)
-            })
+        if (isOutOrCorner) {
+            if (isIn2 && isIn1) {
+                linkEEMapHelper.patchEEDirection({
+                    link1: this.lh.link2,
+                    link2: this.lh.link1,
+                    type: 'in',
+                    oldDirection: link2Direction,
+                    newDirection: LinkHelper.getOpositeDirection(helperDirection1)
+                })
 
-            path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
-            path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
-            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-            path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, helperDirection1)
-
-            path.svgD += svgDrawPath.drawLine(helperDirection1, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection1)
+                path = svgDrawPath.drawPath(forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
+                path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, helperDirection1)
+                path.svgD += svgDrawPath.drawLine(helperDirection1, 'arrow')
+                arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection1)
+            }
+            else if (isIn2 && !isIn1) {
+                path = svgDrawPath.drawPath(forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
+                path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, helperDirection1)
+                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                path.svgD += svgDrawPath.drawLine(helperDirection1, 'arrow')
+                arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection1)
+            }
+            else {
+                path = svgDrawPath.drawPath(forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
+                path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'arrow')
+                arrow = svgDrawArrow.drawArrow(path.svgD, forcedOutDirection)
+            }
         }
         else {
-            path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
-            path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+            if (!isIn1) {
+                path = svgDrawPath.drawPath(forcedOutDirection)
+                path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
+                path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, helperDirection1)
+                path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                path.svgD += svgDrawPath.drawLine(helperDirection1, 'arrow')
+                arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection1)
+            }
+            else {
+                linkEEMapHelper.patchEEDirection({
+                    link1: this.lh.link2,
+                    link2: this.lh.link1,
+                    type: 'in',
+                    oldDirection: link2Direction,
+                    newDirection: LinkHelper.getOpositeDirection(forcedOutDirection)
+                })
 
-            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, forcedOutDirection)
+                path = svgDrawPath.drawPath(forcedOutDirection)
+                path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
+                path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'arrow')
+                arrow = svgDrawArrow.drawArrow(path.svgD, forcedOutDirection)
+            }
         }
 
         return [ path, arrow ]
