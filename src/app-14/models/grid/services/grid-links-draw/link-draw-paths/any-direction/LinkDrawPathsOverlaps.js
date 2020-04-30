@@ -1,5 +1,5 @@
 
-import { LinkDrawPathsBase } from './LinkDrawPathsBase'
+import { LinkDrawPathsBase } from '../LinkDrawPathsBase'
 
 class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
     constructor(query) {

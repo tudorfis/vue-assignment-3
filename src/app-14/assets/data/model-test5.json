@@ -3,7 +3,7 @@
     "numRows": 6,
     "totalSteps": 7,
     "steps": {
-        "3-2": {
+        "2-3": {
             "is": 1,
             "type": "SEND_SMS",
             "id": 12
@@ -23,7 +23,7 @@
             "type": "WAIT",
             "id": 17
         },
-        "4-4": {
+        "4-5": {
             "is": 1,
             "type": "SEND_EMAIL",
             "id": 22
@@ -40,11 +40,11 @@
         }
     },
     "links": [
-        "4-4__4-2"
+        "4-5__4-2"
     ],
     "linkAttributes": {
-        "4-4__4-2": {
-            "outDirection": "right",
+        "4-5__4-2": {
+            "outDirection": "",
             "inDirection": "",
             "name": "",
             "color": "",

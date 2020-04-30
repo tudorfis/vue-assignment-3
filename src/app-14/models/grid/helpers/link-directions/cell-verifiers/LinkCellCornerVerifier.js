@@ -22,18 +22,18 @@ class LinkCellCornerVerifier {
         let row, col
 
         if (orientation === 'upLeft') {
-            row = (lh.isUp) ? row1 - 1 : row2 - 1
-            col = (lh.isLeft) ? col1 - 1 : col2 - 1
+            row = (lh.isUp) ? row2 - 1 : row1 - 1
+            col = (lh.isLeft) ? col2 - 1 : col1 - 1
         }
 
         else if (orientation === 'upRight') {
-            row = (lh.isUp) ? row1 - 1 : row2 - 1
+            row = (lh.isUp) ? row2 - 1 : row1 - 1
             col = (lh.isRight) ? col2 + 1 : col1 + 1
         }
 
         else if (orientation === 'downLeft') {
             row = (lh.isDown) ? row2 + 1 : row1 + 1
-            col = (lh.isLeft) ? col1 - 1 : col2 - 1
+            col = (lh.isLeft) ? col2 - 1 : col1 - 1
         }
 
         else if (orientation === 'downRight') {

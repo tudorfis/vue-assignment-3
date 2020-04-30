@@ -1,6 +1,6 @@
 
-import { LinkDrawPathsBase } from './LinkDrawPathsBase'
-import { LinkHelper } from '../../../helpers/link.helper' 
+import { LinkDrawPathsBase } from '../LinkDrawPathsBase'
+import { LinkHelper } from '../../../../helpers/link.helper' 
 
 class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
     constructor(query) {
@@ -56,6 +56,10 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
     }
 
     drawLastRemainingOfPdir() {
+        /** @TODO: this need a better implementation
+         * so far the isCorner1 and isCorner2 is a temporarly fix
+         * the paths still goes behind the elements
+         */
         const ldm = this.linkDirectionsMap
         const loh = ldm.linkOverlapHelper
 

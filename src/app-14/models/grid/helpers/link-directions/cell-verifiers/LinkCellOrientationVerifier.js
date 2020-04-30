@@ -62,11 +62,11 @@ class LinkCellOrientationVerifier {
     
     static hasCellsOrientationLeft(lh) {
         if (lh.isLeft) {
-            if (lh.col1 - 1 === 0) return true
-            return LinkCellOrientationVerifier.hasCellsOrientationLeftRight(lh, lh.col1 - 1)
-        } else {
             if (lh.col2 - 1 === 0) return true
             return LinkCellOrientationVerifier.hasCellsOrientationLeftRight(lh, lh.col2 - 1)
+        } else {
+            if (lh.col1 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRight(lh, lh.col1 - 1)
         }
     }
 
@@ -130,12 +130,12 @@ class LinkCellOrientationVerifier {
     
     static hasCellsOrientationLeftAfter(lh) {
         if (lh.isLeft) {
-            if (lh.col1 - 1 === 0) return true
-            return LinkCellOrientationVerifier.hasCellsOrientationLeftRightAfter(lh, lh.col1 - 1)
-        }
-        else {
             if (lh.col2 - 1 === 0) return true
             return LinkCellOrientationVerifier.hasCellsOrientationLeftRightAfter(lh, lh.col2 - 1)
+        }
+        else {
+            if (lh.col1 - 1 === 0) return true
+            return LinkCellOrientationVerifier.hasCellsOrientationLeftRightAfter(lh, lh.col1 - 1)
         }
     }
 

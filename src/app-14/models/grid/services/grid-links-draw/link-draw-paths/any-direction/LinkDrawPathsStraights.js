@@ -1,5 +1,5 @@
 
-import { LinkDrawPathsBase } from './LinkDrawPathsBase'
+import { LinkDrawPathsBase } from '../LinkDrawPathsBase'
 
 class LinkDrawPathsStraights extends LinkDrawPathsBase {
     constructor(query) {

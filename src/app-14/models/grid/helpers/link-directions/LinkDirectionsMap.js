@@ -19,13 +19,13 @@ class LinkDirectionsMap {
         return this.linkOverlapOutsideHelper
     }
     
-    get isDifferentForcedLinkOut() {
+    get isValidForcedLinkOut() {
         if (!this.forcedOutDirection) return false
-        return this.forcedOutDirection !== this.link1Direction
+        return this.forcedOutDirection === this.link1Direction
     }
-    get isDifferentForcedLinkIn() {
+    get isValidForcedLinkIn() {
         if (!this.forcedInDirection) return false
-        return this.forcedInDirection !== this.link2Direction
+        return this.forcedInDirection === this.link2Direction
     }
     get hasNoForcedDirections() {
         return !this.forcedOutDirection && !this.forcedInDirection
@@ -45,6 +45,10 @@ class LinkDirectionsMap {
         const cellVerifierKey = `is${UtilsStrings.ucase(this.forcedOutDirection)}Cells`
         return this.linkOverlapOutsideHelper[cellVerifierKey]
     }
+    get hasCellsForcedIn() {
+        const cellVerifierKey = `is${UtilsStrings.ucase(this.forcedInDirection)}Cells`
+        return this.linkOverlapOutsideHelper[cellVerifierKey]
+    }
 
     isForcedOutSameRowCol(lh) {
         return lh.isSameRowCol
@@ -54,6 +58,16 @@ class LinkDirectionsMap {
     }
     isForcedOutOppositeOfPdir1(lh) {
         return (LinkHelper.getOpositeDirection(this.forcedOutDirection) === lh.potentialDirections[1])
+    }
+
+    isForcedInSameRowCol(lh) {
+        return lh.isSameRowCol
+    }
+    isForcedInOppositeOfPdir0(lh) {
+        return (LinkHelper.getOpositeDirection(this.forcedInDirection) === lh.potentialDirections[0])
+    }
+    isForcedInOppositeOfPdir1(lh) {
+        return (LinkHelper.getOpositeDirection(this.forcedInDirection) === lh.potentialDirections[1])
     }
 }
 
