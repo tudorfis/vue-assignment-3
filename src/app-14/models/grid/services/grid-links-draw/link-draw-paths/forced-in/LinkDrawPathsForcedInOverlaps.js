@@ -115,11 +115,11 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
         const helperDirection1 = this.lh.potentialDirections[index]
         const helperDirection2 = LinkHelper.getOpositeDirection(forcedInDirection)
 
-        const isOutOrCorner = index ? (loh.isOut2 || loh.isCorner2) : (loh.isOut1 || loh.isCorner1)
-        const isIn = index ? loh.isIn2 : loh.isIn1
+        const isOutOrCorner = index === 1 ? (loh.isOut2 || loh.isCorner2) : (loh.isOut1 || loh.isCorner1)
+        const isIn = index === 1 ? loh.isIn2 : loh.isIn1
 
         if (isOutOrCorner) {
-            path = svgDrawPath.drawPath(link1Direction)
+            path = svgDrawPath.drawPath(helperDirection2)
             path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedInDirection)
             path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
 
@@ -130,6 +130,16 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
             else {
                 path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
                 path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedInDirection)
+            }
+
+            if (helperDirection2 !== link1Direction) {
+                linkEEMapHelper.patchEEDirection({
+                    link1: this.lh.link1,
+                    link2: this.lh.link2,
+                    type: 'out',
+                    oldDirection: link1Direction,
+                    newDirection: helperDirection2
+                })
             }
         }
         else {

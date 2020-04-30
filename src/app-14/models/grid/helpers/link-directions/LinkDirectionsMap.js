@@ -27,6 +27,9 @@ class LinkDirectionsMap {
         if (!this.forcedInDirection) return false
         return this.forcedInDirection === this.link2Direction
     }
+    get isValidBothForcedLinks() {
+        return this.isValidForcedLinkOut && this.isValidForcedLinkIn
+    }
     get hasNoForcedDirections() {
         return !this.forcedOutDirection && !this.forcedInDirection
     }

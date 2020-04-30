@@ -14,7 +14,7 @@ const gridLinksDrawService = {
     createPathAndArrow(lh) {
         const ldm = linkDirectionsHelper.getLinkDirectionsMap(lh)
 
-        if (ldm.hasBothForcedDirections) {
+        if (ldm.hasBothForcedDirections && !ldm.isValidBothForcedLinks) {
             console.log('%c ldm.hasBothForcedDirections              ', 'background: black; color: white;')
         }
         else if (ldm.hasNoForcedDirections || ldm.isValidForcedLinkOut || ldm.isValidForcedLinkIn) {
@@ -124,10 +124,8 @@ const gridLinksDrawService = {
             else if (ldm.isForcedInOppositeOfPdir1(lh2))
                 return linkDrawPathsForcedInOverlaps.drawOppositeOfPdir1()
 
-            else {
-                linkDrawPathsForcedInOverlaps.prototype = this
+            else
                 return linkDrawPathsForcedInOverlaps.drawLastRemainingOfPdir(ldm)
-            }
         }
     }
 }

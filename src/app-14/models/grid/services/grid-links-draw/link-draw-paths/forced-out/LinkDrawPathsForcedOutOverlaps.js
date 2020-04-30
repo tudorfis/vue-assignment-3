@@ -1,17 +1,16 @@
 
-import { LinkDrawPathsBase } from '../LinkDrawPathsBase'
-import { LinkHelper } from '../../../../helpers/link.helper' 
+import { LinkDrawPathsBase } from "../LinkDrawPathsBase";
+import { LinkHelper } from "../../../../helpers/link.helper"
+import linkEEMapHelper from "../../../../helpers/link-ee/linkEEMap.helper"
 
 class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
     constructor(query) {
         super(query)
     }
     drawOppositeOfPdir0() {
-        console.log('%c drawOppositeOfPdir0               ', 'background: red; color: white')
         return this.drawOppositeOfPdir(1, 0, 2)
     }
     drawOppositeOfPdir1() {
-        console.log('%c drawOppositeOfPdir1               ', 'background: blue; color: white')
         return this.drawOppositeOfPdir(0, 1, 1)
     }
     drawOppositeOfPdir(pdirKey1, pdirKey2, lohKey) {
@@ -56,32 +55,47 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
     }
 
     drawLastRemainingOfPdir() {
-        /** @TODO: this need a better implementation
-         * so far the isCorner1 and isCorner2 is a temporarly fix
-         * the paths still goes behind the elements
-         */
-        const ldm = this.linkDirectionsMap
-        const loh = ldm.linkOverlapHelper
+        let path, arrow
 
-        ldm.link1Direction = ldm.forcedOutDirection
-        ldm.link2Direction = LinkHelper.getOtherPdir2(this.lh, ldm.link2Direction)
+        const { svgDrawPath, svgDrawArrow, linkDirectionsMap, lh } = this
+        const { link2Direction, forcedOutDirection, loh } = linkDirectionsMap
+     
+        const lh2 = new LinkHelper(lh.linkKey, true)
+        const index = lh.potentialDirections.indexOf(forcedOutDirection)
         
-        const pdir1 = this.lh.potentialDirections
+        const helperDirection1 = LinkHelper.getOpositeDirection(lh2.potentialDirections[index])
+        const isOut = index === 0 ? loh.isOut1 : loh.isOut2
+        
+        if (isOut) {
+            linkEEMapHelper.patchEEDirection({
+                link1: this.lh.link2,
+                link2: this.lh.link1,
+                type: 'in',
+                oldDirection: link2Direction,
+                newDirection: LinkHelper.getOpositeDirection(helperDirection1)
+            })
 
-        if (pdir1.indexOf(ldm.forcedOutDirection) === 1) {
-            if ((loh.isOut2 || loh.isIn2 || loh.isCorner2) && (!loh.isOut1 && !loh.isIn1 && !loh.isCorner1)) {
-                ldm.linkOverlapHelper.isCorner1 = true
-                ldm.link2Direction = LinkHelper.getOtherPdir2(this.lh, ldm.link2Direction)
-            } 
+            path = svgDrawPath.drawPath(forcedOutDirection)
+            path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+            path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
+            path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, helperDirection1)
+
+            path.svgD += svgDrawPath.drawLine(helperDirection1, 'arrow')
+            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection1)
         }
-        else if (pdir1.indexOf(ldm.forcedOutDirection) === 0) {
-            if ((loh.isOut1 || loh.isIn1 || loh.isCorner1) && (!loh.isOut2 && !loh.isIn2 && !loh.isCorner2)) {
-                ldm.linkOverlapHelper.isCorner2 = true
-                ldm.link2Direction = LinkHelper.getOtherPdir2(this.lh, ldm.link2Direction)
-            }
+        else {
+            path = svgDrawPath.drawPath(forcedOutDirection)
+            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
+            path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+            path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+            path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+
+            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'arrow')
+            arrow = svgDrawArrow.drawArrow(path.svgD, forcedOutDirection)
         }
 
-        return this.prototype.drawLinkPathOverlaps(this.lh)
+        return [ path, arrow ]
     }
 }
 
