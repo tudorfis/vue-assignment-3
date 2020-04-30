@@ -14,7 +14,10 @@ const gridLinksDrawService = {
     createPathAndArrow(lh) {
         const ldm = linkDirectionsHelper.getLinkDirectionsMap(lh)
 
-        if (ldm.hasNoForcedDirections || ldm.isValidForcedLinkOut || ldm.isValidForcedLinkIn) {
+        if (ldm.hasBothForcedDirections) {
+            console.log('%c ldm.hasBothForcedDirections              ', 'background: black; color: white;')
+        }
+        else if (ldm.hasNoForcedDirections || ldm.isValidForcedLinkOut || ldm.isValidForcedLinkIn) {
             console.log('%c ldm.hasNoForcedDirections              ', 'background: black; color: white;')
             return this.drawLinkPathNoForcedDirections(lh)
         }
@@ -109,7 +112,7 @@ const gridLinksDrawService = {
     },
     drawLinkPathForcedIn(lh, lh2, ldm) {
         const linkDrawPathsForcedInSameLine = new LinkDrawPathsForcedInSameLine({ lh, lh2, linkDirectionsMap: ldm })
-        const linkDrawPathsForcedInOverlaps = new LinkDrawPathsForcedInOverlaps({ lh, lh, linkDirectionsMap: ldm })
+        const linkDrawPathsForcedInOverlaps = new LinkDrawPathsForcedInOverlaps({ lh, lh2, linkDirectionsMap: ldm })
 
         if (ldm.isForcedInSameRowCol(lh2)) 
             return linkDrawPathsForcedInSameLine.drawSameRowCol()
@@ -122,7 +125,7 @@ const gridLinksDrawService = {
                 return linkDrawPathsForcedInOverlaps.drawOppositeOfPdir1()
 
             else {
-                linkDrawPathsForcedOutOverlaps.prototype = this
+                linkDrawPathsForcedInOverlaps.prototype = this
                 return linkDrawPathsForcedInOverlaps.drawLastRemainingOfPdir(ldm)
             }
         }
