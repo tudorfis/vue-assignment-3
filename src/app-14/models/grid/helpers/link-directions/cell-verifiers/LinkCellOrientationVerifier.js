@@ -108,6 +108,8 @@ class LinkCellOrientationVerifier {
         const { col1, col2 } = lh
 
         const colControl = lh.isRight ? col1 + 1 : col1 - 1
+        if (colControl === gridModel.model.numCols || colControl === 0) return true
+
         const cells = 
             Utils.rangeArray(colControl, col2)
              .map(col => gridModel.getPosition(rowControl, col))
@@ -143,6 +145,8 @@ class LinkCellOrientationVerifier {
         const { row1, row2 } = lh
 
         const rowControl = lh.isDown ? row1 + 1 : row1 - 1
+        if (rowControl === gridModel.model.numRows || rowControl === 0) return true
+
         const cells = 
             Utils.rangeArray(rowControl, row2)
              .map(row => gridModel.getPosition(row, colControl))

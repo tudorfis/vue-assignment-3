@@ -137,9 +137,8 @@ const gridLinksDrawService = {
         if (ldm.isForcedInSameRowCol(lh))
             return linkDrawPathsBothForcedSameLine.drawSameRowCol()
             
-        else {
-
-        }
+        else 
+            return linkDrawPathsBothForcedOverlaps.drawOverlaps()
     }
 }
 
