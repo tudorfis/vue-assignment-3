@@ -8,7 +8,8 @@ import { LinkDrawPathsForcedOutSameLine } from "./grid-links-draw/link-draw-path
 import { LinkDrawPathsForcedOutOverlaps } from "./grid-links-draw/link-draw-paths/forced-out/LinkDrawPathsForcedOutOverlaps"
 import { LinkDrawPathsForcedInSameLine } from "./grid-links-draw/link-draw-paths/forced-in/LinkDrawPathsForcedInSameLine"
 import { LinkDrawPathsForcedInOverlaps } from "./grid-links-draw/link-draw-paths/forced-in/LinkDrawPathsForcedInOverlaps"
-import { LinkDrawPathsBothForced } from "./grid-links-draw/link-draw-paths/both-forced/LinkDrawPathsBothForced"
+import { LinkDrawPathsBothForcedSameLine } from "./grid-links-draw/link-draw-paths/both-forced/LinkDrawPathsBothForcedSameLine"
+import { LinkDrawPathsBothForcedOverlaps } from "./grid-links-draw/link-draw-paths/both-forced/LinkDrawPathsBothForcedOverlaps"
 
 const gridLinksDrawService = {
     createPathAndArrow(lh) {
@@ -16,6 +17,7 @@ const gridLinksDrawService = {
 
         if (ldm.hasBothForcedDirections && !ldm.isValidBothForcedLinks) {
             console.log('%c ldm.hasBothForcedDirections              ', 'background: black; color: white;')
+            return this.drawLinkPathBothForcedDirections(lh, new LinkHelper(lh.linkKey, true), ldm)
         }
         else if (ldm.hasNoForcedDirections || ldm.isValidForcedLinkOut || ldm.isValidForcedLinkIn) {
             console.log('%c ldm.hasNoForcedDirections              ', 'background: black; color: white;')
@@ -126,6 +128,17 @@ const gridLinksDrawService = {
 
             else
                 return linkDrawPathsForcedInOverlaps.drawLastRemainingOfPdir(ldm)
+        }
+    },
+    drawLinkPathBothForcedDirections(lh, lh2, ldm) {
+        const linkDrawPathsBothForcedSameLine = new LinkDrawPathsBothForcedSameLine({ lh, lh2, linkDirectionsMap: ldm })
+        const linkDrawPathsBothForcedOverlaps = new LinkDrawPathsBothForcedOverlaps({ lh, lh2, linkDirectionsMap: ldm })
+
+        if (ldm.isForcedInSameRowCol(lh))
+            return linkDrawPathsBothForcedSameLine.drawSameRowCol()
+            
+        else {
+
         }
     }
 }

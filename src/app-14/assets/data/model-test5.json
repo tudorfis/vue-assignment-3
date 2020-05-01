@@ -8,7 +8,7 @@
             "type": "SEND_SMS",
             "id": 12
         },
-        "2-2": {
+        "2-3": {
             "is": 1,
             "type": "WAIT",
             "id": 17
@@ -18,7 +18,7 @@
             "type": "WAIT",
             "id": 15
         },
-        "3-4": {
+        "3-3": {
             "is": 1,
             "type": "SEND_SMS",
             "id": 12
@@ -28,7 +28,7 @@
             "type": "SEND_SMS",
             "id": 12
         },
-        "4-4": {
+        "4-3": {
             "is": 1,
             "type": "SEND_EMAIL",
             "id": 22
@@ -40,12 +40,12 @@
         }
     },
     "links": [
-        "4-4__2-2"
+        "2-3__4-3"
     ],
     "linkAttributes": {
-        "4-4__2-2": {
+        "2-3__4-3": {
             "outDirection": "left",
-            "inDirection": "",
+            "inDirection": "right",
             "name": "",
             "color": "",
             "style": ""
