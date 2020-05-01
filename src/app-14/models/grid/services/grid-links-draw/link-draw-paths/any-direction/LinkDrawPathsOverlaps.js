@@ -12,10 +12,10 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
         const { directionOut, directionIn } = this.lh
 
         path = svgDrawPath.drawPath(directionOut)
-        path.svgD += svgDrawPath.drawHalfOut(directionIn, directionOut)
+        path.svgD += svgDrawPath.drawHalf(directionIn)
         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
         path.svgD += svgDrawPath.drawLine(directionOut, 'full')
-        path.svgD += svgDrawPath.drawHalfIn(directionOut, directionIn)
+        path.svgD += svgDrawPath.drawHalf(directionOut)
 
         path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
         arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
@@ -33,9 +33,9 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
 
         path = svgDrawPath.drawPath(directionOut)
         path.svgD += svgDrawPath.drawLine(directionOut, 'full')
-        path.svgD += svgDrawPath.drawHalfOut(helperDirection, directionIn)
+        path.svgD += svgDrawPath.drawHalf(helperDirection)
         path.svgD += svgDrawPath.drawLine(helperDirection, 'full')
-        path.svgD += svgDrawPath.drawHalfIn(helperDirection, directionOut)
+        path.svgD += svgDrawPath.drawHalf(helperDirection)
 
         path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
         arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
@@ -52,9 +52,9 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
         const helperDirection = (directionOut === pdir[0]) ? pdir[1] : pdir[0]
 
         path = svgDrawPath.drawPath(directionOut)
-        path.svgD += svgDrawPath.drawHalfOut(helperDirection, directionOut)
+        path.svgD += svgDrawPath.drawHalf(helperDirection)
         path.svgD += svgDrawPath.drawLine(helperDirection, 'full')
-        path.svgD += svgDrawPath.drawHalfIn(helperDirection, directionIn)
+        path.svgD += svgDrawPath.drawHalf(helperDirection)
         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
 
         path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
@@ -70,8 +70,8 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
 
         path = svgDrawPath.drawPath(directionOut)
         path.svgD += svgDrawPath.drawLine(directionOut, 'full')
-        path.svgD += svgDrawPath.drawHalfOut(directionOut, directionIn)
-        path.svgD += svgDrawPath.drawHalfIn(directionIn, directionOut)
+        path.svgD += svgDrawPath.drawHalf(directionOut)
+        path.svgD += svgDrawPath.drawHalf(directionIn)
         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
 
         path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')

@@ -4,6 +4,8 @@ import linkEEMapHelper from '../../../../helpers/link-ee/linkEEMap.helper'
 import { LinkHelper } from '../../../../helpers/link.helper' 
 import { UtilsStrings } from '../../../../../../utils/utilsStrings'
 
+const ucase = UtilsStrings.ucase
+
 class LinkDrawPathsForcedOutSameLine extends LinkDrawPathsBase {
     constructor(query) {
         super(query)
@@ -42,11 +44,11 @@ class LinkDrawPathsForcedOutSameLine extends LinkDrawPathsBase {
         })
 
         path = svgDrawPath.drawPath(forcedOutDirection)
-        if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, helperDirection2)
-        path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+        // if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
+        path.svgD += svgDrawPath.drawHalf(helperDirection1)
         path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
-        path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
-        if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalfOut(helperDirection2, helperDirection2)
+        path.svgD += svgDrawPath.drawHalf(helperDirection1)
+        // if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalf(helperDirection2)
 
         path.svgD += svgDrawPath.drawLine(helperDirection2, 'arrow')
         arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection2)
@@ -58,7 +60,8 @@ class LinkDrawPathsForcedOutSameLine extends LinkDrawPathsBase {
         const { linkDirectionsMap } = this
         const { forcedOutDirection, link2Direction } = linkDirectionsMap
         const { helperDirection2 } = query
-        const { helperDirection3, helperDirection4, hasCellsLooh, hasCellsLoohAfter } = this.generateHelpers(query)
+        // const { helperDirection3, helperDirection4, hasCellsLooh, hasCellsLoohAfter } = this.generateHelpers(query)
+        const { helperDirection3, helperDirection4 } = this.generateHelpers(query)
         
         linkEEMapHelper.patchEEDirection({
             link1: this.lh.link2, 
@@ -68,14 +71,15 @@ class LinkDrawPathsForcedOutSameLine extends LinkDrawPathsBase {
             newDirection: helperDirection3
         })
 
-        const verifierKey = UtilsStrings.ucase(forcedOutDirection)
+        // const verifierKey = UtilsStrings.ucase(forcedOutDirection)
 
-        if (this.lh[`is${verifierKey}`]) {
+        // if (this.lh[`is${verifierKey}`]) {
+        if (this.lh[`is${ucase(forcedOutDirection)}`]) {
             return this.drawSameRowColNotStraightSameDirection({ 
                 forcedOutDirection,
                 helperDirection3,
                 helperDirection4,
-                hasCellsLoohAfter
+                // hasCellsLoohAfter
             })
         }
         else {
@@ -84,28 +88,29 @@ class LinkDrawPathsForcedOutSameLine extends LinkDrawPathsBase {
                 helperDirection2,
                 helperDirection3,
                 helperDirection4,
-                hasCellsLooh,
-                verifierKey
+                // hasCellsLooh,
+                // verifierKey
             })
         }
     }
     drawSameRowColNotStraightSameDirection(query) {
         let path, arrow
 
-        const  { forcedOutDirection, helperDirection3, helperDirection4, hasCellsLoohAfter } = query
+        // const  { forcedOutDirection, helperDirection3, helperDirection4, hasCellsLoohAfter } = query
+        const  { forcedOutDirection, helperDirection3, helperDirection4 } = query
         const { svgDrawPath, svgDrawArrow } = this
 
         path = svgDrawPath.drawPath(forcedOutDirection)
-        path.svgD += svgDrawPath.drawHalfOut(helperDirection3, helperDirection4)
+        path.svgD += svgDrawPath.drawHalf(helperDirection3)
 
-        if (!hasCellsLoohAfter)
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection3, helperDirection4)
+        // if (!hasCellsLoohAfter)
+            // path.svgD += svgDrawPath.drawHalf(helperDirection3)
 
-        path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, helperDirection3)
+        path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
         path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
 
-        if (!hasCellsLoohAfter)
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection4, helperDirection3)
+        // if (!hasCellsLoohAfter)
+            // path.svgD += svgDrawPath.drawHalf(helperDirection4)
 
         path.svgD += svgDrawPath.drawLine(helperDirection4, 'arrow')
         arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection4)
@@ -115,32 +120,34 @@ class LinkDrawPathsForcedOutSameLine extends LinkDrawPathsBase {
     drawSameRowColNotStraightDifferentDirection(query) {
         let path, arrow
 
-        const { forcedOutDirection, helperDirection2, helperDirection3, helperDirection4, hasCellsLooh, verifierKey } = query
-        const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
+        // const { forcedOutDirection, helperDirection2, helperDirection3, helperDirection4, hasCellsLooh, verifierKey } = query
+        const { forcedOutDirection, helperDirection2, helperDirection3, helperDirection4 } = query
+        // const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
+        const { svgDrawPath, svgDrawArrow } = this
 
         path = svgDrawPath.drawPath(forcedOutDirection)
 
-        const verifierKeyCorner = UtilsStrings.ucase(forcedOutDirection) + UtilsStrings.ucase(helperDirection3)
-        const hasCellOrCorner = linkDirectionsMap.looh[`is${verifierKey}Cells`]
-            || linkDirectionsMap.looh[`is${verifierKeyCorner}Corner`]
+        // const verifierKeyCorner = UtilsStrings.ucase(forcedOutDirection) + UtilsStrings.ucase(helperDirection3)
+        // const hasCellOrCorner = linkDirectionsMap.looh[`is${verifierKey}Cells`]
+            // || linkDirectionsMap.looh[`is${verifierKeyCorner}Corner`]
             
-        if (!hasCellOrCorner)
-            path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, helperDirection2)
+        // if (!hasCellOrCorner)
+            // path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
 
-        path.svgD += svgDrawPath.drawHalfOut(helperDirection3, helperDirection4)
+        path.svgD += svgDrawPath.drawHalf(helperDirection3)
 
-        if (!hasCellsLooh)
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection3, helperDirection4)
+        // if (!hasCellsLooh)
+            // path.svgD += svgDrawPath.drawHalf(helperDirection3)
         
-        path.svgD += svgDrawPath.drawHalfIn(helperDirection2, helperDirection3)
+        path.svgD += svgDrawPath.drawHalf(helperDirection2)
         path.svgD += svgDrawPath.drawLine(helperDirection2, 'cell')
         path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
         
-        if (!hasCellOrCorner)
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection2, helperDirection3)
+        // if (!hasCellOrCorner)
+            // path.svgD += svgDrawPath.drawHalf(helperDirection2)
 
-        if (!hasCellsLooh)
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection4, helperDirection3)
+        // if (!hasCellsLooh)
+            // path.svgD += svgDrawPath.drawHalf(helperDirection4)
 
         path.svgD += svgDrawPath.drawLine(helperDirection4, 'arrow')
         arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection4)
@@ -152,7 +159,8 @@ class LinkDrawPathsForcedOutSameLine extends LinkDrawPathsBase {
 
         const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
         const { forcedOutDirection, link2Direction } = linkDirectionsMap
-        const { helperDirection3, helperDirection4, hasCellsLooh, hasCornerLooh} = this.generateHelpers(query)
+        // const { helperDirection3, helperDirection4, hasCellsLooh, hasCornerLooh} = this.generateHelpers(query)
+        const { helperDirection3, helperDirection4 } = this.generateHelpers(query)
                 
         const { helperDirection2 } = query
 
@@ -166,19 +174,19 @@ class LinkDrawPathsForcedOutSameLine extends LinkDrawPathsBase {
 
         path = svgDrawPath.drawPath(forcedOutDirection)
         
-        if (!linkDirectionsMap.hasCellsForcedOut && !hasCornerLooh) 
-            path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, helperDirection2)
+        // if (!linkDirectionsMap.hasCellsForcedOut && !hasCornerLooh) 
+            // path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
 
-        path.svgD += svgDrawPath.drawHalfIn(helperDirection3, helperDirection4)
-        if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalfIn(helperDirection3, helperDirection4)
+        path.svgD += svgDrawPath.drawHalf(helperDirection3)
+        // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(helperDirection3)
         
-        if (!linkDirectionsMap.hasCellsForcedOut && !hasCornerLooh) 
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection2, helperDirection4)
+        // if (!linkDirectionsMap.hasCellsForcedOut && !hasCornerLooh) 
+            // path.svgD += svgDrawPath.drawHalf(helperDirection2)
 
         path.svgD += svgDrawPath.drawLine(helperDirection2, 'cell')
         path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
-        path.svgD += svgDrawPath.drawHalfOut(helperDirection2, helperDirection4)
-        if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalfIn(helperDirection4, helperDirection3)
+        path.svgD += svgDrawPath.drawHalf(helperDirection2)
+        // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(helperDirection4)
 
         path.svgD += svgDrawPath.drawLine(helperDirection4, 'arrow')
         arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection4)
@@ -187,42 +195,46 @@ class LinkDrawPathsForcedOutSameLine extends LinkDrawPathsBase {
     }
 
     generateHelpers(query) {
-        const { linkDirectionsMap } = this
-        const { forcedOutDirection } = linkDirectionsMap
+        // const { linkDirectionsMap } = this
+        // const { forcedOutDirection } = linkDirectionsMap
         const { isLeftRight, isUpDown } = query
 
-        let helperDirection3 
-        const looh = linkDirectionsMap.looh
+        // let helperDirection3 
+        // const looh = linkDirectionsMap.looh
 
-        const verifierKey = UtilsStrings.ucase(forcedOutDirection)
-        const hasAfter = this.lh[`is${verifierKey}`]
+        // const verifierKey = UtilsStrings.ucase(forcedOutDirection)
+        // const hasAfter = this.lh[`is${verifierKey}`]
 
-        if (isLeftRight) {
-            helperDirection3 = !looh[`isDownCells${hasAfter ? 'After' : ''}`] ? 'down' : ''
-            helperDirection3 = !helperDirection3 && !looh[`isUpCells${hasAfter ? 'After' : ''}`] ? 'up' : 'down'
-        }
-        else if (isUpDown) {
-            helperDirection3 = !looh[`isRightCells${hasAfter ? 'After' : ''}`] ? 'right' : ''
-            helperDirection3 = !helperDirection3 && !looh[`isLeftCells${hasAfter ? 'After' : ''}`] ? 'left' : 'right'
-        }
+        // if (isLeftRight) {
+        //     helperDirection3 = !looh[`isDownCells${hasAfter ? 'After' : ''}`] ? 'down' : ''
+        //     helperDirection3 = !helperDirection3 && !looh[`isUpCells${hasAfter ? 'After' : ''}`] ? 'up' : 'down'
+        // }
+        // else if (isUpDown) {
+        //     helperDirection3 = !looh[`isRightCells${hasAfter ? 'After' : ''}`] ? 'right' : ''
+        //     helperDirection3 = !helperDirection3 && !looh[`isLeftCells${hasAfter ? 'After' : ''}`] ? 'left' : 'right'
+        // }
+
+        let helperDirection3
+        if (isLeftRight) helperDirection3 = 'down'
+        else if (isUpDown) helperDirection3 = 'right'
 
         const helperDirection4 = LinkHelper.getOpositeDirection(helperDirection3)
 
-        let cellVerifier = `is${UtilsStrings.ucase(helperDirection3)}Cells`
-        const hasCellsLooh = linkDirectionsMap.looh[cellVerifier]
+        // let cellVerifier = `is${UtilsStrings.ucase(helperDirection3)}Cells`
+        // const hasCellsLooh = linkDirectionsMap.looh[cellVerifier]
         
-        cellVerifier = `is${UtilsStrings.ucase(helperDirection3)}CellsAfter`
-        const hasCellsLoohAfter = linkDirectionsMap.looh[cellVerifier]
+        // cellVerifier = `is${UtilsStrings.ucase(helperDirection3)}CellsAfter`
+        // const hasCellsLoohAfter = linkDirectionsMap.looh[cellVerifier]
 
-        cellVerifier = `is${UtilsStrings.ucase(helperDirection3)}${UtilsStrings.ucase(forcedOutDirection)}Corner`
-        const hasCornerLooh = linkDirectionsMap.looh[cellVerifier]
+        // cellVerifier = `is${UtilsStrings.ucase(helperDirection3)}${UtilsStrings.ucase(forcedOutDirection)}Corner`
+        // const hasCornerLooh = linkDirectionsMap.looh[cellVerifier]
 
         return { 
             helperDirection3,
             helperDirection4,
-            hasCellsLooh,
-            hasCornerLooh,
-            hasCellsLoohAfter
+            // hasCellsLooh,
+            // hasCornerLooh,
+            // hasCellsLoohAfter
         }
     }
 }

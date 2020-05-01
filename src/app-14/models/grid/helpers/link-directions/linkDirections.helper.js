@@ -3,12 +3,12 @@ import linkEEMapHelper from '../link-ee/linkEEMap.helper'
 import { LinkHelper } from '../link.helper'
 import { LinkCellCornerVerifier } from './cell-verifiers/LinkCellCornerVerifier'
 import { LinkCellInVerifier } from './cell-verifiers/LinkCellInVerifier'
-import { LinkCellOrientationVerifier } from './cell-verifiers/LinkCellOrientationVerifier'
+// import { LinkCellOrientationVerifier } from './cell-verifiers/LinkCellOrientationVerifier'
 import { LinkCellOutVerifier } from './cell-verifiers/LinkCellOutVerifier'
-import { LinkDirectionsGenerator } from './LinkDirectionsGenerator'
+// import { LinkDirectionsGenerator } from './LinkDirectionsGenerator'
 import { LinkDirectionsMap } from './LinkDirectionsMap'
 import { LinkOverlapHelper } from './LinkOverlapHelper'
-import { LinkOverlapOutsideHelper } from './LinkOverlapOutsideHelper'
+// import { LinkOverlapOutsideHelper } from './LinkOverlapOutsideHelper'
 
 let linkDirectionsMap = {}
 
@@ -19,29 +19,27 @@ const linkDirectionsHelper = {
     generateLinkDirectionsMap(lh) {
         const pdir1 = lh.potentialDirections
 
-        const linkOverlapOutsideHelper = this.createLinkOverlapOutsideHelper(lh)
+        // const linkOverlapOutsideHelper = this.createLinkOverlapOutsideHelper(lh)
         const forcedDirectionsObj = this.createForcedDirections(lh)
         const linkOverlapHelper = this.createLinkOverlapHelper(lh)
-        const linkDirectionsObj = linkOverlapHelper.produceLinkDirections(lh)
+        let linkDirectionsObj = linkOverlapHelper.produceLinkDirections(lh)
 
         if (!pdir1[1]) {
-            const generator = new LinkDirectionsGenerator(lh)
-            
-            this.setLinkDirectionsMap(lh, {
-                linkOverlapHelper,
-                linkOverlapOutsideHelper,
-                ...generator.generateDirectionsWhenSameRowCol(lh),
-                ...forcedDirectionsObj
-            })
+            if (!LinkCellOutVerifier.hasCellsOut(lh, pdir1[0]))
+                linkDirectionsObj = { link1Direction: pdir1[0], link2Direction: LinkHelper.getOpositeDirection(pdir1[0])  }
+    
+            else if (LinkHelper.isUpOrDown(pdir1[0]))
+                linkDirectionsObj = { link1Direction: 'right', link2Direction: 'right' }
+
+            else if (LinkHelper.isLeftOrRight(pdir1[0]))
+                linkDirectionsObj = { link1Direction: 'down', link2Direction: 'down' }
         }
-        else {
-            this.setLinkDirectionsMap(lh, { 
-                linkOverlapHelper,
-                linkOverlapOutsideHelper,
-                ...linkDirectionsObj,
-                ...forcedDirectionsObj
-            })
-        }
+
+        this.setLinkDirectionsMap(lh, {
+            linkOverlapHelper,
+            ...linkDirectionsObj,
+            ...forcedDirectionsObj
+        })
     },
     setLinkDirectionsMap(lh, query) {
         linkDirectionsMap[lh.linkKey] = new LinkDirectionsMap(query) 
@@ -103,25 +101,25 @@ const linkDirectionsHelper = {
             isEE2
         })
     },
-    createLinkOverlapOutsideHelper(lh) {
+    // createLinkOverlapOutsideHelper(lh) {
 
-        return new LinkOverlapOutsideHelper({
-            isUpLeftCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'upLeft'),
-            isUpRightCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'upRight'),
-            isDownLeftCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'downLeft'),
-            isDownRightCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'downRight'),
+    //     return new LinkOverlapOutsideHelper({
+    //         isUpLeftCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'upLeft'),
+    //         isUpRightCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'upRight'),
+    //         isDownLeftCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'downLeft'),
+    //         isDownRightCorner: LinkCellCornerVerifier.hasCellsCornerOutside(lh, 'downRight'),
 
-            isUpCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'up'),
-            isRightCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'right'),
-            isLeftCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'left'),
-            isDownCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'down'),
+    //         isUpCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'up'),
+    //         isRightCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'right'),
+    //         isLeftCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'left'),
+    //         isDownCells: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'down'),
 
-            isUpCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'upAfter'),
-            isRightCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'rightAfter'),
-            isLeftCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'leftAfter'),
-            isDownCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'downAfter'),
-        })
-    }
+    //         isUpCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'upAfter'),
+    //         isRightCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'rightAfter'),
+    //         isLeftCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'leftAfter'),
+    //         isDownCellsAfter: LinkCellOrientationVerifier.hasCellsOrientation(lh, 'downAfter'),
+    //     })
+    // }
 
 }
 

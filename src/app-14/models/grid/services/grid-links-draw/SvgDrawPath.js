@@ -1,6 +1,6 @@
 import { globalConfig } from '../../../../config/global.config'
 import { linkEEDiffHelper } from '../../helpers/link-ee/linkEEDiff.helper' 
-import { LinkHelper } from '../../helpers/link.helper'
+// import { LinkHelper } from '../../helpers/link.helper'
 
 class SvgDrawPath {
     constructor(lh) {
@@ -64,6 +64,7 @@ class SvgDrawPath {
             cell2 = col2
         }
  
+        /** @TODO: make it in a way that the arrow points to the right spot */
         if (lineType === 'arrow')
             distance = this.cellelement_center_size - this.arrow_width + 3 + adjust
         
@@ -76,22 +77,28 @@ class SvgDrawPath {
         const svgD = this.getSvgD(direction)
         return ` ${svgD}${distance}`
     }
-    drawHalfOut(outDirection = '', inDirection = '') {
-        const svgD = this.getSvgD(outDirection)
-
-        let distance = this.cell_center_size
-        distance += linkEEDiffHelper.getDrawHalfDiffOut(this.lh, LinkHelper.getOpositeDirection(inDirection))
+    drawHalf(direction = '') {
+        const svgD = this.getSvgD(direction)
+        const distance = this.cell_center_size
 
         return ` ${svgD}${distance}`
     }
-    drawHalfIn(inDirection = '', outDirection = '') {
-        const svgD = this.getSvgD(inDirection)
+    // drawHalfOut(outDirection = '', inDirection = '') {
+    //     const svgD = this.getSvgD(outDirection)
 
-        let distance = this.cell_center_size
-        distance += linkEEDiffHelper.getDrawHalfDiffIn(this.lh, inDirection, outDirection)
+    //     let distance = this.cell_center_size
+    //     distance += linkEEDiffHelper.getDrawHalfDiffOut(this.lh, LinkHelper.getOpositeDirection(inDirection))
 
-        return ` ${svgD}${distance}`
-    }
+    //     return ` ${svgD}${distance}`
+    // }
+    // drawHalfIn(inDirection = '', outDirection = '') {
+    //     const svgD = this.getSvgD(inDirection)
+
+    //     let distance = this.cell_center_size
+    //     distance += linkEEDiffHelper.getDrawHalfDiffIn(this.lh, inDirection, outDirection)
+
+    //     return ` ${svgD}${distance}`
+    // }
 
     getSvgD(direction) {
         if (direction === 'up') return 'v-'

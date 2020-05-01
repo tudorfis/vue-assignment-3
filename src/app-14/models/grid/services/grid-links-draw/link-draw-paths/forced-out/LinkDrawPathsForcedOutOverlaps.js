@@ -27,26 +27,28 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
         const noObstructionsAlongTheWay = !loh[`isIn${lohKey}`] && !loh[`isCorner${lohKey}`]
 
         path = svgDrawPath.drawPath(forcedOutDirection)
-        if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, helperDirection2)
+        // if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
         
-        path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+        path.svgD += svgDrawPath.drawHalf(helperDirection1)
         path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
         
-        if (noObstructionsAlongTheWay) path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+        if (noObstructionsAlongTheWay) path.svgD += svgDrawPath.drawHalf(helperDirection1)
 
-        path.svgD += svgDrawPath.drawHalfOut(helperDirection2, forcedOutDirection)
+        path.svgD += svgDrawPath.drawHalf(helperDirection2)
         
-        if (linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalfOut(helperDirection2, forcedOutDirection)
-        if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawLine(helperDirection2, 'cell')
+        // if (linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalf(helperDirection2)
+        // if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawLine(helperDirection2, 'cell')
         
         if (noObstructionsAlongTheWay) {
             path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
+            path.svgD += svgDrawPath.drawHalf(helperDirection2)
             path.svgD += svgDrawPath.drawLine(helperDirection2, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection2)
         }
         else {
             path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection2, forcedOutDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection2)
+            path.svgD += svgDrawPath.drawHalf(helperDirection2)
             path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
         }
@@ -79,27 +81,27 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
                 })
 
                 path = svgDrawPath.drawPath(forcedOutDirection)
-                path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
                 path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, helperDirection1)
+                path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
                 path.svgD += svgDrawPath.drawLine(helperDirection1, 'arrow')
                 arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection1)
             }
             else if (isIn2 && !isIn1) {
                 path = svgDrawPath.drawPath(forcedOutDirection)
-                path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, helperDirection1)
+                path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
                 path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
                 path.svgD += svgDrawPath.drawLine(helperDirection1, 'arrow')
                 arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection1)
             }
             else {
                 path = svgDrawPath.drawPath(forcedOutDirection)
-                path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
-                path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
                 path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'arrow')
                 arrow = svgDrawArrow.drawArrow(path.svgD, forcedOutDirection)
@@ -109,8 +111,8 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
             if (!isIn1) {
                 path = svgDrawPath.drawPath(forcedOutDirection)
                 path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, helperDirection1)
-                path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
                 path.svgD += svgDrawPath.drawLine(helperDirection1, 'arrow')
                 arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection1)
@@ -126,9 +128,9 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
 
                 path = svgDrawPath.drawPath(forcedOutDirection)
                 path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
-                path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'arrow')
                 arrow = svgDrawArrow.drawArrow(path.svgD, forcedOutDirection)
             }

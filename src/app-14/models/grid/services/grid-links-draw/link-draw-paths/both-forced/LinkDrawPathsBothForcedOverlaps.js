@@ -61,29 +61,29 @@ class LinkDrawPathsBothForcedOverlaps extends LinkDrawPathsBase {
                 if (isOut1 || isCorner1) {
                     if (isIn1) {
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
-                        path.svgD += svgDrawPath.drawHalfIn(directionIn, forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(directionIn)
                         path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
                     }
                     else {
-                        path.svgD += svgDrawPath.drawHalfIn(directionIn, forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(directionIn)
                         path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
                     }
                 }
                 else {
                     if (isIn1) {
                         path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(directionIn, forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(directionIn)
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
-                        path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
                     }
                     else {
                         
                         path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, forcedInDirection)
-                        path.svgD += svgDrawPath.drawHalfIn(directionIn, forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(directionIn)
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
                     }
                 }
@@ -91,49 +91,49 @@ class LinkDrawPathsBothForcedOverlaps extends LinkDrawPathsBase {
 
             else if (indexOut === 0 && indexIn === 1) {
                 if (isOut1) {
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
 
                     if (isIn2) {
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                     else {
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
                     }
                 }
                 else {
                     path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                 }
             }
 
             else if (indexOut === 1 && indexIn === 0) {
                 if (isIn1 && !isOut2) {
                     path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                 }
                 else if (isOut2 && !isIn1) {
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
                 }
                 else if (isOut2 && isIn1) {
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                 }
                 else {
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
                 }
             }
@@ -142,28 +142,28 @@ class LinkDrawPathsBothForcedOverlaps extends LinkDrawPathsBase {
                 if (isOut2 || isCorner2) {
                     if (isIn2) {
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
-                        path.svgD += svgDrawPath.drawHalfIn(directionIn, forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(directionIn)
                         path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
                     }
                     else {
-                        path.svgD += svgDrawPath.drawHalfIn(directionIn, forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(directionIn)
                         path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
                     }
                 }
                 else {
                     if (isIn2) {
                         path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(directionIn, forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(directionIn)
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
-                        path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
                     }
                     else {
                         path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(forcedOutDirection, forcedInDirection)
-                        path.svgD += svgDrawPath.drawHalfIn(directionIn, forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(directionIn)
                         path.svgD += svgDrawPath.drawLine(directionIn, 'full')
                     }
                     
@@ -174,114 +174,114 @@ class LinkDrawPathsBothForcedOverlaps extends LinkDrawPathsBase {
         else {
             if (isO0) {
                 if (indexIn === 0) {
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                 }
                 else if (indexIn === 1) {
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
 
                     if (isCorner2 || isIn2) {
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                     else {
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
                     }
                 }
                 else if (isI0) {
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                 }
                 else if (isI1) {
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                 }
             }
             else if (isO1) {
                 if (indexIn === 0) {
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
 
                     if (isIn1 || isCorner1) {
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                     else {
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
                     }
                 }
                 else if (indexIn === 1) {
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                 }
                 else if (isI0) {
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
 
                 }
                 else if (isI1) {
-                    path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                     path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
-                    path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                    path.svgD += svgDrawPath.drawHalf(pdir1)
                 }
             }
             else if (isI0) { 
                 if (indexOut === 0) {
                     if (isOut1) {
-                        path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                     else {
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                 }
                 else if (indexOut === 1) {
                     if (isOut2 || isCorner2) {
-                        path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                     else {
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'cell')
-                        path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[0], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                     
                 }
@@ -289,35 +289,35 @@ class LinkDrawPathsBothForcedOverlaps extends LinkDrawPathsBase {
             else if (isI1) {
                 if (indexOut === 0) {
                     if (isOut1 || isCorner1) {
-                        path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                     else {
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
-                        path.svgD += svgDrawPath.drawHalfOut(pdir1[1], forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                     
                 }
                 else if (indexOut === 1) {
                     if (isOut2) {
-                        path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                     else {
                         path.svgD += svgDrawPath.drawLine(pdir1[1], 'full')
-                        path.svgD += svgDrawPath.drawHalfOut(pdir1[0], forcedInDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'full')
                         path.svgD += svgDrawPath.drawLine(pdir1[0], 'cell')
-                        path.svgD += svgDrawPath.drawHalfIn(pdir1[1], forcedOutDirection)
+                        path.svgD += svgDrawPath.drawHalf(pdir1)
                     }
                 }
             }

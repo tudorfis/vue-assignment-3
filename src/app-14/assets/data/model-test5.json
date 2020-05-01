@@ -1,7 +1,7 @@
 {
-    "numCols": 5,
-    "numRows": 6,
-    "totalSteps": 5,
+    "numCols": 6,
+    "numRows": 7,
+    "totalSteps": 7,
     "steps": {
         "1-1": {
             "is": 1,
@@ -18,22 +18,33 @@
             "type": "SEND_SMS",
             "id": 12
         },
-        "3-1": {
+        "4-2": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG",
+            "id": 26
+        },
+        "4-5": {
+            "is": 1,
+            "type": "SEND_EMAIL",
+            "id": 22
+        },
+        "6-2": {
             "is": 1,
             "type": "WAIT",
             "id": 17
         },
-        "5-3": {
+        "6-3": {
             "is": 1,
-            "type": "SEND_EMAIL",
-            "id": 22
+            "type": "SUBSCRIBE_SEQUENCE",
+            "id": 59
         }
     },
     "links": [
-        "3-1__5-3"
+        "6-2__4-2",
+        "6-2__4-5"
     ],
     "linkAttributes": {
-        "3-1__5-3": {
+        "6-2__4-5": {
             "outDirection": "",
             "inDirection": "",
             "name": "",

@@ -8,21 +8,22 @@ class LinkDrawPathsStraights extends LinkDrawPathsBase {
     drawSameRowButUpOrDown() {
         let path, arrow
 
-        const { hasCellsOutSameRow } = this.lhObj
+        // const { hasCellsOutSameRow } = this.lhObj
         const { svgDrawPath, svgDrawArrow } = this
-        const { directionOut, directionIn, getRightLeft } = this.lh
+        // const { directionOut, directionIn, getRightLeft } = this.lh
+        const { directionIn, getRightLeft } = this.lh
 
         path = svgDrawPath.drawPath(this.lh.directionOut)
         
-        if (!hasCellsOutSameRow) 
-            path.svgD += svgDrawPath.drawHalfOut(directionOut, getRightLeft)
+        // if (!hasCellsOutSameRow) 
+            // path.svgD += svgDrawPath.drawHalf(directionOut)
 
-        path.svgD += svgDrawPath.drawHalfIn(getRightLeft, directionOut)
+        path.svgD += svgDrawPath.drawHalf(getRightLeft)
         path.svgD += svgDrawPath.drawLine(getRightLeft, 'full')
-        path.svgD += svgDrawPath.drawHalfIn(getRightLeft, directionIn)
+        path.svgD += svgDrawPath.drawHalf(getRightLeft)
         
-        if (!hasCellsOutSameRow)
-            path.svgD += svgDrawPath.drawHalfOut(directionIn, getRightLeft)
+        // if (!hasCellsOutSameRow)
+            // path.svgD += svgDrawPath.drawHalf(directionIn)
 
         path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
         arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
@@ -32,21 +33,22 @@ class LinkDrawPathsStraights extends LinkDrawPathsBase {
     drawSameColButLeftOrRight() {
         let path, arrow
 
-        const { hasCellsOutSameCol } = this.lhObj
+        // const { hasCellsOutSameCol } = this.lhObj
         const { svgDrawPath, svgDrawArrow } = this
-        const { directionOut, directionIn, getDownUp } = this.lh
+        // const { directionOut, directionIn, getDownUp } = this.lh
+        const { directionIn, getDownUp } = this.lh
 
         path = svgDrawPath.drawPath(this.lh.directionOut)
 
-        if (!hasCellsOutSameCol) 
-            path.svgD += svgDrawPath.drawHalfOut(directionOut, getDownUp)
+        // if (!hasCellsOutSameCol) 
+            // path.svgD += svgDrawPath.drawHalf(directionOut)
 
-        path.svgD += svgDrawPath.drawHalfIn(getDownUp, directionOut)
+        path.svgD += svgDrawPath.drawHalf(getDownUp)
         path.svgD += svgDrawPath.drawLine(getDownUp, 'full')
-        path.svgD += svgDrawPath.drawHalfIn(getDownUp, directionIn)
+        path.svgD += svgDrawPath.drawHalf(getDownUp)
 
-        if (!hasCellsOutSameCol)
-            path.svgD += svgDrawPath.drawHalfOut(directionIn, getDownUp)
+        // if (!hasCellsOutSameCol)
+            // path.svgD += svgDrawPath.drawHalf(directionIn)
         
         path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
         arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)

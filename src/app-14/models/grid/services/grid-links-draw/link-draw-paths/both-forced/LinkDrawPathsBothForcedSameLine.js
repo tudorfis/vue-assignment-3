@@ -71,26 +71,26 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
 
         if (lh2[`is${ucase(forcedInDirection)}`]) {
             path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection1)
             path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection2, forcedInDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection2)
             path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
         }
         else if (forcedOutDirection === forcedInDirection) {
             path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection1)
             path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
             path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'cell')
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection2, forcedInDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection2)
             path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
         }
         else {
             path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawHalfOut(forcedInDirection, forcedOutDirection)
+            path.svgD += svgDrawPath.drawHalf(forcedInDirection)
             path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-            path.svgD += svgDrawPath.drawHalfIn(forcedOutDirection, forcedInDirection)
+            path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
             path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
         }
@@ -104,29 +104,29 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
 
         if (lh2[`is${ucase(forcedInDirection)}`]) {
             path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection1)
             path.svgD += svgDrawPath.drawLine(helperDirection4, 'full')
             path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection2, forcedInDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection2)
             path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
         }
         else if (helperDirection4 === forcedInDirection) {
             path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection1)
             path.svgD += svgDrawPath.drawLine(helperDirection4, 'full')
             path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
             path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection2, forcedInDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection2)
             path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
         }
         else {
             path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawHalfOut(forcedInDirection, forcedOutDirection)
+            path.svgD += svgDrawPath.drawHalf(forcedInDirection)
             path.svgD += svgDrawPath.drawLine(helperDirection4, 'full')
             path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection4, forcedInDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection4)
             path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
         }
@@ -142,8 +142,8 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
         if (lh2[`is${ucase(forcedInDirection)}`]) {
             path = svgDrawPath.drawPath(forcedOutDirection)
             path.svgD += svgDrawPath.drawLine(helperDirection3, 'full')
-            path.svgD += svgDrawPath.drawHalfOut(helperDirection3, forcedOutDirection)
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection4, forcedInDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection3)
+            path.svgD += svgDrawPath.drawHalf(helperDirection4)
             path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
         }
@@ -151,8 +151,8 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
             path = svgDrawPath.drawPath(forcedOutDirection)
             path.svgD += svgDrawPath.drawLine(forcedInDirection, 'full')
             path.svgD += svgDrawPath.drawLine(forcedInDirection, 'cell')
-            path.svgD += svgDrawPath.drawHalfOut(forcedInDirection, forcedOutDirection)
-            path.svgD += svgDrawPath.drawHalfIn(helperDirection4, forcedInDirection)
+            path.svgD += svgDrawPath.drawHalf(forcedInDirection)
+            path.svgD += svgDrawPath.drawHalf(helperDirection4)
             path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
             arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
         }
@@ -167,9 +167,9 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
             else {
                 path = svgDrawPath.drawPath(forcedOutDirection)
                 path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
-                path.svgD += svgDrawPath.drawHalfOut(helperDirection1, forcedOutDirection)
+                path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
-                path.svgD += svgDrawPath.drawHalfIn(helperDirection1, forcedInDirection)
+                path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
                 arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
             }
