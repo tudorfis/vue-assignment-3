@@ -1,7 +1,5 @@
 import { LinkDrawPathsBase } from "../LinkDrawPathsBase";
-// import { UtilsStrings } from "../../../../../../utils/utilsStrings";
 import { LinkHelper } from "../../../../helpers/link.helper"
-// import linkEEMapHelper from "../../../../helpers/link-ee/linkEEMap.helper"
 
 class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
     constructor(query) {
@@ -42,7 +40,6 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
 
         const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
         const { directionOut } = this.lh
-        // const { forcedInDirection, looh } = linkDirectionsMap
         const { forcedInDirection } = linkDirectionsMap
         
         const {
@@ -50,10 +47,7 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
             isIndex1,
             helperDirection1,
             helperDirection2,
-            // hasCellsLooh,
-            // hasCellsLoohAfter
         } = this.generateHelpers({ directionOut, forcedInDirection })
-        // } = this.generateHelpers({ directionOut, forcedInDirection, looh })
         
         path = svgDrawPath.drawPath(directionOut)
         
@@ -79,7 +73,7 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
-        const { link1Direction, forcedInDirection, loh } = linkDirectionsMap
+        const { forcedInDirection, loh } = linkDirectionsMap
         
         const index = this.lh2.potentialDirections.indexOf(forcedInDirection)
         const helperDirection1 = this.lh.potentialDirections[index]
@@ -104,16 +98,6 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
                 path.svgD += svgDrawPath.drawLine(helperDirection1)
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
             }
-
-            // if (helperDirection2 !== link1Direction) {
-            //     linkEEMapHelper.patchEEDirection({
-            //         link1: this.lh.link1,
-            //         link2: this.lh.link2,
-            //         type: 'out',
-            //         oldDirection: link1Direction,
-            //         newDirection: helperDirection2
-            //     })
-            // }
         }
         else {
             if (!isIn) {
@@ -122,16 +106,6 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawHalf(helperDirection2)
                 path.svgD += svgDrawPath.drawLine(helperDirection2)
-
-                // if (helperDirection1 !== link1Direction) {
-                //     linkEEMapHelper.patchEEDirection({
-                //         link1: this.lh.link1,
-                //         link2: this.lh.link2,
-                //         type: 'out',
-                //         oldDirection: link1Direction,
-                //         newDirection: helperDirection1
-                //     })
-                // }
             }
             else {
                 if (isInOut) {
@@ -147,16 +121,6 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
                     path.svgD += svgDrawPath.drawHalf(helperDirection1)
                     path.svgD += svgDrawPath.drawLine(helperDirection1)
                     path.svgD += svgDrawPath.drawHalf(helperDirection1)
-    
-                    // if (helperDirection2 !== link1Direction) {
-                    //     linkEEMapHelper.patchEEDirection({
-                    //         link1: this.lh.link1,
-                    //         link2: this.lh.link2,
-                    //         type: 'out',
-                    //         oldDirection: link1Direction,
-                    //         newDirection: helperDirection2
-                    //     })
-                    // }
                 }
             }
         }
@@ -165,7 +129,6 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
         return [ path, arrow ]
     }
     generateHelpers(query) {
-        // const { directionOut, forcedInDirection, looh, loh } = query
         const { directionOut, forcedInDirection } = query
 
         const pdir1 = this.lh.potentialDirections
@@ -175,14 +138,6 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
         const helperDirection1 = LinkHelper.getOpositeDirection(pdir2[index])
         const helperDirection2 = LinkHelper.getOpositeDirection(forcedInDirection)
         
-        // let cellVerifier = `is${UtilsStrings.ucase(forcedInDirection)}Cells`
-        // const hasCellsLooh = looh[cellVerifier]
-
-        // cellVerifier = `is${UtilsStrings.ucase(forcedInDirection)}CellsAfter`
-        // const hasCellsLoohAfter = looh[cellVerifier]
-
-        // const hasOutOrCorner2 = (loh) ? (loh.isCorner2 || loh.isOut2) : false
-        
         const isIndex0 = index === 0
         const isIndex1 = index === 1
 
@@ -190,10 +145,7 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
             isIndex0,
             isIndex1,
             helperDirection1,
-            helperDirection2,
-            // hasCellsLooh,
-            // hasCellsLoohAfter,
-            // hasOutOrCorner2
+            helperDirection2
         }
     }
 }

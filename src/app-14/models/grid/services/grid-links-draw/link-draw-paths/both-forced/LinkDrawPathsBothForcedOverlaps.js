@@ -1,7 +1,6 @@
 import { LinkDrawPathsBase } from "../LinkDrawPathsBase"
 import { UtilsStrings } from "../../../../../../utils/utilsStrings"
 import { LinkHelper } from "../../../../helpers/link.helper"
-// import linkEEMapHelper from "../../../../helpers/link-ee/linkEEMap.helper"
 
 const ucase = UtilsStrings.ucase
 class LinkDrawPathsBothForcedOverlaps extends LinkDrawPathsBase {

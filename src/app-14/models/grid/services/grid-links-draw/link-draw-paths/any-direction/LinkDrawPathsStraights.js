@@ -8,16 +8,10 @@ class LinkDrawPathsStraights extends LinkDrawPathsBase {
     drawSameRowButUpOrDown() {
         let path, arrow
 
-        // const { hasCellsOutSameRow } = this.lhObj
         const { svgDrawPath, svgDrawArrow } = this
-        // const { directionOut, directionIn, getRightLeft } = this.lh
         const { directionIn, getRightLeft } = this.lh
 
         path = svgDrawPath.drawPath(this.lh.directionOut)
-        
-        // if (!hasCellsOutSameRow) 
-            // path.svgD += svgDrawPath.drawHalf(directionOut)
-
         path.svgD += svgDrawPath.drawHalf(getRightLeft)
         path.svgD += svgDrawPath.drawLine(getRightLeft)
         path.svgD += svgDrawPath.drawHalf(getRightLeft)
@@ -28,16 +22,10 @@ class LinkDrawPathsStraights extends LinkDrawPathsBase {
     drawSameColButLeftOrRight() {
         let path, arrow
 
-        // const { hasCellsOutSameCol } = this.lhObj
         const { svgDrawPath, svgDrawArrow } = this
-        // const { directionOut, directionIn, getDownUp } = this.lh
         const { directionIn, getDownUp } = this.lh
 
         path = svgDrawPath.drawPath(this.lh.directionOut)
-
-        // if (!hasCellsOutSameCol) 
-            // path.svgD += svgDrawPath.drawHalf(directionOut)
-
         path.svgD += svgDrawPath.drawHalf(getDownUp)
         path.svgD += svgDrawPath.drawLine(getDownUp)
         path.svgD += svgDrawPath.drawHalf(getDownUp)

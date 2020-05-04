@@ -27,17 +27,11 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
         const noObstructionsAlongTheWay = !loh[`isIn${lohKey}`] && !loh[`isCorner${lohKey}`]
 
         path = svgDrawPath.drawPath(forcedOutDirection)
-        // if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
-        
         path.svgD += svgDrawPath.drawHalf(helperDirection1)
         path.svgD += svgDrawPath.drawLine(helperDirection1)
         
         if (noObstructionsAlongTheWay) path.svgD += svgDrawPath.drawHalf(helperDirection1)
-
         path.svgD += svgDrawPath.drawHalf(helperDirection2)
-        
-        // if (linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawHalf(helperDirection2)
-        // if (!linkDirectionsMap.hasCellsForcedOut) path.svgD += svgDrawPath.drawCell(helperDirection2)
         
         if (noObstructionsAlongTheWay) {
             path.svgD += svgDrawPath.drawLine(helperDirection2)
@@ -58,7 +52,7 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow, linkDirectionsMap, lh } = this
-        const { link2Direction, forcedOutDirection, loh } = linkDirectionsMap
+        const { forcedOutDirection, loh } = linkDirectionsMap
      
         const lh2 = new LinkHelper(lh.linkKey, true)
         const index = lh.potentialDirections.indexOf(forcedOutDirection)
@@ -70,14 +64,6 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
         
         if (isOutOrCorner) {
             if (isIn2 && isIn1) {
-                // linkEEMapHelper.patchEEDirection({
-                //     link1: this.lh.link2,
-                //     link2: this.lh.link1,
-                //     type: 'in',
-                //     oldDirection: link2Direction,
-                //     newDirection: LinkHelper.getOpositeDirection(helperDirection1)
-                // })
-
                 path = svgDrawPath.drawPath(forcedOutDirection)
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawLine(helperDirection1)
@@ -112,14 +98,6 @@ class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
                 arrow = svgDrawArrow.drawArrow(path, helperDirection1)
             }
             else {
-                // linkEEMapHelper.patchEEDirection({
-                //     link1: this.lh.link2,
-                //     link2: this.lh.link1,
-                //     type: 'in',
-                //     oldDirection: link2Direction,
-                //     newDirection: LinkHelper.getOpositeDirection(forcedOutDirection)
-                // })
-
                 path = svgDrawPath.drawPath(forcedOutDirection)
                 path.svgD += svgDrawPath.drawLine(forcedOutDirection)
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)

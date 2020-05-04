@@ -1,7 +1,4 @@
-import { globalConfig } from '../../../../config/global.config'
 import { SvgDrawBase } from './SvgDrawBase'
-// import { linkEEDiffHelper } from '../../helpers/link-ee/linkEEDiff.helper' 
-// import { LinkHelper } from '../../helpers/link.helper'
 import linkEEMapHelper from '../../helpers/link-ee/linkEEMap.helper'
 
 class SvgDrawPath extends SvgDrawBase {

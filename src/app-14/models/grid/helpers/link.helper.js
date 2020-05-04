@@ -113,17 +113,6 @@ class LinkHelper {
         else if (this.isUp)
             return [ 'up', this['getRightLeft'] ]
     }
-    // static getOtherPdir1(lh, link1Direction) {
-    //     const pdir1 = lh.potentialDirections
-
-    //     return pdir1.splice(pdir1.indexOf(link1Direction) - 1, 1)[0]
-    // }
-    // static getOtherPdir2(lh, link2Direction) {
-    //     const lh2 = new LinkHelper(lh.linkKey, true)
-    //     const pdir2 = lh2.potentialDirections
-
-    //     return pdir2.splice(pdir2.indexOf(link2Direction) - 1, 1)[0]
-    // }
 }
 
 globalThis.LinkHelper = LinkHelper

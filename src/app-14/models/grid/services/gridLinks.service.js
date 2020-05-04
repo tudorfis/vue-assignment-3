@@ -20,9 +20,8 @@ export const gridLinksService = {
 
         this.sortLinkKeys()
 
-        linkDirectionsHelper.resetLinkMap()
         linkEEMapHelper.generateEEmap()
-        linkPathMapHelper.resetPathMap()
+        linkDirectionsHelper.buildLinkDirectionsMap()
 
         const links = gridModel.model.links
         const lki = new LinkKeyIterator(links)
@@ -51,7 +50,10 @@ export const gridLinksService = {
         const lh = new LinkHelper(linkKey)
 
         linkEEMapHelper.restoreEEMapState()
-        if (isDrag) linkEEMapHelper.saveEEMapState(lh)
+        if (isDrag) {
+            linkEEMapHelper.saveEEMapState(lh)
+            linkDirectionsHelper.generateLinkDirectionsMap(lh)
+        }
         
         const pathArrow = gridLinksDrawService.createPathAndArrow(lh)
         const color = this.getPathColor(lh, isDrag)

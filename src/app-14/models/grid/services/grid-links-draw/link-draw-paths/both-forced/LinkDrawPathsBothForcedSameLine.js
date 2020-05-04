@@ -58,8 +58,8 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
 
     drawOutPossibilities(query) {
         let path, arrow
-        const { svgDrawPath, svgDrawArrow, forcedInDirection, forcedOutDirection, lh, lh2,
-            helperDirection1, helperDirection2, helperDirection3, helperDirection4 } = query
+        const { svgDrawPath, svgDrawArrow, forcedInDirection, forcedOutDirection, lh2,
+            helperDirection1, helperDirection2, helperDirection3 } = query
 
         if (lh2[`is${ucase(forcedInDirection)}`]) {
             path = svgDrawPath.drawPath(forcedOutDirection)
@@ -88,7 +88,7 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
     }
     drawOppositeOutPossibilities(query) {
         let path, arrow
-        const { svgDrawPath, svgDrawArrow, forcedInDirection, forcedOutDirection, lh, lh2,
+        const { svgDrawPath, svgDrawArrow, forcedInDirection, forcedOutDirection, lh2,
             helperDirection1, helperDirection2, helperDirection3, helperDirection4 } = query
 
         if (lh2[`is${ucase(forcedInDirection)}`]) {
@@ -122,8 +122,8 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
     }
     drawSidewaysOutPossibilities(query) {
         let path, arrow
-        const { svgDrawPath, svgDrawArrow, forcedInDirection, forcedOutDirection, lh, lh2,
-            helperDirection1, helperDirection2, helperDirection3, helperDirection4 } = query
+        const { svgDrawPath, svgDrawArrow, forcedInDirection, forcedOutDirection, lh2,
+            helperDirection1, helperDirection3, helperDirection4 } = query
 
         if (lh2[`is${ucase(forcedInDirection)}`]) {
             path = svgDrawPath.drawPath(forcedOutDirection)

@@ -26,28 +26,12 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
         else 
             return this.drawSameRowColToBehind({ isLeftRight, isUpDown })
     }
-    drawSameRowColSideways(query) {
+    drawSameRowColSideways() {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
-        const { forcedInDirection, link1Direction, link2Direction } = linkDirectionsMap
+        const { forcedInDirection, link1Direction } = linkDirectionsMap
         const helperDirection1 = LinkHelper.getOpositeDirection(forcedInDirection)
-
-        // linkEEMapHelper.patchEEDirection({
-        //     link1: this.lh.link2, 
-        //     link2: this.lh.link1, 
-        //     type: 'in',
-        //     oldDirection: link2Direction,
-        //     newDirection: forcedInDirection
-        // })
-
-        // linkEEMapHelper.patchEEDirection({
-        //     link1: this.lh.link1, 
-        //     link2: this.lh.link2, 
-        //     type: 'out',
-        //     oldDirection: link1Direction,
-        //     newDirection: forcedInDirection
-        // })
 
         path = svgDrawPath.drawPath(forcedInDirection)
         path.svgD += svgDrawPath.drawHalf(link1Direction)
@@ -61,18 +45,9 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
-        const { forcedInDirection, link1Direction } = linkDirectionsMap
-        // const { helperDirection1, helperDirection2, hasCellsLooh } = this.generateHelpers(query)
+        const { forcedInDirection } = linkDirectionsMap
         const { helperDirection1, helperDirection2 } = this.generateHelpers(query)
         const helperDirection3 = LinkHelper.getOpositeDirection(forcedInDirection)
-        
-        // linkEEMapHelper.patchEEDirection({
-        //     link1: this.lh.link1, 
-        //     link2: this.lh.link2, 
-        //     type: 'out',
-        //     oldDirection: link1Direction,
-        //     newDirection: helperDirection1
-        // })
 
         path = svgDrawPath.drawPath(helperDirection1)
         path.svgD += svgDrawPath.drawHalf(helperDirection3)
@@ -96,20 +71,9 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
-        const { forcedInDirection, link1Direction } = linkDirectionsMap
-        // const { helperDirection1, helperDirection2, hasCellsLooh, hasCellsLooh2, hasCornerLooh } = this.generateHelpers(query)
+        const { forcedInDirection } = linkDirectionsMap
         const { helperDirection1, helperDirection2 } = this.generateHelpers(query)
-
-        // const hasCellsVerify = (!hasCornerLooh && !hasCellsLooh2) || (hasCellsLooh && !hasCellsLooh2)
         const helperDirection3 = LinkHelper.getOpositeDirection(forcedInDirection)
-
-        // linkEEMapHelper.patchEEDirection({
-        //     link1: this.lh.link1, 
-        //     link2: this.lh.link2, 
-        //     type: 'out',
-        //     oldDirection: link1Direction,
-        //     newDirection: helperDirection1
-        // })
 
         path = svgDrawPath.drawPath(helperDirection1)
         path.svgD += svgDrawPath.drawHalf(forcedInDirection)
@@ -121,21 +85,7 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
         return [ path, arrow ]
     }
     generateHelpers(query) {
-        const { linkDirectionsMap } = this
-        const { forcedInDirection } = linkDirectionsMap
         const { isLeftRight, isUpDown } = query
-
-        // let helperDirection1 
-        // const looh = linkDirectionsMap.looh
-
-        // if (isLeftRight) {
-        //     helperDirection1 = !looh.isDownCells ? 'down' : ''
-        //     helperDirection1 = !helperDirection1 && !looh.isUpCells ? 'up' : 'down'
-        // }
-        // else if (isUpDown) {
-        //     helperDirection1 = !looh.isRightCells ? 'right' : ''
-        //     helperDirection1 = !helperDirection1 && !looh.isLeftCells ? 'left' : 'right'
-        // }
 
         let helperDirection1
         if (isLeftRight) helperDirection1 = 'down'
@@ -143,21 +93,9 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
 
         const helperDirection2 = LinkHelper.getOpositeDirection(helperDirection1)
 
-        // let cellVerifier = `is${UtilsStrings.ucase(helperDirection1)}Cells`
-        // const hasCellsLooh = linkDirectionsMap.looh[cellVerifier]
-
-        // cellVerifier = `is${UtilsStrings.ucase(forcedInDirection)}Cells`
-        // const hasCellsLooh2 = linkDirectionsMap.looh[cellVerifier]
-
-        // cellVerifier = `is${UtilsStrings.ucase(helperDirection1)}${UtilsStrings.ucase(forcedInDirection)}Corner`
-        // const hasCornerLooh = linkDirectionsMap.looh[cellVerifier]
-
         return { 
             helperDirection1,
-            helperDirection2,
-            // hasCellsLooh,
-            // hasCellsLooh2,
-            // hasCornerLooh
+            helperDirection2
         }
     }
 }

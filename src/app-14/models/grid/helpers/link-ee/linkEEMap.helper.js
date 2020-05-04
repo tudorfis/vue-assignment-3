@@ -3,9 +3,8 @@ import { gridArrowConnectorService } from '../../../../components/grid/services/
 import { Utils } from '../../../../utils/utils'
 import { gridModel } from '../../grid.model'
 import { LinkKeyIterator } from '../../iterators/LinkKeyIterator'
-import { linkDirectionsHelper } from './../link-directions/linkDirections.helper'
 import { LinkHelper } from '../link.helper'
-// import { linkEECrossOverlapHelper } from "./linkEECrossOverlap.helper"
+import { globalConfig } from '../../../../config/global.config'
 
 class LinkEntryExitPointsMapHelper {
     get eeMap() {
@@ -38,10 +37,7 @@ class LinkEntryExitPointsMapHelper {
 
         while (lki.continue) {
             const lh = new LinkHelper(lki.linkKey)
-            
             this.setEEMapEmptyItems(lh)
-            linkDirectionsHelper.generateLinkDirectionsMap(lh)
-            // this.setEEMapItemsTotals(lh)
         }
     }
     setEEMapEmptyItems(lh) {
@@ -51,33 +47,6 @@ class LinkEntryExitPointsMapHelper {
         if (!this.eeMap[lh.link2])
             this.eeMap[lh.link2] = Utils.deepclone(this.eeMapItemBlueprint)
     }
-    // setEEMapItemsTotals(lh) {
-    //     const { link1Direction, link2Direction } = this.crateLinkDirections(lh)
-        
-    //     const eeMapItem1 = this.eeMap[lh.link1][link1Direction]
-    //     const eeMapItem2 =  this.eeMap[lh.link2][link2Direction]
-
-    //     eeMapItem1.total++
-    //     eeMapItem2.total++
-
-    //     eeMapItem1.out[lh.link2] = eeMapItem1.total
-    //     eeMapItem2.in[lh.link1] = eeMapItem2.total
-
-    //     linkEECrossOverlapHelper.adjust(eeMapItem1, link1Direction)
-    //     linkEECrossOverlapHelper.adjust(eeMapItem2, link2Direction)
-    // }
-    // crateLinkDirections(lh) {
-    //     let link1Direction, link2Direction
-
-    //     const linkDirections = linkDirectionsHelper.getLinkDirections(lh)
-    //     const forcedDirections = linkDirectionsHelper.getForcedLinkDirections(lh)
-    //     const ldm = linkDirectionsHelper.getLinkDirectionsMap(lh)
-
-    //     link1Direction = forcedDirections[0] || linkDirections[0]
-    //     link2Direction = forcedDirections[1] || linkDirections[1]
-
-    //     return { link1Direction, link2Direction }
-    // }
     restoreEEMapState() {
         if (!this.eeMapState) return
         
@@ -86,36 +55,28 @@ class LinkEntryExitPointsMapHelper {
     }
     saveEEMapState(lh) {
         this.eeMapState = Utils.deepclone(this.eeMap)
-        
         this.setEEMapEmptyItems(lh)
-        linkDirectionsHelper.generateLinkDirectionsMap(lh)
-        // this.setEEMapItemsTotals(lh)
     }
+    
     createEEDifferenceForArrow(lh, direction) {
         const eeMap = this.eeMap[lh.link2][LinkHelper.getOpositeDirection(direction)]
         eeMap.in[lh.link1] = ++eeMap.total
 
-        return linkEEDiffHelper.getDiffByPoint(eeMap.total) || 0
+        return this.getDiffByPoint(eeMap.total) || 0
     }
     createEEDifferenceForPath(lh, direction) {
         const eeMap = this.eeMap[lh.link1][direction]
         eeMap.out[lh.link2] = ++eeMap.total
         
-        return linkEEDiffHelper.getDiffByPoint(eeMap.total) || 0
+        return this.getDiffByPoint(eeMap.total) || 0
     }
-        
-    // patchEEDirection(query) {
-    //     const { link1, link2, type, oldDirection, newDirection } = query
-        
-    //     const eeMap = this.eeMap[link1]
-    //     if (!eeMap || !eeMap[oldDirection] || !eeMap[oldDirection][type] || !eeMap[oldDirection][type][link2]) return
+    getDiffByPoint(pointNr) {
+        if (pointNr > 9) return 0
 
-    //     delete eeMap[oldDirection][type][link2]
-    //     eeMap[oldDirection].total--
+        const diff = globalConfig.arrowPointerHeight * Math.floor(pointNr / 2)
 
-    //     eeMap[newDirection].total++
-    //     eeMap[newDirection][type][link2] = eeMap[newDirection].total
-    // }
+        return (pointNr % 2) ? -diff : diff
+    }
 }
 
 const linkEEMapHelper = new LinkEntryExitPointsMapHelper()

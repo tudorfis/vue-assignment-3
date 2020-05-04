@@ -1,5 +1,5 @@
 {
-    "numCols": 7,
+    "numCols": 8,
     "numRows": 7,
     "totalSteps": 12,
     "steps": {
@@ -23,11 +23,6 @@
             "type": "ADD_REMOVE_TAG",
             "id": 66
         },
-        "3-4": {
-            "is": 1,
-            "type": "ADD_REMOVE_TAG",
-            "id": 20
-        },
         "4-2": {
             "is": 1,
             "type": "ADD_REMOVE_TAG",
@@ -37,6 +32,11 @@
             "is": 1,
             "type": "SUBSCRIBE_SEQUENCE",
             "id": 100
+        },
+        "5-1": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG",
+            "id": 20
         },
         "6-2": {
             "is": 1,
@@ -66,15 +66,15 @@
     },
     "links": [
         "4-2__1-2",
+        "4-2__5-1",
         "4-2__2-1",
         "4-2__6-6",
         "6-3__4-2",
         "6-4__4-2",
-        "4-2__3-4",
         "6-5__4-2"
     ],
     "linkAttributes": {
-        "4-2__3-4": {
+        "4-2__5-1": {
             "outDirection": "up",
             "inDirection": "right",
             "name": "",
