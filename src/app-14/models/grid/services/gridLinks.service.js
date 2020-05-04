@@ -28,6 +28,8 @@ export const gridLinksService = {
 
         while(lki.continue)
             this.generateSvgPath(lki.linkKey)
+
+        linkPathMapHelper.generatePathMap()
     },
     sortLinkKeys() {
         const sortedLinks = []

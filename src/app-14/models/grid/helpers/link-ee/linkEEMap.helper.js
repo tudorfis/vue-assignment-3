@@ -71,7 +71,7 @@ class LinkEntryExitPointsMapHelper {
         return this.getDiffByPoint(eeMap.total) || 0
     }
     getDiffByPoint(pointNr) {
-        if (pointNr > 9) return 0
+        if (pointNr > 8) return 0
 
         const diff = globalConfig.arrowPointerHeight * Math.floor(pointNr / 2)
 

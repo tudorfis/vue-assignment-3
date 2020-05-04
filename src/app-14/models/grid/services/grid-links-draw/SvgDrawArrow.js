@@ -96,7 +96,7 @@ class SvgDrawArrow extends SvgDrawBase {
                     break
                 }
     
-                if (!prelastSvgPathMapItem) return
+                if (!prelastSvgPathMapItem || !prelastSvgPathMapItem.distance) return
     
                 if (svgArrow > svgCurrent) prelastSvgPathMapItem.distance += svgArrow - svgLeft
                 else prelastSvgPathMapItem.distance -= svgLeft - svgArrow
@@ -145,10 +145,15 @@ class SvgDrawArrow extends SvgDrawBase {
     }
     handleNewSvgPathWithDifferenceEE(query) {
         const { path, difference_ee, itemsCounted, totalDistance, hvDirection } = query
+
         let { svgPathMap } = query
         svgPathMap = svgPathMap.slice(0, -itemsCounted)
 
+        if (svgPathMap.length === 2) return
+        
         const lastSvgPathMapItem = svgPathMap[svgPathMap.length - 1]
+        if (!lastSvgPathMapItem) return
+        
         lastSvgPathMapItem.distance -= difference_ee
         
         svgPathMap.push({
