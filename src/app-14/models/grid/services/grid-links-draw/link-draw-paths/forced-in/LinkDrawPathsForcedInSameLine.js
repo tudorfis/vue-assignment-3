@@ -33,31 +33,27 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
         const { forcedInDirection, link1Direction, link2Direction } = linkDirectionsMap
         const helperDirection1 = LinkHelper.getOpositeDirection(forcedInDirection)
 
-        linkEEMapHelper.patchEEDirection({
-            link1: this.lh.link2, 
-            link2: this.lh.link1, 
-            type: 'in',
-            oldDirection: link2Direction,
-            newDirection: forcedInDirection
-        })
+        // linkEEMapHelper.patchEEDirection({
+        //     link1: this.lh.link2, 
+        //     link2: this.lh.link1, 
+        //     type: 'in',
+        //     oldDirection: link2Direction,
+        //     newDirection: forcedInDirection
+        // })
 
-        linkEEMapHelper.patchEEDirection({
-            link1: this.lh.link1, 
-            link2: this.lh.link2, 
-            type: 'out',
-            oldDirection: link1Direction,
-            newDirection: forcedInDirection
-        })
+        // linkEEMapHelper.patchEEDirection({
+        //     link1: this.lh.link1, 
+        //     link2: this.lh.link2, 
+        //     type: 'out',
+        //     oldDirection: link1Direction,
+        //     newDirection: forcedInDirection
+        // })
 
         path = svgDrawPath.drawPath(forcedInDirection)
-        // if (!linkDirectionsMap.hasCellsForcedIn) path.svgD += svgDrawPath.drawHalf(forcedInDirection)
         path.svgD += svgDrawPath.drawHalf(link1Direction)
-        path.svgD += svgDrawPath.drawLine(link1Direction, 'full')
+        path.svgD += svgDrawPath.drawLine(link1Direction)
         path.svgD += svgDrawPath.drawHalf(link1Direction)
-        // if (!linkDirectionsMap.hasCellsForcedIn) path.svgD += svgDrawPath.drawHalf(helperDirection1)
-
-        path.svgD += svgDrawPath.drawLine(helperDirection1, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection1)
+        arrow = svgDrawArrow.drawArrow(path, helperDirection1)
 
         return [ path, arrow ]
     }
@@ -70,23 +66,19 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
         const { helperDirection1, helperDirection2 } = this.generateHelpers(query)
         const helperDirection3 = LinkHelper.getOpositeDirection(forcedInDirection)
         
-        linkEEMapHelper.patchEEDirection({
-            link1: this.lh.link1, 
-            link2: this.lh.link2, 
-            type: 'out',
-            oldDirection: link1Direction,
-            newDirection: helperDirection1
-        })
+        // linkEEMapHelper.patchEEDirection({
+        //     link1: this.lh.link1, 
+        //     link2: this.lh.link2, 
+        //     type: 'out',
+        //     oldDirection: link1Direction,
+        //     newDirection: helperDirection1
+        // })
 
         path = svgDrawPath.drawPath(helperDirection1)
-        // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(helperDirection1)
         path.svgD += svgDrawPath.drawHalf(helperDirection3)
-        path.svgD += svgDrawPath.drawLine(helperDirection3, 'full')
+        path.svgD += svgDrawPath.drawLine(helperDirection3)
         path.svgD += svgDrawPath.drawHalf(helperDirection2)
-        // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(helperDirection2)
-
-        path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+        arrow = svgDrawArrow.drawArrow(path, helperDirection3)
 
         return [ path, arrow ]
     }
@@ -95,9 +87,8 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
         const { svgDrawPath, svgDrawArrow, lh } = this
 
         path = svgDrawPath.drawPath(lh.directionOut)
-        path.svgD += svgDrawPath.drawLine(lh.directionOut, 'full')
-        path.svgD += svgDrawPath.drawLine(lh.directionOut, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, lh.directionOut)
+        path.svgD += svgDrawPath.drawLine(lh.directionOut)
+        arrow = svgDrawArrow.drawArrow(path, lh.directionOut)
 
         return [ path, arrow ]
     }
@@ -112,28 +103,20 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
         // const hasCellsVerify = (!hasCornerLooh && !hasCellsLooh2) || (hasCellsLooh && !hasCellsLooh2)
         const helperDirection3 = LinkHelper.getOpositeDirection(forcedInDirection)
 
-        linkEEMapHelper.patchEEDirection({
-            link1: this.lh.link1, 
-            link2: this.lh.link2, 
-            type: 'out',
-            oldDirection: link1Direction,
-            newDirection: helperDirection1
-        })
+        // linkEEMapHelper.patchEEDirection({
+        //     link1: this.lh.link1, 
+        //     link2: this.lh.link2, 
+        //     type: 'out',
+        //     oldDirection: link1Direction,
+        //     newDirection: helperDirection1
+        // })
 
         path = svgDrawPath.drawPath(helperDirection1)
-
-        // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(helperDirection1)
         path.svgD += svgDrawPath.drawHalf(forcedInDirection)
-        path.svgD += svgDrawPath.drawLine(forcedInDirection, 'full')
-        path.svgD += svgDrawPath.drawLine(forcedInDirection, 'cell')
-        
-        // if (hasCellsVerify) path.svgD += svgDrawPath.drawHalf(forcedInDirection)
+        path.svgD += svgDrawPath.drawLine(forcedInDirection)
+        path.svgD += svgDrawPath.drawCell(forcedInDirection)
         path.svgD += svgDrawPath.drawHalf(helperDirection2)
-        // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(helperDirection2)
-        // if (hasCellsVerify) path.svgD += svgDrawPath.drawHalf(helperDirection3)
-
-        path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+        arrow = svgDrawArrow.drawArrow(path, helperDirection3)
 
         return [ path, arrow ]
     }

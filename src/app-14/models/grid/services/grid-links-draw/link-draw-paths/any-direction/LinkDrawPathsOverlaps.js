@@ -13,12 +13,10 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
 
         path = svgDrawPath.drawPath(directionOut)
         path.svgD += svgDrawPath.drawHalf(directionIn)
-        path.svgD += svgDrawPath.drawLine(directionIn, 'full')
-        path.svgD += svgDrawPath.drawLine(directionOut, 'full')
+        path.svgD += svgDrawPath.drawLine(directionIn)
+        path.svgD += svgDrawPath.drawLine(directionOut)
         path.svgD += svgDrawPath.drawHalf(directionOut)
-
-        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
+        arrow = svgDrawArrow.drawArrow(path, directionIn)
 
         return [ path, arrow ]
     }
@@ -32,13 +30,11 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
         const helperDirection = (directionOut === pdir[0]) ? pdir[1] : pdir[0]
 
         path = svgDrawPath.drawPath(directionOut)
-        path.svgD += svgDrawPath.drawLine(directionOut, 'full')
+        path.svgD += svgDrawPath.drawLine(directionOut)
         path.svgD += svgDrawPath.drawHalf(helperDirection)
-        path.svgD += svgDrawPath.drawLine(helperDirection, 'full')
+        path.svgD += svgDrawPath.drawLine(helperDirection)
         path.svgD += svgDrawPath.drawHalf(helperDirection)
-
-        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
+        arrow = svgDrawArrow.drawArrow(path, directionIn)
 
         return [ path, arrow ]
     }
@@ -53,12 +49,10 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
 
         path = svgDrawPath.drawPath(directionOut)
         path.svgD += svgDrawPath.drawHalf(helperDirection)
-        path.svgD += svgDrawPath.drawLine(helperDirection, 'full')
+        path.svgD += svgDrawPath.drawLine(helperDirection)
         path.svgD += svgDrawPath.drawHalf(helperDirection)
-        path.svgD += svgDrawPath.drawLine(directionIn, 'full')
-
-        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
+        path.svgD += svgDrawPath.drawLine(directionIn)
+        arrow = svgDrawArrow.drawArrow(path, directionIn)
 
         return [ path, arrow ]
     }
@@ -69,13 +63,11 @@ class LinkDrawPathsOverlaps extends LinkDrawPathsBase {
         const { directionOut, directionIn } = this.lh
 
         path = svgDrawPath.drawPath(directionOut)
-        path.svgD += svgDrawPath.drawLine(directionOut, 'full')
+        path.svgD += svgDrawPath.drawLine(directionOut)
         path.svgD += svgDrawPath.drawHalf(directionOut)
         path.svgD += svgDrawPath.drawHalf(directionIn)
-        path.svgD += svgDrawPath.drawLine(directionIn, 'full')
-
-        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
+        path.svgD += svgDrawPath.drawLine(directionIn)
+        arrow = svgDrawArrow.drawArrow(path, directionIn)
 
         return [ path, arrow ]
     }

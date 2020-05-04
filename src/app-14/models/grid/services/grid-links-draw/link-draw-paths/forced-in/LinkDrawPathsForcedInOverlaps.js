@@ -1,7 +1,7 @@
 import { LinkDrawPathsBase } from "../LinkDrawPathsBase";
-import { UtilsStrings } from "../../../../../../utils/utilsStrings";
+// import { UtilsStrings } from "../../../../../../utils/utilsStrings";
 import { LinkHelper } from "../../../../helpers/link.helper"
-import linkEEMapHelper from "../../../../helpers/link-ee/linkEEMap.helper"
+// import linkEEMapHelper from "../../../../helpers/link-ee/linkEEMap.helper"
 
 class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
     constructor(query) {
@@ -11,56 +11,30 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
-        let { directionOut } = this.lh
-        // const { forcedInDirection, link1Direction, looh, loh } = linkDirectionsMap
-        // const { forcedInDirection, link1Direction, loh } = linkDirectionsMap
+        const { directionOut } = this.lh
         const { forcedInDirection } = linkDirectionsMap
         
         const helperDirection1 = this.lh.potentialDirections[0]
         const helperDirection2 = LinkHelper.getOpositeDirection(forcedInDirection)
-
-        // const {
-        //     hasCellsLooh,
-        //     hasOutOrCorner2
-        // } = this.generateHelpers({ directionOut, forcedInDirection, looh, loh })
-
-        // if (!hasOutOrCorner2) {
-        //     linkEEMapHelper.patchEEDirection({
-        //         link1: this.lh.link1, 
-        //         link2: this.lh.link2, 
-        //         type: 'out',
-        //         oldDirection: link1Direction,
-        //         newDirection: forcedInDirection
-        //     })
-
-        //     path = svgDrawPath.drawPath(forcedInDirection)
+        const index = this.lh.potentialDirections.indexOf(directionOut)
         
-        //     path.svgD += svgDrawPath.drawLine(forcedInDirection, 'full')
-        //     path.svgD += svgDrawPath.drawLine(forcedInDirection, 'cell')
-        //     if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(forcedInDirection)
-    
-        //     path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
-        //     path.svgD += svgDrawPath.drawHalf(helperDirection1)
-        //     path.svgD += svgDrawPath.drawHalf(helperDirection1)
-        //     if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(helperDirection2)
-    
-        // }
-        // else {
+        if (index === 1) {
+            path = svgDrawPath.drawPath(directionOut)
+            path.svgD += svgDrawPath.drawLine(forcedInDirection)
+            path.svgD += svgDrawPath.drawCell(forcedInDirection)
+            path.svgD += svgDrawPath.drawLine(helperDirection1)
+            path.svgD += svgDrawPath.drawCell(helperDirection1)
+        }
+        else {
             path = svgDrawPath.drawPath(directionOut)
             path.svgD += svgDrawPath.drawHalf(forcedInDirection)
-
-            path.svgD += svgDrawPath.drawLine(forcedInDirection, 'full')
-            path.svgD += svgDrawPath.drawLine(forcedInDirection, 'cell')
-            // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(forcedInDirection)
-    
-            path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+            path.svgD += svgDrawPath.drawLine(forcedInDirection)
+            path.svgD += svgDrawPath.drawCell(forcedInDirection)
+            path.svgD += svgDrawPath.drawLine(helperDirection1)
             path.svgD += svgDrawPath.drawHalf(helperDirection1)
-            // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(helperDirection2)
-        // }
+        }
 
-        path.svgD += svgDrawPath.drawLine(helperDirection2, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection2)
-    
+        arrow = svgDrawArrow.drawArrow(path, helperDirection2)
         return [ path, arrow ]
     }
     drawOppositeOfPdir1() {
@@ -84,29 +58,21 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
         path = svgDrawPath.drawPath(directionOut)
         
         if (isIndex0) {
-            path.svgD += svgDrawPath.drawLine(directionOut, 'full')
-            path.svgD += svgDrawPath.drawLine(directionOut, 'cell')
-            // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(directionOut)
-
-            path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+            path.svgD += svgDrawPath.drawLine(directionOut)
+            path.svgD += svgDrawPath.drawCell(directionOut)
+            path.svgD += svgDrawPath.drawLine(helperDirection1)
             path.svgD += svgDrawPath.drawHalf(helperDirection1)
             path.svgD += svgDrawPath.drawHalf(helperDirection1)
-            // if (!hasCellsLooh) path.svgD += svgDrawPath.drawHalf(helperDirection2)
         }
         else if (isIndex1) {
             path.svgD += svgDrawPath.drawHalf(helperDirection1)
-            path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
-            path.svgD += svgDrawPath.drawLine(helperDirection1, 'cell')
-            // if (!hasCellsLoohAfter) path.svgD += svgDrawPath.drawHalf(helperDirection1)
-
-            path.svgD += svgDrawPath.drawLine(directionOut, 'full')
+            path.svgD += svgDrawPath.drawLine(helperDirection1)
+            path.svgD += svgDrawPath.drawCell(helperDirection1)
+            path.svgD += svgDrawPath.drawLine(directionOut)
             path.svgD += svgDrawPath.drawHalf(directionOut)
-            // if (!hasCellsLoohAfter) path.svgD += svgDrawPath.drawHalf(helperDirection2)
         }
         
-        path.svgD += svgDrawPath.drawLine(helperDirection2, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection2)
-
+        arrow = svgDrawArrow.drawArrow(path, helperDirection2)
         return [ path, arrow ]
     }
     drawLastRemainingOfPdir() {
@@ -128,76 +94,74 @@ class LinkDrawPathsForcedInOverlaps extends LinkDrawPathsBase {
 
             if (!isIn) {
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
-                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                path.svgD += svgDrawPath.drawLine(helperDirection1)
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
-                path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
+                path.svgD += svgDrawPath.drawLine(helperDirection2)
             }
             else {
-                path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
+                path.svgD += svgDrawPath.drawLine(helperDirection2)
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
-                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                path.svgD += svgDrawPath.drawLine(helperDirection1)
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
             }
 
-            if (helperDirection2 !== link1Direction) {
-                linkEEMapHelper.patchEEDirection({
-                    link1: this.lh.link1,
-                    link2: this.lh.link2,
-                    type: 'out',
-                    oldDirection: link1Direction,
-                    newDirection: helperDirection2
-                })
-            }
+            // if (helperDirection2 !== link1Direction) {
+            //     linkEEMapHelper.patchEEDirection({
+            //         link1: this.lh.link1,
+            //         link2: this.lh.link2,
+            //         type: 'out',
+            //         oldDirection: link1Direction,
+            //         newDirection: helperDirection2
+            //     })
+            // }
         }
         else {
             if (!isIn) {
                 path = svgDrawPath.drawPath(helperDirection1)
-                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                path.svgD += svgDrawPath.drawLine(helperDirection1)
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 path.svgD += svgDrawPath.drawHalf(helperDirection2)
-                path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
+                path.svgD += svgDrawPath.drawLine(helperDirection2)
 
-                if (helperDirection1 !== link1Direction) {
-                    linkEEMapHelper.patchEEDirection({
-                        link1: this.lh.link1,
-                        link2: this.lh.link2,
-                        type: 'out',
-                        oldDirection: link1Direction,
-                        newDirection: helperDirection1
-                    })
-                }
+                // if (helperDirection1 !== link1Direction) {
+                //     linkEEMapHelper.patchEEDirection({
+                //         link1: this.lh.link1,
+                //         link2: this.lh.link2,
+                //         type: 'out',
+                //         oldDirection: link1Direction,
+                //         newDirection: helperDirection1
+                //     })
+                // }
             }
             else {
                 if (isInOut) {
                     path = svgDrawPath.drawPath(helperDirection2)
                     path.svgD += svgDrawPath.drawHalf(helperDirection1)
-                    path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
-                    path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                    path.svgD += svgDrawPath.drawLine(helperDirection2)
+                    path.svgD += svgDrawPath.drawLine(helperDirection1)
                     path.svgD += svgDrawPath.drawHalf(helperDirection1)
                 }
                 else {
                     path = svgDrawPath.drawPath(helperDirection2)
-                    path.svgD += svgDrawPath.drawLine(helperDirection2, 'full')
+                    path.svgD += svgDrawPath.drawLine(helperDirection2)
                     path.svgD += svgDrawPath.drawHalf(helperDirection1)
-                    path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                    path.svgD += svgDrawPath.drawLine(helperDirection1)
                     path.svgD += svgDrawPath.drawHalf(helperDirection1)
     
-                    if (helperDirection2 !== link1Direction) {
-                        linkEEMapHelper.patchEEDirection({
-                            link1: this.lh.link1,
-                            link2: this.lh.link2,
-                            type: 'out',
-                            oldDirection: link1Direction,
-                            newDirection: helperDirection2
-                        })
-                    }
+                    // if (helperDirection2 !== link1Direction) {
+                    //     linkEEMapHelper.patchEEDirection({
+                    //         link1: this.lh.link1,
+                    //         link2: this.lh.link2,
+                    //         type: 'out',
+                    //         oldDirection: link1Direction,
+                    //         newDirection: helperDirection2
+                    //     })
+                    // }
                 }
             }
         }
         
-        path.svgD += svgDrawPath.drawLine(helperDirection2, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection2)
-
+        arrow = svgDrawArrow.drawArrow(path, helperDirection2)
         return [ path, arrow ]
     }
     generateHelpers(query) {

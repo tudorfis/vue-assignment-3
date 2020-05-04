@@ -15,22 +15,17 @@ const gridLinksDrawService = {
     createPathAndArrow(lh) {
         const ldm = linkDirectionsHelper.getLinkDirectionsMap(lh)
 
-        if (ldm.hasBothForcedDirections && !ldm.isValidBothForcedLinks) {
-            console.log('%c ldm.hasBothForcedDirections              ', 'background: black; color: white;')
+        if (ldm.isBothForced)
             return this.drawLinkPathBothForcedDirections(lh, new LinkHelper(lh.linkKey, true), ldm)
-        }
-        else if (ldm.hasNoForcedDirections || ldm.isValidForcedLinkOut || ldm.isValidForcedLinkIn) {
-            console.log('%c ldm.hasNoForcedDirections              ', 'background: black; color: white;')
+
+        else if (ldm.isOptimal)
             return this.drawLinkPathNoForcedDirections(lh)
-        }
-        else if (ldm.hasForcedOutDirection) {
-            console.log('%c ldm.hasForcedOutDirection              ', 'background: black; color: white;')
+
+    else if (ldm.hasForcedOutDirection)
             return this.drawLinkPathForcedOut(lh, ldm)
-        }
-        else if (ldm.hasForcedInDirection) {
-            console.log('%c ldm.hasForcedInDirection              ', 'background: black; color: white;')
+
+        else if (ldm.hasForcedInDirection) 
             return this.drawLinkPathForcedIn(lh, new LinkHelper(lh.linkKey, true), ldm)
-        }
     },
     drawLinkPathNoForcedDirections(lh) {
         if (lh.isSameRowCol)
@@ -122,14 +117,17 @@ const gridLinksDrawService = {
             return linkDrawPathsForcedInSameLine.drawSameRowCol()
         
         else {
-            if (ldm.isForcedInOppositeOfPdir0(lh2))
+            if (ldm.isForcedInOppositeOfPdir0(lh2)) {
                 return linkDrawPathsForcedInOverlaps.drawOppositeOfPdir0()
+            }
 
-            else if (ldm.isForcedInOppositeOfPdir1(lh2))
+            else if (ldm.isForcedInOppositeOfPdir1(lh2)) {
                 return linkDrawPathsForcedInOverlaps.drawOppositeOfPdir1()
+            }
 
-            else
+            else {
                 return linkDrawPathsForcedInOverlaps.drawLastRemainingOfPdir(ldm)
+            }
         }
     },
     drawLinkPathBothForcedDirections(lh, lh2, ldm) {

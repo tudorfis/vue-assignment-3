@@ -1,32 +1,42 @@
 {
-    "numCols": 6,
+    "numCols": 7,
     "numRows": 7,
-    "totalSteps": 7,
+    "totalSteps": 12,
     "steps": {
-        "1-1": {
-            "is": 1,
-            "type": "WAIT",
-            "id": 15
-        },
         "1-2": {
             "is": 1,
             "type": "SEND_SMS",
             "id": 12
         },
-        "1-3": {
+        "2-1": {
+            "is": 1,
+            "type": "WAIT",
+            "id": 15
+        },
+        "3-1": {
             "is": 1,
             "type": "SEND_SMS",
             "id": 12
+        },
+        "3-3": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG",
+            "id": 66
+        },
+        "3-4": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG",
+            "id": 20
         },
         "4-2": {
             "is": 1,
             "type": "ADD_REMOVE_TAG",
             "id": 26
         },
-        "4-5": {
+        "4-4": {
             "is": 1,
-            "type": "SEND_EMAIL",
-            "id": 22
+            "type": "SUBSCRIBE_SEQUENCE",
+            "id": 100
         },
         "6-2": {
             "is": 1,
@@ -37,16 +47,36 @@
             "is": 1,
             "type": "SUBSCRIBE_SEQUENCE",
             "id": 59
+        },
+        "6-4": {
+            "is": 1,
+            "type": "SUBSCRIBE_SEQUENCE",
+            "id": 46
+        },
+        "6-5": {
+            "is": 1,
+            "type": "AUTOMATION",
+            "id": 4
+        },
+        "6-6": {
+            "is": 1,
+            "type": "SEND_EMAIL",
+            "id": 22
         }
     },
     "links": [
-        "6-2__4-2",
-        "6-2__4-5"
+        "4-2__1-2",
+        "4-2__2-1",
+        "4-2__6-6",
+        "6-3__4-2",
+        "6-4__4-2",
+        "4-2__3-4",
+        "6-5__4-2"
     ],
     "linkAttributes": {
-        "6-2__4-5": {
-            "outDirection": "",
-            "inDirection": "",
+        "4-2__3-4": {
+            "outDirection": "up",
+            "inDirection": "right",
             "name": "",
             "color": "",
             "style": ""

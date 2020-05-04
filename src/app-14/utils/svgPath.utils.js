@@ -3,10 +3,10 @@ class SvgPathUtils {
     static getM(svgD) {
         const svgPathMap = SvgPathUtils.getPathMap(svgD)
 
-        const Mleft = SvgPathUtils.getMLeft(svgPathMap)
-        const Mtop = SvgPathUtils.getMTop(svgPathMap)
-
-        return `M${Mleft} ${Mtop}`
+        const svgLeft = SvgPathUtils.getMLeft(svgPathMap)
+        const svgTop = SvgPathUtils.getMTop(svgPathMap)
+        
+        return { svgLeft, svgTop }
     }
     static getPathMap(svgD) {
         return svgD.split(' ').map(item => {
@@ -20,7 +20,15 @@ class SvgPathUtils {
                 return { direction: 'v', distance: Number(item.replace('v', '')) }
             
             else return Number(item)
-        })
+        }).filter(item => item.distance !== 0)
+    }
+    static generateSvgD(svgPathMap) {
+        let svgD = `M${svgPathMap[0]} ${svgPathMap[1]}`
+        
+        for (const item of svgPathMap.slice(2))
+            svgD += ` ${item.direction}${item.distance}`
+        
+        return svgD
     }
     static getMLeft(svgPathMap) {
         return svgPathMap

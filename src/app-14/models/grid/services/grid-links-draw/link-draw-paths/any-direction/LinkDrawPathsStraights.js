@@ -19,14 +19,9 @@ class LinkDrawPathsStraights extends LinkDrawPathsBase {
             // path.svgD += svgDrawPath.drawHalf(directionOut)
 
         path.svgD += svgDrawPath.drawHalf(getRightLeft)
-        path.svgD += svgDrawPath.drawLine(getRightLeft, 'full')
+        path.svgD += svgDrawPath.drawLine(getRightLeft)
         path.svgD += svgDrawPath.drawHalf(getRightLeft)
-        
-        // if (!hasCellsOutSameRow)
-            // path.svgD += svgDrawPath.drawHalf(directionIn)
-
-        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
+        arrow = svgDrawArrow.drawArrow(path, directionIn)
 
         return [ path, arrow ]
     }
@@ -44,14 +39,9 @@ class LinkDrawPathsStraights extends LinkDrawPathsBase {
             // path.svgD += svgDrawPath.drawHalf(directionOut)
 
         path.svgD += svgDrawPath.drawHalf(getDownUp)
-        path.svgD += svgDrawPath.drawLine(getDownUp, 'full')
+        path.svgD += svgDrawPath.drawLine(getDownUp)
         path.svgD += svgDrawPath.drawHalf(getDownUp)
-
-        // if (!hasCellsOutSameCol)
-            // path.svgD += svgDrawPath.drawHalf(directionIn)
-        
-        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
+        arrow = svgDrawArrow.drawArrow(path, directionIn)
 
         return [ path, arrow ]
     }
@@ -62,9 +52,8 @@ class LinkDrawPathsStraights extends LinkDrawPathsBase {
         const { directionIn } = this.lh
 
         path = svgDrawPath.drawPath(directionIn)
-        path.svgD += svgDrawPath.drawLine(directionIn, 'full')
-        path.svgD += svgDrawPath.drawLine(directionIn, 'arrow')
-        arrow = svgDrawArrow.drawArrow(path.svgD, directionIn)
+        path.svgD += svgDrawPath.drawLine(directionIn)
+        arrow = svgDrawArrow.drawArrow(path, directionIn)
 
         return [ path, arrow ]
     }

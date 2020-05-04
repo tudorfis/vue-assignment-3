@@ -15,9 +15,9 @@ class LinkDirectionsMap {
     get loh() {
         return this.linkOverlapHelper
     }
-    get looh() {
-        return this.linkOverlapOutsideHelper
-    }
+    // get looh() {
+    //     return this.linkOverlapOutsideHelper
+    // }
     
     get isValidForcedLinkOut() {
         if (!this.forcedOutDirection) return false
@@ -43,6 +43,14 @@ class LinkDirectionsMap {
     get hasBothForcedDirections() {
         return !!this.forcedOutDirection && !!this.forcedInDirection
     }
+
+    get isBothForced() {
+        return this.hasBothForcedDirections && !this.isValidBothForcedLinks
+    }
+    get isOptimal() {
+        return this.hasNoForcedDirections || this.isValidForcedLinkOut || this.isValidForcedLinkIn
+    }
+
 
     // get hasCellsForcedOut() {
     //     const cellVerifierKey = `is${UtilsStrings.ucase(this.forcedOutDirection)}Cells`

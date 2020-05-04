@@ -6,9 +6,18 @@ class LinkDrawPathsBase {
     constructor(query) {
         for (const key in query)
             this[key] = query[key]
+    }
+    get svgDrawPath() {
+        if (!this.svgDrawPathService)
+            this.svgDrawPathService = new SvgDrawPath(this.lh)
 
-        this.svgDrawPath = new SvgDrawPath(this.lh)
-        this.svgDrawArrow = new SvgDrawArrow()
+        return this.svgDrawPathService
+    }
+    get svgDrawArrow() {
+        if (!this.svgDrawArrowService)
+            this.svgDrawArrowService = new SvgDrawArrow(this.lh)
+
+        return this.svgDrawArrowService
     }
 }
 

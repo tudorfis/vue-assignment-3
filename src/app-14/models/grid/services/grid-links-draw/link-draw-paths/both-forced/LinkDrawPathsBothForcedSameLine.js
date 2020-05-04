@@ -45,16 +45,8 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
         const isUpDown = LinkHelper.isUpOrDown(forcedOutDirection)
 
         let helperDirection1
-        const looh = linkDirectionsMap.looh
-
-        if (isLeftRight) {
-            helperDirection1 = !looh.isDownCells ? 'down' : ''
-            helperDirection1 = !helperDirection1 && !looh.isUpCells ? 'up' : 'down'
-        }
-        else if (isUpDown) {
-            helperDirection1 = !looh.isRightCells ? 'right' : ''
-            helperDirection1 = !helperDirection1 && !looh.isLeftCells ? 'left' : 'right'
-        }
+        if (isLeftRight) helperDirection1 = 'down'
+        else if (isUpDown) helperDirection1 = 'right'
 
         const helperDirection2 = LinkHelper.getOpositeDirection(helperDirection1)
 
@@ -72,27 +64,24 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
         if (lh2[`is${ucase(forcedInDirection)}`]) {
             path = svgDrawPath.drawPath(forcedOutDirection)
             path.svgD += svgDrawPath.drawHalf(helperDirection1)
-            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
+            path.svgD += svgDrawPath.drawLine(forcedOutDirection)
             path.svgD += svgDrawPath.drawHalf(helperDirection2)
-            path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+            arrow = svgDrawArrow.drawArrow(path, helperDirection3)
         }
         else if (forcedOutDirection === forcedInDirection) {
             path = svgDrawPath.drawPath(forcedOutDirection)
             path.svgD += svgDrawPath.drawHalf(helperDirection1)
-            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
-            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'cell')
+            path.svgD += svgDrawPath.drawLine(forcedOutDirection)
+            path.svgD += svgDrawPath.drawCell(forcedOutDirection)
             path.svgD += svgDrawPath.drawHalf(helperDirection2)
-            path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+            arrow = svgDrawArrow.drawArrow(path, helperDirection3)
         }
         else {
             path = svgDrawPath.drawPath(forcedOutDirection)
             path.svgD += svgDrawPath.drawHalf(forcedInDirection)
-            path.svgD += svgDrawPath.drawLine(forcedOutDirection, 'full')
+            path.svgD += svgDrawPath.drawLine(forcedOutDirection)
             path.svgD += svgDrawPath.drawHalf(forcedOutDirection)
-            path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+            arrow = svgDrawArrow.drawArrow(path, helperDirection3)
         }
 
         return [path, arrow]
@@ -105,30 +94,27 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
         if (lh2[`is${ucase(forcedInDirection)}`]) {
             path = svgDrawPath.drawPath(forcedOutDirection)
             path.svgD += svgDrawPath.drawHalf(helperDirection1)
-            path.svgD += svgDrawPath.drawLine(helperDirection4, 'full')
-            path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
+            path.svgD += svgDrawPath.drawLine(helperDirection4)
+            path.svgD += svgDrawPath.drawCell(helperDirection4)
             path.svgD += svgDrawPath.drawHalf(helperDirection2)
-            path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+            arrow = svgDrawArrow.drawArrow(path, helperDirection3)
         }
         else if (helperDirection4 === forcedInDirection) {
             path = svgDrawPath.drawPath(forcedOutDirection)
             path.svgD += svgDrawPath.drawHalf(helperDirection1)
-            path.svgD += svgDrawPath.drawLine(helperDirection4, 'full')
-            path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
-            path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
+            path.svgD += svgDrawPath.drawLine(helperDirection4)
+            path.svgD += svgDrawPath.drawCell(helperDirection4)
+            path.svgD += svgDrawPath.drawCell(helperDirection4)
             path.svgD += svgDrawPath.drawHalf(helperDirection2)
-            path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+            arrow = svgDrawArrow.drawArrow(path, helperDirection3)
         }
         else {
             path = svgDrawPath.drawPath(forcedOutDirection)
             path.svgD += svgDrawPath.drawHalf(forcedInDirection)
-            path.svgD += svgDrawPath.drawLine(helperDirection4, 'full')
-            path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
+            path.svgD += svgDrawPath.drawLine(helperDirection4)
+            path.svgD += svgDrawPath.drawCell(helperDirection4)
             path.svgD += svgDrawPath.drawHalf(helperDirection4)
-            path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+            arrow = svgDrawArrow.drawArrow(path, helperDirection3)
         }
 
 
@@ -141,37 +127,33 @@ class LinkDrawPathsBothForcedSameLine extends LinkDrawPathsBase {
 
         if (lh2[`is${ucase(forcedInDirection)}`]) {
             path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawLine(helperDirection3, 'full')
+            path.svgD += svgDrawPath.drawLine(helperDirection3)
             path.svgD += svgDrawPath.drawHalf(helperDirection3)
             path.svgD += svgDrawPath.drawHalf(helperDirection4)
-            path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+            arrow = svgDrawArrow.drawArrow(path, helperDirection3)
         }
         else if (helperDirection1 === forcedInDirection) {
             path = svgDrawPath.drawPath(forcedOutDirection)
-            path.svgD += svgDrawPath.drawLine(forcedInDirection, 'full')
-            path.svgD += svgDrawPath.drawLine(forcedInDirection, 'cell')
+            path.svgD += svgDrawPath.drawLine(forcedInDirection)
+            path.svgD += svgDrawPath.drawCell(forcedInDirection)
             path.svgD += svgDrawPath.drawHalf(forcedInDirection)
             path.svgD += svgDrawPath.drawHalf(helperDirection4)
-            path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-            arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+            arrow = svgDrawArrow.drawArrow(path, helperDirection3)
         }
         else {
             if (forcedInDirection === forcedOutDirection) {
                 path = svgDrawPath.drawPath(forcedOutDirection)
-                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
-                path.svgD += svgDrawPath.drawLine(helperDirection1, 'cell')
-                path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-                arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+                path.svgD += svgDrawPath.drawLine(helperDirection1)
+                path.svgD += svgDrawPath.drawCell(helperDirection1)
+                arrow = svgDrawArrow.drawArrow(path, helperDirection3)
             }
             else {
                 path = svgDrawPath.drawPath(forcedOutDirection)
-                path.svgD += svgDrawPath.drawLine(helperDirection1, 'full')
+                path.svgD += svgDrawPath.drawLine(helperDirection1)
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
-                path.svgD += svgDrawPath.drawLine(helperDirection4, 'cell')
+                path.svgD += svgDrawPath.drawCell(helperDirection4)
                 path.svgD += svgDrawPath.drawHalf(helperDirection1)
-                path.svgD += svgDrawPath.drawLine(helperDirection3, 'arrow')
-                arrow = svgDrawArrow.drawArrow(path.svgD, helperDirection3)
+                arrow = svgDrawArrow.drawArrow(path, helperDirection3)
             }
         }
 
