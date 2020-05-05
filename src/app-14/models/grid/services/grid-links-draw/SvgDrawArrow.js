@@ -9,11 +9,10 @@ class SvgDrawArrow extends SvgDrawBase {
         super(lh)
     }
     drawArrow(path, direction)  {
-        this.adjustArrowPath(path, direction)
         const difference_ee = linkEEMapHelper.createEEDifferenceForArrow(this.lh, direction)
 
-        if (!!difference_ee) 
-            this.adjustArrowPathWithDifferenceEE(path, difference_ee)
+        this.adjustArrowPath(path, direction, difference_ee)
+        this.addRemainingDistance(path, direction)
 
         const { svgLeft, svgTop } = SvgPathUtils.getM(path.svgD)
         const arrowDraw = this[`${direction}ArrowDraw`]
@@ -24,88 +23,69 @@ class SvgDrawArrow extends SvgDrawBase {
         }
     }
 
-    adjustArrowPath(path, direction) {
+    adjustArrowPath(path, direction, difference_ee) {
         const { svgLeft, svgTop } = this.getCurrentSvgLeftTop(path, direction)
-        const { svgArrowLeft, svgArrowTop } = this.getBestSvgArrowLeftTop(direction)        
-        
-        this.handleMisplacementOfSvgPath({ path, svgArrowLeft, svgArrowTop, svgLeft, svgTop })
-        this.handleRemainingDistance(path, direction)
+        const { svgCorrectLeft, svgCorrectTop } = this.getBestSvgArrowLeftTop(direction, difference_ee)
+
+        const svgPathMap = SvgPathUtils.getPathMap(path.svgD)
+
+        if (svgTop !== svgCorrectTop) {
+            const vDiff = Math.max(svgTop, svgCorrectTop) - Math.min(svgTop, svgCorrectTop)
+            const vItem = svgPathMap.slice(3).find(item => item.direction && item.direction === 'v')
+            
+            if (vItem) {
+                if (svgTop > svgCorrectTop) vItem.distance -= vDiff
+                else vItem.distance += vDiff
+            }
+        }
+
+        if (svgLeft !== svgCorrectLeft) {
+            const hDiff = Math.max(svgLeft, svgCorrectLeft) - Math.min(svgLeft, svgCorrectLeft)
+            const hItem = svgPathMap.slice(3).find(item => item.direction && item.direction === 'h')
+            
+            if (hItem) {
+                if (svgLeft > svgCorrectLeft) hItem.distance -= hDiff
+                else hItem.distance += hDiff
+            }
+        }
+
+        if (svgTop !== svgCorrectTop || svgLeft !== svgCorrectLeft)
+            path.svgD = SvgPathUtils.generateSvgD(svgPathMap)
     }
     getCurrentSvgLeftTop(path, direction) {
         const svgD = this.getSvgD(direction)
         return SvgPathUtils.getM(path.svgD + ` ${svgD}${this.cellelement_center_size}`)
     }
-    getBestSvgArrowLeftTop(direction) {
+    getBestSvgArrowLeftTop(direction, difference_ee) {
         const arrowDirection = LinkHelper.getOpositeDirection(direction)
         const { linkKey } = this.lh
 
         const tempLh = this.lh
         this.lh = new LinkHelper(linkKey, true)
 
-        let svgArrowLeft, svgArrowTop
+        let svgCorrectLeft, svgCorrectTop
         if (arrowDirection === 'up') {
-            svgArrowLeft = this.horizontal_M + this.cell_center_size
-            svgArrowTop =  this.vertical_M + this.cellelement_center_size
+            svgCorrectLeft = this.horizontal_M + this.cell_center_size - difference_ee
+            svgCorrectTop =  this.vertical_M + this.cellelement_center_size
         }
         else if (arrowDirection === 'down') {
-            svgArrowLeft = this.horizontal_M + this.cell_center_size
-            svgArrowTop =  this.vertical_M + (this.cell_size - this.cellelement_center_size)
+            svgCorrectLeft = this.horizontal_M + this.cell_center_size - difference_ee
+            svgCorrectTop =  this.vertical_M + (this.cell_size - this.cellelement_center_size)
         }
         else if (arrowDirection === 'left') {
-            svgArrowLeft = this.horizontal_M + this.cellelement_center_size
-            svgArrowTop =  this.vertical_M + this.cell_center_size
+            svgCorrectLeft = this.horizontal_M + this.cellelement_center_size
+            svgCorrectTop =  this.vertical_M + this.cell_center_size - difference_ee
         }
         else if (arrowDirection === 'right') {
-            svgArrowLeft = this.horizontal_M + (this.cell_size - this.cellelement_center_size)
-            svgArrowTop =  this.vertical_M + this.cell_center_size
+            svgCorrectLeft = this.horizontal_M + (this.cell_size - this.cellelement_center_size)
+            svgCorrectTop =  this.vertical_M + this.cell_center_size - difference_ee
         }
 
         this.lh = tempLh
-        return { svgArrowLeft, svgArrowTop }
+        return { svgCorrectLeft, svgCorrectTop }
     }
-    handleMisplacementOfSvgPath(query) {
-        const { path, svgArrowLeft, svgArrowTop, svgLeft, svgTop } = query
-        const hasMisplacement = svgLeft !== svgArrowLeft || svgTop !== svgArrowTop
 
-        if (hasMisplacement) {
-            const svgPathMap = SvgPathUtils.getPathMap(path.svgD)
-            const lastSvgPathMapItem = svgPathMap[svgPathMap.length - 1]
-            const hv = lastSvgPathMapItem.direction
-
-            if (svgTop !== svgArrowTop && hv === 'v') {
-                if (svgArrowTop > svgTop) lastSvgPathMapItem.distance += svgArrowTop - svgTop
-                else lastSvgPathMapItem.distance -= svgTop - svgArrowTop
-            }
-            if (svgLeft !== svgArrowLeft && hv === 'h') {
-                if (svgArrowLeft > svgLeft) lastSvgPathMapItem.distance += svgArrowLeft - svgLeft
-                else lastSvgPathMapItem.distance -= svgLeft - svgArrowLeft
-            }
-
-            this.handleMisplacementOfSvgPathComplex({ svgLeft, svgArrowLeft, hv, svgPathMap, svgTop, svgArrowTop })
-            path.svgD = SvgPathUtils.generateSvgD(svgPathMap)
-        }
-    }
-    handleMisplacementOfSvgPathComplex(query) {
-        const { svgLeft, svgArrowLeft, hv, svgPathMap, svgTop, svgArrowTop } = query
-        function handleDistanceRecalculation(svgCurrent, svgArrow, hv, hvCompare) {
-            if (svgCurrent !== svgArrow && hv === 'v') {
-                let prelastSvgPathMapItem, i = 2
-                while (svgPathMap[svgPathMap.length - i]) {
-                    prelastSvgPathMapItem = svgPathMap[svgPathMap.length - i]
-                    if (svgPathMap[svgPathMap.length - i].direction !== hvCompare) i++
-                    break
-                }
-    
-                if (!prelastSvgPathMapItem || !prelastSvgPathMapItem.distance) return
-    
-                if (svgArrow > svgCurrent) prelastSvgPathMapItem.distance += svgArrow - svgLeft
-                else prelastSvgPathMapItem.distance -= svgLeft - svgArrow
-            }
-        }
-        handleDistanceRecalculation(svgLeft, svgArrowLeft, 'v', 'h')
-        handleDistanceRecalculation(svgTop, svgArrowTop, 'h', 'v')
-    }
-    handleRemainingDistance(path, direction) {
+    addRemainingDistance(path, direction) {
         const { row1, col1 } = this.lh
         let adjustForGridEdges = 0
 
@@ -120,48 +100,6 @@ class SvgDrawArrow extends SvgDrawBase {
         const distance = this.cellelement_center_size - this.arrow_width + 3 + adjustForGridEdges
 
         path.svgD += ` ${svgD}${distance}`
-    }
-
-    adjustArrowPathWithDifferenceEE(path, difference_ee) {
-        let svgPathMap = SvgPathUtils.getPathMap(path.svgD)    
-            
-        const { totalDistance, itemsCounted, hvDirection } = this.getSvgPathMapTotalDistanceAndItemsCounted(svgPathMap)
-        this.handleNewSvgPathWithDifferenceEE({ path, svgPathMap, difference_ee, itemsCounted, totalDistance, hvDirection })
-    }
-    getSvgPathMapTotalDistanceAndItemsCounted(svgPathMap) {
-        const svgPathMapArr = svgPathMap.slice(2).reverse()
-        let hvDirection = svgPathMapArr[0].direction, 
-            totalDistance = 0,
-            itemsCounted = 0
-
-        for (const item of svgPathMapArr) {
-            if (hvDirection !== item.direction) break
-
-            totalDistance += item.distance
-            itemsCounted++
-        }
-
-        return { totalDistance, itemsCounted, hvDirection }
-    }
-    handleNewSvgPathWithDifferenceEE(query) {
-        const { path, difference_ee, itemsCounted, totalDistance, hvDirection } = query
-
-        let { svgPathMap } = query
-        svgPathMap = svgPathMap.slice(0, -itemsCounted)
-
-        if (svgPathMap.length === 2) return
-        
-        const lastSvgPathMapItem = svgPathMap[svgPathMap.length - 1]
-        if (!lastSvgPathMapItem) return
-        
-        lastSvgPathMapItem.distance -= difference_ee
-        
-        svgPathMap.push({
-            direction: hvDirection,
-            distance: totalDistance
-        })
-
-        path.svgD = SvgPathUtils.generateSvgD(svgPathMap)
     }
 
     get downArrowDraw() { 
