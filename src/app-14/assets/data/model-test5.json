@@ -1,87 +1,42 @@
 {
-    "numCols": 9,
-    "numRows": 8,
-    "totalSteps": 12,
+    "numCols": 7,
+    "numRows": 6,
+    "totalSteps": 4,
     "steps": {
-        "1-2": {
-            "is": 1,
-            "type": "SEND_SMS",
-            "id": 12
-        },
         "2-3": {
             "is": 1,
+            "type": "SEND_EMAIL",
+            "id": 54
+        },
+        "3-2": {
+            "is": 1,
+            "type": "SUBSCRIBE_LIST",
+            "id": 26
+        },
+        "3-4": {
+            "is": 1,
             "type": "ADD_REMOVE_TAG",
-            "id": 66
-        },
-        "2-4": {
-            "is": 1,
-            "type": "WAIT",
-            "id": 15
-        },
-        "3-1": {
-            "is": 1,
-            "type": "SEND_SMS",
-            "id": 12
-        },
-        "3-5": {
-            "is": 1,
-            "type": "SUBSCRIBE_SEQUENCE",
-            "id": 100
+            "id": 41
         },
         "4-3": {
             "is": 1,
-            "type": "ADD_REMOVE_TAG",
-            "id": 26
-        },
-        "6-2": {
-            "is": 1,
-            "type": "WAIT",
-            "id": 17
-        },
-        "6-3": {
-            "is": 1,
             "type": "SUBSCRIBE_SEQUENCE",
-            "id": 59
-        },
-        "6-4": {
-            "is": 1,
-            "type": "SUBSCRIBE_SEQUENCE",
-            "id": 46
-        },
-        "6-5": {
-            "is": 1,
-            "type": "AUTOMATION",
-            "id": 4
-        },
-        "6-6": {
-            "is": 1,
-            "type": "SEND_EMAIL",
-            "id": 22
-        },
-        "7-7": {
-            "is": 1,
-            "type": "ADD_REMOVE_TAG",
-            "id": 20
+            "id": 49
         }
     },
     "links": [
-        "6-3__4-3",
-        "4-3__2-3",
-        "6-4__4-3",
-        "4-3__3-5",
-        "4-3__2-4",
-        "4-3__1-2",
-        "4-3__7-7",
-        "4-3__6-6",
-        "6-5__4-3"
+        null,
+        null,
+        null,
+        "4-3__3-4",
+        "4-3__3-2",
+        null,
+        "2-3__3-2",
+        "2-3__3-4",
+        null,
+        "3-2__2-3",
+        "3-4__3-2",
+        "2-3__4-3"
     ],
-    "linkAttributes": {
-        "4-3__7-7": {
-            "outDirection": "left",
-            "inDirection": "right",
-            "name": "",
-            "color": "",
-            "style": ""
-        }
-    }
+    "linkAttributes": {}
 }

@@ -26,31 +26,48 @@ class SvgDrawArrow extends SvgDrawBase {
     adjustArrowPath(path, direction, difference_ee) {
         const { svgLeft, svgTop } = this.getCurrentSvgLeftTop(path, direction)
         const { svgCorrectLeft, svgCorrectTop } = this.getBestSvgArrowLeftTop(direction, difference_ee)
-
         const svgPathMap = SvgPathUtils.getPathMap(path.svgD)
-
-        if (svgTop !== svgCorrectTop) {
-            const vDiff = Math.max(svgTop, svgCorrectTop) - Math.min(svgTop, svgCorrectTop)
-            const vItem = svgPathMap.slice(3).find(item => item.direction && item.direction === 'v')
-            
-            if (vItem) {
-                if (svgTop > svgCorrectTop) vItem.distance -= vDiff
-                else vItem.distance += vDiff
-            }
+        
+        if (this.isStraightLine(svgPathMap) && this.isOverlapLine(direction)) {
+            if (svgTop !== svgCorrectTop) svgPathMap[1] = svgCorrectTop
+            else if (svgLeft !== svgCorrectLeft) svgPathMap[0] = svgCorrectLeft
         }
-
-        if (svgLeft !== svgCorrectLeft) {
-            const hDiff = Math.max(svgLeft, svgCorrectLeft) - Math.min(svgLeft, svgCorrectLeft)
-            const hItem = svgPathMap.slice(3).find(item => item.direction && item.direction === 'h')
-            
-            if (hItem) {
-                if (svgLeft > svgCorrectLeft) hItem.distance -= hDiff
-                else hItem.distance += hDiff
+        else {
+            if (svgTop !== svgCorrectTop) {
+                const vDiff = Math.max(svgTop, svgCorrectTop) - Math.min(svgTop, svgCorrectTop)
+                const vItem = svgPathMap.slice(3).find(item => item.direction && item.direction === 'v')
+                
+                if (vItem) {
+                    if (svgTop > svgCorrectTop) vItem.distance -= vDiff
+                    else vItem.distance += vDiff
+                }
+            }
+    
+            if (svgLeft !== svgCorrectLeft) {
+                const hDiff = Math.max(svgLeft, svgCorrectLeft) - Math.min(svgLeft, svgCorrectLeft)
+                const hItem = svgPathMap.slice(3).find(item => item.direction && item.direction === 'h')
+                
+                if (hItem) {
+                    if (svgLeft > svgCorrectLeft) hItem.distance -= hDiff
+                    else hItem.distance += hDiff
+                }
             }
         }
 
         if (svgTop !== svgCorrectTop || svgLeft !== svgCorrectLeft)
             path.svgD = SvgPathUtils.generateSvgD(svgPathMap)
+    }
+    isOverlapLine(direction) {
+        const eeMapOut = linkEEMapHelper.eeMap[this.lh.link1][direction].out[this.lh.link2]
+        const eeMapIn = linkEEMapHelper.eeMap[this.lh.link2][LinkHelper.getOpositeDirection(direction)].in[this.lh.link1]
+        
+        return eeMapIn > eeMapOut
+    }
+    isStraightLine(svgPathMap) {
+        const hItems = svgPathMap.filter(item => item.direction && item.direction === 'h') || []
+        const vItems = svgPathMap.filter(item => item.direction && item.direction === 'v') || []
+        
+        return (hItems.length && !vItems.length) || (vItems.length && !hItems.length)
     }
     getCurrentSvgLeftTop(path, direction) {
         const svgD = this.getSvgD(direction)
