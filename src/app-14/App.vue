@@ -41,6 +41,15 @@ export default {
     document.body.onresize = resizeService.resize
     
     /** @TODO - match an id of a sequence to get the output  */
+    if (localStorage.getItem('gridModel.model')) {
+        gridIOservice.loadGridModel(JSON.parse(localStorage.getItem('gridModel.model')))
+        this.hideLoadingIcon()
+
+        gridLinksService.buildLinks()
+        gridHistoryService.saveState()
+        return
+    }
+    
     let modelType = null
     const matchRef = globalThis.location.search.match(/model\=([\w\-]+)/)
     if (matchRef && matchRef[1]) modelType = matchRef[1]

@@ -16,6 +16,7 @@
 <script>
 import { globalConfig as gc } from '../../../../config/global.config';
 import { gridToolService } from '../../services/gridTool.service'
+import { DimensionsConfigEnum } from '../../../../config/dimensions/DimensionsConfigEnum';
 
 export default {
   props: ['position'],
@@ -28,14 +29,23 @@ export default {
     }
   },
   computed: {
+    mathMedium() {
+      return (gc.gridCellElementWidth + gc.gridCellElementHeight) / 2
+    },
     generalIconStyle() {
-      const fontSize = Math.floor(gc.gridCellElementWidth / 5)
+      let fontSize
+      if (gc.dimensionType === DimensionsConfigEnum.SQUARE) {
+        fontSize = Math.floor(this.mathMedium / 5)
+      }
+      else if (gc.dimensionType === DimensionsConfigEnum.RECTANGULAR) {
+        fontSize = Math.floor(this.mathMedium / 6)
+      }
       return {
         'font-size': `${fontSize}px`
       }
     },
     deleteIconStyle() {
-      const left =  Math.floor(gc.gridCellElementWidth / 14)
+      const left =  Math.floor(this.mathMedium / 14)
       const top = left + Math.floor(left / 2)
 
       return {
@@ -44,8 +54,15 @@ export default {
       }
     },
     editIconStyle() {
-      const left =  gc.gridCellElementWidth - Math.floor(gc.gridCellElementWidth / 7)
-      const top = Math.floor(gc.gridCellElementHeight / 11)
+      let left, top
+      if (gc.dimensionType === DimensionsConfigEnum.SQUARE) {
+        left =  gc.gridCellElementWidth - Math.floor(gc.gridCellElementWidth / 7)
+        top = Math.floor(gc.gridCellElementHeight / 11)
+      }
+      else if (gc.dimensionType === DimensionsConfigEnum.RECTANGULAR) {
+        left = gc.gridCellElementWidth - 15
+        top = Math.floor(gc.gridCellElementHeight / 11) + 5
+      }
 
       return {
         'top': `-${top}px`,

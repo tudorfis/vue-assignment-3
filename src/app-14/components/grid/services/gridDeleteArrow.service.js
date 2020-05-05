@@ -5,6 +5,7 @@ import { gridLinksService } from "../../../models/grid/services/gridLinks.servic
 import { toolboxDragService } from "../../toolbox/services/toolboxDrag.service"
 import { gridArrowConnectorService } from "./gridArrowConnector.service"
 import { gridPanService } from "./gridPan.service"
+import { DimensionsConfigEnum } from "../../../config/dimensions/DimensionsConfigEnum"
 
 export const gridDeleteArrowService = {
     svgEl: null,
@@ -17,7 +18,7 @@ export const gridDeleteArrowService = {
     i: 0,
     top: 0,
     left: 0,
-
+    
     findSvgPath(event) {
         if (!this.selectorId)
             throw new Error('Please specificy a selectorId for gridDeleteArrow service before initializing')
@@ -64,7 +65,13 @@ export const gridDeleteArrowService = {
         return null
     },
     build(el, event) {
-        const adjust = Math.floor(gc.gridCellElementWidth / 4)
+        let adjust
+        if (gc.dimensionType === DimensionsConfigEnum.SQUARE) {
+            adjust = Math.floor(this.mathMedium / 4)
+        }
+        else if (gc.dimensionType === DimensionsConfigEnum.RECTANGULAR) {
+            adjust = Math.floor(this.mathMedium / 5.5)
+        }
 
         Object.assign(this.arrowDeleteEl.style, {
             display: `block`,
@@ -121,5 +128,9 @@ export const gridDeleteArrowService = {
     resetLeftTop() {
         this.left = 0
         this.top = 0
+    },
+
+    get mathMedium() {
+        return (gc.gridCellElementWidth + gc.gridCellElementHeight) / 2
     }
 }

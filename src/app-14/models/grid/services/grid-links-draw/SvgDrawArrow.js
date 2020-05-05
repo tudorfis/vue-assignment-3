@@ -27,7 +27,7 @@ class SvgDrawArrow extends SvgDrawBase {
         const { svgLeft, svgTop } = this.getCurrentSvgLeftTop(path, direction)
         const { svgCorrectLeft, svgCorrectTop } = this.getBestSvgArrowLeftTop(direction, difference_ee)
         const svgPathMap = SvgPathUtils.getPathMap(path.svgD)
-        
+
         if (this.isStraightLine(svgPathMap) && this.isOverlapLine(direction)) {
             if (svgTop !== svgCorrectTop) svgPathMap[1] = svgCorrectTop
             else if (svgLeft !== svgCorrectLeft) svgPathMap[0] = svgCorrectLeft
@@ -71,7 +71,9 @@ class SvgDrawArrow extends SvgDrawBase {
     }
     getCurrentSvgLeftTop(path, direction) {
         const svgD = this.getSvgD(direction)
-        return SvgPathUtils.getM(path.svgD + ` ${svgD}${this.cellelement_center_size}`)
+        const { cellelement_center_size } = this.getCellsSizes(direction)
+
+        return SvgPathUtils.getM(path.svgD + ` ${svgD}${cellelement_center_size}`)
     }
     getBestSvgArrowLeftTop(direction, difference_ee) {
         const arrowDirection = LinkHelper.getOpositeDirection(direction)
@@ -81,22 +83,41 @@ class SvgDrawArrow extends SvgDrawBase {
         this.lh = new LinkHelper(linkKey, true)
 
         let svgCorrectLeft, svgCorrectTop
+
         if (arrowDirection === 'up') {
-            svgCorrectLeft = this.horizontal_M + this.cell_center_size - difference_ee
-            svgCorrectTop =  this.vertical_M + this.cellelement_center_size
+            svgCorrectLeft = this.horizontal_M + this.cell_center_size_width - difference_ee
+            svgCorrectTop =  this.vertical_M + this.cellelement_center_size_height
         }
         else if (arrowDirection === 'down') {
-            svgCorrectLeft = this.horizontal_M + this.cell_center_size - difference_ee
-            svgCorrectTop =  this.vertical_M + (this.cell_size - this.cellelement_center_size)
+            svgCorrectLeft = this.horizontal_M + this.cell_center_size_width - difference_ee
+            svgCorrectTop =  this.vertical_M + (this.cell_size_height - this.cellelement_center_size_height)
         }
         else if (arrowDirection === 'left') {
-            svgCorrectLeft = this.horizontal_M + this.cellelement_center_size
-            svgCorrectTop =  this.vertical_M + this.cell_center_size - difference_ee
+            svgCorrectLeft = this.horizontal_M + this.cellelement_center_size_width
+            svgCorrectTop =  this.vertical_M + this.cell_center_size_height - difference_ee
         }
         else if (arrowDirection === 'right') {
-            svgCorrectLeft = this.horizontal_M + (this.cell_size - this.cellelement_center_size)
-            svgCorrectTop =  this.vertical_M + this.cell_center_size - difference_ee
+            svgCorrectLeft = this.horizontal_M + (this.cell_size_width - this.cellelement_center_size_width)
+            svgCorrectTop =  this.vertical_M + this.cell_center_size_height - difference_ee
         }
+
+        // if (arrowDirection === 'up') {
+        //     svgCorrectLeft = this.horizontal_M + this.cell_center_size - difference_ee
+        //     svgCorrectTop =  this.vertical_M + this.cellelement_center_size
+        // }
+        // else if (arrowDirection === 'down') {
+        //     svgCorrectLeft = this.horizontal_M + this.cell_center_size - difference_ee
+        //     svgCorrectTop =  this.vertical_M + (this.cell_size - this.cellelement_center_size)
+        // }
+        // else if (arrowDirection === 'left') {
+        //     svgCorrectLeft = this.horizontal_M + this.cellelement_center_size
+        //     svgCorrectTop =  this.vertical_M + this.cell_center_size - difference_ee
+        // }
+        // else if (arrowDirection === 'right') {
+        //     svgCorrectLeft = this.horizontal_M + (this.cell_size - this.cellelement_center_size)
+        //     svgCorrectTop =  this.vertical_M + this.cell_center_size - difference_ee
+        // }
+
 
         this.lh = tempLh
         return { svgCorrectLeft, svgCorrectTop }
@@ -114,7 +135,8 @@ class SvgDrawArrow extends SvgDrawBase {
         }
 
         const svgD = this.getSvgD(direction)
-        const distance = this.cellelement_center_size - this.arrow_width + 3 + adjustForGridEdges
+        const { cellelement_center_size } = this.getCellsSizes(direction)
+        const distance = cellelement_center_size - this.arrow_width + 3 + adjustForGridEdges
 
         path.svgD += ` ${svgD}${distance}`
     }

@@ -1,13 +1,16 @@
 
-import { globalConfig as gc } from "../../../config/global.config"
+import { globalConfig } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
 
 const gridSvgService = {
     svgStyle: null,
     svgViewBox: '0 0 0 0',
     calculateSvg() {
-        const width = gc.gridCellWidth * gridModel.model.numCols
-        const height = gc.gridCellWidth * gridModel.model.numRows
+        const { numCols, numRows } = gridModel.model
+        const { gridCellWidth, gridCellHeight } = globalConfig
+
+        const width = gridCellWidth * numCols
+        const height = gridCellHeight * numRows
             
         this.svgStyle = { width, height }
         this.svgViewBox = `0 0 ${width} ${height}`

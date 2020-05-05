@@ -1,5 +1,13 @@
 
+import { DimensionsConfigEnum } from './dimensions/DimensionsConfigEnum'
+import { squareDimensionsConfig } from './dimensions/squareDimensions.config'
+import { rectangularDimensionsConfig } from './dimensions/rectangularDimensions.config'
+
+const DIMENSION_TYPE_DEFAULT = DimensionsConfigEnum.SQUARE
+
 const globalConfig = {
+    dimensionType: localStorage.getItem('dimensionType') || DIMENSION_TYPE_DEFAULT,
+
     minGridCols: 0,
     minGridRows: 0,
 
@@ -7,12 +15,6 @@ const globalConfig = {
     zoomDiff: 25,
     zoomMax: 150,
     zoomMin: 50,
-
-    gridCellWidth: 180,
-    gridCellHeight: 180,
-
-    gridCellElementWidth: 105,
-    gridCellElementHeight: 105,
 
     droppointDimension: 30,
     
@@ -43,6 +45,16 @@ const globalConfig = {
         '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
         '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'
     ]
+}
+
+switch (globalConfig.dimensionType) {
+    case DimensionsConfigEnum.SQUARE:
+        Object.assign(globalConfig, squareDimensionsConfig)
+        break;
+
+    case DimensionsConfigEnum.RECTANGULAR:
+        Object.assign(globalConfig, rectangularDimensionsConfig)
+        break;
 }
 
 globalThis.globalConfig = globalConfig

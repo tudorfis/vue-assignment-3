@@ -1,8 +1,10 @@
 <template>
   <div 
     class="toolbox"
+
     @mouseover="grs.resetGridView()"
     :style="toolboxStyle"
+    :class="toolboxClass"
   >
     <krt-send-email class="tool"></krt-send-email>
     <krt-send-sms class="tool"></krt-send-sms>
@@ -49,6 +51,7 @@ import WaitVue from './components/Wait.vue'
 import WaitModalVue from './modals/WaitModal.vue'
 import CompleteVue from './components/Complete.vue'
 import { globalResetsService } from '../../services/globalResets.service'
+import { DimensionsConfigEnum } from '../../config/dimensions/DimensionsConfigEnum'
 export default {
   components: {
     krtSendEmail: SendEmailVue,
@@ -79,6 +82,12 @@ export default {
         top: `${gc.topmenuHeight}px`,
         height: `calc(100% - ${gc.topmenuHeight}px)`
       }
+    },
+    toolboxClass() {
+        return {
+            [`square`]: globalConfig.dimensionType === DimensionsConfigEnum.SQUARE,
+            [`rectangular`]: globalConfig.dimensionType === DimensionsConfigEnum.RECTANGULAR
+        }
     }
   },
   data() {
@@ -99,10 +108,7 @@ export default {
     box-shadow: 2px 0px 5px #1e7baf;
     
     .tool {
-      width: 120px;
-      height: 120px;
       margin: 20px auto;
-      padding: 30px 15px;
       border: 0;
       border-radius: 5px;
       box-shadow: 3px 3px 12px #555;

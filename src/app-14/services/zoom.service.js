@@ -1,8 +1,9 @@
 import { gridSvgService } from "../components/grid/services/gridSvg.service"
-import { globalConfig } from "../config/global.config"
+import { globalConfig as gc } from "../config/global.config"
 import { gridLinksService } from "../models/grid/services/gridLinks.service"
 import { gridReduceService } from "../models/grid/services/gridReduce.service"
 import { globalResetsService } from "./globalResets.service"
+import { ZoomDimensionAdjust } from "./zoom-dimensions/ZoomDimensionAdjust"
 
 export const zoomService = {
     disableZoomIn() {
@@ -17,15 +18,9 @@ export const zoomService = {
         if (this.disableZoomIn()) return
         globalResetsService.reset
 
-        const gc = globalConfig
         gc.zoomLevel += gc.zoomDiff
-
-        gc.gridCellWidth += 60
-        gc.gridCellHeight += 60
-
-        gc.gridCellElementWidth += 35
-        gc.gridCellElementHeight += 35
-        
+        this.zoomDimensionAdjust.zoomIn(gc)
+       
         gc.arrowLineWidth += 2
         gc.droppointDimension += 10
 
@@ -43,14 +38,8 @@ export const zoomService = {
         if (this.disableZoomOut()) return
         globalResetsService.reset
 
-        const gc = globalConfig
         gc.zoomLevel -= gc.zoomDiff
-
-        gc.gridCellWidth -= 60
-        gc.gridCellHeight -= 60
-
-        gc.gridCellElementWidth -= 35
-        gc.gridCellElementHeight -= 35
+        this.zoomDimensionAdjust.zoomOut(gc)
         
         gc.arrowLineWidth -= 2
         gc.droppointDimension -= 10
@@ -64,5 +53,12 @@ export const zoomService = {
         
         gridSvgService.calculateSvg()
         gridLinksService.buildLinks()
+    },
+
+    get zoomDimensionAdjust() {
+        if (!this.zoomDimensionAdjuster)
+            this.zoomDimensionAdjuster = new ZoomDimensionAdjust(gc.dimensionType)
+
+        return this.zoomDimensionAdjuster
     }
 }

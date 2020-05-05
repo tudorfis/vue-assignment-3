@@ -6,6 +6,7 @@ import { gridLinksService } from "../../../models/grid/services/gridLinks.servic
 import { VueUtils } from "../../../utils/vue.utils"
 import { gridPanService } from "./gridPan.service"
 import { linkPathDragHelper } from "../../../models/grid/helpers/linkPathDrag.helper"
+import { DimensionsConfigEnum } from "../../../config/dimensions/DimensionsConfigEnum"
 
 export const gridArrowConnectorService = {
     selectorId: '',
@@ -39,6 +40,9 @@ export const gridArrowConnectorService = {
 
         return document.querySelector(`#${this.selectorId}`)
     },
+    get mathMedium() {
+        return (gc.gridCellElementWidth + gc.gridCellElementHeight) / 2
+    },
     startDrag() {
         this.linkKey = ''
         this.recentLink = false
@@ -57,12 +61,20 @@ export const gridArrowConnectorService = {
         this.setArrowConnectorStyles()    
     },
     setArrowConnectorStyles() {
-        const adjust = Math.floor(gc.gridCellElementWidth / 2)
+        const adjust = Math.floor(this.mathMedium / 2)
         const rect = this.gridcell.getBoundingClientRect()
 
-        const top = rect.top + rect.height - adjust - 3
-        const left = rect.left + rect.width - adjust + 3
-        const fontSize = Math.floor(gc.gridCellElementWidth / 4)
+        let top, left, fontSize
+        if (gc.dimensionType === DimensionsConfigEnum.SQUARE) {
+            top = rect.top + rect.height - adjust - 3
+            left = rect.left + rect.width - adjust + 3
+            fontSize = Math.floor(this.mathMedium / 4)
+        }
+        else if (gc.dimensionType === DimensionsConfigEnum.RECTANGULAR) {
+            top = rect.top + gc.gridCellElementHeight + 5
+            left = rect.left + gc.gridCellElementWidth + 15
+            fontSize = Math.floor(this.mathMedium / 5)
+        }
 
         Object.assign(this.arrowConnectorEl.style, {
             display: `block`,

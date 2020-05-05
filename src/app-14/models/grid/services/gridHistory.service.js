@@ -1,5 +1,6 @@
 import { gridIOservice } from "./gridIO.service"
 import { gridLinksService } from "./gridLinks.service"
+import { Utils } from "../../../utils/utils"
 
 const gridHistoryService = {
     modelHistory: [],
@@ -11,7 +12,6 @@ const gridHistoryService = {
     },
     undoModelState() {
         this.undoRedoState(true, false)
-        
     },
     redoModelState() {
         this.undoRedoState(false, true)
@@ -30,6 +30,9 @@ const gridHistoryService = {
     },
     log() {
         console.log(this.modelHistory[this.modelVersion])
+    },
+    getLatestState() {
+        return Utils.deepclone(this.modelHistory[this.modelVersion])
     }
 }
 

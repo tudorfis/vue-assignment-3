@@ -52,6 +52,7 @@ import { gridLinksService } from '../../models/grid/services/gridLinks.service';
 import { globalResetsService } from '../../services/globalResets.service';
 import { GridPositionIterator } from '../../models/grid/iterators/GridPositionIterator';
 import { gridReduceService } from '../../models/grid/services/gridReduce.service';
+import { DimensionsConfigEnum } from '../../config/dimensions/DimensionsConfigEnum';
 
 export default {
   props: ['toolboxWidth', 'topmenuHeight'],
@@ -81,9 +82,6 @@ export default {
       gridDeleteArrowService.svgEl = document.querySelector('#svgGrid')
       gridDeleteArrowService.gridlayoutEl = document.querySelector('.gridlayout')
       gridPanService.init(this.$refs.gridcontent)
-
-      
-      
   },
   computed: {
     gridPositions() {
@@ -104,7 +102,9 @@ export default {
     },
     gridLayoutClass() {
         return {
-            [`zoom-${gc.zoomLevel}`]: true
+            [`zoom-${gc.zoomLevel}`]: true,
+            [`square`]: gc.dimensionType === DimensionsConfigEnum.SQUARE,
+            [`rectangular`]: gc.dimensionType === DimensionsConfigEnum.RECTANGULAR
         }
     },
     gridLayoutStyle() {
@@ -119,7 +119,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./styles/zoom.scss";
+@import "./styles/square.dimensions.scss";
+@import "./styles/rectangular.dimensions.scss";
 
 .gridcontent {
   overflow: auto;
