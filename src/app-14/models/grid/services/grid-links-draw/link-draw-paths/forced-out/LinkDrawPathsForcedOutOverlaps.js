@@ -1,7 +1,6 @@
 
 import { LinkDrawPathsBase } from "../LinkDrawPathsBase";
 import { LinkHelper } from "../../../../helpers/link.helper"
-import linkEEMapHelper from "../../../../helpers/link-ee/linkEEMap.helper"
 
 class LinkDrawPathsForcedOutOverlaps extends LinkDrawPathsBase {
     constructor(query) {

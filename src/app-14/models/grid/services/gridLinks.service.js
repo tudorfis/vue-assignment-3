@@ -1,14 +1,15 @@
-import Vue from 'vue'
-import { globalConfig } from '../../../config/global.config'
+import Vue from "vue"
+import { globalConfig } from "../../../config/global.config"
 import { gridModel } from "../grid.model"
-import { LinkHelper } from '../helpers/link.helper'
-import linkEEMapHelper from '../helpers/link-ee/linkEEMap.helper'
-import { linkPathMapHelper } from '../helpers/linkPathMap.helper'
-import { LinkKeyIterator } from '../iterators/LinkKeyIterator'
-import { gridLinksDrawService } from './gridLinksDraw.service'
-import { Utils } from '../../../utils/utils'
+import { LinkHelper } from "../helpers/link.helper"
+import linkEEMapHelper from "../helpers/linkEEMap.helper"
+import { linkPathMapHelper } from "../helpers/linkPathMap.helper"
+import { LinkKeyIterator } from "../iterators/LinkKeyIterator"
+import { gridLinksDrawService } from "./gridLinksDraw.service"
+import { Utils } from "../../../utils/utils"
+import { linkPathDragHelper } from "../helpers/linkPathDrag.helper"
 
-export const gridLinksService = {
+const gridLinksService = {
     svgPaths: {},
     colors: [],
     colorIds: [],
@@ -18,10 +19,7 @@ export const gridLinksService = {
         this.colors = []
         this.colorIds = []
 
-        this.sortLinkKeys()
-
-        linkEEMapHelper.generateEEmap()
-        linkDirectionsHelper.buildLinkDirectionsMap()
+        linkEEMapHelper.resetEEMap()
 
         const links = gridModel.model.links
         const lki = new LinkKeyIterator(links)
@@ -31,31 +29,11 @@ export const gridLinksService = {
 
         linkPathMapHelper.generatePathMap()
     },
-    sortLinkKeys() {
-        const sortedLinks = []
-        gridModel.model.links.forEach(linkKey => {
-            if (linkKey !== null) {
-                const lh = new LinkHelper(linkKey)
-    
-                if (lh.isSameRowCol) {
-                    sortedLinks.unshift(linkKey)
-                } else {
-                    sortedLinks.push(linkKey)
-                }
-            }
-        })
-
-        gridModel.model.links = sortedLinks
-    },
     generateSvgPath(linkKey = '', isDrag = false) {
         Vue.set(this.svgPaths, linkKey, [])
         const lh = new LinkHelper(linkKey)
 
-        linkEEMapHelper.restoreEEMapState()
-        if (isDrag) {
-            linkEEMapHelper.saveEEMapState(lh)
-            linkDirectionsHelper.generateLinkDirectionsMap(lh)
-        }
+        linkPathDragHelper.handleLinkDraw(lh, isDrag)
         
         const pathArrow = gridLinksDrawService.createPathAndArrow(lh)
         const color = this.getPathColor(lh, isDrag)
@@ -134,3 +112,6 @@ export const gridLinksService = {
         }
     }
 }
+
+globalThis.gridLinksService = gridLinksService
+export { gridLinksService }

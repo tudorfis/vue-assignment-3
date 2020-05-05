@@ -1,7 +1,6 @@
 import { LinkDrawPathsBase } from "../LinkDrawPathsBase";
 import { LinkHelper} from "../../../../helpers/link.helper"
 import { UtilsStrings } from "../../../../../../utils/utilsStrings"
-import linkEEMapHelper from "../../../../helpers/link-ee/linkEEMap.helper"
 
 class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
     constructor(query) {

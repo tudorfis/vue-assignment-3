@@ -5,6 +5,7 @@ import { gridHistoryService } from "../../../models/grid/services/gridHistory.se
 import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
 import { VueUtils } from "../../../utils/vue.utils"
 import { gridPanService } from "./gridPan.service"
+import { linkPathDragHelper } from "../../../models/grid/helpers/linkPathDrag.helper"
 
 export const gridArrowConnectorService = {
     selectorId: '',
@@ -76,7 +77,19 @@ export const gridArrowConnectorService = {
         if (this.startedDrag && this.hasCell && !this.sameCell) {
             this.isHighlight = true
             this.gridcell.style.boxShadow = '5px 5px 50px #efefef'
+
+            if (this.isCurrentLinkKeyNotSet)        
+                linkPathDragHelper.handleFoundPotentialConnection()
         }
+    },
+    get isCurrentLinkKeyNotSet() {
+        if (this.startedPosition && this.currentPosition && this.startedPosition !== this.currentPosition) {
+            const linkKey = LinkHelper.getLinkKey(this.startedPosition, this.currentPosition)    
+
+            return !gridModel.model.links.includes(linkKey)
+        }
+
+        return false
     },
     destroy() {
         this.removeTempPaths()
@@ -93,16 +106,14 @@ export const gridArrowConnectorService = {
             this.linkKey = ''
         }
     },
-    dehighlightCell(hideGridCell) {
+    dehighlightCell() {
         if (!this.gridcell) return
         
-        if (hideGridCell && this.gridcell) {
-            this.isHighlight = false
-            this.gridcell.style.boxShadow = 'none'
-        } else {
-            this.isHighlight = false
-            this.gridcell.style.boxShadow = 'none'
-        }
+        this.isHighlight = false
+        this.gridcell.style.boxShadow = 'none'
+        
+        if (!this.recentLink)
+            linkPathDragHelper.handleNoPotentialConnection()
     },
     hideArrowConnector() {
         this.arrowConnectorEl.style.display = `none`
@@ -121,6 +132,7 @@ export const gridArrowConnectorService = {
                 gridModel.model.links.push(this.linkKey)
 
             gridHistoryService.saveState()
+            linkPathDragHelper.handleLinkConnected()
         }
         else  {
             this.startedDrag = false
@@ -128,7 +140,7 @@ export const gridArrowConnectorService = {
             this.hideArrowConnector()
         }
 
-        this.dehighlightCell(true)
+        this.dehighlightCell()
         gridLinksService.buildLinks()
     },
     drawPath() {
@@ -139,12 +151,17 @@ export const gridArrowConnectorService = {
         
         if (start === end) return
         
-        const linkKey = LinkHelper.getLinkKey(start,end)
-        
+        const linkKey = LinkHelper.getLinkKey(start, end)
         if (this.linkKey === linkKey) return
-        this.linkKey = linkKey
-        
-        gridLinksService.generateSvgPath(linkKey, true)
+
+        if (gridModel.model.links.includes(linkKey)) {
+            this.isHighlight = false
+            this.gridcell.style.boxShadow = 'none'
+        }
+        else {
+            this.linkKey = linkKey
+            gridLinksService.generateSvgPath(this.linkKey, true)
+        }
     },
     doGridcellOperations(position) {
         this.currentPosition = position

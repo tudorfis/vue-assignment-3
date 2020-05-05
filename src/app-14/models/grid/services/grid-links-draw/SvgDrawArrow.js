@@ -1,6 +1,6 @@
 import { globalConfig } from '../../../../config/global.config'
 import { SvgPathUtils } from '../../../../utils/svgPath.utils'
-import linkEEMapHelper from '../../helpers/link-ee/linkEEMap.helper'
+import linkEEMapHelper from '../../helpers/linkEEMap.helper'
 import { LinkHelper } from '../../helpers/link.helper'
 import { SvgDrawBase } from './SvgDrawBase'
 
@@ -10,8 +10,8 @@ class SvgDrawArrow extends SvgDrawBase {
     }
     drawArrow(path, direction)  {
         const difference_ee = linkEEMapHelper.createEEDifferenceForArrow(this.lh, direction)
-
         this.adjustArrowPath(path, direction, difference_ee)
+        
         this.addRemainingDistance(path, direction)
 
         const { svgLeft, svgTop } = SvgPathUtils.getM(path.svgD)

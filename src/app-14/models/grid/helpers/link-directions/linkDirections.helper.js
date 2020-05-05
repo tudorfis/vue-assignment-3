@@ -1,27 +1,19 @@
 import { gridModel } from '../../grid.model'
-import linkEEMapHelper from '../link-ee/linkEEMap.helper'
+import linkEEMapHelper from '../linkEEMap.helper'
 import { LinkHelper } from '../link.helper'
 import { LinkCellCornerVerifier } from './cell-verifiers/LinkCellCornerVerifier'
 import { LinkCellInVerifier } from './cell-verifiers/LinkCellInVerifier'
 import { LinkCellOutVerifier } from './cell-verifiers/LinkCellOutVerifier'
 import { LinkDirectionsMap } from './LinkDirectionsMap'
 import { LinkOverlapHelper } from './LinkOverlapHelper'
-import { LinkKeyIterator } from '../../iterators/LinkKeyIterator'
 
 let linkDirectionsMap = {}
 
 const linkDirectionsHelper = {
-    buildLinkDirectionsMap() {
-        this.linkDirectionsMap = {}
+    getLinkDirectionsMap(lh) {
+        this.generateLinkDirectionsMap(lh)
 
-        const links = gridModel.model.links
-        const lki = new LinkKeyIterator(links)
-
-        while (lki.continue) {
-            const lh = new LinkHelper(lki.linkKey)
-            linkDirectionsHelper.generateLinkDirectionsMap(lh)
-        }
-
+        return linkDirectionsMap[lh.linkKey]
     },
     generateLinkDirectionsMap(lh) {
         const pdir1 = lh.potentialDirections
@@ -47,23 +39,6 @@ const linkDirectionsHelper = {
             ...forcedDirectionsObj
         })
     },
-    setLinkDirectionsMap(lh, query) {
-        linkDirectionsMap[lh.linkKey] = new LinkDirectionsMap(query) 
-    },
-    getLinkDirectionsMap(lh) {
-        return linkDirectionsMap[lh.linkKey]
-    },
-    getLinkDirections(lh) {
-        const { link1Direction, link2Direction } = linkDirectionsMap[lh.linkKey]
-        return [ link1Direction, link2Direction ]
-    },
-    getForcedLinkDirections(lh) {
-        const { forcedOutDirection, forcedInDirection } = linkDirectionsMap[lh.linkKey]
-        return [ forcedOutDirection, forcedInDirection ]
-    },
-    getLinkDirectionsOverlapHelper(lh) {
-        return linkDirectionsMap[lh.linkKey].linkOverlapHelper
-    },
     createForcedDirections(lh) {
         const forcedDirectionsObj = {}
         const linkAttributes = gridModel.model.linkAttributes[lh.linkKey]
@@ -84,11 +59,11 @@ const linkDirectionsHelper = {
     createLinkOverlapHelper(lh) {
         const lh2 = new LinkHelper(lh.linkKey, true)
         
+        linkEEMapHelper.createEEMapItemIfItDoesntExist(lh.link1)
         const eeMap1 = linkEEMapHelper.eeMap[lh.link1]
 
         const pdir1 = lh.potentialDirections
         const pdir2 = lh2.potentialDirections
-
 
         let isEE2 = false
 
@@ -106,6 +81,9 @@ const linkDirectionsHelper = {
             isIn2: LinkCellInVerifier.hasCellsIn(lh, LinkHelper.getOpositeDirection(pdir2[1])),
             isEE2
         })
+    },
+    setLinkDirectionsMap(lh, query) {
+        linkDirectionsMap[lh.linkKey] = new LinkDirectionsMap(query) 
     }
 }
 

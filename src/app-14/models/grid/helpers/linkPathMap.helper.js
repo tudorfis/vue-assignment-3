@@ -1,7 +1,7 @@
 import { gridModel } from "../grid.model"
 import { Utils } from "../../../utils/utils"
 import { globalConfig } from "../../../config/global.config"
-import linkEEMapHelper from "../helpers/link-ee/linkEEMap.helper"
+import linkEEMapHelper from "../helpers/linkEEMap.helper"
 
 const linkPathMapHelper = {
     pathMap: {},

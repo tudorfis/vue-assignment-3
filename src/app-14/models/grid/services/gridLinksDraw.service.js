@@ -43,7 +43,9 @@ const gridLinksDrawService = {
         return linkDrawPathsStraights.drawSameRowOrColButStraightLine()
     },
     drawLinkPathOverlaps(lh) {
-        const loh = linkDirectionsHelper.getLinkDirectionsOverlapHelper(lh)
+        const linkDirectionsMap = linkDirectionsHelper.getLinkDirectionsMap(lh)
+        const loh = linkDirectionsMap.linkOverlapHelper
+        
         const linkDrawPathsOverlaps = new LinkDrawPathsOverlaps({ lh, loh })
 
         if (loh.D1 || loh.D2)
@@ -89,17 +91,14 @@ const gridLinksDrawService = {
             return linkDrawPathsForcedInSameLine.drawSameRowCol()
         
         else {
-            if (ldm.isForcedInOppositeOfPdir0(lh2)) {
+            if (ldm.isForcedInOppositeOfPdir0(lh2))
                 return linkDrawPathsForcedInOverlaps.drawOppositeOfPdir0()
-            }
 
-            else if (ldm.isForcedInOppositeOfPdir1(lh2)) {
+            else if (ldm.isForcedInOppositeOfPdir1(lh2))
                 return linkDrawPathsForcedInOverlaps.drawOppositeOfPdir1()
-            }
-
-            else {
+            
+            else
                 return linkDrawPathsForcedInOverlaps.drawLastRemainingOfPdir(ldm)
-            }
         }
     },
     drawLinkPathBothForcedDirections(lh, lh2, ldm) {

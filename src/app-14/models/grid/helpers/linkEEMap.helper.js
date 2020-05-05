@@ -1,10 +1,7 @@
 
-import { gridArrowConnectorService } from '../../../../components/grid/services/gridArrowConnector.service'
-import { Utils } from '../../../../utils/utils'
-import { gridModel } from '../../grid.model'
-import { LinkKeyIterator } from '../../iterators/LinkKeyIterator'
-import { LinkHelper } from '../link.helper'
-import { globalConfig } from '../../../../config/global.config'
+import { globalConfig } from "../../../config/global.config"
+import { Utils } from "../../../utils/utils"
+import { LinkHelper } from "./link.helper"
 
 class LinkEntryExitPointsMapHelper {
     get eeMap() {
@@ -14,7 +11,7 @@ class LinkEntryExitPointsMapHelper {
         this.entryExitPointsMap = entryExitPointsMap
     }
     constructor() {
-        this.eeMap = {}
+        this.resetEEMap()    
 
         const eeMapItemDirectionBlueprint = { 
             out: {},
@@ -29,47 +26,30 @@ class LinkEntryExitPointsMapHelper {
             left: Utils.deepclone(eeMapItemDirectionBlueprint)
         }
     }
-    generateEEmap() {
+    resetEEMap() {
         this.eeMap = {}
-
-        const links = gridModel.model.links
-        const lki = new LinkKeyIterator(links)
-
-        while (lki.continue) {
-            const lh = new LinkHelper(lki.linkKey)
-            this.setEEMapEmptyItems(lh)
-        }
     }
-    setEEMapEmptyItems(lh) {
-        if (!this.eeMap[lh.link1])
-            this.eeMap[lh.link1] = Utils.deepclone(this.eeMapItemBlueprint)
-                
-        if (!this.eeMap[lh.link2])
-            this.eeMap[lh.link2] = Utils.deepclone(this.eeMapItemBlueprint)
-    }
-    restoreEEMapState() {
-        if (!this.eeMapState) return
-        
-        if (gridArrowConnectorService.restoreEEMapState)
-            this.eeMap = Utils.deepclone(this.eeMapState)
-    }
-    saveEEMapState(lh) {
-        this.eeMapState = Utils.deepclone(this.eeMap)
-        this.setEEMapEmptyItems(lh)
-    }
-    
     createEEDifferenceForArrow(lh, direction) {
+        this.createEEMapItemIfItDoesntExist(lh.link2)
+
         const eeMap = this.eeMap[lh.link2][LinkHelper.getOpositeDirection(direction)]
         eeMap.in[lh.link1] = ++eeMap.total
 
         return this.getDiffByPoint(eeMap.total) || 0
     }
     createEEDifferenceForPath(lh, direction) {
+        this.createEEMapItemIfItDoesntExist(lh.link1)
+
         const eeMap = this.eeMap[lh.link1][direction]
         eeMap.out[lh.link2] = ++eeMap.total
         
         return this.getDiffByPoint(eeMap.total) || 0
     }
+    createEEMapItemIfItDoesntExist(link) {
+        if (!this.eeMap[link])
+            this.eeMap[link] = Utils.deepclone(this.eeMapItemBlueprint)
+    }
+
     getDiffByPoint(pointNr) {
         if (pointNr > 8) return 0
 

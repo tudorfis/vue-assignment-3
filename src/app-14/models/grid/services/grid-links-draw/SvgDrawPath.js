@@ -1,5 +1,5 @@
 import { SvgDrawBase } from './SvgDrawBase'
-import linkEEMapHelper from '../../helpers/link-ee/linkEEMap.helper'
+import linkEEMapHelper from '../../helpers/linkEEMap.helper'
 
 class SvgDrawPath extends SvgDrawBase {
     constructor(lh) {
