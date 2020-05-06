@@ -34,6 +34,7 @@
     </div>
     <krt-grid-arrow-connector></krt-grid-arrow-connector>
     <krt-grid-arrow-delete></krt-grid-arrow-delete>
+    <krt-grid-link-names></krt-grid-link-names>
   </div>
 </template>
 
@@ -53,13 +54,15 @@ import { globalResetsService } from '../../services/globalResets.service';
 import { GridPositionIterator } from '../../models/grid/iterators/GridPositionIterator';
 import { gridReduceService } from '../../models/grid/services/gridReduce.service';
 import { DimensionsConfigEnum } from '../../config/dimensions/DimensionsConfigEnum';
+import GridLinkNamesVue from './components/control-components/GridLinkNames.vue';
 
 export default {
   props: ['toolboxWidth', 'topmenuHeight'],
   components: {
     krtGridcell: GridcellVue,
     krtGridArrowConnector: GridArrowConnectorVue,
-    krtGridArrowDelete: GridArrowDeleteVue
+    krtGridArrowDelete: GridArrowDeleteVue,
+    krtGridLinkNames: GridLinkNamesVue
   },
   data() {
     return {

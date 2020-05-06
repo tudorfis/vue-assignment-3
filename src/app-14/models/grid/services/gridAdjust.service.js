@@ -10,14 +10,14 @@ import { gridLinksService } from './gridLinks.service'
 export const gridAdjustService = {
     removeColAtEnd() {
         GridPositionIterator.goOverLastCol(position => {
-            delete gridModel.model.cells[position]
+            gridModel.deleteCell(position)
         })
 
         gridModel.model.numCols--
     },
     removeRowAtEnd() {
         GridPositionIterator.goOverLastRow(position => {
-            delete gridModel.model.cells[position]
+            gridModel.deleteCell(position)
         })
 
         gridModel.model.numRows--

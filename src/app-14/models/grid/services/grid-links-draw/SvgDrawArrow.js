@@ -3,6 +3,7 @@ import { SvgPathUtils } from '../../../../utils/svgPath.utils'
 import linkEEMapHelper from '../../helpers/linkEEMap.helper'
 import { LinkHelper } from '../../helpers/link.helper'
 import { SvgDrawBase } from './SvgDrawBase'
+import { gridModel } from '../../grid.model'
 
 class SvgDrawArrow extends SvgDrawBase {
     constructor(lh) {
@@ -14,12 +15,18 @@ class SvgDrawArrow extends SvgDrawBase {
         
         this.addRemainingDistance(path, direction)
 
+        const linkAttribute = gridModel.getLinkAttribute(this.lh.linkKey)
+        const hideHead = linkAttribute && linkAttribute.hideHead
+
         const { svgLeft, svgTop } = SvgPathUtils.getM(path.svgD)
         const arrowDraw = this[`${direction}ArrowDraw`]
 
+        let svgD = `M${svgLeft} ${svgTop}`
+        svgD += !hideHead ? ` ${arrowDraw}` : ''
+
         return {
             isArrow: true,
-            svgD: `M${svgLeft} ${svgTop} ${arrowDraw}`
+            svgD
         }
     }
 
@@ -101,30 +108,12 @@ class SvgDrawArrow extends SvgDrawBase {
             svgCorrectTop =  this.vertical_M + this.cell_center_size_height - difference_ee
         }
 
-        // if (arrowDirection === 'up') {
-        //     svgCorrectLeft = this.horizontal_M + this.cell_center_size - difference_ee
-        //     svgCorrectTop =  this.vertical_M + this.cellelement_center_size
-        // }
-        // else if (arrowDirection === 'down') {
-        //     svgCorrectLeft = this.horizontal_M + this.cell_center_size - difference_ee
-        //     svgCorrectTop =  this.vertical_M + (this.cell_size - this.cellelement_center_size)
-        // }
-        // else if (arrowDirection === 'left') {
-        //     svgCorrectLeft = this.horizontal_M + this.cellelement_center_size
-        //     svgCorrectTop =  this.vertical_M + this.cell_center_size - difference_ee
-        // }
-        // else if (arrowDirection === 'right') {
-        //     svgCorrectLeft = this.horizontal_M + (this.cell_size - this.cellelement_center_size)
-        //     svgCorrectTop =  this.vertical_M + this.cell_center_size - difference_ee
-        // }
-
-
         this.lh = tempLh
         return { svgCorrectLeft, svgCorrectTop }
     }
 
     addRemainingDistance(path, direction) {
-        const { row1, col1 } = this.lh
+        const { row1, col1, linkKey } = this.lh
         let adjustForGridEdges = 0
 
         if (direction === 'down') {
@@ -136,8 +125,15 @@ class SvgDrawArrow extends SvgDrawBase {
 
         const svgD = this.getSvgD(direction)
         const { cellelement_center_size } = this.getCellsSizes(direction)
-        const distance = cellelement_center_size - this.arrow_width + 3 + adjustForGridEdges
 
+        let distance = cellelement_center_size + adjustForGridEdges
+        
+        const linkAttribute = gridModel.getLinkAttribute(linkKey)
+        const hideHead = linkAttribute && linkAttribute.hideHead
+
+        if (!hideHead)
+            distance -= this.arrow_width - 3
+        
         path.svgD += ` ${svgD}${distance}`
     }
 

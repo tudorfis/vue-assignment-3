@@ -41,13 +41,13 @@ const linkDirectionsHelper = {
     },
     createForcedDirections(lh) {
         const forcedDirectionsObj = {}
-        const linkAttributes = gridModel.model.linkAttributes[lh.linkKey]
+        const linkAttribute = gridModel.getLinkAttribute(lh.linkKey)
 
-        if (linkAttributes && linkAttributes.outDirection)
-            forcedDirectionsObj.forcedOutDirection = linkAttributes.outDirection
+        if (linkAttribute && linkAttribute.outDirection)
+            forcedDirectionsObj.forcedOutDirection = linkAttribute.outDirection
             
-        if (linkAttributes && linkAttributes.inDirection)
-            forcedDirectionsObj.forcedInDirection = linkAttributes.inDirection
+        if (linkAttribute && linkAttribute.inDirection)
+            forcedDirectionsObj.forcedInDirection = linkAttribute.inDirection
 
         return forcedDirectionsObj
     },

@@ -1,6 +1,6 @@
 {
-    "numCols": 7,
-    "numRows": 6,
+    "numCols": 6,
+    "numRows": 5,
     "totalSteps": 4,
     "steps": {
         "2-3": {
@@ -13,7 +13,7 @@
             "type": "SUBSCRIBE_LIST",
             "id": 26
         },
-        "3-4": {
+        "3-5": {
             "is": 1,
             "type": "ADD_REMOVE_TAG",
             "id": 41
@@ -25,18 +25,32 @@
         }
     },
     "links": [
-        null,
-        null,
-        null,
-        "4-3__3-4",
+        "4-3__3-5",
         "4-3__3-2",
-        null,
         "2-3__3-2",
-        "2-3__3-4",
-        null,
+        "2-3__3-5",
         "3-2__2-3",
-        "3-4__3-2",
+        "3-5__3-2",
         "2-3__4-3"
     ],
-    "linkAttributes": {}
+    "linkAttributes": {
+        "2-3__3-5": {
+            "name": "This is an amazing link, omg, is the most beautyfull link I ever saw",
+            "color": "",
+            "width": "",
+            "style": "",
+            "hideHead": true,
+            "outDirection": "left",
+            "inDirection": "right"
+        },
+        "4-3__3-5": {
+            "name": "This is another amazing super-califragilistic link",
+            "color": "",
+            "width": "",
+            "style": "",
+            "hideHead": false,
+            "outDirection": "",
+            "inDirection": ""
+        }
+    }
 }

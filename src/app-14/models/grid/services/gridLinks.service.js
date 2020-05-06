@@ -8,6 +8,7 @@ import { LinkKeyIterator } from "../iterators/LinkKeyIterator"
 import { gridLinksDrawService } from "./gridLinksDraw.service"
 import { Utils } from "../../../utils/utils"
 import { linkPathDragHelper } from "../helpers/linkPathDrag.helper"
+import { linkNameHelper } from "../helpers/link-attributes/linkName.helper"
 
 const gridLinksService = {
     svgPaths: {},
@@ -62,26 +63,31 @@ const gridLinksService = {
     rearangeLinks(oldPosition, newPosition) {
         const links = gridModel.model.links
         const lki = new LinkKeyIterator(links)
+        
 
         while (lki.continue) {
             const link1 = LinkHelper.getLink1(lki.linkKey)
             const link2 = LinkHelper.getLink2(lki.linkKey)
 
-            if (link1 === oldPosition) {
-                const newLinkKey = LinkHelper.getLinkKey(newPosition, link2)
-                gridModel.model.links[lki.i - 1] = newLinkKey
+            if (link1 === oldPosition)
+                resetLinkKeys(newPosition, link2)
 
-                if (gridModel.model.linkAttributes[lki.linkKey])
-                    Utils.renameObjKey(gridModel.model.linkAttributes, lki.linkKey, newLinkKey)
-            }
+            else if (link2 === oldPosition)
+                resetLinkKeys(link1, newPosition)
+        }
 
-            else if (link2 === oldPosition) {
-                const newLinkKey = LinkHelper.getLinkKey(link1, newPosition)
+        linkNameHelper.rearange()
 
-                gridModel.model.links[lki.i - 1] = newLinkKey
+        function resetLinkKeys(link1, link2) {
+            const oldLinkKey = lki.linkKey
+            const newLinkKey = LinkHelper.getLinkKey(link1, link2)
 
-                if (gridModel.model.linkAttributes[lki.linkKey])
-                    Utils.renameObjKey(gridModel.model.linkAttributes, lki.linkKey, newLinkKey)
+            gridModel.model.links[lki.i - 1] = newLinkKey
+            const linkAttribute = gridModel.getLinkAttribute(oldLinkKey)
+            
+            if (linkAttribute) {
+                Utils.renameObjKey(gridModel.model.linkAttributes, oldLinkKey, newLinkKey)
+                linkNameHelper.renameOldLinkKey(oldLinkKey, newLinkKey)
             }
         }
     },
@@ -106,8 +112,7 @@ const gridLinksService = {
 
         while (lki.continue) {
             if (lki.linkKey.includes(position)) {
-                const index = gridModel.model.links.indexOf(lki.linkKey)
-                delete gridModel.model.links[index]
+                gridModel.deleteLink(lki.linkKey)
             }
         }
     }

@@ -47,6 +47,7 @@ export default {
 
         gridLinksService.buildLinks()
         gridHistoryService.saveState()
+        localStorage.removeItem('gridModel.model')
         return
     }
     

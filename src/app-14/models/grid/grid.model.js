@@ -1,6 +1,7 @@
 
 import { globalConfig as gc } from "../../config/global.config"
 import { VueUtils } from '../../utils/vue.utils'
+import { linkNameHelper } from '../../models/grid/helpers/link-attributes/linkName.helper'
 
 export const gridModelBlueprint = {
     numRows: 0,
@@ -19,12 +20,13 @@ export const gridcellBlueprint = {
 }
 
 export const linkAttributeBlueprint = {
-    outDirection: "down", /** down, right, up, left */
-    inDirection: "",
     name: "",
     color: "", /** from kartra color picker */
+    width: "", /** slim, medium, heavy */
     style: "", /** dotted, dashed, straight */
-    thickness: "" /** slim, medium, heavy */
+    hideHead: false, /** false, true */ 
+    outDirection: "", /** down, right, up, left */
+    inDirection: "",
 }
 
 const gridModel = {
@@ -78,6 +80,26 @@ const gridModel = {
             return gridcell.__vue__.position
 
         return ''
+    },
+    getLinkAttribute(linkKey) {
+        return this.model.linkAttributes[linkKey]
+    },
+    deleteCell(position) {
+        if (!position || !this.model.cells[position]) return
+
+        delete this.model.cells[position]
+    },
+    deleteLink(linkKey) {
+        if (!linkKey || !this.model.links.includes(linkKey)) return
+
+        const index = this.model.links.indexOf(linkKey)
+        this.model.links.splice(index, 1)
+
+        const linkAttribute = this.getLinkAttribute(linkKey)
+        if (linkAttribute) {
+            delete this.getLinkAttribute(linkKey)
+            linkNameHelper.deleteLinkName(linkKey)
+        }
     }
 }
 

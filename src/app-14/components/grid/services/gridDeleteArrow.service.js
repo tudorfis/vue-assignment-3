@@ -109,8 +109,7 @@ export const gridDeleteArrowService = {
         }
     },
     deleteLink() {
-        const index = gridModel.model.links.indexOf(this.linkKey)
-        delete gridModel.model.links[index]
+        gridModel.deleteLink(this.linkKey)
         
         gridLinksService.buildLinks()
         gridHistoryService.saveState()

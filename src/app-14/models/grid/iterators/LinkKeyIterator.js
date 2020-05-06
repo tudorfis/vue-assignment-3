@@ -1,3 +1,4 @@
+import { Utils } from "../../../utils/utils"
 
 class LinkKeyIterator {
     constructor(links) {
@@ -5,7 +6,7 @@ class LinkKeyIterator {
             throw new Error('Please provide a gridModel.model.links object')
             
         this.stop = !links || typeof links !== 'object' || links.length === 0
-        this.items = !this.stop ? links : []
+        this.items = !this.stop ? Utils.deepclone(links) : []
         
         this.i = 0
         this.item = null

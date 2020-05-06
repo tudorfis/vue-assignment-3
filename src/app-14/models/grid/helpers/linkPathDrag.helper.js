@@ -21,10 +21,8 @@ const linkPathDragHelper = {
         if (gridArrowConnectorService.restoreEEMapState && !this.hasTempPotential) {
             linkEEMapHelper.eeMap = Utils.deepclone(this.tempEEMapState)
 
-            if (this.tempLh) {
-                const index = gridModel.model.links.indexOf(this.tempLh.linkKey)
-                delete gridModel.model.links[index]
-            }
+            if (this.tempLh) 
+                gridModel.deleteLink(this.tempLh.linkKey)
         }
     },
     save(lh) {

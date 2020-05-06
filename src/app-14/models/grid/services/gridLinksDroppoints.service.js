@@ -36,8 +36,7 @@ export const gridLinksDroppointService = {
         if (gm.links.indexOf(newLinkKey2) === -1)
             gm.links.push(newLinkKey2)
 
-        const index = gm.links.indexOf(linkKey)
-        delete gm.links[index]
+        gridModel.deleteLink(linkKey)
     },
     getEmptyPositionAfterDroppoint(newPosition, oldPosition) {
         if (!newPosition || !oldPosition) return ''
@@ -82,7 +81,7 @@ export const gridLinksDroppointService = {
 
             gm.links.push(newLinkKey1)
             gm.links.push(newLinkKey2)
-            delete gm.links[index1]
+            gridModel.deleteLink(linkKey)
         }
 
         const index2 = gm.links.indexOf(linkKeyDirection2)
@@ -92,7 +91,7 @@ export const gridLinksDroppointService = {
 
             gm.links.push(newLinkKey1)
             gm.links.push(newLinkKey2)
-            delete gm.links[index2]
+            gridModel.deleteLink(linkKey)
         }
     }
 }

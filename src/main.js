@@ -11,7 +11,9 @@ switch(appNumber) {
   case '15': App = App15; break;
 }
 
-new Vue({
+const app = new Vue({
   el: '#app',
   render: h => h(App)
 })
+
+globalThis.app = app
