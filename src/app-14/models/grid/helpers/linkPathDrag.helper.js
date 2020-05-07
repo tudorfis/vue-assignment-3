@@ -1,6 +1,6 @@
 import { gridArrowConnectorService } from "../../../components/grid/services/gridArrowConnector.service"
 import { gridModel } from "../grid.model"
-import { gridLinksService } from "../services/gridLinks.service"
+import { gridLinksBuilderService } from "../services/grid-links/gridLinksBuilder.service"
 import linkEEMapHelper from "./linkEEMap.helper"
 import { Utils } from "../../../utils/utils"
 
@@ -36,7 +36,7 @@ const linkPathDragHelper = {
         this.hasTempPotential = true
 
         gridModel.model.links.push(this.tempLh.linkKey)
-        gridLinksService.buildLinks()
+        gridLinksBuilderService.buildLinks()
     },
     handleNoPotentialConnection() {
         this.hasTempPotential = false

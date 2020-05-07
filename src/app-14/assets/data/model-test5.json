@@ -36,18 +36,18 @@
     "linkAttributes": {
         "2-3__3-5": {
             "name": "This is an amazing link, omg, is the most beautyfull link I ever saw",
-            "color": "",
-            "width": "",
-            "style": "",
-            "hideHead": true,
+            "color": "#FF1A66",
+            "width": "3",
+            "style": "dashed",
+            "hideHead": false,
             "outDirection": "left",
             "inDirection": "right"
         },
         "4-3__3-5": {
             "name": "This is another amazing super-califragilistic link",
-            "color": "",
+            "color": "blue",
             "width": "",
-            "style": "",
+            "style": "dashed",
             "hideHead": false,
             "outDirection": "",
             "inDirection": ""

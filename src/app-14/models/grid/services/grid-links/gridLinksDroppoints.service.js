@@ -1,6 +1,6 @@
-import { gridModel } from "../grid.model"
-import { LinkHelper } from "../helpers/link.helper"
-import { linkPathMapHelper } from "../helpers/linkPathMap.helper"
+import { gridModel } from "../../grid.model"
+import { LinkHelper } from "../../helpers/link.helper"
+import { linkPathMapHelper } from "../../helpers/linkPathMap.helper"
 
 export const gridLinksDroppointService = {
     hasDroppointMiddle(newPosition, oldPosition) {
@@ -81,7 +81,7 @@ export const gridLinksDroppointService = {
 
             gm.links.push(newLinkKey1)
             gm.links.push(newLinkKey2)
-            gridModel.deleteLink(linkKey)
+            gm.links.splice(index1, 1)
         }
 
         const index2 = gm.links.indexOf(linkKeyDirection2)
@@ -91,7 +91,7 @@ export const gridLinksDroppointService = {
 
             gm.links.push(newLinkKey1)
             gm.links.push(newLinkKey2)
-            gridModel.deleteLink(linkKey)
+            gm.links.splice(index2, 1)
         }
     }
 }

@@ -17,7 +17,7 @@ import ToolboxVue from './components/toolbox/Toolbox.vue';
 import GridContentVue from './components/grid/Gridcontent.vue';
 import { gridHistoryService } from './models/grid/services/gridHistory.service'
 import { gridIOservice } from './models/grid/services/gridIO.service'
-import { gridLinksService } from './models/grid/services/gridLinks.service';
+import { gridLinksBuilderService } from './models/grid/services/grid-links/gridLinksBuilder.service';
 import { resizeService } from './services/resize.service'
 
 export default {
@@ -45,7 +45,7 @@ export default {
         gridIOservice.loadGridModel(JSON.parse(localStorage.getItem('gridModel.model')))
         this.hideLoadingIcon()
 
-        gridLinksService.buildLinks()
+        gridLinksBuilderService.buildLinks()
         gridHistoryService.saveState()
         localStorage.removeItem('gridModel.model')
         return
@@ -67,7 +67,7 @@ export default {
         gridIOservice.loadGridModel(model)
         this.hideLoadingIcon()
 
-        gridLinksService.buildLinks()
+        gridLinksBuilderService.buildLinks()
         gridHistoryService.saveState()
       })
       .catch(error => {

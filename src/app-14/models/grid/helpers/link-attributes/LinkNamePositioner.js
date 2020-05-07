@@ -1,5 +1,6 @@
 import { SvgPathUtils } from "../../../../utils/svgPath.utils"
 import { gridModel } from "../../grid.model"
+import { globalConfig as gc } from "../../../../config/global.config"
 
 class LinkNamePositioner {
     constructor(query) {
@@ -25,24 +26,20 @@ class LinkNamePositioner {
             
             if (hv === 'h') {
                 if (!this.hasCellByPositioning(pchck.hGoUp_left, pchck.hGoUp_top)) {
-                    if (this.linkKey === '2-3__3-5') console.log(`%c                                     `, 'background: blue')
                     optimalLeft = pchck.hGoUp_left
                     optimalTop = pchck.hGoUp_top
                 }
                 else if (!this.hasCellByPositioning(pchck.hGoDown_left, pchck.hGoDown_top)) {
-                    if (this.linkKey === '2-3__3-5') console.log(`%c                                     `, 'background: red')
                     optimalLeft = pchck.hGoDown_left
                     optimalTop = pchck.hGoDown_top
                 }
             }
             else if (hv === 'v') {
                 if (!this.hasCellByPositioning(pchck.vGoLeft_left, pchck.vGoLeft_top)) {
-                    if (this.linkKey === '2-3__3-5') console.log(`%c                                     `, 'background: green')
                     optimalLeft = pchck.vGoLeft_left
                     optimalTop = pchck.vGoLeft_top
                 }
                 else if (!this.hasCellByPositioning(pchck.vGoRight_left, pchck.vGoRight_top)) {
-                    if (this.linkKey === '2-3__3-5') console.log(`%c                                     `, 'background: yellow')
                     optimalLeft = pchck.vGoRight_left
                     optimalTop = pchck.vGoRight_top
                 }
@@ -100,6 +97,8 @@ class LinkNamePositioner {
 
         const searchLeft = svgRect.left + left
         const searchTop = svgRect.top + top
+        
+        if (isNaN(searchLeft) || isNaN(searchTop)) return true
 
         const gridcell = document.elementFromPoint(searchLeft, searchTop)
         const isValidGridcell = gridcell && gridcell.classList.contains('gridcell')
@@ -116,7 +115,6 @@ class LinkNamePositioner {
         const svgPathMap = SvgPathUtils.getPathMap(svgD)
         const svgPathMapSliced = svgPathMap.slice(2)
 
-        // .slice(0, -2)
         const svgPathItems = this.createOrderedSvgPathItems({ svgPathMapSliced })
         return this.createPositioningSvgPathItems({ svgPathItems, svgPathMapSliced, svgPathMap })
     }
@@ -145,7 +143,17 @@ class LinkNamePositioner {
     createPositioningSvgPathItems(query) {
         const { svgPathItems, svgPathMapSliced, svgPathMap } = query
 
+        const indexArrForDeletion = []
         for (const svgPathItem of svgPathItems) {
+            
+            const isTooSmallDistance = Math.abs(svgPathItem.distance) <= gc.gridCellWidth / 2
+            const hasTooLittleItems = svgPathItems.length <= 2
+
+            if (svgPathItem.direction === 'h' && isTooSmallDistance  && !hasTooLittleItems) {
+                indexArrForDeletion.push(svgPathItems.indexOf(svgPathItem))
+                continue
+            }
+
             const index = svgPathMapSliced.indexOf(svgPathItem) + 2
             const svgPathMapClone = svgPathMap.slice(0, index + 1)
 
@@ -155,6 +163,10 @@ class LinkNamePositioner {
             const svgDclone = SvgPathUtils.generateSvgD(svgPathMapClone)
             Object.assign(svgPathItem, SvgPathUtils.getM(svgDclone))
         }
+
+        indexArrForDeletion.forEach(index => {
+            svgPathItems.splice(index, 1)
+        })
 
         return svgPathItems.map(item => ({
             top: item.svgTop,

@@ -1,7 +1,7 @@
 import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
-import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
+import { gridLinksBuilderService } from "../../../models/grid/services/grid-links/gridLinksBuilder.service"
 import { toolboxDragService } from "../../toolbox/services/toolboxDrag.service"
 import { gridArrowConnectorService } from "./gridArrowConnector.service"
 import { gridPanService } from "./gridPan.service"
@@ -111,7 +111,7 @@ export const gridDeleteArrowService = {
     deleteLink() {
         gridModel.deleteLink(this.linkKey)
         
-        gridLinksService.buildLinks()
+        gridLinksBuilderService.buildLinks()
         gridHistoryService.saveState()
         
         this.linkKey = ''

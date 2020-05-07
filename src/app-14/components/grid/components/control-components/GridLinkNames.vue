@@ -50,6 +50,7 @@ export default {
     color: #999;
     text-align: center;
     white-space: nowrap;
+    z-index: 1;
   }
 }
 </style>

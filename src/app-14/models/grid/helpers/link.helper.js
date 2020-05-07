@@ -46,15 +46,6 @@ class LinkHelper {
         this.link2 = link1
         this.link1 = temp
     }
-    get idLink() {
-        const cells = gridModel.model.cells
-        if (!cells[this.link1] || !cells[this.link2]) return ''
-
-        const id1 = cells[this.link1].id
-        const id2 = cells[this.link2].id
-
-        return `${id1}=>${id2}`
-    }
     get isRight() {
         return this.col1 < this.col2
     }

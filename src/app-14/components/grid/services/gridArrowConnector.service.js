@@ -2,7 +2,7 @@ import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
 import { LinkHelper } from "../../../models/grid/helpers/link.helper"
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
-import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
+import { gridLinksBuilderService } from "../../../models/grid/services/grid-links/gridLinksBuilder.service"
 import { VueUtils } from "../../../utils/vue.utils"
 import { gridPanService } from "./gridPan.service"
 import { linkPathDragHelper } from "../../../models/grid/helpers/linkPathDrag.helper"
@@ -114,7 +114,7 @@ export const gridArrowConnectorService = {
     removeTempPaths() {
         if (this.linkKey && !this.recentLink) {
             
-            delete gridLinksService.svgPaths[this.linkKey]
+            delete gridLinksBuilderService.svgPaths[this.linkKey]
             this.linkKey = ''
         }
     },
@@ -153,7 +153,7 @@ export const gridArrowConnectorService = {
         }
 
         this.dehighlightCell()
-        gridLinksService.buildLinks()
+        gridLinksBuilderService.buildLinks()
     },
     drawPath() {
         if (!this.startedDrag) return
@@ -172,7 +172,7 @@ export const gridArrowConnectorService = {
         }
         else {
             this.linkKey = linkKey
-            gridLinksService.generateSvgPath(this.linkKey, true)
+            gridLinksBuilderService.generateSvgPath(this.linkKey, true)
         }
     },
     doGridcellOperations(position) {

@@ -3,32 +3,6 @@ import { globalConfig as gc } from "../../config/global.config"
 import { VueUtils } from '../../utils/vue.utils'
 import { linkNameHelper } from '../../models/grid/helpers/link-attributes/linkName.helper'
 
-export const gridModelBlueprint = {
-    numRows: 0,
-    numCols: 0,
-    totalSteps: 0,
-    steps: {},
-    cells: {},
-    links: [],
-    linkAttributes: {}
-}
-
-export const gridcellBlueprint = {
-    is: 0,
-    type: '', /** toolboxElements.enum */
-    id: 0
-}
-
-export const linkAttributeBlueprint = {
-    name: "",
-    color: "", /** from kartra color picker */
-    width: "", /** slim, medium, heavy */
-    style: "", /** dotted, dashed, straight */
-    hideHead: false, /** false, true */ 
-    outDirection: "", /** down, right, up, left */
-    inDirection: "",
-}
-
 const gridModel = {
     model: null,
     getId(position) {

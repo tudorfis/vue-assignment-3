@@ -1,11 +1,13 @@
 import { gridSvgService } from "../../../components/grid/services/gridSvg.service"
 import { globalConfig as gc } from "../../../config/global.config"
 import { Utils } from "../../../utils/utils"
-import { gridcellBlueprint, gridModel, gridModelBlueprint } from "../grid.model"
+import { gridModel } from "../grid.model"
+import { gridcellBlueprint, gridModelBlueprint } from "../grid.blueprints"
 import { GridPositionIterator } from "../iterators/GridPositionIterator"
 import { gridHistoryService } from "./gridHistory.service"
-import { gridLinksService } from "./gridLinks.service"
+import { gridLinksBuilderService } from "./grid-links/gridLinksBuilder.service"
 import { gridReduceService } from "./gridReduce.service"
+import { linkNameHelper } from "../helpers/link-attributes/linkName.helper"
 
 export const gridIOservice = {
     newGridModel(numRows, numCols) {
@@ -76,7 +78,8 @@ export const gridIOservice = {
     },
     newModel() {
         this.newGridModel()
-        gridLinksService.buildLinks()
+        gridLinksBuilderService.buildLinks()
         gridHistoryService.saveState()
+        linkNameHelper.removeAll()
     },
 }

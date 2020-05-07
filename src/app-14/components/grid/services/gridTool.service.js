@@ -1,6 +1,9 @@
 import { gridModel } from "../../../models/grid/grid.model"
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
-import { gridLinksService } from "../../../models/grid/services/gridLinks.service"
+
+import { gridLinksOperatorService } from "../../../models/grid/services/grid-links/gridLinksOperator.service"
+import { gridLinksBuilderService } from "../../../models/grid/services/grid-links/gridLinksBuilder.service"
+
 import { gridReduceService } from "../../../models/grid/services/gridReduce.service"
 import { globalResetsService } from "../../../services/globalResets.service"
 import { toolboxElementsEnum } from '../../toolbox/enum/toolboxElements.enum'
@@ -15,8 +18,9 @@ export const gridToolService = {
         gridReduceService.reduceGrid()
         
         gridSvgService.calculateSvg()
-        gridLinksService.deleteAllLinks(position)
-        gridLinksService.buildLinks()
+
+        gridLinksOperatorService.deleteAllLinks(position)
+        gridLinksBuilderService.buildLinks()
         
         gridHistoryService.saveState()
     },

@@ -3,9 +3,10 @@ import Vue from "vue"
 import { gridSvgService } from '../../../components/grid/services/gridSvg.service'
 import { globalConfig as gc } from '../../../config/global.config'
 import { Utils } from '../../../utils/utils'
-import { gridcellBlueprint, gridModel } from '../grid.model'
+import { gridModel } from '../grid.model'
+import { gridcellBlueprint } from '../grid.blueprints'
 import { GridPositionIterator } from '../iterators/GridPositionIterator'
-import { gridLinksService } from './gridLinks.service'
+import { gridLinksOperatorService } from './grid-links/gridLinksOperator.service'
 
 export const gridAdjustService = {
     removeColAtEnd() {
@@ -44,7 +45,7 @@ export const gridAdjustService = {
 
         GridPositionIterator.goOverNextPrevFromLastCol(position, (nextPos, prevPos) => { 
             gridModel.model.cells[nextPos] = gridModel.model.cells[prevPos]
-            gridLinksService.rearangeLinks(prevPos, nextPos)
+            gridLinksOperatorService.rearangeLinks(prevPos, nextPos)
         })
 
         gridModel.model.cells[position] = Utils.deepclone(gridcellBlueprint)
@@ -57,7 +58,7 @@ export const gridAdjustService = {
 
         GridPositionIterator.goOverNextPrevFromLastRow(position, (nextPos, prevPos) => { 
             gridModel.model.cells[nextPos] = gridModel.model.cells[prevPos]
-            gridLinksService.rearangeLinks(prevPos, nextPos)
+            gridLinksOperatorService.rearangeLinks(prevPos, nextPos)
         })
 
         gridModel.model.cells[position] = Utils.deepclone(gridcellBlueprint)

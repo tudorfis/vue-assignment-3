@@ -1,13 +1,13 @@
-import { LinkHelper } from "../helpers/link.helper"
-import { linkDirectionsHelper } from '../helpers/link-directions/linkDirections.helper'
-import { LinkDrawPathsOverlaps } from './grid-links-draw/link-draw-paths/any-direction/LinkDrawPathsOverlaps'
-import { LinkDrawPathsStraights } from './grid-links-draw/link-draw-paths/any-direction/LinkDrawPathsStraights'
-import { LinkDrawPathsForcedOutSameLine } from "./grid-links-draw/link-draw-paths/forced-out/LinkDrawPathsForcedOutSameLine"
-import { LinkDrawPathsForcedOutOverlaps } from "./grid-links-draw/link-draw-paths/forced-out/LinkDrawPathsForcedOutOverlaps"
-import { LinkDrawPathsForcedInSameLine } from "./grid-links-draw/link-draw-paths/forced-in/LinkDrawPathsForcedInSameLine"
-import { LinkDrawPathsForcedInOverlaps } from "./grid-links-draw/link-draw-paths/forced-in/LinkDrawPathsForcedInOverlaps"
-import { LinkDrawPathsBothForcedSameLine } from "./grid-links-draw/link-draw-paths/both-forced/LinkDrawPathsBothForcedSameLine"
-import { LinkDrawPathsBothForcedOverlaps } from "./grid-links-draw/link-draw-paths/both-forced/LinkDrawPathsBothForcedOverlaps"
+import { LinkHelper } from "../../helpers/link.helper"
+import { linkDirectionsHelper } from '../../helpers/link-directions/linkDirections.helper'
+import { LinkDrawPathsOverlaps } from '../grid-links-draw/link-draw-paths/any-direction/LinkDrawPathsOverlaps'
+import { LinkDrawPathsStraights } from '../grid-links-draw/link-draw-paths/any-direction/LinkDrawPathsStraights'
+import { LinkDrawPathsForcedOutSameLine } from "../grid-links-draw/link-draw-paths/forced-out/LinkDrawPathsForcedOutSameLine"
+import { LinkDrawPathsForcedOutOverlaps } from "../grid-links-draw/link-draw-paths/forced-out/LinkDrawPathsForcedOutOverlaps"
+import { LinkDrawPathsForcedInSameLine } from "../grid-links-draw/link-draw-paths/forced-in/LinkDrawPathsForcedInSameLine"
+import { LinkDrawPathsForcedInOverlaps } from "../grid-links-draw/link-draw-paths/forced-in/LinkDrawPathsForcedInOverlaps"
+import { LinkDrawPathsBothForcedSameLine } from "../grid-links-draw/link-draw-paths/both-forced/LinkDrawPathsBothForcedSameLine"
+import { LinkDrawPathsBothForcedOverlaps } from "../grid-links-draw/link-draw-paths/both-forced/LinkDrawPathsBothForcedOverlaps"
 
 const gridLinksDrawService = {
     createPathAndArrow(lh) {

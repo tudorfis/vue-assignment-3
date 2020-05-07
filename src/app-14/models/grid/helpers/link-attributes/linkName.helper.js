@@ -2,15 +2,15 @@
 import { Utils } from "../../../../utils/utils"
 import { UtilsStrings } from "../../../../utils/utilsStrings"
 import { gridModel } from "../../grid.model"
-import { gridLinksService } from "../../services/gridLinks.service"
+import { gridLinksBuilderService } from "../../services/grid-links/gridLinksBuilder.service"
 import { LinkNamePositioner } from "./LinkNamePositioner"
 
 const linkNameHelper = {
     arangeGridLinkNamesElements() {
         for (const { linkKey } of this.linkAttributes) {
-            if (!gridLinksService.svgPaths[linkKey]) continue
+            if (!gridLinksBuilderService.svgPaths[linkKey]) continue
 
-            const { svgD, color } = gridLinksService.svgPaths[linkKey][0]
+            const { svgD, color } = gridLinksBuilderService.svgPaths[linkKey][0]
             const element = this.gridLinkNamesElements[linkKey]
             
             const linkNamePositioner = new LinkNamePositioner({ svgD, element, linkKey })
@@ -99,6 +99,12 @@ const linkNameHelper = {
 
     rearange() {
         this.gridLinkNamesEl.__vue__.arangeGridLinkNamesElements()
+    },
+    removeAll() {
+        for (const linkKey in this.gridLinkNamesElements) {
+            const element = this.gridLinkNamesElements[linkKey]
+            element.remove()
+        }
     }
 }
 

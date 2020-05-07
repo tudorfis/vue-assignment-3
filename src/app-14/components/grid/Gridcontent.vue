@@ -2,6 +2,7 @@
   <div 
     ref="gridcontent"
     class="gridcontent"
+    :class="gridcontentClass"
     :style="gridcontentStyle"
     @mouseover="grs.resetGridView()"
     @mouseup="grs.stopArrowDrag()"
@@ -17,13 +18,13 @@
         :key="svgIndex"
         :linkKey="svgPath.linkKey"
         :d="svgPath.svgD" 
-        :fill="svgPath.isArrow ? (svgPath.color || gc.arrowLineColor) : 'none'"
-        :stroke="!svgPath.isArrow ? (svgPath.color ||gc.arrowLineColor) : ''"
-        :stroke-width="!svgPath.isArrow ? gc.arrowLineWidth : 0" />
+        :fill="svgPath.isArrow ? svgPath.color : 'none'"
+        :stroke="!svgPath.isArrow ? svgPath.color : ''"
+        :stroke-width="!svgPath.isArrow ? svgPath.width : 0"
+        :stroke-dasharray="!svgPath.isArrow ? svgPath.style : 0" />
     </svg>
     <div 
       class="gridlayout"
-      :class="gridLayoutClass"
       :style="gridLayoutStyle"
     >
       <krt-gridcell
@@ -49,7 +50,7 @@ import { Utils } from '../../utils/utils';
 import { gridArrowConnectorService } from '../grid/services/gridArrowConnector.service'
 import { gridDeleteArrowService } from './services/gridDeleteArrow.service'
 import { gridPanService } from './services/gridPan.service';
-import { gridLinksService } from '../../models/grid/services/gridLinks.service';
+import { gridLinksBuilderService } from '../../models/grid/services/grid-links/gridLinksBuilder.service';
 import { globalResetsService } from '../../services/globalResets.service';
 import { GridPositionIterator } from '../../models/grid/iterators/GridPositionIterator';
 import { gridReduceService } from '../../models/grid/services/gridReduce.service';
@@ -68,7 +69,7 @@ export default {
     return {
       gc,
       gm: gridModel,
-      gl: gridLinksService,
+      glb: gridLinksBuilderService,
       grs: globalResetsService,
       gridSvgService
     };
@@ -93,7 +94,14 @@ export default {
       return GridPositionIterator.getPositionsMatrix()
     },
     svgPaths() {
-      return Utils.reduceobj(gridLinksService.svgPaths)
+      return Utils.reduceobj(gridLinksBuilderService.svgPaths)
+    },
+    gridcontentClass() {
+      return {
+          [`zoom-${gc.zoomLevel}`]: true,
+          [`square`]: gc.dimensionType === DimensionsConfigEnum.SQUARE,
+          [`rectangular`]: gc.dimensionType === DimensionsConfigEnum.RECTANGULAR
+      }
     },
     gridcontentStyle() {
         return {
@@ -101,13 +109,6 @@ export default {
             width: `calc(100% - ${gc.toolboxWidth + 7}px)`,
             left: `${gc.toolboxWidth + 5}px`,
             top: `${gc.topmenuHeight + 1}px`
-        }
-    },
-    gridLayoutClass() {
-        return {
-            [`zoom-${gc.zoomLevel}`]: true,
-            [`square`]: gc.dimensionType === DimensionsConfigEnum.SQUARE,
-            [`rectangular`]: gc.dimensionType === DimensionsConfigEnum.RECTANGULAR
         }
     },
     gridLayoutStyle() {

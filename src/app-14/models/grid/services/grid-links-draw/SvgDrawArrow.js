@@ -131,26 +131,33 @@ class SvgDrawArrow extends SvgDrawBase {
         const linkAttribute = gridModel.getLinkAttribute(linkKey)
         const hideHead = linkAttribute && linkAttribute.hideHead
 
-        if (!hideHead)
-            distance -= this.arrow_width - 3
+        if (!hideHead) {
+            let { arrowPointerAdjust } = this.getArrowPointers()
+            if (arrowPointerAdjust > 3) arrowPointerAdjust -= 3
+
+            distance -= this.arrow_width - arrowPointerAdjust
+        }
+        
+        if (distance <= 0) distance = 2
         
         path.svgD += ` ${svgD}${distance}`
     }
 
     get downArrowDraw() { 
-        const { arrowPointerHeight, arrowPointerWidth } = globalConfig
+        const { arrowPointerHeight, arrowPointerWidth } = this.getArrowPointers()
         return `h${arrowPointerHeight} l-${arrowPointerHeight} ${arrowPointerWidth} l-${arrowPointerHeight} -${arrowPointerWidth} Z`
     }
     get upArrowDraw() { 
-        const { arrowPointerHeight, arrowPointerWidth } = globalConfig
+        const { arrowPointerHeight, arrowPointerWidth } = this.getArrowPointers()
+        
         return `h${arrowPointerHeight} l-${arrowPointerHeight} -${arrowPointerWidth} l-${arrowPointerHeight} ${arrowPointerWidth} Z`
     }
     get rightArrowDraw() { 
-        const { arrowPointerHeight, arrowPointerWidth } = globalConfig
+        const { arrowPointerHeight, arrowPointerWidth } = this.getArrowPointers()
         return `v-${arrowPointerHeight} l${arrowPointerWidth} ${arrowPointerHeight} l-${arrowPointerWidth} ${arrowPointerHeight} Z`
     }
     get leftArrowDraw() { 
-        const { arrowPointerHeight, arrowPointerWidth } = globalConfig
+        const { arrowPointerHeight, arrowPointerWidth } = this.getArrowPointers()
         return `v-${arrowPointerHeight} l-${arrowPointerWidth} ${arrowPointerHeight} l${arrowPointerWidth} ${arrowPointerHeight} Z`
     }
 }

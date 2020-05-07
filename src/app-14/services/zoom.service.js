@@ -1,11 +1,12 @@
 import { gridSvgService } from "../components/grid/services/gridSvg.service"
 import { globalConfig as gc } from "../config/global.config"
-import { gridLinksService } from "../models/grid/services/gridLinks.service"
+import { gridLinksBuilderService } from "../models/grid/services/grid-links/gridLinksBuilder.service"
 import { gridReduceService } from "../models/grid/services/gridReduce.service"
 import { globalResetsService } from "./globalResets.service"
 import { ZoomDimensionAdjust } from "./zoom-dimensions/ZoomDimensionAdjust"
+import { linkNameHelper } from "../models/grid/helpers/link-attributes/linkName.helper"
 
-export const zoomService = {
+const zoomService = {
     disableZoomIn() {
         const gc = globalConfig
         return (gc.zoomLevel + gc.zoomDiff > gc.zoomMax)
@@ -27,12 +28,7 @@ export const zoomService = {
         gc.arrowPointerWidth += 5
         gc.arrowPointerHeight += 5
 
-        gridReduceService.calculateGridSize()
-        gridReduceService.increaseGrid()
-        gridReduceService.reduceGrid()
-
-        gridSvgService.calculateSvg()
-        gridLinksService.buildLinks()
+        recalculateRebuildServices()
     },
     zoomOut() {
         if (this.disableZoomOut()) return
@@ -47,12 +43,7 @@ export const zoomService = {
         gc.arrowPointerWidth -= 5
         gc.arrowPointerHeight -= 5
 
-        gridReduceService.calculateGridSize()
-        gridReduceService.increaseGrid()
-        gridReduceService.reduceGrid()
-        
-        gridSvgService.calculateSvg()
-        gridLinksService.buildLinks()
+        recalculateRebuildServices()
     },
 
     get zoomDimensionAdjust() {
@@ -62,3 +53,17 @@ export const zoomService = {
         return this.zoomDimensionAdjuster
     }
 }
+
+function recalculateRebuildServices() {
+    gridReduceService.calculateGridSize()
+    gridReduceService.increaseGrid()
+    gridReduceService.reduceGrid()
+
+    gridSvgService.calculateSvg()
+    gridLinksBuilderService.buildLinks()
+
+    linkNameHelper.rearange()
+}
+
+globalThis.zoomService = zoomService
+export { zoomService }

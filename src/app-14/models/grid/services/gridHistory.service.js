@@ -1,5 +1,5 @@
 import { gridIOservice } from "./gridIO.service"
-import { gridLinksService } from "./gridLinks.service"
+import { gridLinksBuilderService } from "./grid-links/gridLinksBuilder.service"
 import { Utils } from "../../../utils/utils"
 
 const gridHistoryService = {
@@ -25,7 +25,7 @@ const gridHistoryService = {
             const model = JSON.parse(this.modelHistory[this.modelVersion])
             
             gridIOservice.loadGridModel(model)
-            gridLinksService.buildLinks()
+            gridLinksBuilderService.buildLinks()
         }
     },
     log() {

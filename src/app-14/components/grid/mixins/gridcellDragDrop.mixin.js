@@ -1,8 +1,9 @@
 import { gridModel } from '../../../models/grid/grid.model';
 import { gridAdjustService } from '../../../models/grid/services/gridAdjust.service';
 import { gridHistoryService } from '../../../models/grid/services/gridHistory.service';
-import { gridLinksService } from '../../../models/grid/services/gridLinks.service';
-import { gridLinksDroppointService } from '../../../models/grid/services/gridLinksDroppoints.service';
+import { gridLinksBuilderService } from '../../../models/grid/services/grid-links/gridLinksBuilder.service';
+import { gridLinksOperatorService } from '../../../models/grid/services/grid-links/gridLinksOperator.service';
+import { gridLinksDroppointService } from '../../../models/grid/services/grid-links/gridLinksDroppoints.service';
 import { gridReduceService } from '../../../models/grid/services/gridReduce.service';
 import { globalResetsService } from '../../../services/globalResets.service';
 import { Utils } from '../../../utils/utils';
@@ -53,7 +54,7 @@ export default {
                 gridCellService.removePreviousCell()
                 
             else {
-                gridLinksService.deleteAllLinks(emptyDroppointPosition)
+                gridLinksOperatorService.deleteAllLinks(emptyDroppointPosition)
                 gridCellService.resetCell(emptyDroppointPosition)
             }
 
@@ -72,12 +73,12 @@ export default {
             }
 
             gridCellService.setCellActive(newPosition, oldPosition)
-            gridLinksService.rearangeLinks(oldPosition, newPosition)
+            gridLinksOperatorService.rearangeLinks(oldPosition, newPosition)
             
             // gridLinksDroppointService.setDroppointLinksByMiddle(newPosition)
             
-            if (!gridLinksService.hasNoLinks(newPosition))
-                gridLinksService.deleteAllLinks(oldPosition)
+            if (!gridLinksOperatorService.hasNoLinks(newPosition))
+                gridLinksOperatorService.deleteAllLinks(oldPosition)
             
             if (!isNearColOrRowEnd) {
                 gridReduceService.reduceGrid()
@@ -91,7 +92,7 @@ export default {
             if (cell && cell.id === 0)
                 gridModel.model.cells[this.position].id = Utils.randomNumber(1, 100)
             
-            gridLinksService.buildLinks()
+            gridLinksBuilderService.buildLinks()
             gridHistoryService.saveState()
         },
 

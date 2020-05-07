@@ -1,86 +1,122 @@
 
-.gridlayout.square.zoom-50 {
-    .gridcell {
-        width: 60px;
-        height: 60px;
-        .gridcell-element {
-            width: 35px;
-            height: 35px;
-            top: 12.5px;
-            left: 12.5px;
-            .gridtool {
-                padding: 5px;
-                border-radius: 3.75px;
-                i { font-size: 12px; }
+.gridcontent.square.zoom-50 {
+    .gridlayout {
+        .gridcell {
+            width: 60px;
+            height: 60px;
+            .gridcell-element {
+                width: 35px;
+                height: 35px;
+                top: 12.5px;
+                left: 12.5px;
+                .gridtool {
+                    padding: 5px;
+                    border-radius: 3.75px;
+                    i { font-size: 12px; }
+                }
+            }
+        }
+    }
+    .grid-link-names {
+        .grid-link-name {
+            font-size: 7px;
+            margin: -5px;
+            letter-spacing: -.5px;
+        }
+    }
+}
+.gridcontent.square.zoom-75 {
+    .gridlayout {
+        .gridcell {
+            width: 120px;
+            height: 120px;
+            .gridcell-element {
+                width: 70px;
+                height: 70px;
+                top: 25px;
+                left: 25px;
+                .gridtool {
+                    padding: 20px;
+                    border-radius: 7.5px;
+                    i { font-size: 26px; }
+                }
+            }
+        }
+    }
+    .grid-link-names {
+        .grid-link-name {
+            font-size: 9px;
+            margin: 0;
+            letter-spacing: -.1px;
+        }
+    }
+}
+.gridcontent.square.zoom-100 {
+    .gridlayout {
+        .gridcell {
+            width: 180px;
+            height: 180px;
+            .gridcell-element {
+                width: 105px;
+                height: 105px;
+                top: 37.5px;
+                left: 37.5px;
+                .gridtool {
+                    padding: 30px;
+                    border-radius: 11.25px;
+                    i { font-size: 42px; }
+                }
             }
         }
     }
 }
-.gridlayout.square.zoom-75 {
-    .gridcell {
-        width: 120px;
-        height: 120px;
-        .gridcell-element {
-            width: 70px;
-            height: 70px;
-            top: 25px;
-            left: 25px;
-            .gridtool {
-                padding: 20px;
-                border-radius: 7.5px;
-                i { font-size: 26px; }
+.gridcontent.square.zoom-125 {
+    .gridlayout {
+        .gridcell {
+            width: 240px;
+            height: 240px;
+            .gridcell-element {
+                width: 140px;
+                height: 140px;
+                top: 50px;
+                left: 50px;
+                .gridtool {
+                    padding: 40px;
+                    border-radius: 15px;
+                    i { font-size: 56px; }
+                }
             }
         }
     }
-}
-.gridlayout.square.zoom-100 {
-    .gridcell {
-        width: 180px;
-        height: 180px;
-        .gridcell-element {
-            width: 105px;
-            height: 105px;
-            top: 37.5px;
-            left: 37.5px;
-            .gridtool {
-                padding: 30px;
-                border-radius: 11.25px;
-                i { font-size: 42px; }
-            }
+    .grid-link-names {
+        .grid-link-name {
+            font-size: 13px;
+            padding: 3px;
         }
     }
 }
-.gridlayout.square.zoom-125 {
-    .gridcell {
-        width: 240px;
-        height: 240px;
-        .gridcell-element {
-            width: 140px;
-            height: 140px;
-            top: 50px;
-            left: 50px;
-            .gridtool {
-                padding: 40px;
-                border-radius: 15px;
-                i { font-size: 56px; }
+.gridcontent.square.zoom-150 {
+    .gridlayout {
+        .gridcell {
+            width: 300px;
+            height: 300px;
+            .gridcell-element {
+                width: 175px;
+                height: 175px;
+                top: 62.5px;
+                left: 62.5px;
+                .gridtool {
+                    padding: 50px;
+                    border-radius: 18.75px;
+                    i { font-size: 70px; }
+                }
             }
         }
     }
-}
-.gridlayout.square.zoom-150 {
-    .gridcell {
-        width: 300px;
-        height: 300px;
-        .gridcell-element {
-            width: 175px;
-            height: 175px;
-            top: 62.5px;
-            left: 62.5px;
-            .gridtool {
-                padding: 50px;
-                border-radius: 18.75px;
-                i { font-size: 70px; }
-            }
+    .grid-link-names {
+        .grid-link-name {
+            font-size: 16px;
+            padding: 5px;
         }
     }
 }

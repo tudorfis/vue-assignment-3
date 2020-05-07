@@ -1,86 +1,121 @@
-
-.gridlayout.rectangular.zoom-50 {
-    .gridcell {
-        width: 90px;
-        height: 50px;
-        .gridcell-element {
-            width: 70px;
-            height: 30px;
-            top: 10px;
-            left: 10px;
-            .gridtool {
-                padding: 3.5px;
-                border-radius: 2.5px;
-                i { font-size: 14px; }
+.gridcontent.rectangular.zoom-50 {
+    .gridlayout {
+        .gridcell {
+            width: 90px;
+            height: 50px;
+            .gridcell-element {
+                width: 70px;
+                height: 30px;
+                top: 10px;
+                left: 10px;
+                .gridtool {
+                    padding: 3.5px;
+                    border-radius: 2.5px;
+                    i { font-size: 14px; }
+                }
             }
         }
     }
-}
-.gridlayout.rectangular.zoom-75 {
-    .gridcell {
-        width: 180px;
-        height: 100px;
-        .gridcell-element {
-            width: 140px;
-            height: 60px;
-            top: 20px;
-            left: 20px;
-            .gridtool {
-                padding: 16.75px;
-                border-radius: 3.75px;
-                i { font-size: 28px; }
-            }
+    .grid-link-names {
+        .grid-link-name {
+            font-size: 7px;
+            margin: -5px;
+            letter-spacing: -.5px;
         }
     }
 }
-.gridlayout.rectangular.zoom-100 {
-    .gridcell {
-        width: 270px;
-        height: 150px;
-        .gridcell-element {
-            width: 210px;
-            height: 90px;
-            top: 30px;
-            left: 30px;
-            .gridtool {
-                padding: 25px;
-                border-radius: 5px;
-                i { font-size: 42px; }
+.gridcontent.rectangular.zoom-75 {
+    .gridlayout {
+        .gridcell {
+            width: 180px;
+            height: 100px;
+            .gridcell-element {
+                width: 140px;
+                height: 60px;
+                top: 20px;
+                left: 20px;
+                .gridtool {
+                    padding: 16.75px;
+                    border-radius: 3.75px;
+                    i { font-size: 28px; }
+                }
             }
         }
     }
-}
-.gridlayout.rectangular.zoom-125 {
-    .gridcell {
-        width: 360px;
-        height: 200px;
-        .gridcell-element {
-            width: 280px;
-            height: 120px;
-            top: 40px;
-            left: 40px;
-            .gridtool {
-                padding: 35px;
-                border-radius: 8.75px;
-                i { font-size: 56px; }
-            }
+    .grid-link-names {
+        .grid-link-name {
+            font-size: 9px;
+            margin: 0;
+            letter-spacing: -.1px;
         }
     }
 }
-.gridlayout.rectangular.zoom-150 {
-    .gridcell {
-        width: 450px;
-        height: 250px;
-        .gridcell-element {
-            width: 350px;
+.gridcontent.rectangular.zoom-100 {
+    .gridlayout {
+        .gridcell {
+            width: 270px;
             height: 150px;
-            top: 50px;
-            left: 50px;
-            .gridtool {
-                padding: 45px;
-                border-radius: 17px;
-                i { font-size: 65px; }
+            .gridcell-element {
+                width: 210px;
+                height: 90px;
+                top: 30px;
+                left: 30px;
+                .gridtool {
+                    padding: 25px;
+                    border-radius: 5px;
+                    i { font-size: 42px; }
+                }
             }
+        }
+    }
+}
+.gridcontent.rectangular.zoom-125 {
+    .gridlayout {
+        .gridcell {
+            width: 360px;
+            height: 200px;
+            .gridcell-element {
+                width: 280px;
+                height: 120px;
+                top: 40px;
+                left: 40px;
+                .gridtool {
+                    padding: 35px;
+                    border-radius: 8.75px;
+                    i { font-size: 56px; }
+                }
+            }
+        }
+    }
+    .grid-link-names {
+        .grid-link-name {
+            font-size: 13px;
+            padding: 3px;
+        }
+    }
+}
+.gridcontent.rectangular.zoom-150 {
+    .gridlayout {
+        .gridcell {
+            width: 450px;
+            height: 250px;
+            .gridcell-element {
+                width: 350px;
+                height: 150px;
+                top: 50px;
+                left: 50px;
+                .gridtool {
+                    padding: 45px;
+                    border-radius: 17px;
+                    i { font-size: 65px; }
+                }
+            }
+        }
+    }
+    .grid-link-names {
+        .grid-link-name {
+            font-size: 16px;
+            padding: 5px;
         }
     }
 }

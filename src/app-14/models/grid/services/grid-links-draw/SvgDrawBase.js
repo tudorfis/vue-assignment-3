@@ -1,4 +1,4 @@
-import { globalConfig } from '../../../../config/global.config'
+import { globalConfig } from "../../../../config/global.config"
 
 class SvgDrawBase {
     constructor(lh) {
@@ -36,7 +36,30 @@ class SvgDrawBase {
     }
 
     get arrow_width() { 
-        return globalConfig.arrowPointerWidth + 3
+        const { arrowPointerAdjust } = this.getArrowPointers()
+        return globalConfig.arrowPointerWidth + arrowPointerAdjust
+    }
+
+    getArrowPointers() {
+        let arrowPointerAdjust = 3
+        let { arrowPointerHeight, arrowPointerWidth } = globalConfig
+
+        const linkAttribute = gridModel.getLinkAttribute(this.lh.linkKey)
+        if (linkAttribute && linkAttribute.width) {
+            arrowPointerHeight += +linkAttribute.width
+            arrowPointerWidth += +linkAttribute.width
+            arrowPointerAdjust += +linkAttribute.width
+        }
+        
+        if (arrowPointerHeight <= 1) {
+            arrowPointerHeight = 4
+            arrowPointerWidth = 6
+        }
+        
+        if (arrowPointerAdjust <= 0)
+            arrowPointerAdjust = 0
+
+        return { arrowPointerHeight, arrowPointerWidth, arrowPointerAdjust }
     }
 
     getSvgD(direction) {
