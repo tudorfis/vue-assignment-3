@@ -33,9 +33,12 @@
         :position="position"
       ></krt-gridcell>
     </div>
+
     <krt-grid-arrow-connector></krt-grid-arrow-connector>
-    <krt-grid-arrow-delete></krt-grid-arrow-delete>
+    <krt-grid-arrow-attributes></krt-grid-arrow-attributes>
     <krt-grid-link-names></krt-grid-link-names>
+    <krt-grid-link-name-modal></krt-grid-link-name-modal>
+    <krt-grid-link-attributes-modal></krt-grid-link-attributes-modal>
   </div>
 </template>
 
@@ -44,11 +47,10 @@ import { globalConfig as gc } from '../../config/global.config'
 import { gridModel } from '../../models/grid/grid.model'
 import GridcellVue from './components/Gridcell.vue';
 import GridArrowConnectorVue from './components/control-components/GridArrowConnector.vue';
-import GridArrowDeleteVue from './components/control-components/GridArrowDelete.vue';
 import { gridSvgService } from './services/gridSvg.service'
 import { Utils } from '../../utils/utils';
 import { gridArrowConnectorService } from '../grid/services/gridArrowConnector.service'
-import { gridDeleteArrowService } from './services/gridDeleteArrow.service'
+import { gridArrowAttributesService } from './services/gridArrowAttributes.service'
 import { gridPanService } from './services/gridPan.service';
 import { gridLinksBuilderService } from '../../models/grid/services/grid-links/gridLinksBuilder.service';
 import { globalResetsService } from '../../services/globalResets.service';
@@ -56,14 +58,19 @@ import { GridPositionIterator } from '../../models/grid/iterators/GridPositionIt
 import { gridReduceService } from '../../models/grid/services/gridReduce.service';
 import { DimensionsConfigEnum } from '../../config/dimensions/DimensionsConfigEnum';
 import GridLinkNamesVue from './components/control-components/GridLinkNames.vue';
+import GridArrowAttributesVue from './components/control-components/GridArrowAttributes.vue';
+import GridLinkNameModalVue from './modals/GridLinkNameModal.vue';
+import GridLinkAttributesModalVue from './modals/GridLinkAttributesModal.vue';
 
 export default {
   props: ['toolboxWidth', 'topmenuHeight'],
   components: {
     krtGridcell: GridcellVue,
     krtGridArrowConnector: GridArrowConnectorVue,
-    krtGridArrowDelete: GridArrowDeleteVue,
-    krtGridLinkNames: GridLinkNamesVue
+    krtGridArrowAttributes: GridArrowAttributesVue,
+    krtGridLinkNames: GridLinkNamesVue,
+    krtGridLinkNameModal: GridLinkNameModalVue,
+    krtGridLinkAttributesModal: GridLinkAttributesModalVue,
   },
   data() {
     return {
@@ -79,12 +86,12 @@ export default {
       gridArrowConnectorService.drawPath()
     },
     findSvgPath(event) {
-      gridDeleteArrowService.findSvgPath(event)
+      gridArrowAttributesService.findSvgPath(event)
     }
   },
   mounted() {
-      gridDeleteArrowService.svgEl = document.querySelector('#svgGrid')
-      gridDeleteArrowService.gridlayoutEl = document.querySelector('.gridlayout')
+      gridArrowAttributesService.svgEl = document.querySelector('#svgGrid')
+      gridArrowAttributesService.gridlayoutEl = document.querySelector('.gridlayout')
       gridPanService.init(this.$refs.gridcontent)
   },
   computed: {

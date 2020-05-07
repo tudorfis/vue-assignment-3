@@ -6,6 +6,7 @@
     <div
       class="grid-link-name"
       :linkKey="item.linkKey"
+      :key="item.linkKey"
       v-html="item.name"
       v-for="item of linkNameHelper.linkAttributes"
     ></div>

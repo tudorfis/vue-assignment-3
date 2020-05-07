@@ -14,11 +14,11 @@ class UtilsStrings {
 
         let i, startPos, endPos
         for (i = 1; i <= 20; i++) {
-            if (str[halfStr - i] === ' ')
-                if (!startPos) startPos = halfStr - i + 1
+            if (!startPos && str[halfStr - i] === ' ')
+                startPos = halfStr - i + 1
 
-            if (str[halfStr + i] === ' ') 
-                if (!endPos) endPos = halfStr + i
+            if (!endPos && str[halfStr + i] === ' ') 
+                endPos = halfStr + i
 
             if (!startPos || !endPos) continue
         }
@@ -32,10 +32,10 @@ class UtilsStrings {
         const strSplit = str.split(' ')
         const middleWord = UtilsStrings.findMiddleWord(str)
 
-        const halfPosition = strSplit.indexOf(middleWord) + 1
+        const halfPosition = strSplit.indexOf(middleWord)
 
-        const firstHalfStr = strSplit.slice(0, halfPosition - 1).join(' ')
-        const secondHalfStr = strSplit.slice(halfPosition - 1).join(' ')
+        const firstHalfStr = strSplit.slice(0, halfPosition).join(' ')
+        const secondHalfStr = strSplit.slice(halfPosition).join(' ')
         
         return `${firstHalfStr} <br> ${secondHalfStr}`
     }

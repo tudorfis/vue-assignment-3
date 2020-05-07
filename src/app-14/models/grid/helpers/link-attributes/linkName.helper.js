@@ -7,22 +7,30 @@ import { LinkNamePositioner } from "./LinkNamePositioner"
 
 const linkNameHelper = {
     arangeGridLinkNamesElements() {
-        for (const { linkKey } of this.linkAttributes) {
-            if (!gridLinksBuilderService.svgPaths[linkKey]) continue
+        const vm = this
 
-            const { svgD, color } = gridLinksBuilderService.svgPaths[linkKey][0]
-            const element = this.gridLinkNamesElements[linkKey]
-            
-            const linkNamePositioner = new LinkNamePositioner({ svgD, element, linkKey })
-            const { optimalLeft, optimalTop } = linkNamePositioner.getOptimalPosition()
-
-            Object.assign(element.style, {
-                left: `${optimalLeft}px`,
-                top: `${optimalTop}px`,
-                color
-            })
-
-        }
+        setTimeout(function() {
+            for (const { linkKey } of vm.linkAttributes) {
+                if (!gridLinksBuilderService.svgPaths[linkKey]) continue
+    
+                const { svgD, color } = gridLinksBuilderService.svgPaths[linkKey][0]
+                
+                if (!vm.gridLinkNamesElements[linkKey])
+                    vm.patchGridLinkNameElement(linkKey)
+    
+                const element = vm.gridLinkNamesElements[linkKey]
+                
+                const linkNamePositioner = new LinkNamePositioner({ svgD, element, linkKey })
+                const { optimalLeft, optimalTop } = linkNamePositioner.getOptimalPosition()
+                console.log('{ optimalLeft, optimalTop } :', { optimalLeft, optimalTop } )
+    
+                Object.assign(element.style, {
+                    left: `${optimalLeft}px`,
+                    top: `${optimalTop}px`,
+                    color
+                })
+            }
+        }, 0)
     },
 
     get linkAttributes() {
@@ -47,6 +55,16 @@ const linkNameHelper = {
         for (const element of this.gridLinkNamesEl.children)
             this.gridLinkNamesElementsList[element.getAttribute('linkKey')] = element
     },
+    patchGridLinkNameElement(linkKey) {
+        let gridLinkNameEl
+        for (const element of this.gridLinkNamesEl.children) {
+            if (element.getAttribute('linkKey') === linkKey) {
+                gridLinkNameEl = element
+            }
+        }
+
+        this.gridLinkNamesElements[linkKey] = gridLinkNameEl
+    },
 
     get gridLinkNamesEl() {
         return document.querySelector('.grid-link-names')
@@ -59,7 +77,7 @@ const linkNameHelper = {
             if (!name) continue
 
             name = UtilsStrings.breaklinehalf(name)
-            this.linkAttributesList.push({ name, linkKey })
+            this.setLinkAttribute(name, linkKey)
         }
     },
     get gridModelLinkKeys() {
@@ -67,6 +85,9 @@ const linkNameHelper = {
     },
     get gridModelLinkAttributes() {
         return gridModel.model.linkAttributes
+    },
+    setLinkAttribute(name, linkKey) {
+        this.linkAttributesList.push({ name, linkKey })
     },
 
     renameOldLinkKey(oldLinkKey, newLinkKey) {
@@ -77,6 +98,12 @@ const linkNameHelper = {
         gridLinkNameEl.setAttribute('linkKey', newLinkKey)
 
         Utils.renameObjKey(this.gridLinkNamesElements, oldLinkKey, newLinkKey)
+    },
+    setNewName(linkKey, newName) {
+        if (this.gridLinkNamesElements[linkKey]) {
+            const gridLinkNameEl = this.gridLinkNamesElements[linkKey]
+            gridLinkNameEl.innerHTML = UtilsStrings.breaklinehalf(newName)
+        }
     },
     
     deleteLinkName(linkKey) {

@@ -28,20 +28,24 @@ class LinkNamePositioner {
                 if (!this.hasCellByPositioning(pchck.hGoUp_left, pchck.hGoUp_top)) {
                     optimalLeft = pchck.hGoUp_left
                     optimalTop = pchck.hGoUp_top
+                    element.style.textAlign = 'center'
                 }
                 else if (!this.hasCellByPositioning(pchck.hGoDown_left, pchck.hGoDown_top)) {
                     optimalLeft = pchck.hGoDown_left
                     optimalTop = pchck.hGoDown_top
+                    element.style.textAlign = 'center'
                 }
             }
             else if (hv === 'v') {
                 if (!this.hasCellByPositioning(pchck.vGoLeft_left, pchck.vGoLeft_top)) {
                     optimalLeft = pchck.vGoLeft_left
                     optimalTop = pchck.vGoLeft_top
+                    element.style.textAlign = 'right'
                 }
                 else if (!this.hasCellByPositioning(pchck.vGoRight_left, pchck.vGoRight_top)) {
                     optimalLeft = pchck.vGoRight_left
                     optimalTop = pchck.vGoRight_top
+                    element.style.textAlign = 'left'
                 }
             }
 
@@ -61,10 +65,12 @@ class LinkNamePositioner {
         if (hv === 'h') {
             optimalLeft = pchck.hGoDown_left
             optimalTop = pchck.hGoDown_top - 5
+            element.style.textAlign = 'center'
         }
         else if (hv === 'v') {
             optimalLeft = pchck.vGoRight_left
             optimalTop = pchck.vGoRight_top
+            element.style.textAlign = 'left'
         }
 
         return { optimalLeft, optimalTop }

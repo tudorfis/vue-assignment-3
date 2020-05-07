@@ -1,8 +1,9 @@
+import Vue from "vue"
 import { gridSvgService } from "../../../components/grid/services/gridSvg.service"
 import { globalConfig as gc } from "../../../config/global.config"
 import { Utils } from "../../../utils/utils"
 import { gridModel } from "../grid.model"
-import { gridcellBlueprint, gridModelBlueprint } from "../grid.blueprints"
+import { gridcellBlueprint, gridModelBlueprint, linkAttributeBlueprint } from "../grid.blueprints"
 import { GridPositionIterator } from "../iterators/GridPositionIterator"
 import { gridHistoryService } from "./gridHistory.service"
 import { gridLinksBuilderService } from "./grid-links/gridLinksBuilder.service"
@@ -82,4 +83,8 @@ export const gridIOservice = {
         gridHistoryService.saveState()
         linkNameHelper.removeAll()
     },
+    setNewLinkAttribute(linkKey) {
+        const newLinkAttributes = Utils.deepclone(linkAttributeBlueprint)
+        Vue.set(gridModel.model.linkAttributes, linkKey, newLinkAttributes)
+    }
 }

@@ -17,7 +17,6 @@ const zoomService = {
     },
     zoomIn() {
         if (this.disableZoomIn()) return
-        globalResetsService.reset
 
         gc.zoomLevel += gc.zoomDiff
         this.zoomDimensionAdjust.zoomIn(gc)
@@ -32,7 +31,6 @@ const zoomService = {
     },
     zoomOut() {
         if (this.disableZoomOut()) return
-        globalResetsService.reset
 
         gc.zoomLevel -= gc.zoomDiff
         this.zoomDimensionAdjust.zoomOut(gc)
@@ -55,12 +53,16 @@ const zoomService = {
 }
 
 function recalculateRebuildServices() {
+    globalResetsService.reset
+
     gridReduceService.calculateGridSize()
     gridReduceService.increaseGrid()
     gridReduceService.reduceGrid()
 
     gridSvgService.calculateSvg()
     gridLinksBuilderService.buildLinks()
+
+    gridArrowAttributesService.resetLeftTop()
 
     linkNameHelper.rearange()
 }
