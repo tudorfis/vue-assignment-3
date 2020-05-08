@@ -69,11 +69,13 @@ const gridModel = {
         const index = this.model.links.indexOf(linkKey)
         this.model.links.splice(index, 1)
 
+        this.deleteLinkAttribute(linkKey)
+        linkNameHelper.deleteLinkName(linkKey)
+    },
+    deleteLinkAttribute(linkKey) {
         const linkAttribute = this.getLinkAttribute(linkKey)
-        if (linkAttribute) {
-            delete this.getLinkAttribute(linkKey)
-            linkNameHelper.deleteLinkName(linkKey)
-        }
+        if (linkAttribute) 
+            delete this.model.linkAttributes[linkKey]
     }
 }
 

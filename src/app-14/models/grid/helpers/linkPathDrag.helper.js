@@ -1,19 +1,25 @@
 import { gridArrowConnectorService } from "../../../components/grid/services/gridArrowConnector.service"
+import { globalConfig as gc } from "../../../config/global.config"
+import { Utils } from "../../../utils/utils"
 import { gridModel } from "../grid.model"
 import { gridLinksBuilderService } from "../services/grid-links/gridLinksBuilder.service"
+import { gridIOservice } from "../services/gridIO.service"
 import linkEEMapHelper from "./linkEEMap.helper"
-import { Utils } from "../../../utils/utils"
 
 const linkPathDragHelper = {
     tempLh: null,
     hasTempPotential: false,
     tempEEMapState: null,
+    tempLinkAttributeLinkKeys: [],
     
     handleLinkDraw(lh, isDrag) {
         this.restore()
-        if (isDrag) {
-            this.save(lh)
-        }
+        if (!isDrag) return
+
+        gridArrowConnectorService.hideArrowConnector()
+        this.handleSplitGridcellCase(lh)
+
+        this.save(lh)
     },
     restore() {
         if (!this.tempEEMapState) return
@@ -44,6 +50,30 @@ const linkPathDragHelper = {
     handleLinkConnected() {
         this.tempLh = null
         this.hasTempPotential = false
+    },
+    handleSplitGridcellCase(lh) {
+        const { isElementOfTypeSplit, isSplitYesDrag, isSplitNoDrag } = gridArrowConnectorService
+        if (!isElementOfTypeSplit) return
+
+        const { linkKey } = lh
+        gridIOservice.setNewLinkAttribute(linkKey)
+        this.tempLinkAttributeLinkKeys.push(linkKey)
+
+        const linkAttribute = gridModel.getLinkAttribute(linkKey)
+        linkAttribute.outDirection = 'down'
+
+        if (isSplitYesDrag) linkAttribute.color = gc.pathSplitYesColor
+        else if (isSplitNoDrag) linkAttribute.color = gc.pathSplitNoColor
+    },
+    deletePreviousSplitGridcellCase(dontDeleteLastOne = false) {
+        if (!this.tempLinkAttributeLinkKeys.length) return
+
+        if (dontDeleteLastOne)
+            this.tempLinkAttributeLinkKeys.pop()
+        
+        for (const linkKey of this.tempLinkAttributeLinkKeys) {
+            gridModel.deleteLinkAttribute(linkKey)
+        }
     }
 }
 

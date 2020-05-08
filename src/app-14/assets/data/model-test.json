@@ -1,7 +1,7 @@
 {
-    "numCols": 6,
+    "numCols": 9,
     "numRows": 7,
-    "totalSteps": 7,
+    "totalSteps": 8,
     "steps": {
         "1-1": {
             "is": 1,
@@ -36,6 +36,11 @@
         "6-2": {
             "is": 1,
             "type": "AUTOMATION",
+            "id": 25
+        },
+        "3-7": {
+            "is": 1,
+            "type": "SPLIT",
             "id": 25
         }
     },

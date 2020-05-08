@@ -50,6 +50,9 @@ const linkNameHelper = {
     },
     createGridLinkNamesElements() {
         this.gridLinkNamesElementsList = {}
+        
+        // @TODO: create new elements since using the ones from vue creates bugs
+        // for (const { linkKey } of this.linkAttributesList) { }
 
         for (const element of this.gridLinkNamesEl.children)
             this.gridLinkNamesElementsList[element.getAttribute('linkKey')] = element
@@ -119,6 +122,8 @@ const linkNameHelper = {
     },
 
     deleteGridLinkNameEl(linkKey) {
+        if (!this.gridLinkNamesElementsList) return
+
         const element = this.gridLinkNamesElementsList[linkKey]
         if (!element) return
 

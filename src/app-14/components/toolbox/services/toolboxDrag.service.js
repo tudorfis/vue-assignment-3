@@ -3,7 +3,7 @@ import { gridModel } from "../../../models/grid/grid.model"
 import { globalResetsService } from "../../../services/globalResets.service"
 import { toolboxDragStylesService } from "./toolboxDragStyles.service"
 
-export const toolboxDragService = {
+const toolboxDragService = {
     dragType: '',
     dragPosition: null,
     dragGridcell: null,
@@ -53,3 +53,6 @@ export const toolboxDragService = {
             gridcellelement.showOtherIcons = false
     }
 }
+
+globalThis.toolboxDragService = toolboxDragService
+export { toolboxDragService }

@@ -6,6 +6,7 @@ import { toolboxDragService } from "../../toolbox/services/toolboxDrag.service"
 import { gridArrowConnectorService } from "./gridArrowConnector.service"
 import { gridPanService } from "./gridPan.service"
 import { DimensionsConfigEnum } from "../../../config/dimensions/DimensionsConfigEnum"
+import { toolboxElementsEnum } from "../../toolbox/enum/toolboxElements.enum"
 
 const gridArrowAttributesService = {
     linkKey: '',
@@ -23,6 +24,8 @@ const gridArrowAttributesService = {
     i: 0,
     top: 0,
     left: 0,
+
+    popupSelectorId: '.grid-arrow-attributes-box',
 
     findSvgPath(event) {
         if (this.shouldStopSearchingForSvgPath) return
@@ -63,8 +66,8 @@ const gridArrowAttributesService = {
     },
     build(svgPath, event) {
         this.setIconStyles()
+        this.setPopupStyles()
         this.setTopLeft(svgPath, event)
-
         this.linkKey = svgPath.getAttribute('linkKey')
     },
 
@@ -78,6 +81,27 @@ const gridArrowAttributesService = {
         
         this.iconEl.style.top = `-${Math.round(this.adjustMeasure / 3.3)}px`
     },
+    
+    setPopupStyles() {
+        const vm = this
+        setTimeout(function(){
+            const display = vm.isLinkFromElementOfTypeSplit ? 'none' : 'block'
+            Object.assign(vm.gridAttributesPopupEditButtonEl.style, { display })
+        }, 0)
+    },
+
+    get gridAttributesPopupBoxEl() {
+        return document.querySelector(this.popupSelectorId)
+    },
+    get gridAttributesPopupEditButtonEl() {
+        return document.querySelector(`${this.popupSelectorId} .edit-attributes-button`)
+    },
+
+    get isLinkFromElementOfTypeSplit() {
+        const { link1 } = new LinkHelper(this.linkKey)
+        return (gridModel.model.cells[link1].type === toolboxElementsEnum.SPLIT)
+    },
+
     setTopLeft(svgPath, event) {
         if (svgPath.getAttribute('linkKey') !== this.linkKey || (!this.top && !this.left)) {
             this.top = event.pageY - this.htmlEl.scrollTop - this.adjustMeasure / 2

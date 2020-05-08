@@ -1,12 +1,14 @@
+import { DimensionsConfigEnum } from "../../../config/dimensions/DimensionsConfigEnum"
 import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
 import { LinkHelper } from "../../../models/grid/helpers/link.helper"
-import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
-import { gridLinksBuilderService } from "../../../models/grid/services/grid-links/gridLinksBuilder.service"
-import { VueUtils } from "../../../utils/vue.utils"
-import { gridPanService } from "./gridPan.service"
 import { linkPathDragHelper } from "../../../models/grid/helpers/linkPathDrag.helper"
-import { DimensionsConfigEnum } from "../../../config/dimensions/DimensionsConfigEnum"
+import { gridLinksBuilderService } from "../../../models/grid/services/grid-links/gridLinksBuilder.service"
+import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
+import { VueUtils } from "../../../utils/vue.utils"
+import { Utils } from "../../../utils/utils"
+import { toolboxElementsEnum } from "../../toolbox/enum/toolboxElements.enum"
+import { gridPanService } from "./gridPan.service"
 
 export const gridArrowConnectorService = {
     selectorId: '',
@@ -18,6 +20,9 @@ export const gridArrowConnectorService = {
     isHighlight: false,
     recentLink: false,
     
+    isSplitNoDrag: false,
+    isSplitYesDrag: false,
+
     get hasCell() {
         if (!this.position) return false
 
@@ -31,6 +36,16 @@ export const gridArrowConnectorService = {
 
         return this.gridcell.__vue__.$options.propsData.position
     },
+    get gridcellType() {
+        if (!gridModel.model) return ''
+
+        let invalid = !this.gridcell || !this.position
+        invalid |= !gridModel.model.cells[this.position]
+        
+        if (invalid) return ''
+
+        return gridModel.model.cells[this.position].type
+    },
     get gridcellElement() {
         return this.gridcell.__vue__.$refs['gridcellelement'].$el
     },
@@ -40,6 +55,15 @@ export const gridArrowConnectorService = {
 
         return document.querySelector(`#${this.selectorId}`)
     },
+    get arrowIconGeneral() {
+        return document.querySelector(`#${this.selectorId} .icon-general`)
+    },
+    get arrowIconSplitYes() {
+        return document.querySelector(`#${this.selectorId} .icon-split-yes`)
+    },
+    get arrowIconSplitNo() {
+        return document.querySelector(`#${this.selectorId} .icon-split-no`)
+    },
     get mathMedium() {
         return (gc.gridCellElementWidth + gc.gridCellElementHeight) / 2
     },
@@ -48,19 +72,62 @@ export const gridArrowConnectorService = {
         this.recentLink = false
         this.startedDrag = true
         this.startedPosition = this.currentPosition
+        
     },
     init(event) {
-        
         if (event) {
             this.gridcell = VueUtils.traversePath(event, 'gridcell')
             this.highlightCell()
         }
 
-        if (!this.hasCell || this.startedDrag || gridPanService.startedPan) return
-
+        if (this.shouldHideArrowConnector) return
         this.setArrowConnectorStyles()    
     },
+
+    get shouldHideArrowConnector() {
+        let shouldHideArrowConnector = !this.hasCell || this.startedDrag
+        shouldHideArrowConnector |= gridPanService.startedPan || this.hasSufficientLinkConnections
+
+        return  shouldHideArrowConnector
+    },
+
+    get hasSufficientLinkConnections() {
+        const links = Utils.deepclone(gridModel.model.links)
+        const totalLinkConnections = links.reduce((total, linkKey) => {
+            const match = linkKey.match(new RegExp(`^${this.position}`, 'g'))
+            if (match) total++
+            
+            return total
+        }, 0)
+
+        const conditionForOtherBoxes = !this.isElementOfTypeSplit && totalLinkConnections >= 1
+        const conditionForSplitBox = this.isElementOfTypeSplit && totalLinkConnections >= 2
+
+        return conditionForOtherBoxes || conditionForSplitBox
+    },
+
+    get isElementOfTypeSplit() {
+        return this.gridcellType === toolboxElementsEnum.SPLIT
+    },
+
     setArrowConnectorStyles() {
+        this.isElementOfTypeSplit ?
+            this.hideGeneralShowSplitIcons() :
+            this.showGeneralHideSplitIcons()
+
+        this.setArrowConnectorStylesPositioning()
+    },
+    hideGeneralShowSplitIcons() {
+        this.arrowIconGeneral.style.display = 'none'
+        this.arrowIconSplitYes.style.display = 'block'
+        this.arrowIconSplitNo.style.display = 'block'
+    },
+    showGeneralHideSplitIcons() {
+        this.arrowIconGeneral.style.display = 'block'
+        this.arrowIconSplitYes.style.display = 'none'
+        this.arrowIconSplitNo.style.display = 'none'
+    },
+    setArrowConnectorStylesPositioning() {
         const adjust = Math.floor(this.mathMedium / 2)
         const rect = this.gridcell.getBoundingClientRect()
 
@@ -77,7 +144,7 @@ export const gridArrowConnectorService = {
         }
 
         Object.assign(this.arrowConnectorEl.style, {
-            display: `block`,
+            display: `flex`,
             top: `${top}px`,
             left: `${left}px`,
             fontSize: `${fontSize}px`
@@ -126,6 +193,7 @@ export const gridArrowConnectorService = {
         
         if (!this.recentLink)
             linkPathDragHelper.handleNoPotentialConnection()
+        
     },
     hideArrowConnector() {
         this.arrowConnectorEl.style.display = `none`
@@ -145,11 +213,14 @@ export const gridArrowConnectorService = {
 
             gridHistoryService.saveState()
             linkPathDragHelper.handleLinkConnected()
+            linkPathDragHelper.deletePreviousSplitGridcellCase(true)
+
         }
         else  {
             this.startedDrag = false
             this.removeTempPaths()
             this.hideArrowConnector()
+            linkPathDragHelper.deletePreviousSplitGridcellCase(false)
         }
 
         this.dehighlightCell()
@@ -185,4 +256,5 @@ export const gridArrowConnectorService = {
     get restoreEEMapState() {
         return !this.recentLink && this.startedDrag
     }
+
 }

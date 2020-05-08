@@ -45,21 +45,24 @@ export default {
             toolboxDragService.startedDrag = false
         },
         onDropDoDroppoints() {
+            const oldPosition = toolboxDragService.dragPosition
             const newPosition = gridCellService.moveCellsByDroppointDirection(this.dropppointDirection, this.position)
-            gridCellService.setCellActive(newPosition)
 
-            const emptyDroppointPosition = gridLinksDroppointService.getEmptyPositionAfterDroppoint(newPosition, toolboxDragService.dragPosition)
+            gridCellService.setCellActive(newPosition)
+            const emptyDroppointPosition = gridLinksDroppointService.getEmptyPositionAfterDroppoint(newPosition, oldPosition)
             
             if (!emptyDroppointPosition) 
                 gridCellService.removePreviousCell()
-                
+
             else {
-                gridLinksOperatorService.deleteAllLinks(emptyDroppointPosition)
+                !gridModel.model.cells[emptyDroppointPosition].is ?
+                    gridLinksOperatorService.deleteAllLinks(emptyDroppointPosition) :
+                    gridLinksOperatorService.moveLinksToNewPosition(emptyDroppointPosition, newPosition)
+
                 gridCellService.resetCell(emptyDroppointPosition)
             }
 
             gridLinksDroppointService.setDroppointLinksByDirection(newPosition, this.dropppointDirection)
-
         },
         onDropDoAllowDrop() {
             const newPosition = this.position

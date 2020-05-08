@@ -7,6 +7,7 @@ import { linkPathMapHelper } from "../../helpers/linkPathMap.helper"
 import { LinkKeyIterator } from "../../iterators/LinkKeyIterator"
 import { gridLinksDrawService } from "../grid-links/gridLinksDraw.service"
 import { linkPathDragHelper } from "../../helpers/linkPathDrag.helper"
+import { gridArrowConnectorService } from "../../../../components/grid/services/gridArrowConnector.service"
 
 const gridLinksBuilderService = {
     svgPaths: {},
@@ -30,25 +31,30 @@ const gridLinksBuilderService = {
         const lh = new LinkHelper(linkKey)
 
         linkPathDragHelper.handleLinkDraw(lh, isDrag)
-        
+
         const pathArrow = gridLinksDrawService.createPathAndArrow(lh)
         const color = this.getPathColor(linkKey, isDrag)
         const width = this.getPathWidth(linkKey, isDrag)
         const style = this.getPathStyle(linkKey, isDrag, width)
-
+        
         this.setPaths({ pathArrow, linkKey, color, width, style })
     },
-
     getPathColor(linkKey, isDrag) {
         let color = gc.defaultPathColor
-
+        
         const linkAttribute = gridModel.getLinkAttribute(linkKey)
-
+        
         if (linkAttribute && linkAttribute.color) {
             color = linkAttribute.color
         }
+        
+        const isSplitGridCell = gridArrowConnectorService.isElementOfTypeSplit
+        const isSplitDrag = gridArrowConnectorService.isSplitYesDrag 
+        
+        const dragSplitColor = isSplitDrag ? gc.drawPathSplitDragYesColor : gc.drawPathSplitDragNoColor
+        const dragPathColor = isSplitGridCell ? dragSplitColor : gc.defaultPathDragColor
 
-        return isDrag ? gc.defaultPathDragColor : color
+        return isDrag ? dragPathColor : color
     },
     getPathWidth(linkKey, isDrag) {
         let width = gc.arrowLineWidth

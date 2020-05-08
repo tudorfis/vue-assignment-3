@@ -73,7 +73,8 @@ export default {
                 linkNameHelper.setLinkAttribute(linkDescription, linkKey)
             }
 
-            gridArrowAttributesService.linkAttribute.name = linkDescription
+            const linkAttribute = gridModel.getLinkAttribute(linkKey)
+            linkAttribute.name = linkDescription
             
             linkNameHelper.setNewName(linkKey, linkDescription)
             gridHistoryService.saveState()

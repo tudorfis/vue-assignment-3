@@ -3,6 +3,12 @@ const colorConfig = {
     defaultPathDragColor: '#e9e9e9',
     defaultPathColor: '#444444',
 
+    drawPathSplitDragNoColor: '#ffbfbf',
+    drawPathSplitDragYesColor: '#caf9ca',
+
+    pathSplitNoColor: '#E64D66',
+    pathSplitYesColor: '#33991A',
+
     colorArray: [
         '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
         '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',

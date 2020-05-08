@@ -59,6 +59,21 @@ const gridLinksOperatorService = {
                 gridModel.deleteLink(lki.linkKey)
             }
         }
+    },
+    moveLinksToNewPosition(oldPosition, newPosition) {
+        const links = gridModel.model.links
+        const lki = new LinkKeyIterator(links)
+
+        while (lki.continue) {
+            if (!lki.linkKey.includes(oldPosition)) continue
+
+            const newLinkKey = lki.linkKey.replace(oldPosition, newPosition)
+            const index = gridModel.model.links.indexOf(lki.linkKey)
+            gridModel.model.links[index] = newLinkKey
+
+            if (gridModel.getLinkAttribute(lki.linkKey))
+                Utils.renameObjKey(gridModel.model.linkAttributes, lki.linkKey, newLinkKey)
+        }
     }
 }
 
