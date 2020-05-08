@@ -6,9 +6,9 @@
     <i class="fas fa-pen-square fa-fill edit-icon"></i>
 
     <div class="grid-arrow-attributes-box">
-      <button>
+      <button @click="editAttributes">
         <i class="fas fa-cogs"></i>
-        Edit Settings
+        Edit Attributes
       </button>
       <button @click="changeDescription">
         <i class="far fa-keyboard"></i>
@@ -26,15 +26,21 @@
 import { gridArrowAttributesService } from '../../services/gridArrowAttributes.service'
 export default {
   methods: {
+    editAttributes() {
+      document.querySelector('.grid-link-attributes-modal').__vue__.updateComponent()
+      this.openModal('#gridLinkAttributesModal')
+    },
     changeDescription() {
-      document.querySelector('.grid-link-name-modal').__vue__.updateLinkDescription()
-      
-      $('#gridLinkNameModal').modal();
-      gridArrowAttributesService.isModalOpened = true
-      gridArrowAttributesService.hideArrowAttributes()
+      document.querySelector('.grid-link-name-modal').__vue__.updateComponent()
+      this.openModal('#gridLinkNameModal')
     },
     deleteLink() {
       gridArrowAttributesService.deleteLink()
+    },
+    openModal(selectorId) {
+      $(selectorId).modal();
+      gridArrowAttributesService.isModalOpened = true
+      gridArrowAttributesService.hideArrowAttributes()
     }
   },
   mounted() {

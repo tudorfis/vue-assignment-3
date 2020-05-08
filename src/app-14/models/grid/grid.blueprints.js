@@ -15,9 +15,20 @@ const gridcellBlueprint = {
     id: 0               /** Number */
 }
 
+const linkAttributeColors = [
+    '#333333',
+    '#3792bc',
+    '#E6FF80',
+    '#FF33FF',
+    '#4DB380',
+    '#FFFF99',
+    '#991AFF',
+    '#FF6633'
+]
+
 const linkAttributeBlueprint = {
     name: "",
-    color: "",          /** #hascodes kartra */
+    color: linkAttributeColors[0],
     width: "",          /** -2, 0, 3 */
     style: "",          /** dotted, dashed */
     hideHead: false,    /** true, false */ 
@@ -28,5 +39,6 @@ const linkAttributeBlueprint = {
 export {
     gridModelBlueprint,
     gridcellBlueprint,
+    linkAttributeColors,
     linkAttributeBlueprint
 }

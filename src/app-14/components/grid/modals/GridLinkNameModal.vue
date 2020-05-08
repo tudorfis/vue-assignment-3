@@ -5,6 +5,7 @@
       id="gridLinkNameModal"
       tabindex="-1"
       role="dialog"
+      data-backdrop="static"
       data-keyboard="false"
       aria-labelledby="gridLinkNameModalTitle"
       aria-hidden="true"
@@ -79,7 +80,7 @@ export default {
 
             this.closeModal()
         },
-        updateLinkDescription() {
+        updateComponent() {
             const { linkKey, linkAttribute } = gridArrowAttributesService
             this.linkKey = linkKey  
             
@@ -98,6 +99,7 @@ export default {
 
 <style lang="scss" scoped>
 .grid-link-name-modal {
+  user-select: none;
   .modal-header {
     padding: 20px 30px;
     background: #333;

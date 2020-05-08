@@ -22,7 +22,6 @@ const linkNameHelper = {
                 
                 const linkNamePositioner = new LinkNamePositioner({ svgD, element, linkKey })
                 const { optimalLeft, optimalTop } = linkNamePositioner.getOptimalPosition()
-                console.log('{ optimalLeft, optimalTop } :', { optimalLeft, optimalTop } )
     
                 Object.assign(element.style, {
                     left: `${optimalLeft}px`,
@@ -92,6 +91,8 @@ const linkNameHelper = {
 
     renameOldLinkKey(oldLinkKey, newLinkKey) {
         const linkAttribute = this.findLinkAttribute(oldLinkKey)
+        if (!linkAttribute) return
+        
         linkAttribute.linkKey = newLinkKey
 
         const gridLinkNameEl = this.gridLinkNamesElements[oldLinkKey]

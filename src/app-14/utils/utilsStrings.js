@@ -10,9 +10,13 @@ class UtilsStrings {
     }
     static findMiddleWord(str) {
         if (!str) return ''
-        const halfStr = str.length / 2
+        const halfStr = Math.floor(str.length / 2)
 
         let i, startPos, endPos
+        if (str[halfStr] === ' ') {
+            endPos = halfStr
+        }
+
         for (i = 1; i <= 20; i++) {
             if (!startPos && str[halfStr - i] === ' ')
                 startPos = halfStr - i + 1
@@ -22,7 +26,7 @@ class UtilsStrings {
 
             if (!startPos || !endPos) continue
         }
-
+        
         return str.slice(startPos, endPos)
     }
     static breaklinehalf(str, length = 40) {

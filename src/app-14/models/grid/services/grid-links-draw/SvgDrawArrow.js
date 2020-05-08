@@ -133,7 +133,7 @@ class SvgDrawArrow extends SvgDrawBase {
 
         if (!hideHead) {
             let { arrowPointerAdjust } = this.getArrowPointers()
-            if (arrowPointerAdjust > 3) arrowPointerAdjust -= 3
+            if (arrowPointerAdjust >= 3) arrowPointerAdjust -= 3
 
             distance -= this.arrow_width - arrowPointerAdjust
         }

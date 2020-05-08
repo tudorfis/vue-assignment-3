@@ -75,7 +75,7 @@ export default {
             gridCellService.setCellActive(newPosition, oldPosition)
             gridLinksOperatorService.rearangeLinks(oldPosition, newPosition)
             
-            // gridLinksDroppointService.setDroppointLinksByMiddle(newPosition)
+            gridLinksDroppointService.setDroppointLinksByMiddle(newPosition)
             
             if (!gridLinksOperatorService.hasNoLinks(newPosition))
                 gridLinksOperatorService.deleteAllLinks(oldPosition)
