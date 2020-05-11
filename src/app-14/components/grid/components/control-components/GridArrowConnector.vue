@@ -69,6 +69,9 @@ export default {
         else if (classList.contains('icon-split-yes')) {
           this.setSplitYesDrag() 
         }
+        else {
+          this.setNoSplitDrag()
+        }
       }
     },
     setSplitNoDrag() {
@@ -77,6 +80,10 @@ export default {
     },
     setSplitYesDrag() {
       gridArrowConnectorService.isSplitYesDrag = true;
+      gridArrowConnectorService.isSplitNoDrag = false;
+    },
+    setNoSplitDrag() {
+      gridArrowConnectorService.isSplitYesDrag = false;
       gridArrowConnectorService.isSplitNoDrag = false;
     }
   },

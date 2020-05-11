@@ -5,6 +5,7 @@ import { gridModel } from "../grid.model"
 import { gridLinksBuilderService } from "../services/grid-links/gridLinksBuilder.service"
 import { gridIOservice } from "../services/gridIO.service"
 import linkEEMapHelper from "./linkEEMap.helper"
+import { toolboxElementsEnum } from "../../../components/toolbox/enum/toolboxElements.enum"
 
 const linkPathDragHelper = {
     tempLh: null,
@@ -27,7 +28,7 @@ const linkPathDragHelper = {
         if (gridArrowConnectorService.restoreEEMapState && !this.hasTempPotential) {
             linkEEMapHelper.eeMap = Utils.deepclone(this.tempEEMapState)
 
-            if (this.tempLh) 
+            if (this.tempLh)
                 gridModel.deleteLink(this.tempLh.linkKey)
         }
     },
@@ -52,19 +53,34 @@ const linkPathDragHelper = {
         this.hasTempPotential = false
     },
     handleSplitGridcellCase(lh) {
-        const { isElementOfTypeSplit, isSplitYesDrag, isSplitNoDrag } = gridArrowConnectorService
-        if (!isElementOfTypeSplit) return
+        const { isSplitYesDrag, isSplitNoDrag } = gridArrowConnectorService
+        if (!this.isSplitElement(lh.linkKey)) return
 
         const { linkKey } = lh
         gridIOservice.setNewLinkAttribute(linkKey)
         this.tempLinkAttributeLinkKeys.push(linkKey)
 
         const linkAttribute = gridModel.getLinkAttribute(linkKey)
+        linkAttribute.isSplit = true
         linkAttribute.outDirection = 'down'
 
-        if (isSplitYesDrag) linkAttribute.color = gc.pathSplitYesColor
-        else if (isSplitNoDrag) linkAttribute.color = gc.pathSplitNoColor
+        if (isSplitYesDrag) {
+            linkAttribute.color = gc.pathSplitYesColor
+            linkAttribute.splitType = 'yes'
+        }
+        else if (isSplitNoDrag) {
+            linkAttribute.color = gc.pathSplitNoColor
+            linkAttribute.splitType = 'no'
+        }
     },
+
+    isSplitElement(linkKey) {
+        const { link1 } = new LinkHelper(linkKey)
+        const { type } = gridModel.model.cells[link1]
+        
+        return type === toolboxElementsEnum.SPLIT    
+    },
+
     deletePreviousSplitGridcellCase(dontDeleteLastOne = false) {
         if (!this.tempLinkAttributeLinkKeys.length) return
 

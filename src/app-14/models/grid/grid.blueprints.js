@@ -34,6 +34,8 @@ const linkAttributeBlueprint = {
     hideHead: false,    /** true, false */ 
     outDirection: "",   /** down, right, up, left */
     inDirection: "",    /** down, right, up, left */
+    isSplit: false,     /** true, false */
+    splitType: ""       /** yes, no */
 }
 
 export {

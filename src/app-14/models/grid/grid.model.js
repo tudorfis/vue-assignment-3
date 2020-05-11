@@ -56,7 +56,14 @@ const gridModel = {
         return ''
     },
     getLinkAttribute(linkKey) {
-        return this.model.linkAttributes[linkKey]
+        return this.model.linkAttributes[linkKey] || {}
+    },
+    getLinkAttributes(position) {
+        const linkAttributes = Utils.deepclone(this.model.linkAttributes)
+        const objectKeys = Object.keys(linkAttributes)
+        const keys = objectKeys.filter(linkKey => linkKey.includes(position))
+        
+        return keys.map(linkKey => (this.model.linkAttributes[linkKey]))
     },
     deleteCell(position) {
         if (!position || !this.model.cells[position]) return

@@ -1,65 +1,96 @@
 {
-    "numCols": 7,
-    "numRows": 6,
-    "totalSteps": 9,
+    "numCols": 5,
+    "numRows": 5,
+    "totalSteps": 5,
     "steps": {
         "1-1": {
             "is": 1,
-            "type": "SEND_EMAIL",
-            "id": 21
-        },
-        "2-1": {
-            "is": 1,
-            "type": "SEND_SMS",
-            "id": 23
+            "type": "SUBSCRIBE_LIST",
+            "id": 26
         },
         "2-2": {
             "is": 1,
-            "type": "SEND_SMS",
-            "id": 14
+            "type": "SPLIT",
+            "id": 55
         },
-        "3-2": {
-            "is": 1,
-            "type": "AUTOMATION",
-            "id": 31
-        },
-        "3-3": {
-            "is": 1,
-            "type": "AUTOMATION",
-            "id": 52
-        },
-        "4-1": {
+        "3-1": {
             "is": 1,
             "type": "SEND_EMAIL",
-            "id": 51
+            "id": 54
         },
         "4-2": {
             "is": 1,
-            "type": "AUTOMATION",
-            "id": 57
+            "type": "SUBSCRIBE_SEQUENCE",
+            "id": 49
         },
-        "4-3": {
+        "4-4": {
             "is": 1,
             "type": "ADD_REMOVE_TAG",
-            "id": 59
-        },
-        "5-1": {
-            "is": 1,
-            "type": "ADD_REMOVE_TAG",
-            "id": 87
+            "id": 41
         }
     },
     "links": [
-        "2-1__1-1",
-        "2-1__2-2",
-        "2-2__3-3",
-        "2-2__3-2",
-        "3-2__4-1",
-        "3-2__5-1",
-        "3-2__4-2",
-        null,
-        null,
-        "3-3__4-2"
+        "4-2__4-4",
+        "3-1__4-4",
+        "1-1__3-1",
+        "2-2__4-4",
+        "2-2__3-1"
     ],
-    "linkAttributes": {}
+    "linkAttributes": {
+        "4-2__4-4": {
+            "name": "This is another amazing super-califragilistic link",
+            "color": "#4D80CC",
+            "width": "",
+            "style": "dashed",
+            "hideHead": false,
+            "outDirection": "",
+            "inDirection": "",
+            "isSplit": false,
+            "splitType": ""
+        },
+        "3-1__4-4": {
+            "name": "This is an amazing link, omg, is the most beautyfull link I ever saw",
+            "color": "#991AFF",
+            "width": "3",
+            "style": "dashed",
+            "hideHead": false,
+            "outDirection": "left",
+            "inDirection": "right",
+            "isSplit": false,
+            "splitType": ""
+        },
+        "1-1__3-1": {
+            "name": "",
+            "color": "#FF33FF",
+            "width": "3",
+            "style": "",
+            "hideHead": true,
+            "outDirection": "",
+            "inDirection": "",
+            "isSplit": false,
+            "splitType": ""
+        },
+        "2-2__4-4": {
+            "name": "",
+            "color": "#33991A",
+            "width": "",
+            "style": "",
+            "hideHead": false,
+            "outDirection": "down",
+            "inDirection": "",
+            "isSplit": true,
+            "splitType": "yes"
+        },
+        "2-2__3-1": {
+            "name": "",
+            "color": "#E64D66",
+            "width": "",
+            "style": "",
+            "hideHead": false,
+            "outDirection": "down",
+            "inDirection": "",
+            "isSplit": true,
+            "splitType": "no"
+        }
+    }
 }

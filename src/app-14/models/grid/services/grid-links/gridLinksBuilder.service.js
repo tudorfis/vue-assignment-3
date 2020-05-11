@@ -7,7 +7,6 @@ import { linkPathMapHelper } from "../../helpers/linkPathMap.helper"
 import { LinkKeyIterator } from "../../iterators/LinkKeyIterator"
 import { gridLinksDrawService } from "../grid-links/gridLinksDraw.service"
 import { linkPathDragHelper } from "../../helpers/linkPathDrag.helper"
-import { gridArrowConnectorService } from "../../../../components/grid/services/gridArrowConnector.service"
 
 const gridLinksBuilderService = {
     svgPaths: {},
@@ -48,10 +47,10 @@ const gridLinksBuilderService = {
             color = linkAttribute.color
         }
         
-        const isSplitGridCell = gridArrowConnectorService.isElementOfTypeSplit
-        const isSplitDrag = gridArrowConnectorService.isSplitYesDrag 
+        const isSplitGridCell = linkAttribute.isSplit
+        const isSplitYesDrag = linkAttribute.splitType === 'yes' 
         
-        const dragSplitColor = isSplitDrag ? gc.drawPathSplitDragYesColor : gc.drawPathSplitDragNoColor
+        const dragSplitColor = isSplitYesDrag ? gc.drawPathSplitDragYesColor : gc.drawPathSplitDragNoColor
         const dragPathColor = isSplitGridCell ? dragSplitColor : gc.defaultPathDragColor
 
         return isDrag ? dragPathColor : color

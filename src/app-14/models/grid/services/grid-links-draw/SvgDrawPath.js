@@ -1,16 +1,18 @@
 import { SvgDrawBase } from './SvgDrawBase'
 import linkEEMapHelper from '../../helpers/linkEEMap.helper'
+import { linkPathDragHelper } from '../../helpers/linkPathDrag.helper'
 
 class SvgDrawPath extends SvgDrawBase {
     constructor(lh) {
         super(lh)
     }
     drawPath(direction) {
+        const { arrowPointerAdjust } = this.getArrowPointers()
         let svgLeft, svgTop, svgPath, adjustForGridEdges = 0
-        const difference_ee = linkEEMapHelper.createEEDifferenceForPath(this.lh, direction)
+        const difference_ee = this.getDifferenceEE(direction)
 
         if (direction === 'up') {
-            adjustForGridEdges = (this.lh.row1 === 1 ? -5 : 0)
+            adjustForGridEdges = (this.lh.row1 === 1 ? -arrowPointerAdjust : 0)
             svgLeft = this.horizontal_M + this.cell_center_size_width - difference_ee
             svgTop =  this.vertical_M + this.cellelement_center_size_height
             svgPath = `M${svgLeft} ${svgTop} v-${this.cellelement_center_size_height + adjustForGridEdges}`
@@ -21,7 +23,7 @@ class SvgDrawPath extends SvgDrawBase {
             svgPath = `M${svgLeft} ${svgTop} v${this.cellelement_center_size_height}`
         }
         else if (direction === 'left') {
-            adjustForGridEdges = (this.lh.col1 === 1 ? -5 : 0)
+            adjustForGridEdges = (this.lh.col1 === 1 ? -arrowPointerAdjust : 0)
             svgLeft = this.horizontal_M + this.cellelement_center_size_width
             svgTop =  this.vertical_M + this.cell_center_size_height - difference_ee
             svgPath = `M${svgLeft} ${svgTop} h-${this.cellelement_center_size_width + adjustForGridEdges}`
@@ -77,6 +79,15 @@ class SvgDrawPath extends SvgDrawBase {
         const distance = cell_center_size
 
         return ` ${svgD}${distance}`
+    }
+    getDifferenceEE(direction) {
+        const { linkKey } = this.lh
+        const { splitType } = gridModel.getLinkAttribute(linkKey)
+        const diffPoint = splitType === 'yes' ? 3 : splitType === 'no' ? 2 : 0
+
+        return !!diffPoint ?
+            linkEEMapHelper.getDiffByPoint(diffPoint) :
+            linkEEMapHelper.createEEDifferenceForPath(this.lh, direction)
     }
 }
 

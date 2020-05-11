@@ -1,5 +1,5 @@
 {
-    "numCols": 9,
+    "numCols": 5,
     "numRows": 5,
     "totalSteps": 4,
     "steps": {
@@ -14,8 +14,7 @@
             "id": 54
         },
         "4-2": {
-            "is": 1,{"numCols":9,"numRows":7,"totalSteps":8,"steps":{"1-1":{"is":1,"type":"ADD_REMOVE_TAG","id":74},"1-5":{"is":1,"type":"ADD_REMOVE_TAG","id":41},"2-3":{"is":1,"type":"SEND_EMAIL","id":54},"2-4":{"is":1,"type":"SUBSCRIBE_LIST","id":44},"3-4":{"is":1,"type":"SUBSCRIBE_SEQUENCE","id":52},"5-4":{"is":1,"type":"SUBSCRIBE_SEQUENCE","id":49},"6-2":{"is":1,"type":"AUTOMATION","id":25},"3-7":{"is":1,"type":"SPLIT","id":25}},"links":["5-4__1-5","2-3__1-5","5-4__1-1"],"linkAttributes":{"2-3__1-5":{"name":"This is an amazing link, omg, is the most beautyfull link I ever saw","color":"#FF1A66","width":"3","style":"dashed","hideHead":false,"outDirection":"left","inDirection":"right"},"5-4__1-5":{"name":"This is another amazing super-califragilistic link","color":"blue","width":"","style":"dashed","hideHead":false,"outDirection":"","inDirection":""}}}
-
+            "is": 1,
             "type": "SUBSCRIBE_SEQUENCE",
             "id": 49
         },
@@ -55,8 +54,8 @@
             "width": "3",
             "style": "",
             "hideHead": true,
-            "outDirection": "right",
-            "inDirection": "left"
+            "outDirection": "",
+            "inDirection": ""
         }
     }
 }

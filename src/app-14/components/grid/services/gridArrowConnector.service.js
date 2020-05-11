@@ -100,7 +100,7 @@ export const gridArrowConnectorService = {
             return total
         }, 0)
 
-        const conditionForOtherBoxes = !this.isElementOfTypeSplit && totalLinkConnections >= 1
+        const conditionForOtherBoxes = !this.isElementOfTypeSplit && totalLinkConnections >= Infinity
         const conditionForSplitBox = this.isElementOfTypeSplit && totalLinkConnections >= 2
 
         return conditionForOtherBoxes || conditionForSplitBox
@@ -121,6 +121,18 @@ export const gridArrowConnectorService = {
         this.arrowIconGeneral.style.display = 'none'
         this.arrowIconSplitYes.style.display = 'block'
         this.arrowIconSplitNo.style.display = 'block'
+
+        this.hideSplitIconYesOrNo()
+    },
+    hideSplitIconYesOrNo() {
+        const linkAttributes = gridModel.getLinkAttributes(this.currentPosition)
+        if (!linkAttributes.length) return
+
+        if (linkAttributes[0].splitType === 'no') 
+            this.arrowIconSplitNo.style.display = 'none'
+        
+        else if (linkAttributes[0].splitType === 'yes')
+            this.arrowIconSplitYes.style.display = 'none'
     },
     showGeneralHideSplitIcons() {
         this.arrowIconGeneral.style.display = 'block'
@@ -214,7 +226,6 @@ export const gridArrowConnectorService = {
             gridHistoryService.saveState()
             linkPathDragHelper.handleLinkConnected()
             linkPathDragHelper.deletePreviousSplitGridcellCase(true)
-
         }
         else  {
             this.startedDrag = false
@@ -256,5 +267,4 @@ export const gridArrowConnectorService = {
     get restoreEEMapState() {
         return !this.recentLink && this.startedDrag
     }
-
 }
