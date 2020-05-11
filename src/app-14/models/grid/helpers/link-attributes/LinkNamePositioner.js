@@ -19,7 +19,7 @@ class LinkNamePositioner {
     }
     getOptimalPositionCases(middleSvgPathItems) {
         const { element } = this
-
+        
         let optimalLeft = 0, optimalTop = 0
         for (const { left, top, hv } of middleSvgPathItems) {
             const pchck = this.buildPositioningChecker({ left, top, element })
@@ -126,7 +126,7 @@ class LinkNamePositioner {
     }
     createOrderedSvgPathItems(query) {
         const { svgPathMapSliced } = query
-        const centerIndex = Math.floor(svgPathMapSliced.length / 2)
+        const centerIndex = Math.floor((svgPathMapSliced.length - 1) / 2)
         const svgPathItems = []
 
         let i = centerIndex, increment = 0, goRight = true
@@ -143,6 +143,17 @@ class LinkNamePositioner {
             const lastItem = svgPathMapSliced.find(item => !svgPathItems.includes(item))
             if (lastItem) svgPathItems.push(lastItem)
         }
+
+
+        svgPathItems.sort(function(a, b) {
+            var distanceA = Math.abs(a.distance),
+                distanceB = Math.abs(b.distance)
+
+            if (distanceA > distanceB) return -1
+            if (distanceA < distanceB) return 1
+
+            return 0
+        })
 
         return svgPathItems
     }

@@ -64,7 +64,7 @@ function recalculateRebuildServices() {
 
     gridArrowAttributesService.resetLeftTop()
 
-    linkNameHelper.rearange()
+    linkNameHelper.rearangeGridLinkNamesElements()
 }
 
 globalThis.zoomService = zoomService

@@ -1,12 +1,12 @@
+import { DimensionsConfigEnum } from "../../../config/dimensions/DimensionsConfigEnum"
 import { globalConfig as gc } from "../../../config/global.config"
 import { gridModel } from "../../../models/grid/grid.model"
-import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
 import { gridLinksBuilderService } from "../../../models/grid/services/grid-links/gridLinksBuilder.service"
+import { gridHistoryService } from "../../../models/grid/services/gridHistory.service"
+import { toolboxElementsEnum } from "../../toolbox/enum/toolboxElements.enum"
 import { toolboxDragService } from "../../toolbox/services/toolboxDrag.service"
 import { gridArrowConnectorService } from "./gridArrowConnector.service"
 import { gridPanService } from "./gridPan.service"
-import { DimensionsConfigEnum } from "../../../config/dimensions/DimensionsConfigEnum"
-import { toolboxElementsEnum } from "../../toolbox/enum/toolboxElements.enum"
 
 const gridArrowAttributesService = {
     linkKey: '',
@@ -22,8 +22,8 @@ const gridArrowAttributesService = {
     waitMousemoveTimeout: null,
     
     i: 0,
-    top: 0,
-    left: 0,
+    cssTop: 0,
+    cssLeft: 0,
 
     popupSelectorId: '.grid-arrow-attributes-box',
 
@@ -75,8 +75,9 @@ const gridArrowAttributesService = {
         Object.assign(this.gridArrowAttributesEl.style, {
             display: `block`,
             fontSize: `${this.adjustMeasure}px`,
-            width: `${this.adjustMeasure}px`,
-            height: `${this.adjustMeasure}px`,
+            width: `${this.adjustMeasure - 3}px`,
+            height: `${this.adjustMeasure - 3}px`,
+            borderRadius: '5px'
         })
         
         this.iconEl.style.top = `-${Math.round(this.adjustMeasure / 3.3)}px`
@@ -103,23 +104,23 @@ const gridArrowAttributesService = {
     },
 
     setTopLeft(svgPath, event) {
-        if (svgPath.getAttribute('linkKey') !== this.linkKey || (!this.top && !this.left)) {
-            this.top = event.pageY - this.htmlEl.scrollTop - this.adjustMeasure / 2
-            this.left = event.pageX - this.htmlEl.scrollLeft - this.adjustMeasure / 2
+        if (svgPath.getAttribute('linkKey') !== this.linkKey || (!this.cssTop && !this.cssLeft)) {
+            this.cssTop = event.pageY - this.htmlEl.scrollTop - this.adjustMeasure / 2
+            this.cssLeft = event.pageX - this.htmlEl.scrollLeft - this.adjustMeasure / 2
 
             if (Math.sign(this.i) === -1) {
-                this.top += this.i
-                this.left += this.i + 1.5
+                this.cssTop += this.i
+                this.cssLeft += this.i + 1.5
             }
             else if (Math.sign(this.i) === 1) {
-                this.top += this.i + 1.5
-                this.left += this.i + 3
+                this.cssTop += this.i + 1.5
+                this.cssLeft += this.i + 3
             }
         }
 
         Object.assign(this.gridArrowAttributesEl.style, {
-            top: `${this.top}px`,
-            left: `${this.left}px`
+            top: `${this.cssTop}px`,
+            left: `${this.cssLeft}px`
         })
     },
     deleteLink() {
@@ -136,8 +137,8 @@ const gridArrowAttributesService = {
         this.gridArrowAttributesEl.style.display = 'none'    
     },
     resetLeftTop() {
-        this.left = 0
-        this.top = 0
+        this.cssLeft = 0
+        this.cssTop = 0
     },
 
     get mathMedium() {
@@ -183,3 +184,4 @@ const gridArrowAttributesService = {
 
 globalThis.gridArrowAttributesService = gridArrowAttributesService
 export { gridArrowAttributesService }
+

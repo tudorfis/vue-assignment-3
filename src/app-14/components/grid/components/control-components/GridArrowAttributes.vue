@@ -28,11 +28,11 @@ import { gridArrowConnectorService } from "../../services/gridArrowConnector.ser
 export default {
   methods: {
     editAttributes() {
-      this.updateComponent()
+      this.updateAttributesComponent()
       this.openModal('#gridLinkAttributesModal');
     },
     changeDescription() {
-      this.updateComponent()
+      this.updateNameComponent()
       this.openModal('#gridLinkNameModal');
     },
     deleteLink() {
@@ -43,9 +43,14 @@ export default {
       gridArrowAttributesService.isModalOpened = true;
       gridArrowAttributesService.hideArrowAttributes();
     },
-    updateComponent() {
+    updateAttributesComponent() {
       document
         .querySelector('.grid-link-attributes-modal')
+        .__vue__.updateComponent();
+    },
+    updateNameComponent() {
+      document
+        .querySelector('.grid-link-name-modal')
         .__vue__.updateComponent();
     }
   },
@@ -64,11 +69,13 @@ export default {
   color: #33bd58;
   background: white;
 
-  i.edit-icon {
-    position: relative;
-    z-index: 2;
+  i {
+    margin-right: 3px;
+    &.edit-icon {
+      position: relative;
+      z-index: 2;
+    }
   }
-
   .grid-arrow-attributes-box {
     z-index: 1;
     position: absolute;

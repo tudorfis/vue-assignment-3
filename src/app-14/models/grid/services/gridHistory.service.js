@@ -21,11 +21,15 @@ const gridHistoryService = {
         if (diff === 0) return 
 
         if (this.modelHistory[this.modelVersion + diff]) {
+            linkNameHelper.removeAllGridLinkNameElements()
+
             this.modelVersion += diff
             const model = JSON.parse(this.modelHistory[this.modelVersion])
             
             gridIOservice.loadGridModel(model)
             gridLinksBuilderService.buildLinks()
+
+            linkNameHelper.rearangeGridLinkNamesElements()
         }
     },
     log() {

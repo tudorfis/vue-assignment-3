@@ -8,7 +8,7 @@ class SvgPathImprover {
         const svgPathMap = SvgPathUtils.getPathMap(svgD)
         
         let currentItem, indexesForDeletion = []
-        for (let i = 2; i < svgPathMap.length; i++) {
+        for (let i = 3; i < svgPathMap.length - 1; i++) {
 
             if (currentItem && svgPathMap[i].direction === currentItem.direction) {
                 currentItem.distance += svgPathMap[i].distance

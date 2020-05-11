@@ -54,6 +54,8 @@ class Utils {
         return (new Set(array)).size !== array.length;
     }
     static renameObjKey(obj, oldKey, newKey) {
+        if (!obj[oldKey]) return
+        
         if (oldKey !== newKey) {
             Object.defineProperty(obj, newKey,
                 Object.getOwnPropertyDescriptor(obj, oldKey));

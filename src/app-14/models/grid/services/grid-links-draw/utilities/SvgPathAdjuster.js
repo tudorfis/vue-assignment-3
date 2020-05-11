@@ -113,7 +113,7 @@ class SvgPathAdjuster {
         else if (svgLeft !== svgCorrectLeft && lastItem.direction === 'h') {
             const diff = Math.max(svgLeft, svgCorrectLeft) - Math.min(svgLeft, svgCorrectLeft)
 
-            if (svgLeft < svgCorrectTop) lastItem.distance -= diff
+            if (svgLeft < svgCorrectLeft) lastItem.distance += diff
             else lastItem.distance -= diff
         }
 

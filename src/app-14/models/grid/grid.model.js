@@ -55,6 +55,9 @@ const gridModel = {
 
         return ''
     },
+    existsLinkAttribute(linkKey) {
+        return Object.keys(this.getLinkAttribute(linkKey)).length
+    },
     getLinkAttribute(linkKey) {
         return this.model.linkAttributes[linkKey] || {}
     },

@@ -31,19 +31,19 @@
           </div>
           <div class="modal-body">
             <div class="form-group">
-              <label for="linkDescription">Link description:</label>
+              <label for="name">Link description:</label>
               <input
                 type="text"
                 class="form-control"
-                v-model="linkDescription"
-                id="linkDescription"
+                v-model="name"
+                id="name"
                 placeholder="Enter a great link description..."
               />
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary btn-gray" data-dismiss="modal" @click="closeModal">Close</button>
-            <button type="button" class="btn btn-success btn-green" @click="saveLinkDescription">Save</button>
+            <button type="button" class="btn btn-success btn-green" @click="saveName">Save</button>
           </div>
         </div>
       </div>
@@ -61,34 +61,36 @@ export default {
     data() {
         return {
             linkKey: '',
-            linkDescription: ''
+            name: ''
         }
     },
     methods: {
-        saveLinkDescription() {
-            const { linkKey, linkDescription } = this
-
-            if (!gridArrowAttributesService.linkAttribute) {
-                gridIOservice.setNewLinkAttribute(linkKey)
-                linkNameHelper.setLinkAttribute(linkDescription, linkKey)
-            }
+        saveName() {
+            const { linkKey, name } = this
+            const existsLinkAttribute = gridModel.existsLinkAttribute(linkKey)
+            
+            if (!existsLinkAttribute)
+              gridIOservice.setNewLinkAttribute(linkKey)
 
             const linkAttribute = gridModel.getLinkAttribute(linkKey)
-            linkAttribute.name = linkDescription
+            linkAttribute.name = name
             
-            linkNameHelper.setNewName(linkKey, linkDescription)
+            linkNameHelper.setGridLinkNameElement({ name, linkKey }).then(_ => {
+              linkNameHelper.rearangeGridLinkNamesElements()
+            })
+
             gridHistoryService.saveState()
 
             this.closeModal()
         },
         updateComponent() {
-            const { linkKey, linkAttribute } = gridArrowAttributesService
+            const { linkKey } = gridArrowAttributesService
             this.linkKey = linkKey  
-            
-            this.linkDescription = ''
+            this.name = ''
 
+            const linkAttribute = gridModel.getLinkAttribute(linkKey)
             if (linkAttribute)
-                this.linkDescription = gridArrowAttributesService.linkAttribute.name
+                this.name = linkAttribute.name
         },
         closeModal() {
             $('#gridLinkNameModal').modal('hide')

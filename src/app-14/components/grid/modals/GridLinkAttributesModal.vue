@@ -200,8 +200,6 @@ import { linkNameHelper } from "../../../models/grid/helpers/link-attributes/lin
 import { linkAttributeColors, linkAttributeBlueprint } from "../../../models/grid/grid.blueprints";
 import { Utils } from "../../../utils/utils"
 
-
-
 export default {
   data() {
     return {
@@ -220,17 +218,21 @@ export default {
       gridModel.model.linkAttributes[linkKey] = Utils.deepclone(this.linkAttributesModel)
       gridLinksBuilderService.buildLinks()
 
-      linkNameHelper.rearange()
+      linkNameHelper.rearangeGridLinkNamesElements()
       gridArrowAttributesService.resetLeftTop()
 
       gridHistoryService.saveState()
       this.closeModal()
     },
     updateComponent() {
-      const { linkKey, linkAttribute } = gridArrowAttributesService
+      const { linkKey } = gridArrowAttributesService
+      const existsLinkAttribute = gridModel.existsLinkAttribute(linkKey)
+      
+      this.linkAttributesModel =  existsLinkAttribute ? 
+        gridModel.getLinkAttribute(linkKey) :
+        Utils.deepclone(linkAttributeBlueprint)
 
       this.linkKey = linkKey
-      this.linkAttributesModel = Utils.deepclone(linkAttribute || linkAttributeBlueprint)
     },
     closeModal() {
       $('#gridLinkAttributesModal').modal('hide')

@@ -29,9 +29,8 @@ class UtilsStrings {
         
         return str.slice(startPos, endPos)
     }
-    static breaklinehalf(str, length = 40) {
+    static breaklinehalf(str) {
         if (!str) return ''
-        if (str.length < length) return str
 
         const strSplit = str.split(' ')
         const middleWord = UtilsStrings.findMiddleWord(str)

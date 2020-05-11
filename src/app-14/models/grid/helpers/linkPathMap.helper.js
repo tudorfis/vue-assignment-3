@@ -49,26 +49,28 @@ const linkPathMapHelper = {
     },
     handleGridIteration(query) {
         const { vm, position, row, col } = query
-
+        
         const svgRect = this.svgEl.getBoundingClientRect()
         const difference_ee = linkEEMapHelper.getDiffByPoint(2)
         
-        for (const { x, y } of this.generateXYSearchArray({ svgRect, difference_ee, row, col }))
+        for (const { x, y } of this.generateXYSearchArray({ svgRect, difference_ee, row, col, position }))
             this.createLinkKeyIfFound({ vm, position, x, y })
     },
     generateXYSearchArray(query) {
-        const { svgRect, difference_ee, row, col } = query
+        const { svgRect, difference_ee, row, col, position } = query
 
         const x = svgRect.x + (globalConfig.gridCellWidth * col) - (globalConfig.gridCellWidth / 2)
         const y = svgRect.y + (globalConfig.gridCellHeight * row) - (globalConfig.gridCellHeight / 2)
         
         const output = []
+        output.push({ x, y })
+        
         for (let diff_ee = -(difference_ee * 3); diff_ee <= (difference_ee * 3); diff_ee += difference_ee) {
             output.push({ x: x - (difference_ee * 3), y: y + diff_ee})
             output.push({ x: x + (difference_ee * 3), y: y + diff_ee})
-
-            output.push({ y: y - (difference_ee * 3), x: x + diff_ee})
-            output.push({ y: y + (difference_ee * 3), x: x + diff_ee})
+            
+            output.push({ x: x + diff_ee, y: y - (difference_ee * 3)})
+            output.push({ x: x + diff_ee, y: y + (difference_ee * 3)})
         }
 
         return output
