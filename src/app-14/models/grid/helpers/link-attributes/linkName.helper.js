@@ -28,7 +28,7 @@ const linkNameHelper = {
         return new Promise((resolve, _) => {
             const { name, linkKey } = query
 
-            const parsedName = UtilsStrings.breaklinehalf(name)
+            const parsedName = UtilsStrings.splitStringInHalfByWord(name, 20)
             const existingGridLinkNameEl = this.gridLinkNamesElements[linkKey]
     
             if (existingGridLinkNameEl) {

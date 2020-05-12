@@ -8,39 +8,24 @@ class UtilsStrings {
         if (!str) return ''
         return UtilsStrings.upperCaseFirstLetter(str)
     }
-    static findMiddleWord(str) {
-        if (!str) return ''
-        const halfStr = Math.floor(str.length / 2)
+    static splitStringInHalfByWord(str, length = 0) {
+        if (str.length < length) return str
 
-        let i, startPos, endPos
-        if (str[halfStr] === ' ') {
-            endPos = halfStr
+        let middle = Math.floor(str.length / 2)
+
+        const before = str.lastIndexOf(' ', middle)
+        const after = str.indexOf(' ', middle + 1)
+
+        if (middle - before < after - middle) {
+            middle = before
+        } else {
+            middle = after
         }
 
-        for (i = 1; i <= 20; i++) {
-            if (!startPos && str[halfStr - i] === ' ')
-                startPos = halfStr - i + 1
-
-            if (!endPos && str[halfStr + i] === ' ') 
-                endPos = halfStr + i
-
-            if (!startPos || !endPos) continue
-        }
+        const str1 = str.substr(0, middle)
+        const str2 = str.substr(middle + 1) 
         
-        return str.slice(startPos, endPos)
-    }
-    static breaklinehalf(str) {
-        if (!str) return ''
-
-        const strSplit = str.split(' ')
-        const middleWord = UtilsStrings.findMiddleWord(str)
-
-        const halfPosition = strSplit.indexOf(middleWord)
-
-        const firstHalfStr = strSplit.slice(0, halfPosition).join(' ')
-        const secondHalfStr = strSplit.slice(halfPosition).join(' ')
-        
-        return `${firstHalfStr} <br> ${secondHalfStr}`
+        return str1 + '<br>' + str2
     }
 }
 

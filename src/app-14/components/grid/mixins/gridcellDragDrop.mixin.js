@@ -1,15 +1,16 @@
 import { gridModel } from '../../../models/grid/grid.model';
+import { gridLinksBuilderService } from '../../../models/grid/services/grid-links/gridLinksBuilder.service';
+import { gridLinksDroppointService } from '../../../models/grid/services/grid-links/gridLinksDroppoints.service';
+import { gridLinksOperatorService } from '../../../models/grid/services/grid-links/gridLinksOperator.service';
 import { gridAdjustService } from '../../../models/grid/services/gridAdjust.service';
 import { gridHistoryService } from '../../../models/grid/services/gridHistory.service';
-import { gridLinksBuilderService } from '../../../models/grid/services/grid-links/gridLinksBuilder.service';
-import { gridLinksOperatorService } from '../../../models/grid/services/grid-links/gridLinksOperator.service';
-import { gridLinksDroppointService } from '../../../models/grid/services/grid-links/gridLinksDroppoints.service';
 import { gridReduceService } from '../../../models/grid/services/gridReduce.service';
 import { globalResetsService } from '../../../services/globalResets.service';
 import { Utils } from '../../../utils/utils';
 import { toolboxDragService } from '../../toolbox/services/toolboxDrag.service';
 import { gridCellService } from '../services/gridCell.service';
 import { gridSvgService } from '../services/gridSvg.service';
+import { linkNameHelper } from '../../../models/grid/helpers/link-attributes/linkName.helper'
 
 export default {
     props: ['position'],
@@ -97,6 +98,8 @@ export default {
             
             gridLinksBuilderService.buildLinks()
             gridHistoryService.saveState()
+
+            linkNameHelper.rearangeGridLinkNamesElements()
         },
 
         onDragoverGridCellElement(event) {

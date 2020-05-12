@@ -25,7 +25,7 @@ const linkPathDragHelper = {
     restore() {
         if (!this.tempEEMapState) return
         
-        if (gridArrowConnectorService.restoreEEMapState && !this.hasTempPotential) {
+        if (gridArrowConnectorService.shouldRestoreEEMapState && !this.hasTempPotential) {
             linkEEMapHelper.eeMap = Utils.deepclone(this.tempEEMapState)
 
             if (this.tempLh)

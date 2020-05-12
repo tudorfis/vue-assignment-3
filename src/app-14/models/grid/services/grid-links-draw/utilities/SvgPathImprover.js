@@ -1,15 +1,14 @@
 import { SvgPathUtils } from '../../../../../utils/svgPath.utils'
 
 class SvgPathImprover {
-    constructor(svgDrawPath) {
-        this.svgDrawPath = svgDrawPath
+    constructor(svgDrawArrow) {
+        this.svgDrawArrow = svgDrawArrow
     }
     improvePath(svgD) {
         const svgPathMap = SvgPathUtils.getPathMap(svgD)
         
         let currentItem, indexesForDeletion = []
-        for (let i = 3; i < svgPathMap.length - 1; i++) {
-
+        for (let i = 3; i < svgPathMap.length; i++) {
             if (currentItem && svgPathMap[i].direction === currentItem.direction) {
                 currentItem.distance += svgPathMap[i].distance
                 indexesForDeletion.push(i)
@@ -28,9 +27,9 @@ class SvgPathImprover {
     }
 
     improveEdges(path) {
-        const { svgDrawPath } = this
-        const { arrowPointerAdjust } = svgDrawPath.getArrowPointers()
-        const { col2, row2 } = svgDrawPath.lh
+        const { svgDrawArrow } = this
+        const { arrowPointerAdjust } = svgDrawArrow.getArrowPointers()
+        const { col2, row2 } = svgDrawArrow.lh
         const svgPathMap = SvgPathUtils.getPathMap(path.svgD)
         
         if (col2 !== 1 && row2 !== 1) return path.svgD
@@ -47,6 +46,10 @@ class SvgPathImprover {
         }
 
         return SvgPathUtils.generateSvgD(svgPathMap)
+    }
+    
+    get linkKey() {
+        return this.svgDrawArrow.lh.linkKey
     }
 }
 

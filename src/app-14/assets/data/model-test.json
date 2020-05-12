@@ -1,72 +1,80 @@
 {
-    "numCols": 9,
-    "numRows": 7,
-    "totalSteps": 8,
+    "numCols": 12,
+    "numRows": 5,
+    "totalSteps": 9,
     "steps": {
-        "1-1": {
-            "is": 1,
-            "type": "ADD_REMOVE_TAG",
-            "id": 74
-        },
-        "1-5": {
-            "is": 1,
-            "type": "ADD_REMOVE_TAG",
-            "id": 41
-        },
-        "2-3": {
-            "is": 1,
-            "type": "SEND_EMAIL",
-            "id": 54
-        },
-        "2-4": {
+        "2-5": {
             "is": 1,
             "type": "SUBSCRIBE_LIST",
-            "id": 44
+            "id": 30
+        },
+        "2-7": {
+            "is": 1,
+            "type": "ADD_REMOVE_TAG",
+            "id": 93
+        },
+        "3-3": {
+            "is": 1,
+            "type": "SEND_EMAIL",
+            "id": 80
         },
         "3-4": {
             "is": 1,
-            "type": "SUBSCRIBE_SEQUENCE",
-            "id": 52
-        },
-        "5-4": {
-            "is": 1,
-            "type": "SUBSCRIBE_SEQUENCE",
-            "id": 49
-        },
-        "6-2": {
-            "is": 1,
             "type": "AUTOMATION",
-            "id": 25
+            "id": 3
+        },
+        "3-5": {
+            "is": 1,
+            "type": "SEND_SMS",
+            "id": 98
+        },
+        "3-6": {
+            "is": 1,
+            "type": "SEND_EMAIL",
+            "id": 51
         },
         "3-7": {
             "is": 1,
-            "type": "SPLIT",
-            "id": 25
+            "type": "SEND_EMAIL",
+            "id": 50
+        },
+        "3-11": {
+            "is": 1,
+            "type": "SUBSCRIBE_SEQUENCE",
+            "id": 95
+        },
+        "4-2": {
+            "is": 1,
+            "type": "SEND_EMAIL",
+            "id": 58
         }
     },
     "links": [
-        "5-4__1-5",
-        "2-3__1-5",
-        "5-4__1-1"
+        "2-5__3-5",
+        "3-3__3-4"
     ],
     "linkAttributes": {
-        "2-3__1-5": {
-            "name": "This is an amazing link, omg, is the most beautyfull link I ever saw",
-            "color": "#FF1A66",
-            "width": "3",
-            "style": "dashed",
-            "hideHead": false,
-            "outDirection": "left",
-            "inDirection": "right"
-        },
-        "5-4__1-5": {
-            "name": "This is another amazing super-califragilistic link",
-            "color": "blue",
+        "3-3__3-4": {
+            "name": "",
+            "color": "#3792bc",
             "width": "",
-            "style": "dashed",
+            "style": "",
             "hideHead": false,
             "outDirection": "",
-            "inDirection": ""
+            "inDirection": "",
+            "isSplit": false,
+            "splitType": ""
+        },
+        "2-5__3-5": {
+            "name": "What a wonderfull day",
+            "color": "#FF6633",
+            "width": "",
+            "style": "",
+            "hideHead": false,
+            "outDirection": "",
+            "inDirection": "",
+            "isSplit": false,
+            "splitType": ""
         }
     }
 }

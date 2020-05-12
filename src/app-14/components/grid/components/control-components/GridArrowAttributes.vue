@@ -62,6 +62,7 @@ export default {
 
 <style lang="scss">
 #grid-arrow-attributes {
+  user-select: none;
   position: fixed;
   display: none;
   z-index: 2;

@@ -264,7 +264,7 @@ export const gridArrowConnectorService = {
             this.removeTempPaths()
     },
 
-    get restoreEEMapState() {
+    get shouldRestoreEEMapState() {
         return !this.recentLink && this.startedDrag
     }
 }

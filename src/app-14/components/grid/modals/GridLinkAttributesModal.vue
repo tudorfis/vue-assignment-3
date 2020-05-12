@@ -216,9 +216,10 @@ export default {
         gridIOservice.setNewLinkAttribute(linkKey)
 
       gridModel.model.linkAttributes[linkKey] = Utils.deepclone(this.linkAttributesModel)
-      gridLinksBuilderService.buildLinks()
 
+      gridLinksBuilderService.buildLinks()
       linkNameHelper.rearangeGridLinkNamesElements()
+
       gridArrowAttributesService.resetLeftTop()
 
       gridHistoryService.saveState()

@@ -7,19 +7,20 @@ class LinkNamePositioner {
         this.svgD = query.svgD
         this.element = query.element
         this.linkKey = query.linkKey
+        this.defaultPathItem = null
     }
     getOptimalPosition() {
         const middleSvgPathItems = this.getMiddleSvgPathItems(this.svgD)
         const { optimalLeft, optimalTop } = this.getOptimalPositionCases(middleSvgPathItems)
-
+        
         if (!optimalLeft && !optimalTop)
-            return this.getOptimalPositionDefault(middleSvgPathItems)
-
+            return this.getOptimalPositionDefault(this.svgD)
+        
         return { optimalLeft, optimalTop }
     }
     getOptimalPositionCases(middleSvgPathItems) {
         const { element } = this
-        
+
         let optimalLeft = 0, optimalTop = 0
         for (const { left, top, hv } of middleSvgPathItems) {
             const pchck = this.buildPositioningChecker({ left, top, element })
@@ -55,17 +56,20 @@ class LinkNamePositioner {
         return { optimalLeft, optimalTop }
     }
 
-    getOptimalPositionDefault(middleSvgPathItems) {
+    getOptimalPositionDefault(svgD) {
+        const svgPathMap = SvgPathUtils.getPathMap(svgD)
         const { element } = this
-
+        const areElementsCloseToEachOther = svgPathMap.length === 4
+        
         let optimalLeft = 0, optimalTop = 0
-        const { left, top, hv } = middleSvgPathItems[0]
+        const { left, top, hv } = this.defaultPathItem
         const pchck = this.buildPositioningChecker({ left, top, element })
 
         if (hv === 'h') {
             optimalLeft = pchck.hGoDown_left
             optimalTop = pchck.hGoDown_top - 5
             element.style.textAlign = 'center'
+            element.style.display = areElementsCloseToEachOther ? 'none' : 'block'
         }
         else if (hv === 'v') {
             optimalLeft = pchck.vGoRight_left
@@ -80,19 +84,19 @@ class LinkNamePositioner {
         const { left, top, element } = query
         const rect = element.getBoundingClientRect()
 
-        const hGoUp_left = left - rect.width / 2
-        const hGoUp_top = top - rect.height - 10
+        const hGoUp_left = Math.floor(left - rect.width / 2)
+        const hGoUp_top = Math.floor(top - rect.height - 10)
         
-        const hGoDown_left = left - rect.width / 2
-        const hGoDown_top = top + 10
+        const hGoDown_left = Math.floor(left - rect.width / 2)
+        const hGoDown_top = Math.floor(top + 10)
 
         /////////////////////////////////////
         
-        const vGoLeft_left = left - rect.width - 10
-        const vGoLeft_top = top - rect.height / 2
+        const vGoLeft_left = Math.floor(left - rect.width - 10)
+        const vGoLeft_top = Math.floor(top - rect.height / 2)
         
-        const vGoRight_left = left + 10
-        const vGoRight_top = top - rect.height / 2
+        const vGoRight_left = Math.floor(left + 10)
+        const vGoRight_top = Math.floor(top - rect.height / 2)
 
         return { hGoUp_left, hGoUp_top, hGoDown_left, hGoDown_top,
             vGoLeft_left, vGoLeft_top,  vGoRight_left, vGoRight_top }
@@ -120,32 +124,14 @@ class LinkNamePositioner {
     getMiddleSvgPathItems(svgD) {
         const svgPathMap = SvgPathUtils.getPathMap(svgD)
         const svgPathMapSliced = svgPathMap.slice(2)
-
+        
         const svgPathItems = this.createOrderedSvgPathItems({ svgPathMapSliced })
-        return this.createPositioningSvgPathItems({ svgPathItems, svgPathMapSliced, svgPathMap })
+        return this.createPositioningSvgPathItems({ svgPathItems, svgPathMap })
     }
     createOrderedSvgPathItems(query) {
         const { svgPathMapSliced } = query
-        const centerIndex = Math.floor((svgPathMapSliced.length - 1) / 2)
-        const svgPathItems = []
 
-        let i = centerIndex, increment = 0, goRight = true
-        while (increment <= svgPathMapSliced.length) {
-            increment++
-
-            if (svgPathMapSliced[i]) {
-                svgPathItems.push(svgPathMapSliced[i])
-                goRight ? i += increment : i -= increment
-                goRight = !goRight
-                continue
-            }
-
-            const lastItem = svgPathMapSliced.find(item => !svgPathItems.includes(item))
-            if (lastItem) svgPathItems.push(lastItem)
-        }
-
-
-        svgPathItems.sort(function(a, b) {
+        svgPathMapSliced.sort(function(a, b) {
             var distanceA = Math.abs(a.distance),
                 distanceB = Math.abs(b.distance)
 
@@ -155,42 +141,61 @@ class LinkNamePositioner {
             return 0
         })
 
-        return svgPathItems
+        return svgPathMapSliced
     }
     createPositioningSvgPathItems(query) {
-        const { svgPathItems, svgPathMapSliced, svgPathMap } = query
-
-        const indexArrForDeletion = []
+        const { svgPathItems, svgPathMap } = query
+        const newPathItems = []
+        
         for (const svgPathItem of svgPathItems) {
+            const isTooSmallDistanceH = Math.abs(svgPathItem.distance) <= gc.gridCellWidth / 2
+            const isTooSmallDistanceV = Math.abs(svgPathItem.distance) <= gc.gridCellHeight / 2
             
-            const isTooSmallDistance = Math.abs(svgPathItem.distance) <= gc.gridCellWidth / 2
+            let shouldIgnoreItem = svgPathItem.direction === 'h' && isTooSmallDistanceH
+            shouldIgnoreItem |= svgPathItem.direction === 'v' && isTooSmallDistanceV
+            
             const hasTooLittleItems = svgPathItems.length <= 2
 
-            if (svgPathItem.direction === 'h' && isTooSmallDistance  && !hasTooLittleItems) {
-                indexArrForDeletion.push(svgPathItems.indexOf(svgPathItem))
+            if (shouldIgnoreItem || hasTooLittleItems) {
                 continue
             }
 
-            const index = svgPathMapSliced.indexOf(svgPathItem) + 2
-            const svgPathMapClone = svgPathMap.slice(0, index + 1)
+            let svgPathMapClone = Utils.deepclone(svgPathMap)
 
-            const svgPathMapCloneLastItem = svgPathMapClone[svgPathMapClone.length - 1]
-            svgPathMapCloneLastItem.distance /= 2
+            const index = svgPathMap.indexOf(svgPathItem)
+            const svgPathMapHandle = svgPathMapClone.slice(0, index + 1)
 
-            const svgDclone = SvgPathUtils.generateSvgD(svgPathMapClone)
-            Object.assign(svgPathItem, SvgPathUtils.getM(svgDclone))
+            const svgPathMapHandleLastItem = svgPathMapHandle[svgPathMapHandle.length - 1]
+            svgPathMapHandleLastItem.distance /= 2
+
+            const svgDclone = SvgPathUtils.generateSvgD(svgPathMapHandle)
+            newPathItems.push({
+                ...SvgPathUtils.getM(svgDclone), 
+                hv: svgPathMapHandleLastItem.direction
+            })
         }
 
-        indexArrForDeletion.forEach(index => {
-            svgPathItems.splice(index, 1)
-        })
+        const svgPathMapClone = Utils.deepclone(svgPathMap)
+        const svgDclone = SvgPathUtils.generateSvgD(svgPathMapClone.slice(0, 3))
 
-        return svgPathItems.map(item => ({
+        this.defaultPathItem = [{
+            ...SvgPathUtils.getM(svgDclone), 
+            hv: svgPathMapClone[2].direction
+        }].map(item => ({
             top: item.svgTop,
             left: item.svgLeft,
-            hv: item.direction,
+            hv: item.hv
+        }))[0]
+
+        const result = newPathItems.map(item => ({
+            top: item.svgTop,
+            left: item.svgLeft,
+            hv: item.hv
         }))
+
+        return result
     }
+
     get svgEl() {
         return document.querySelector('svg')
     }
