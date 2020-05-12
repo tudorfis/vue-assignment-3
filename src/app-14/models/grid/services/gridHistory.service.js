@@ -29,7 +29,6 @@ const gridHistoryService = {
             gridIOservice.loadGridModel(model)
             gridLinksBuilderService.buildLinks()
 
-            linkNameHelper.rearangeGridLinkNamesElements()
         }
     },
     log() {

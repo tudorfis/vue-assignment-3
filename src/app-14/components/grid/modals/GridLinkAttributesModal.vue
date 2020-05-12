@@ -24,7 +24,7 @@
               aria-label="Close"
               style="opacity: 1;"
             >
-              <span aria-hidden="true" @click="closeModal">
+              <span aria-hidden="true" @click.prevent="closeModal">
                 <i class="fas fa-times" style="color: white;"></i>
               </span>
             </button>
@@ -180,10 +180,13 @@
             <button
               type="button"
               class="btn btn-secondary btn-gray"
-              data-dismiss="modal"
-              @click="closeModal"
+              @click.prevent="closeModal"
             >Close</button>
-            <button type="button" class="btn btn-success btn-green" @click="saveLinkAttributes">Save</button>
+            <button 
+              type="button"
+              class="btn btn-success btn-green"
+              @click.prevent="saveLinkAttributes"
+            >Save</button>
           </div>
         </div>
       </div>
@@ -196,7 +199,6 @@ import Vue from "vue";
 import { gridArrowAttributesService } from "../services/gridArrowAttributes.service";
 import { gridIOservice } from "../../../models/grid/services/gridIO.service";
 import { gridHistoryService } from "../../../models/grid/services/gridHistory.service";
-import { linkNameHelper } from "../../../models/grid/helpers/link-attributes/linkName.helper";
 import { linkAttributeColors, linkAttributeBlueprint } from "../../../models/grid/grid.blueprints";
 import { Utils } from "../../../utils/utils"
 
@@ -218,8 +220,6 @@ export default {
       gridModel.model.linkAttributes[linkKey] = Utils.deepclone(this.linkAttributesModel)
 
       gridLinksBuilderService.buildLinks()
-      linkNameHelper.rearangeGridLinkNamesElements()
-
       gridArrowAttributesService.resetLeftTop()
 
       gridHistoryService.saveState()
@@ -230,7 +230,7 @@ export default {
       const existsLinkAttribute = gridModel.existsLinkAttribute(linkKey)
       
       this.linkAttributesModel =  existsLinkAttribute ? 
-        gridModel.getLinkAttribute(linkKey) :
+        Utils.deepclone(gridModel.getLinkAttribute(linkKey)) :
         Utils.deepclone(linkAttributeBlueprint)
 
       this.linkKey = linkKey

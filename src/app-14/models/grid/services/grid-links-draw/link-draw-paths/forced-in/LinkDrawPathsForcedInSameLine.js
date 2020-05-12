@@ -29,13 +29,16 @@ class LinkDrawPathsForcedInSameLine extends LinkDrawPathsBase {
         let path, arrow
 
         const { svgDrawPath, svgDrawArrow, linkDirectionsMap } = this
-        const { forcedInDirection, link1Direction } = linkDirectionsMap
+        const { forcedInDirection } = linkDirectionsMap
         const helperDirection1 = LinkHelper.getOpositeDirection(forcedInDirection)
-
+        
+        const pdir = this.lh.potentialDirections
+        const helperDirection2 = pdir[0] === forcedInDirection ? pdir[1] : pdir[0]
+        
         path = svgDrawPath.drawPath(forcedInDirection)
-        path.svgD += svgDrawPath.drawHalf(link1Direction)
-        path.svgD += svgDrawPath.drawLine(link1Direction)
-        path.svgD += svgDrawPath.drawHalf(link1Direction)
+        path.svgD += svgDrawPath.drawHalf(helperDirection2)
+        path.svgD += svgDrawPath.drawLine(helperDirection2)
+        path.svgD += svgDrawPath.drawHalf(helperDirection2)
         arrow = svgDrawArrow.drawArrow(path, helperDirection1)
 
         return [ path, arrow ]

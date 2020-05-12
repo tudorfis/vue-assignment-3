@@ -9,6 +9,7 @@ const linkNameHelper = {
     gridLinkNamesElements: {},
 
     generateGridLinkNameElements() {
+        const promisesForElements = []
         return new Promise((resolve, _) => {
             this.gridLinkNamesElements = {}
 
@@ -18,10 +19,12 @@ const linkNameHelper = {
                 if (!name) continue
 
                 const query = { name, linkKey }
-                this.setGridLinkNameElement(query)
+                promisesForElements.push(
+                    this.setGridLinkNameElement(query)
+                )
             }
 
-            resolve()
+            Promise.all(promisesForElements).then(_ => resolve())
         })
     },
     setGridLinkNameElement(query) {
@@ -85,7 +88,7 @@ const linkNameHelper = {
             
             linkAttribute.linkKey = newLinkKey
             Utils.renameObjKey(this.gridLinkNamesElements, oldLinkKey, newLinkKey)
-            
+
             resolve()
         })
     },

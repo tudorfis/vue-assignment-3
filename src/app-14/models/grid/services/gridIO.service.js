@@ -65,9 +65,7 @@ export const gridIOservice = {
         gridModel.model.links = model.links
         gridModel.model.linkAttributes = model.linkAttributes
 
-        linkNameHelper.generateGridLinkNameElements().then(_ => {
-            linkNameHelper.rearangeGridLinkNamesElements()
-        })
+        linkNameHelper.generateGridLinkNameElements()
 
         gridReduceService.increaseGrid()
         gridReduceService.reduceGrid()
@@ -83,8 +81,10 @@ export const gridIOservice = {
     },
     newModel() {
         this.newGridModel()
+
         gridLinksBuilderService.buildLinks()
         gridHistoryService.saveState()
+        
         linkNameHelper.removeAllGridLinkNameElements()
     },
     setNewLinkAttribute(linkKey) {

@@ -61,6 +61,7 @@ import GridLinkNamesVue from './components/control-components/GridLinkNames.vue'
 import GridArrowAttributesVue from './components/control-components/GridArrowAttributes.vue';
 import GridLinkNameModalVue from './modals/GridLinkNameModal.vue';
 import GridLinkAttributesModalVue from './modals/GridLinkAttributesModal.vue';
+import { linkNameHelper } from '../../models/grid/helpers/link-attributes/linkName.helper'
 
 export default {
   props: ['toolboxWidth', 'topmenuHeight'],
@@ -125,6 +126,9 @@ export default {
           'grid-template-rows': `repeat(${gridModel.model.numRows}, 1fr)`
       }
     }
+  },
+  updated() {
+    linkNameHelper.rearangeGridLinkNamesElements()
   }
 };
 </script>

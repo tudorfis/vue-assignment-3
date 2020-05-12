@@ -10,7 +10,6 @@ import { Utils } from '../../../utils/utils';
 import { toolboxDragService } from '../../toolbox/services/toolboxDrag.service';
 import { gridCellService } from '../services/gridCell.service';
 import { gridSvgService } from '../services/gridSvg.service';
-import { linkNameHelper } from '../../../models/grid/helpers/link-attributes/linkName.helper'
 
 export default {
     props: ['position'],
@@ -98,8 +97,6 @@ export default {
             
             gridLinksBuilderService.buildLinks()
             gridHistoryService.saveState()
-
-            linkNameHelper.rearangeGridLinkNamesElements()
         },
 
         onDragoverGridCellElement(event) {

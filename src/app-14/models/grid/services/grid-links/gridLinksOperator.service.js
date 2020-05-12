@@ -29,9 +29,7 @@ const gridLinksOperatorService = {
             
             if (linkAttribute) {
                 Utils.renameObjKey(gridModel.model.linkAttributes, oldLinkKey, newLinkKey)
-                linkNameHelper.renameOldLinkKey(oldLinkKey, newLinkKey).then(_ => {
-                    linkNameHelper.rearangeGridLinkNamesElements()
-                })
+                linkNameHelper.renameOldLinkKey(oldLinkKey, newLinkKey)
             }
         }
     },

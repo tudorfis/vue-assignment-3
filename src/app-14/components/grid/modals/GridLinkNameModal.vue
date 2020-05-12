@@ -24,7 +24,7 @@
               aria-label="Close"
               style="opacity: 1;"
             >
-              <span aria-hidden="true" @click="closeModal">
+              <span aria-hidden="true" @click.prevent="closeModal">
                 <i class="fas fa-times" style="color: white;"></i>
               </span>
             </button>
@@ -42,8 +42,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary btn-gray" data-dismiss="modal" @click="closeModal">Close</button>
-            <button type="button" class="btn btn-success btn-green" @click="saveName">Save</button>
+            <button type="button" class="btn btn-secondary btn-gray" @click.prevent="closeModal">Close</button>
+            <button type="button" class="btn btn-success btn-green" @click.prevent="saveName">Save</button>
           </div>
         </div>
       </div>
@@ -75,10 +75,7 @@ export default {
             const linkAttribute = gridModel.getLinkAttribute(linkKey)
             linkAttribute.name = name
             
-            linkNameHelper.setGridLinkNameElement({ name, linkKey }).then(_ => {
-              linkNameHelper.rearangeGridLinkNamesElements()
-            })
-
+            linkNameHelper.setGridLinkNameElement({ name, linkKey })
             gridHistoryService.saveState()
 
             this.closeModal()

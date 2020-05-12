@@ -4,7 +4,6 @@ import { gridLinksBuilderService } from "../models/grid/services/grid-links/grid
 import { gridReduceService } from "../models/grid/services/gridReduce.service"
 import { globalResetsService } from "./globalResets.service"
 import { ZoomDimensionAdjust } from "./zoom-dimensions/ZoomDimensionAdjust"
-import { linkNameHelper } from "../models/grid/helpers/link-attributes/linkName.helper"
 
 const zoomService = {
     disableZoomIn() {
@@ -63,8 +62,6 @@ function recalculateRebuildServices() {
     gridLinksBuilderService.buildLinks()
 
     gridArrowAttributesService.resetLeftTop()
-
-    linkNameHelper.rearangeGridLinkNamesElements()
 }
 
 globalThis.zoomService = zoomService

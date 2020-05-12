@@ -1,13 +1,8 @@
 {
     "numCols": 12,
-    "numRows": 5,
+    "numRows": 6,
     "totalSteps": 9,
     "steps": {
-        "2-5": {
-            "is": 1,
-            "type": "SUBSCRIBE_LIST",
-            "id": 30
-        },
         "2-7": {
             "is": 1,
             "type": "ADD_REMOVE_TAG",
@@ -28,11 +23,6 @@
             "type": "SEND_SMS",
             "id": 98
         },
-        "3-6": {
-            "is": 1,
-            "type": "SEND_EMAIL",
-            "id": 51
-        },
         "3-7": {
             "is": 1,
             "type": "SEND_EMAIL",
@@ -47,32 +37,30 @@
             "is": 1,
             "type": "SEND_EMAIL",
             "id": 58
+        },
+        "4-5": {
+            "is": 1,
+            "type": "SEND_EMAIL",
+            "id": 51
+        },
+        "5-5": {
+            "is": 1,
+            "type": "SUBSCRIBE_LIST",
+            "id": 30
         }
     },
     "links": [
-        "2-5__3-5",
-        "3-3__3-4"
+        "5-5__3-5"
     ],
     "linkAttributes": {
-        "3-3__3-4": {
-            "name": "",
-            "color": "#3792bc",
-            "width": "",
-            "style": "",
-            "hideHead": false,
-            "outDirection": "",
-            "inDirection": "",
-            "isSplit": false,
-            "splitType": ""
-        },
-        "2-5__3-5": {
+        "5-5__3-5": {
             "name": "What a wonderfull day",
             "color": "#FF6633",
             "width": "",
             "style": "",
             "hideHead": false,
             "outDirection": "",
-            "inDirection": "",
+            "inDirection": "left",
             "isSplit": false,
             "splitType": ""
         }
