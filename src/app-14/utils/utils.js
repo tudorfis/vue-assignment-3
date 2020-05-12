@@ -28,6 +28,8 @@ class Utils {
       return output
     }
     static deepclone(obj) {
+        if (!obj) return null
+
         return JSON.parse(JSON.stringify(obj))
     }
     static randomNumber(from, to) {

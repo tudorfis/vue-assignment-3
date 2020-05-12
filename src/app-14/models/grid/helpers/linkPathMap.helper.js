@@ -47,6 +47,11 @@ const linkPathMapHelper = {
         this.svgEl.style.zIndex = '1'
         this.gridlayoutEl.style.zIndex = '2'
     },
+
+    /** this implementation is being used when 
+     * linkEEMapHelper.getDiffByPoint brings multiple values,
+     * meaning, paths, go out/in from multiple entry/exit points
+     
     handleGridIteration(query) {
         const { vm, position, row, col } = query
         
@@ -74,6 +79,20 @@ const linkPathMapHelper = {
         }
 
         return output
+    },
+    */
+
+    handleGridIteration(query) {
+        const { vm, position, row, col } = query
+        const svgRect = vm.svgEl.getBoundingClientRect()
+        
+        const x = svgRect.x + (globalConfig.gridCellWidth * col) - (globalConfig.gridCellWidth / 2)
+        const y = svgRect.y + (globalConfig.gridCellHeight * row) - (globalConfig.gridCellHeight / 2)
+
+        vm.createLinkKeyIfFound({ vm, position, x: x + 5, y })
+        vm.createLinkKeyIfFound({ vm, position, x: x - 5, y })
+        vm.createLinkKeyIfFound({ vm, position, x, y: y + 5 })
+        vm.createLinkKeyIfFound({ vm, position, x, y: y - 5 })
     },
     createLinkKeyIfFound(query) {
         const { vm, position, x, y } = query

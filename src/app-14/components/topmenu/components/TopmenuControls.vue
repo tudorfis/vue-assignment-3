@@ -35,16 +35,22 @@ export default {
       makeRectangular() {
         if (localStorage.getItem('dimensionType') === DimensionsConfigEnum.RECTANGULAR) return
 
-        localStorage.setItem('gridModel.model', gridHistoryService.getLatestState());
+        this.setLatestGridState()
         localStorage.setItem('dimensionType', DimensionsConfigEnum.RECTANGULAR);
         location.reload()
       },
       makeSquare() {
         if (localStorage.getItem('dimensionType') === DimensionsConfigEnum.SQUARE) return
 
-        localStorage.setItem('gridModel.model', gridHistoryService.getLatestState());
+        this.setLatestGridState()
         localStorage.setItem('dimensionType', DimensionsConfigEnum.SQUARE);
         location.reload()
+      },
+      setLatestGridState() {
+        const latestGridState = gridHistoryService.getLatestState()
+        if (latestGridState) {
+          localStorage.setItem('gridModel.model', latestGridState);
+        }
       }
     },
     computed: {

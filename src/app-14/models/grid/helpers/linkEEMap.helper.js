@@ -11,9 +11,9 @@ class LinkEntryExitPointsMapHelper {
         this.entryExitPointsMap = entryExitPointsMap
     }
     constructor() {
-        this.resetEEMap()    
+        this.resetEEMap()
 
-        const eeMapItemDirectionBlueprint = { 
+        const eeMapItemDirectionBlueprint = {
             out: {},
             in: {},
             total: 0
@@ -42,15 +42,20 @@ class LinkEntryExitPointsMapHelper {
 
         const eeMap = this.eeMap[lh.link1][direction]
         eeMap.out[lh.link2] = ++eeMap.total
-        
+
         return this.getDiffByPoint(eeMap.total) || 0
     }
     createEEMapItemIfItDoesntExist(link) {
         if (!this.eeMap[link])
             this.eeMap[link] = Utils.deepclone(this.eeMapItemBlueprint)
     }
-
     getDiffByPoint(pointNr) {
+        /** always returns 0 to go 
+         * in/out from the same point
+         * might require to have lines go 
+         * in/out multiple entry/exit points */
+        return 0
+
         if (pointNr > 8) return 0
 
         const diff = globalConfig.arrowPointerHeight * Math.floor(pointNr / 2)
